@@ -91,9 +91,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
             key={tab.id}
             data-tab={tab.id}
             onClick={() => handleClick(tab.id)}
-            className={`relative inline-flex flex-col items-center gap-1 px-3.5 py-2.5 whitespace-nowrap transition-all duration-200 flex-shrink-0 ${
-              isStuck ? 'hover:scale-105' : ''
-            }`}
+            className={`group relative inline-flex flex-col items-center gap-1 px-3.5 py-2.5 whitespace-nowrap transition-all duration-200 flex-shrink-0 hover:-translate-y-1 hover:scale-110`}
             style={{
               color: isActive ? '#fff' : 'rgba(255,255,255,.5)',
               background: isActive ? 'rgba(99,102,241,.15)' : 'transparent',
