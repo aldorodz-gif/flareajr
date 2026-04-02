@@ -91,7 +91,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
             key={tab.id}
             data-tab={tab.id}
             onClick={() => handleClick(tab.id)}
-            className={`group relative inline-flex flex-col items-center gap-1 px-3.5 py-2.5 whitespace-nowrap transition-all duration-200 flex-shrink-0 hover:-translate-y-1 hover:scale-110`}
+            className={`group relative inline-flex flex-col items-center gap-1 px-3.5 py-2.5 whitespace-nowrap transition-all duration-200 flex-shrink-0 hover:-translate-y-1 hover:scale-110 hover:text-white`}
             style={{
               color: isActive ? '#fff' : 'rgba(255,255,255,.5)',
               background: isActive ? 'rgba(99,102,241,.15)' : 'transparent',
@@ -100,17 +100,12 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
           >
             <span
               ref={isActive ? activeIconRef : undefined}
-              className={`text-[17px] leading-none transition-transform duration-200 ${isActive ? '' : 'grayscale-[0.5] opacity-65'} ${isActive ? 'animate-icon-pop' : ''} ${
-                isStuck && !isActive ? 'hover:scale-110' : ''
-              }`}
+              className={`text-[17px] leading-none transition-all duration-200 ${isActive ? '' : 'grayscale-[0.5] opacity-65 group-hover:opacity-100 group-hover:grayscale-0'} ${isActive ? 'animate-icon-pop' : ''}`}
               key={`${tab.id}-${isActive}`}
             >
               {tab.icon}
             </span>
-            <span className="text-[10px] leading-none tracking-wide">{tab.label}</span>
-            {isVisited && !isActive && (
-              <span className="absolute top-1 right-1 text-[8px] font-extrabold" style={{ color: '#EC4899' }}>✓</span>
-            )}
+            <span className="text-[10px] leading-none tracking-wide transition-colors duration-200 group-hover:text-white">{tab.label}</span>
           </button>
         );
       })}
