@@ -24,13 +24,13 @@ const verticalTitles = [
 const ContactTab = ({ onNavigate }: ContactTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #E11D48, #FB7185)">Step 04: Find the Right Person</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #E07878, #E8A87A)">Step 04: Find the Right Person</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Service Line Buyer Map</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Match the buyer to the signal. Start with whoever's job breaks if the need isn't solved. Not whoever has the most obvious title.
       </p>
 
-      <div className="flex gap-3 items-start p-3.5 mb-6" style={{ background: 'rgba(225,29,72,.05)', border: '1px solid rgba(225,29,72,.18)' }}>
+      <div className="flex gap-3 items-start p-3.5 mb-6" style={{ background: 'rgba(251,191,36,.06)', border: '1px solid rgba(251,191,36,.2)' }}>
         <span className="flex-shrink-0">📌</span>
         <p className="text-[13px] leading-[1.65] text-foreground">
           <strong>The rule:</strong> In most accounts, HR is not the first pain owner. Match the buyer to the signal. Start with whoever's job breaks if the need is not solved.
@@ -52,9 +52,9 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       <p className="text-[13px] mb-4 text-muted-foreground">Start with the signal and service line. Pick the lane that owns the pain first.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(225,29,72,.15)' }}>
-          <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #881337, #9F1239)' }}>
-            <div className="text-[10px] font-semibold uppercase tracking-[2px] mb-1" style={{ color: '#FDA4AF' }}>Tier 1 — Signal Owner</div>
+        <div className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)' }}>
+          <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1E293B, #2A2760)' }}>
+            <div className="text-[10px] font-semibold uppercase tracking-[2px] mb-1" style={{ color: '#818CF8' }}>Tier 1 — Signal Owner</div>
             <p className="text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.7)' }}>The person whose project, launch, or crew schedule breaks if the need is not solved.</p>
           </div>
           <div className="p-4 space-y-3">
@@ -71,9 +71,9 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
           </div>
         </div>
 
-        <div className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(168,85,247,.15)' }}>
-          <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #581C87, #6B21A8)' }}>
-            <div className="text-[10px] font-semibold uppercase tracking-[2px] mb-1" style={{ color: '#D8B4FE' }}>Tier 2 — Support Owner</div>
+        <div className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)' }}>
+          <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #334155, #3B3B6B)' }}>
+            <div className="text-[10px] font-semibold uppercase tracking-[2px] mb-1" style={{ color: '#A5B4FC' }}>Tier 2 — Support Owner</div>
             <p className="text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.7)' }}>The person who helps with policy, travel, sourcing, or vendor setup after the need is clear.</p>
           </div>
           <div className="p-4 space-y-3">
@@ -97,14 +97,14 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
 
       <div className="flex flex-col gap-2 mb-6">
         {verticalTitles.map((row, ri) => (
-          <div key={ri} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(225,29,72,.12)' }}>
+          <div key={ri} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)' }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               {row.cols.map((col, ci) => (
-                <div key={ci} className={`p-4 ${ci === 0 ? 'md:border-r' : ''}`} style={{ borderColor: '#FECDD3' }}>
+                <div key={ci} className={`p-4 ${ci === 0 ? 'md:border-r' : ''}`} style={{ borderColor: '#E2E8F0' }}>
                   <p className="text-[12px] font-semibold mb-1.5 text-foreground">{col.icon} {col.name}</p>
                   <p className="text-[12px] text-muted-foreground mb-1"><strong>Signals:</strong> {col.signals}</p>
                   <p className="text-[12px] text-foreground"><strong>Primary:</strong> {col.primary}</p>
-                  <p className="text-[12px] mt-1" style={{ color: '#E11D48' }}><strong>Non-traditional:</strong> {col.nonTrad}</p>
+                  <p className="text-[12px] mt-1" style={{ color: '#6366F1' }}><strong>Non-traditional:</strong> {col.nonTrad}</p>
                 </div>
               ))}
             </div>
@@ -113,8 +113,8 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       </div>
 
       {/* Prioritization */}
-      <div className="p-5" style={{ background: 'linear-gradient(135deg, #881337, #4C1D95)' }}>
-        <p className="text-[12px] font-semibold uppercase tracking-wider mb-3.5" style={{ color: '#FDA4AF' }}>How to Prioritize Your Outreach</p>
+      <div className="p-5" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+        <p className="text-[12px] font-semibold uppercase tracking-wider mb-3.5" style={{ color: '#818CF8' }}>How to Prioritize Your Outreach</p>
         <div className="flex flex-col gap-2.5">
           {[
             'Start with the pain owner in operations, project leadership, mobility, facilities, or field logistics.',
@@ -122,13 +122,13 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
             'Bring in procurement or travel later when you need policy alignment, vendor setup, or invoicing support.',
           ].map((text, i) => (
             <div key={i} className="flex gap-3 items-start">
-              <div className="min-w-[22px] h-[22px] rounded-full flex items-center justify-center text-[11px] font-semibold flex-shrink-0" style={{ background: '#E11D48', color: '#fff' }}>{i + 1}</div>
+              <div className="min-w-[22px] h-[22px] rounded-full flex items-center justify-center text-[11px] font-semibold flex-shrink-0" style={{ background: '#6366F1', color: '#fff' }}>{i + 1}</div>
               <p className="text-[13px] leading-[1.6]" style={{ color: 'rgba(255,255,255,.8)' }}>{text}</p>
             </div>
           ))}
         </div>
         <div className="mt-4 pt-3.5" style={{ borderTop: '1px solid rgba(255,255,255,.1)' }}>
-          <p className="text-[12px] font-semibold uppercase tracking-wide mb-1.5" style={{ color: '#F9A8D4' }}>Pattern to watch</p>
+          <p className="text-[12px] font-semibold uppercase tracking-wide mb-1.5" style={{ color: '#818CF8' }}>Pattern to watch</p>
           <p className="text-[13px] leading-[1.6]" style={{ color: 'rgba(255,255,255,.75)' }}>Project-based industries (construction, energy, defense) buy through <strong style={{ color: '#fff' }}>operations and field leaders</strong>. Program-based industries (tech, consulting, healthcare) buy through <strong style={{ color: '#fff' }}>mobility, travel, facilities, or people operations</strong>.</p>
         </div>
       </div>
