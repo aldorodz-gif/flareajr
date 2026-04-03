@@ -87,21 +87,21 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {[
           {
-            icon: '🏀', title: 'Sports Teams',
+            icon: '🏭', title: 'Manufacturing Plant Launch',
             rows: [
-              { label: 'Situation', text: 'Sourcing own housing, staging apartments, staying in hotels' },
-              { label: 'Operational', text: 'Delays in expense reports; imbalanced spending across roster moves' },
-              { label: 'Executive', text: '"We\'re overspending on player housing and it\'s affecting our recruiting pitch"' },
-              { label: 'Business Impact', text: 'Overspend · Lose top athletes · Weaker recruiting position' },
+              { label: 'Situation', text: 'New EV battery plant opening in rural Tennessee — 200+ technicians relocating over 4 months for commissioning and production ramp.' },
+              { label: 'Operational', text: 'Site managers coordinating housing individually; crews arriving to no-shows, double bookings, and 90-minute commutes from the nearest hotel cluster.' },
+              { label: 'Executive', text: '"We\'re three weeks behind on commissioning because we can\'t get crews on-site reliably — and per diem costs are 40% over budget."' },
+              { label: 'Business Impact', text: 'Delayed production timeline · $2M+/week in lost output · Board-level launch milestone at risk' },
             ],
           },
           {
-            icon: '🎓', title: 'Intern Housing',
+            icon: '🏥', title: 'Healthcare Fellowship Program',
             rows: [
-              { label: 'Situation', text: 'Interns staging their own housing — inconsistent, stressful, no support' },
-              { label: 'Operational', text: 'HR manually sourcing apartments; no standardized process across markets' },
-              { label: 'Executive', text: '"We have recruiting inequities, empty seats, and housing bottlenecks"' },
-              { label: 'Business Impact', text: 'No market growth · Overspend · Reduced talent pipeline' },
+              { label: 'Situation', text: 'Regional health system onboarding 35 fellows across 6 teaching hospitals — each arriving on different start dates with families, pets, and 30-day notice windows.' },
+              { label: 'Operational', text: 'GME coordinators spending 15+ hours per fellow sourcing furnished apartments, negotiating short leases, and fielding complaints about quality.' },
+              { label: 'Executive', text: '"We lost two top fellowship candidates to competing programs that offered better relocation support — and our coordinators are burning out."' },
+              { label: 'Business Impact', text: 'Weakened physician pipeline · Increased coordinator turnover · Competitive disadvantage in GME recruiting' },
             ],
           },
         ].map(ex => (
