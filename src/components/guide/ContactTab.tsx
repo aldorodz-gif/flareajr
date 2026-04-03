@@ -55,44 +55,70 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       <p className="text-[14px] font-semibold mb-1.5 text-foreground">Who Owns the Pain</p>
       <p className="text-[13px] mb-4 text-muted-foreground">Start with the signal and service line. Pick the lane that owns the pain first.</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
-          <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
-            <div className="text-[10px] font-semibold uppercase tracking-[2px] mb-1" style={{ color: '#C4A5DE' }}>Tier 1 — Signal Owner</div>
-            <p className="text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.7)' }}>The person whose project, launch, or crew schedule breaks if the need is not solved.</p>
-          </div>
-          <div className="p-4 space-y-3">
-            {[
-              { icon: '⚙️', title: 'Operations Leaders', roles: 'VP of Operations · Director of Operations · Regional Operations Manager', why: 'Delays create crew disruption, missed timelines, and traveler friction.' },
-              { icon: '🏗️', title: 'Project & Site Leaders', roles: 'Project Manager · Site Superintendent · Program Manager', why: 'They get the call when crews or teams cannot get placed or get on site quickly.' },
-            ].map(r => (
-              <div key={r.title}>
-                <p className="text-[12px] font-semibold mb-0.5 text-foreground">{r.icon} {r.title}</p>
-                <p className="text-[12px] mb-1 text-muted-foreground">{r.roles}</p>
-                <p className="text-[12px] text-foreground"><strong>Why:</strong> {r.why}</p>
-              </div>
-            ))}
-          </div>
+      {/* Discovery Tree Framework */}
+      <div className="overflow-hidden border mb-6" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
+        <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
+          <p className="text-[12px] font-bold uppercase tracking-[2px] mb-1" style={{ color: '#C4A5DE' }}>Discovery Tree</p>
+          <p className="text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.7)' }}>Move from surface-level situation to the business impact that gets executive attention.</p>
         </div>
+        <div className="flex flex-col">
+          {[
+            { level: '01', color: '#9B78C8', label: 'Situation', desc: 'How are they literally doing the thing today?', hint: 'Sourcing own housing · Staging own apartments · Putting people in hotels' },
+            { level: '02', color: '#B07ED4', label: 'Operational Problem', desc: 'Something no one would want to do — the daily friction.', hint: 'Manual sourcing · Scattered expense reports · No consistency across locations' },
+            { level: '03', color: '#C47EAA', label: 'Executive Problem', desc: 'The bad news a VP would have to give a CEO.', hint: 'Recruiting inequities · Housing bottlenecks · Imbalanced spending across programs' },
+            { level: '04', color: '#D97895', label: 'Business Impact', desc: 'The C-level initiative, risk, or KPI that\'s at stake.', hint: 'Overspend · Reduced talent pipeline · Slow market growth · Lose top recruits' },
+          ].map((step, i) => (
+            <div key={step.level} className={`grid items-center p-4 ${i < 3 ? 'border-b' : ''}`} style={{ gridTemplateColumns: '44px 1fr', borderColor: '#E2E8F0', background: '#fff' }}>
+              <span className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0" style={{ background: step.color, color: '#fff' }}>{step.level}</span>
+              <div>
+                <p className="text-[13px] font-semibold text-foreground">{step.label}</p>
+                <p className="text-[12px] text-muted-foreground mb-1">{step.desc}</p>
+                <p className="text-[11px] italic" style={{ color: '#9B78C8' }}>{step.hint}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-        <div className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
-          <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #2d1b69, #4a1942)' }}>
-            <div className="text-[10px] font-semibold uppercase tracking-[2px] mb-1" style={{ color: '#D9A5E0' }}>Tier 2 — Support Owner</div>
-            <p className="text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.7)' }}>The person who helps with policy, travel, sourcing, or vendor setup after the need is clear.</p>
+      {/* Worked Examples */}
+      <p className="text-[14px] font-semibold mb-1.5 text-foreground">Discovery Tree in Practice</p>
+      <p className="text-[13px] mb-4 text-muted-foreground">Two real examples showing how to climb from surface situation to business impact.</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {[
+          {
+            icon: '🏀', title: 'Sports Teams',
+            rows: [
+              { label: 'Situation', text: 'Sourcing own housing, staging apartments, staying in hotels' },
+              { label: 'Operational', text: 'Delays in expense reports; imbalanced spending across roster moves' },
+              { label: 'Executive', text: '"We\'re overspending on player housing and it\'s affecting our recruiting pitch"' },
+              { label: 'Business Impact', text: 'Overspend · Lose top athletes · Weaker recruiting position' },
+            ],
+          },
+          {
+            icon: '🎓', title: 'Intern Housing',
+            rows: [
+              { label: 'Situation', text: 'Interns staging their own housing — inconsistent, stressful, no support' },
+              { label: 'Operational', text: 'HR manually sourcing apartments; no standardized process across markets' },
+              { label: 'Executive', text: '"We have recruiting inequities, empty seats, and housing bottlenecks"' },
+              { label: 'Business Impact', text: 'No market growth · Overspend · Reduced talent pipeline' },
+            ],
+          },
+        ].map(ex => (
+          <div key={ex.title} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
+            <div className="px-4 py-3" style={{ background: 'linear-gradient(135deg, #2d1b69, #4a1942)' }}>
+              <p className="text-[13px] font-semibold" style={{ color: '#fff' }}>{ex.icon} {ex.title}</p>
+            </div>
+            <div className="p-4 space-y-2.5">
+              {ex.rows.map(r => (
+                <div key={r.label}>
+                  <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#9B78C8' }}>{r.label}</p>
+                  <p className="text-[12px] leading-[1.55] text-foreground">{r.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="p-4 space-y-3">
-            {[
-              { icon: '🔄', title: 'Mobility & People Programs', roles: 'Global Mobility Manager · Relocation Manager · Travel Program Manager', why: 'They coordinate relocations, intern stays, and employee experience at scale.' },
-              { icon: '🏢', title: 'Facilities & Workplace', roles: 'Facilities Manager · Workplace Services Lead · Office Operations Manager', why: 'Travel, hotel, and settling-in needs often land with them for office launches.' },
-            ].map(r => (
-              <div key={r.title}>
-                <p className="text-[12px] font-semibold mb-0.5 text-foreground">{r.icon} {r.title}</p>
-                <p className="text-[12px] mb-1 text-muted-foreground">{r.roles}</p>
-                <p className="text-[12px] text-foreground"><strong>Why:</strong> {r.why}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Best Titles by Vertical */}

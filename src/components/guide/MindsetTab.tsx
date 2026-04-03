@@ -15,19 +15,35 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
       </p>
 
       <div className="flex flex-col gap-6">
-        {/* What this tab is for */}
+        {/* Buyer Persona Model */}
         <section>
-          <h3 className="text-[20px] font-semibold mb-3 text-foreground">What this tab is for</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-            {[
-              { title: 'Make it yours', body: 'Use this as the foundation. Make every conversation sound like you.' },
-              { title: 'Use this to recenter', body: 'Come back here when you feel stuck, when outreach feels generic, or when you need a clearer starting point.' },
-            ].map(c => (
-              <div key={c.title} className="p-4 border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
-                <strong className="block text-[13px] mb-1.5 text-foreground">{c.title}</strong>
-                <p className="text-[13px] leading-[1.65] text-muted-foreground">{c.body}</p>
-              </div>
-            ))}
+          <h3 className="text-[20px] font-semibold mb-1 text-foreground">We Sell Company Goals</h3>
+          <p className="text-[13px] text-muted-foreground mb-4">Disguised as temp housing & relocation. Every buyer conversation starts with what the company is trying to achieve — not what we offer.</p>
+
+          <div className="overflow-hidden border mb-4" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
+            <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
+              <p className="text-[12px] font-bold uppercase tracking-[2px]" style={{ color: '#C4A5DE' }}>The Buyer Persona Chain</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3">
+              {[
+                { icon: '🎯', title: "Company's Goals", desc: 'Growth, expansion, new markets, operational efficiency — the C-level agenda driving everything downstream.' },
+                { icon: '⚙️', title: 'Programs & Initiatives', desc: 'Intern cohorts, LDPs, rotational programs, office launches, project mobilizations — the initiatives that execute on those goals.' },
+                { icon: '👥', title: 'The Talent to Make It Happen', desc: 'HR Managers, Department Heads, L&D, Recruiters, Interns, LDPs, Trainees — the people who physically need to move.' },
+              ].map((step, i) => (
+                <div key={step.title} className={`p-4 ${i < 2 ? 'md:border-r' : ''}`} style={{ background: '#fff', borderColor: '#E2E8F0' }}>
+                  <p className="text-[20px] mb-1.5">{step.icon}</p>
+                  <p className="text-[13px] font-semibold mb-1 text-foreground">{step.title}</p>
+                  <p className="text-[12px] leading-[1.6] text-muted-foreground">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-3 items-start p-3.5" style={{ background: 'rgba(155,120,200,.05)', border: '1px solid rgba(99,102,241,.18)' }}>
+            <span className="text-[16px] flex-shrink-0 mt-0.5">💡</span>
+            <p className="text-[13px] leading-[1.65] text-foreground">
+              <strong>Example — Intern/Trainee Program:</strong> The company goal is growth. The initiative is the intern class. The talent is HR, Department Heads, and L&D coordinating 50 interns arriving in June. That's your signal — and your opening.
+            </p>
           </div>
         </section>
 
