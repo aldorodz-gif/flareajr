@@ -18,6 +18,7 @@ const Index = () => {
   const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set());
   const [slideDir, setSlideDir] = useState<'right' | 'left'>('right');
   const [animKey, setAnimKey] = useState(0);
+  const [tourOpen, setTourOpen] = useState(false);
   const tabBarRef = useRef<HTMLDivElement>(null);
 
   const handleTabChange = useCallback((tabId: string) => {
