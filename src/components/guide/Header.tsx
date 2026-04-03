@@ -20,7 +20,7 @@ const Header = () => {
             animationDelay: '0.08s',
           }}
         >
-          Prospect Engine
+          Flare
         </h1>
         <p
           className="text-[14px] font-light leading-[1.7] max-w-[760px] animate-hero-rise"
