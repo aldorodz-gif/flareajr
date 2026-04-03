@@ -78,12 +78,21 @@ const TOUR_STEPS: TourStep[] = [
 
 interface WelcomeModalProps {
   onNavigateToTab?: (tabId: string) => void;
+  forceOpen?: boolean;
+  onClose?: () => void;
 }
 
-const WelcomeModal = ({ onNavigateToTab }: WelcomeModalProps) => {
+const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps) => {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [animating, setAnimating] = useState(false);
+
+  useEffect(() => {
+    if (forceOpen) {
+      setStep(0);
+      setOpen(true);
+    }
+  }, [forceOpen]);
 
   useEffect(() => {
     if (!localStorage.getItem(DISMISSED_KEY)) {
