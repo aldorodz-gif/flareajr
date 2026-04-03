@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const DISMISSED_KEY = 'prospect-engine-welcome-dismissed';
+const DISMISSED_KEY = 'flare-welcome-dismissed';
 
 const WelcomeModal = () => {
   const [open, setOpen] = useState(false);
