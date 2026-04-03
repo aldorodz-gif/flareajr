@@ -18,6 +18,7 @@ const Index = () => {
   const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set());
   const [slideDir, setSlideDir] = useState<'right' | 'left'>('right');
   const [animKey, setAnimKey] = useState(0);
+  const [tourOpen, setTourOpen] = useState(false);
   const tabBarRef = useRef<HTMLDivElement>(null);
 
   const handleTabChange = useCallback((tabId: string) => {
@@ -49,8 +50,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <WelcomeModal onNavigateToTab={handleTabChange} />
-      <Header />
+      <WelcomeModal onNavigateToTab={handleTabChange} forceOpen={tourOpen} onClose={() => setTourOpen(false)} />
+      <Header onReplayTour={() => setTourOpen(true)} />
       <div ref={tabBarRef}>
         <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />
       </div>

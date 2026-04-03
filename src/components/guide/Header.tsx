@@ -1,4 +1,8 @@
-const Header = () => {
+interface HeaderProps {
+  onReplayTour?: () => void;
+}
+
+const Header = ({ onReplayTour }: HeaderProps) => {
   return (
     <header
       className="relative overflow-hidden px-6 py-12 md:px-12 md:py-16"
@@ -19,6 +23,23 @@ const Header = () => {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] rounded-full pointer-events-none blur-[120px] opacity-30"
         style={{ background: 'radial-gradient(ellipse, rgba(251,146,60,.2) 0%, transparent 70%)' }}
       />
+
+      {/* Replay tour button */}
+      {onReplayTour && (
+        <button
+          onClick={onReplayTour}
+          className="absolute top-5 right-5 md:top-6 md:right-8 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:scale-105"
+          style={{
+            background: 'rgba(255,255,255,.08)',
+            border: '1px solid rgba(255,255,255,.12)',
+            color: 'rgba(255,255,255,.5)',
+          }}
+          title="Replay guided tour"
+        >
+          <span className="text-[13px]">❓</span>
+          <span className="text-[11px] font-medium tracking-wide hidden md:inline">Tour</span>
+        </button>
+      )}
 
       <div className="relative z-10 flex flex-col items-start">
         {/* Flare wordmark */}

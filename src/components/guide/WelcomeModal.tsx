@@ -78,12 +78,21 @@ const TOUR_STEPS: TourStep[] = [
 
 interface WelcomeModalProps {
   onNavigateToTab?: (tabId: string) => void;
+  forceOpen?: boolean;
+  onClose?: () => void;
 }
 
-const WelcomeModal = ({ onNavigateToTab }: WelcomeModalProps) => {
+const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps) => {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [animating, setAnimating] = useState(false);
+
+  useEffect(() => {
+    if (forceOpen) {
+      setStep(0);
+      setOpen(true);
+    }
+  }, [forceOpen]);
 
   useEffect(() => {
     if (!localStorage.getItem(DISMISSED_KEY)) {
@@ -99,32 +108,35 @@ const WelcomeModal = ({ onNavigateToTab }: WelcomeModalProps) => {
     }, 200);
   }, []);
 
+  const closeModal = useCallback(() => {
+    localStorage.setItem(DISMISSED_KEY, '1');
+    setOpen(false);
+    onClose?.();
+  }, [onClose]);
+
   const handleNext = useCallback(() => {
     if (step < TOUR_STEPS.length - 1) {
       goTo(step + 1);
     } else {
-      localStorage.setItem(DISMISSED_KEY, '1');
-      setOpen(false);
+      closeModal();
     }
-  }, [step, goTo]);
+  }, [step, goTo, closeModal]);
 
   const handleBack = useCallback(() => {
     if (step > 0) goTo(step - 1);
   }, [step, goTo]);
 
   const handleSkip = useCallback(() => {
-    localStorage.setItem(DISMISSED_KEY, '1');
-    setOpen(false);
-  }, []);
+    closeModal();
+  }, [closeModal]);
 
   const handleJumpToTab = useCallback(() => {
     const current = TOUR_STEPS[step];
     if (current.tabId && onNavigateToTab) {
-      localStorage.setItem(DISMISSED_KEY, '1');
-      setOpen(false);
+      closeModal();
       onNavigateToTab(current.tabId);
     }
-  }, [step, onNavigateToTab]);
+  }, [step, onNavigateToTab, closeModal]);
 
   if (!open) return null;
 
