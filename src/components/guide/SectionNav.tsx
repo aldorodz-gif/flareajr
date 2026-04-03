@@ -17,13 +17,13 @@ const SectionNav = ({ currentTab, onNavigate }: SectionNavProps) => {
           onClick={() => onNavigate(prev.id)}
           className="flex-1 min-w-[240px] flex items-center gap-3 p-4 text-left transition-colors duration-200 border"
           style={{ background: '#fff', borderColor: '#E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,.05)' }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; e.currentTarget.style.borderColor = '#6366F1'; }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#F5F0FA'; e.currentTarget.style.borderColor = '#9B78C8'; }}
           onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#E2E8F0'; }}
         >
-          <span className="text-[22px]" style={{ color: '#6366F1' }}>←</span>
+          <span className="text-[22px]" style={{ color: '#9B78C8' }}>←</span>
           <span className="flex flex-col gap-0.5">
             <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#94A3B8' }}>Previous section</span>
-            <span className="text-[16px] font-semibold" style={{ color: '#1E293B' }}>{prev.label}</span>
+            <span className="text-[16px] font-semibold text-foreground">{prev.label}</span>
           </span>
         </button>
       ) : <div className="flex-1 min-w-[180px]" />}
@@ -32,14 +32,14 @@ const SectionNav = ({ currentTab, onNavigate }: SectionNavProps) => {
           onClick={() => onNavigate(next.id)}
           className="flex-1 min-w-[240px] flex items-center justify-between gap-3 p-4 text-left transition-colors duration-200 border"
           style={{ background: '#fff', borderColor: '#E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,.05)' }}
-          onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; e.currentTarget.style.borderColor = '#6366F1'; }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#F5F0FA'; e.currentTarget.style.borderColor = '#9B78C8'; }}
           onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#E2E8F0'; }}
         >
           <span className="flex flex-col gap-0.5">
             <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#94A3B8' }}>Next section</span>
-            <span className="text-[16px] font-semibold" style={{ color: '#1E293B' }}>{next.label}</span>
+            <span className="text-[16px] font-semibold text-foreground">{next.label}</span>
           </span>
-          <span className="text-[22px]" style={{ color: '#6366F1' }}>→</span>
+          <span className="text-[22px]" style={{ color: '#9B78C8' }}>→</span>
         </button>
       )}
     </div>

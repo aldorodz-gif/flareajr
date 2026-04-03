@@ -28,16 +28,16 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
 
       {/* Signal Scorer Tool */}
       <div className="overflow-hidden mb-8">
-        <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+        <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
           <div>
             <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.5)' }}>Quick Tool</p>
             <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>Signal Scorer</p>
           </div>
-          <div className="px-3 py-1.5" style={{ background: 'rgba(99,102,241,.15)' }}>
-            <p className="text-[12px] font-semibold" style={{ color: '#818CF8' }}>Paste into ChatGPT or Claude</p>
+          <div className="px-3 py-1.5" style={{ background: 'rgba(155,120,200,.15)' }}>
+            <p className="text-[12px] font-semibold" style={{ color: '#C4A5DE' }}>Paste into ChatGPT or Claude</p>
           </div>
         </div>
-        <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(99,102,241,.12)', background: '#fff' }}>
+        <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
           <p className="text-[13px] text-muted-foreground mb-4">Got a headline or LinkedIn post and not sure if it's worth your time? Copy this prompt, paste it into ChatGPT or Claude, then add your signal at the bottom.</p>
           <PromptBox label="Signal Scorer Prompt">
 {`You are a signal scoring tool for a corporate housing sales team. We sell temporary housing, travel management, hotel programs, and destination services to businesses.
@@ -71,8 +71,8 @@ Signal to score:
       </div>
 
       {/* Signal comparison table */}
-      <div className="overflow-hidden border" style={{ borderColor: 'rgba(99,102,241,.12)' }}>
-        <div className="grid grid-cols-[28%_22%_1fr]" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+      <div className="overflow-hidden border" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
+        <div className="grid grid-cols-[28%_22%_1fr]" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
           <div className="px-4 py-3.5 text-[12px] font-bold uppercase tracking-wider" style={{ color: '#10B981' }}>Pursue. Real Signal</div>
           <div className="px-4 py-3.5 text-[12px] font-bold uppercase tracking-wider" style={{ color: '#EF4444' }}>Skip. Noise</div>
           <div className="px-4 py-3.5 text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.6)' }}>Why the difference matters</div>
@@ -93,8 +93,8 @@ Signal to score:
       </div>
 
       {/* The filter */}
-      <div className="flex gap-3.5 items-start p-4 mt-4" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
-        <span className="text-[12px] font-bold uppercase tracking-wide whitespace-nowrap pt-0.5" style={{ color: '#818CF8' }}>The filter</span>
+      <div className="flex gap-3.5 items-start p-4 mt-4" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
+        <span className="text-[12px] font-bold uppercase tracking-wide whitespace-nowrap pt-0.5" style={{ color: '#C4A5DE' }}>The filter</span>
         <p className="text-[13px] leading-[1.65]" style={{ color: 'rgba(255,255,255,.82)' }}>Ask one question: <strong style={{ color: '#fff' }}>are real people physically going somewhere because of this?</strong> If yes, pursue. If the movement is virtual, speculative, or one day long, move on.</p>
       </div>
 

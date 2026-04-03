@@ -17,16 +17,16 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
       {/* First Email Generator */}
       <div className="overflow-hidden mb-8">
-        <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+        <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
           <div>
             <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.5)' }}>Quick Tool</p>
             <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>First Email Generator</p>
           </div>
-          <div className="px-3 py-1.5" style={{ background: 'rgba(99,102,241,.15)' }}>
-            <p className="text-[12px] font-semibold" style={{ color: '#818CF8' }}>Paste into ChatGPT or Claude</p>
+          <div className="px-3 py-1.5" style={{ background: 'rgba(155,120,200,.15)' }}>
+            <p className="text-[12px] font-semibold" style={{ color: '#C4A5DE' }}>Paste into ChatGPT or Claude</p>
           </div>
         </div>
-        <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(99,102,241,.12)', background: '#fff' }}>
+        <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
           <p className="text-[13px] text-muted-foreground mb-4">You have the signal. You have the buyer. Now you need the email. Copy this prompt, paste it into ChatGPT or Claude, and fill in the four blanks.</p>
           <PromptBox label="First Email Generator Prompt">
 {`Write a first outreach email for a corporate housing sales rep at National Corporate Housing. NCH sells temporary housing, travel management, hotel programs, and destination services to businesses.
@@ -52,10 +52,10 @@ Also generate a 2 to 4 word subject line that references the specific trigger.
 Return the subject line first, then the email body.`}
           </PromptBox>
           <div className="p-3.5" style={{ background: 'rgba(251,191,36,.06)', border: '1px solid rgba(251,191,36,.2)' }}>
-            <p className="text-[12px] font-bold uppercase tracking-wide mb-2" style={{ color: '#6366F1' }}>After you get the draft</p>
+            <p className="text-[12px] font-bold uppercase tracking-wide mb-2" style={{ color: '#C47EAA' }}>After you get the draft</p>
             <div className="flex flex-col gap-1.5">
               {['Read it out loud. If it sounds like a sales email, rewrite it.', 'Could it be sent to anyone else? If yes, it needs a more specific first line.', 'Is the ask clear and easy to say yes to? If not, simplify it.'].map((t, i) => (
-                <p key={i} className="text-[13px] text-foreground flex gap-2.5"><span className="font-bold" style={{ color: '#6366F1' }}>{i + 1}</span> {t}</p>
+                <p key={i} className="text-[13px] text-foreground flex gap-2.5"><span className="font-bold" style={{ color: '#C47EAA' }}>{i + 1}</span> {t}</p>
               ))}
             </div>
           </div>
@@ -63,7 +63,7 @@ Return the subject line first, then the email body.`}
       </div>
 
       {/* Stats bar */}
-      <div className="flex flex-wrap gap-5 p-3.5 mb-5 border" style={{ background: '#E2E8F0', borderColor: 'rgba(99,102,241,.12)' }}>
+      <div className="flex flex-wrap gap-5 p-3.5 mb-5 border" style={{ background: '#E2E8F0', borderColor: 'rgba(155,120,200,.12)' }}>
         {[{ val: '4', label: 'sentences max' }, { val: '<100', label: 'words total' }, { val: '2–4', label: 'word subject' }, { val: '1', label: 'ask only' }].map(s => (
           <div key={s.label} className="text-center">
             <p className="text-[18px] font-semibold text-foreground">{s.val}</p>
@@ -76,8 +76,8 @@ Return the subject line first, then the email body.`}
       </div>
 
       {/* Personal tone rule */}
-      <div className="p-5 mb-6" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
-        <p className="text-[13px] font-semibold tracking-wide mb-3" style={{ color: '#818CF8' }}>THE PERSONAL TONE RULE</p>
+      <div className="p-5 mb-6" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
+        <p className="text-[13px] font-semibold tracking-wide mb-3" style={{ color: '#C4A5DE' }}>THE PERSONAL TONE RULE</p>
         <p className="text-[14px] leading-[1.75]" style={{ color: 'rgba(255,255,255,.88)' }}>
           Write it like you're texting a colleague about someone you both know. Not like you're sending a sales email. No "I wanted to reach out." No "I hope this finds you well." Just one person talking to another.
         </p>
@@ -94,7 +94,7 @@ Return the subject line first, then the email body.`}
           { num: 3, gradient: 'linear-gradient(160deg,#E2907A,#E89D85)', title: 'One sentence on what you do: plain English, outcome-first', good: '"We help get crews placed before they land — temporary housing, hotels, or travel support handled cleanly."', goodLabel: '✓ OUTCOME FIRST', bad: '"We help teams get placed quickly and keep moves, travel, and lodging organized."', badLabel: '✗ COMPANY-FIRST' },
           { num: 4, gradient: '#2F4858', title: 'One ask: the smallest possible yes', good: '"Worth a quick 15-minute call to see if it makes sense for your Q2 timeline?"', goodLabel: '✓ LOW FRICTION', bad: '"I\'d love to schedule a 30-minute demo to walk you through our platform."', badLabel: '✗ HIGH FRICTION' },
         ].map(s => (
-          <div key={s.num} className="flex flex-col md:flex-row overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)' }}>
+          <div key={s.num} className="flex flex-col md:flex-row overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
             <div className="md:min-w-[64px] flex md:flex-col items-center justify-center p-4" style={{ background: s.gradient }}>
               <span className="text-[20px] font-semibold" style={{ color: '#fff' }}>{s.num}</span>
             </div>
@@ -126,7 +126,7 @@ Return the subject line first, then the email body.`}
           { header: 'Travel · Operations Director', title: 'Operations Director. Crew logistics', gradient: 'linear-gradient(135deg, #1E293B, #1E1B4B)', subj: '"[Company] crew travel"', body: 'Brian,\n\nSaw [Company] just [landed the contract / kicked off the project]. That\'s a serious ramp for your team.\n\nGetting rotating crews to site on a tight schedule is usually where travel starts to leak: ad hoc bookings, no rate discipline. We manage crew travel programs so your ops team isn\'t chasing flights and hotel receipts.\n\nHappy to show you how we\'ve handled similar deployments, worth 15 minutes?\n\n[Your name]' },
           { header: 'Hotels · Travel Program Manager', title: 'Travel Program Manager. Hotel leakage', gradient: 'linear-gradient(135deg, #818CF8, #A78BFA)', subj: '"Hotel coverage. [Company] build"', body: 'Kim,\n\nCongrats on [the contract win / project launch], looks like a significant deployment coming up.\n\nWhen project headcount spikes fast, hotel spend usually gets messy: multiple properties, no rate negotiation, leakage outside the program. We lock in negotiated hotel blocks around active job sites so your spend is clean from day one.\n\nWorth a quick call before your mobilization starts?\n\n[Your name]' },
         ].map(e => (
-          <div key={e.header} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)' }}>
+          <div key={e.header} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
             <div className="px-4 py-3" style={{ background: e.gradient }}>
               <p className="text-[11px] uppercase tracking-wider mb-0.5" style={{ color: 'rgba(255,255,255,.55)' }}>{e.header}</p>
               <p className="text-[13px] font-semibold" style={{ color: '#fff' }}>{e.title}</p>
@@ -144,10 +144,10 @@ Return the subject line first, then the email body.`}
       <div className="mt-6 pt-5" style={{ borderTop: '1px solid rgba(14,30,58,.08)' }}>
         <p className="text-[14px] font-semibold mb-1.5 text-foreground">The Follow-Up Sequence</p>
         <p className="text-[13px] mb-4 text-muted-foreground">60% of replies come after the first email. Each follow-up adds something new.</p>
-        <div className="overflow-hidden border" style={{ borderColor: 'rgba(99,102,241,.12)' }}>
-          <div className="grid grid-cols-[100px_120px_1fr]" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+        <div className="overflow-hidden border" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
+          <div className="grid grid-cols-[100px_120px_1fr]" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
             <div className="px-3.5 py-2.5 text-[12px] font-bold uppercase tracking-wide" style={{ color: 'rgba(255,255,255,.55)' }}>Touch</div>
-            <div className="px-3.5 py-2.5 text-[12px] font-bold uppercase tracking-wide" style={{ color: '#818CF8' }}>Angle</div>
+            <div className="px-3.5 py-2.5 text-[12px] font-bold uppercase tracking-wide" style={{ color: '#C4A5DE' }}>Angle</div>
             <div className="px-3.5 py-2.5 text-[12px] font-bold uppercase tracking-wide" style={{ color: 'rgba(255,255,255,.55)' }}>What you send</div>
           </div>
           {[
