@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import PromptBox from './PromptBox';
 import SectionNav from './SectionNav';
@@ -24,8 +25,48 @@ For each company provide a brief, scannable entry:
 Keep each entry concise — 3 to 4 lines max. No long paragraphs.
 Close with a one-sentence summary of the strongest opportunity.`;
 
+const VERTICALS = ['Construction', 'Defense', 'Energy', 'Healthcare', 'Technology', 'Manufacturing', 'Other'];
+const SIGNAL_TYPES = ['Contract award', 'Office relocation', 'Facility expansion', 'Training cohort', 'Merger or acquisition', 'Funding round', 'Return to office mandate', 'Other'];
+
 const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
   const [showExamples, setShowExamples] = useState(false);
+
+  // Prompt Builder state
+  const [city, setCity] = useState('');
+  const [vertical, setVertical] = useState('');
+  const [signalType, setSignalType] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [generatedPrompt, setGeneratedPrompt] = useState('');
+  const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const canBuild = city.trim() && vertical && signalType;
+
+  const handleBuild = useCallback(async () => {
+    if (!canBuild) return;
+    setLoading(true);
+    setError('');
+    setGeneratedPrompt('');
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke('prompt-builder', {
+        body: { city: city.trim(), vertical, signal_type: signalType },
+      });
+      if (fnError) throw fnError;
+      if (data.error) throw new Error(data.error);
+      setGeneratedPrompt(data.prompt);
+    } catch {
+      setError('Something went wrong. Try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [city, vertical, signalType, canBuild]);
+
+  const handleCopyPrompt = useCallback(() => {
+    navigator.clipboard.writeText(generatedPrompt).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [generatedPrompt]);
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
@@ -39,24 +80,20 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
         {basePrompt('[YOUR CITY, STATE]')}
       </PromptBox>
 
-      <p className="text-[12px] mb-6 text-muted-foreground">Replace <strong className="text-foreground">[YOUR CITY, STATE]</strong> with your market before pasting. That's the only thing you need to change.</p>
+      <p className="text-[12px] mb-6 text-muted-foreground">Replace <strong className="text-foreground">[YOUR CITY, STATE]</strong> with your market before pasting.</p>
 
       {/* Collapsible market examples */}
       <div className="border overflow-hidden mb-6" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
-        <button
-          onClick={() => setShowExamples(!showExamples)}
-          className="w-full px-4 py-3.5 flex items-center justify-between text-left"
-          style={{ background: '#fff' }}
-        >
+        <button onClick={() => setShowExamples(!showExamples)} className="w-full px-4 py-3.5 flex items-center justify-between text-left" style={{ background: '#fff' }}>
           <span className="text-[14px] font-semibold text-foreground">See market examples</span>
           <span className="text-[12px] text-muted-foreground transition-transform duration-200" style={{ transform: showExamples ? 'rotate(180deg)' : '' }}>▼</span>
         </button>
         {showExamples && (
           <div>
             {[
-              { city: 'Huntsville, AL', desc: 'Defense, aerospace, and advanced manufacturing tied to Redstone Arsenal and space programs.', focus: 'Huntsville focus: Prioritize defense contractors, aerospace, and advanced manufacturing tied to Redstone Arsenal and space programs. These are the highest-density signal verticals in this market.' },
-              { city: 'Nashville, TN', desc: 'Healthcare systems and staffing, construction tied to infrastructure and hospitality growth, corporate relocations.', focus: 'Nashville focus: Prioritize healthcare systems and staffing, construction tied to infrastructure and hospitality growth, and corporate relocations from higher-cost markets. Healthcare travel staffing is a high-frequency signal here.' },
-              { city: 'Atlanta, GA', desc: 'Logistics and distribution expansion, financial services and tech relocations, major construction buildouts.', focus: 'Atlanta focus: Prioritize logistics and distribution expansion, financial services and tech relocations, and major construction and infrastructure buildouts. Atlanta is one of the highest-volume corporate relocation markets in the Southeast.' },
+              { city: 'Huntsville, AL', desc: 'Defense, aerospace, and advanced manufacturing tied to Redstone Arsenal and space programs.', focus: 'Huntsville focus: Prioritize defense contractors, aerospace, and advanced manufacturing tied to Redstone Arsenal and space programs.' },
+              { city: 'Nashville, TN', desc: 'Healthcare systems and staffing, construction tied to infrastructure and hospitality growth, corporate relocations.', focus: 'Nashville focus: Prioritize healthcare systems and staffing, construction tied to infrastructure and hospitality growth, and corporate relocations from higher-cost markets.' },
+              { city: 'Atlanta, GA', desc: 'Logistics and distribution expansion, financial services and tech relocations, major construction buildouts.', focus: 'Atlanta focus: Prioritize logistics and distribution expansion, financial services and tech relocations, and major construction and infrastructure buildouts.' },
             ].map(ex => (
               <div key={ex.city} className="border-t p-5" style={{ borderColor: '#E2E8F0', background: '#F8FAFC' }}>
                 <p className="text-[12px] font-bold uppercase tracking-wide mb-1" style={{ color: '#9B78C8' }}>{ex.city}</p>
@@ -70,53 +107,90 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
 
       <p className="text-[14px] font-semibold mb-1.5 text-foreground">Set your schedule — stay in the same chat and type this</p>
       <p className="text-[13px] mb-2.5 text-muted-foreground">In the same chat where you ran your first results, tell ChatGPT when to run it:</p>
+      <PromptBox label="Schedule prompt">{"\"Create this as a recurring task every weekday at 7:00 AM.\""}</PromptBox>
 
-      <PromptBox label="Schedule prompt">
-        {"\"Create this as a recurring task every weekday at 7:00 AM.\""}
-      </PromptBox>
-
-      <div className="flex gap-3 items-start p-3.5 mt-3" style={{ background: 'rgba(99,102,241,.05)', border: '1px solid rgba(99,102,241,.18)' }}>
-        <span className="text-[16px] flex-shrink-0 mt-0.5">⚙️</span>
-        <p className="text-[13px] leading-[1.65] text-foreground">
-          Manage all your tasks anytime under your <strong>profile icon → Pulse</strong>. Up to 10 active tasks — one per city is the recommended setup.
-        </p>
-      </div>
-
-      {/* Custom Prompt Builder */}
+      {/* Interactive Prompt Builder */}
       <div className="mt-8 pt-6" style={{ borderTop: '1px solid rgba(14,30,58,.08)' }}>
         <div className="overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
             <div>
-              <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.5)' }}>Quick Tool</p>
+              <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.5)' }}>AI Tool</p>
               <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>Custom Prompt Builder</p>
             </div>
             <div className="px-3 py-1.5" style={{ background: 'rgba(155,120,200,.15)' }}>
-              <p className="text-[12px] font-semibold" style={{ color: '#C4A5DE' }}>Paste into ChatGPT or Claude</p>
+              <p className="text-[12px] font-semibold" style={{ color: '#C4A5DE' }}>Powered by AI</p>
             </div>
           </div>
           <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
-            <p className="text-[13px] text-muted-foreground mb-4">The city prompts above are your daily engine. Use this when you want a prompt built around a specific vertical or signal type you're already tracking.</p>
-            <PromptBox label="Custom Prompt Builder">
-{`Build me a ChatGPT Agent Mode search prompt for the following:
+            <p className="text-[13px] text-muted-foreground mb-4">Fill in your market details and get a custom Agent Mode prompt built for your specific vertical and signal type.</p>
 
-City: [YOUR CITY AND STATE]
-Vertical: [CONSTRUCTION / DEFENSE / ENERGY / HEALTHCARE / TECHNOLOGY / MANUFACTURING]
-Signal type I'm targeting: [CONTRACT AWARD / OFFICE RELOCATION / FACILITY EXPANSION / TRAINING COHORT / M&A / FUNDING ROUND / RETURN TO OFFICE]
-
-The prompt should:
-- Search for companies in that city and vertical showing that specific signal type
-- Surface opportunities for temporary housing, travel management, hotel programs, or destination services
-- Find a minimum of 10 companies
-- Return results with: company name, city, signal detail, most likely service line, and priority (High / Medium / Low)
-- Stay focused on SMB and mid-market companies, not Fortune 500
-- Keep each result to 3 to 4 lines max
-
-Return only the finished prompt. I will paste it directly into ChatGPT Agent Mode.`}
-            </PromptBox>
-            <div className="flex gap-3 items-start p-3.5" style={{ background: 'rgba(251,191,36,.06)', border: '1px solid rgba(251,191,36,.2)' }}>
-              <span className="flex-shrink-0">💡</span>
-              <p className="text-[13px] leading-[1.65] text-foreground">You only need to do this when the standard city prompt isn't specific enough. If you're targeting a specific vertical or signal type in your market, this gets you a prompt built for exactly that.</p>
+            <div className="flex flex-col gap-3 mb-4">
+              <input
+                type="text"
+                value={city}
+                onChange={e => setCity(e.target.value)}
+                placeholder="Your city and state"
+                className="w-full px-4 py-3 border text-[14px] focus:outline-none focus:ring-2"
+                style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }}
+                disabled={loading}
+              />
+              <select
+                value={vertical}
+                onChange={e => setVertical(e.target.value)}
+                className="w-full px-4 py-3 border text-[14px] focus:outline-none focus:ring-2"
+                style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }}
+                disabled={loading}
+              >
+                <option value="">Select vertical</option>
+                {VERTICALS.map(v => <option key={v} value={v}>{v}</option>)}
+              </select>
+              <select
+                value={signalType}
+                onChange={e => setSignalType(e.target.value)}
+                className="w-full px-4 py-3 border text-[14px] focus:outline-none focus:ring-2"
+                style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }}
+                disabled={loading}
+              >
+                <option value="">Select signal type</option>
+                {SIGNAL_TYPES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
             </div>
+
+            <button
+              onClick={handleBuild}
+              disabled={!canBuild || loading}
+              className="px-6 py-3 text-[14px] font-semibold transition-all"
+              style={{
+                background: !canBuild || loading ? '#94A3B8' : 'linear-gradient(135deg, #9B78C8, #D97FAA)',
+                color: '#fff',
+                cursor: !canBuild || loading ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {loading ? 'Thinking...' : 'Build My Prompt'}
+            </button>
+
+            {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#C95B6A' }}>{error}</p>}
+
+            {generatedPrompt && (
+              <div className="mt-5">
+                <div className="relative p-5" style={{ background: '#1a1145' }}>
+                  <button
+                    onClick={handleCopyPrompt}
+                    className="absolute top-3 right-3 text-[11px] font-semibold px-3 py-1.5 tracking-wide z-10 transition-all duration-150"
+                    style={{
+                      background: copied ? 'linear-gradient(135deg, #5BBFA0, #4AAA8A)' : 'linear-gradient(135deg, #9B78C8, #D97FAA)',
+                      color: '#fff',
+                    }}
+                  >
+                    {copied ? 'COPIED' : 'COPY'}
+                  </button>
+                  <pre className="text-[13px] leading-[1.85] whitespace-pre-wrap break-words pr-20 font-mono" style={{ color: '#E2E8F0' }}>
+                    {generatedPrompt}
+                  </pre>
+                </div>
+                <p className="text-[12px] mt-2 text-muted-foreground">Paste this directly into ChatGPT Agent Mode.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
