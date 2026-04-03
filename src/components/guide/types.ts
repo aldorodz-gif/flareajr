@@ -5,14 +5,14 @@ export interface TabConfig {
 }
 
 export const TAB_ORDER: TabConfig[] = [
-  { id: 'workflow', icon: '🗺️', label: 'The Flow' },
+  { id: 'workflow', icon: '🗺️', label: 'Overview' },
   { id: 'setup', icon: '⚙️', label: 'Setup' },
-  { id: 'tracker', icon: '📡', label: 'Run Search' },
+  { id: 'tracker', icon: '📡', label: 'Prompt Builder' },
   { id: 'results', icon: '⚡', label: 'Work Your List' },
   { id: 'contact', icon: '🎯', label: 'Who to Call' },
   { id: 'outreach', icon: '✉️', label: 'Write Outreach' },
-  { id: 'mindset', icon: '🧠', label: 'The Thinking' },
-  { id: 'signals', icon: '📋', label: 'Signal Filter' },
+  { id: 'mindset', icon: '🧠', label: 'Mindset' },
+  { id: 'signals', icon: '📋', label: 'Score Signals' },
 ];
 
 export interface VerticalData {
