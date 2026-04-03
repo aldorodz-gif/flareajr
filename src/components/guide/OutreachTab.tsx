@@ -57,11 +57,20 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #5BBFA0, #8B8FE8)">Step 06: Make Contact</Eyebrow>
-      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">First Outreach</h2>
+      <Eyebrow gradient="linear-gradient(90deg, #5BBFA0, #8B8FE8)">Step 07: Make Contact</Eyebrow>
+      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Write Outreach</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
-        Connect the signal to the business need. One service line angle. Easy to respond to.
+        This tab covers both channels — phone and email. Use the call frameworks when you're dialing. Use the email generator when you're writing. Both start from the same signal.
       </p>
+
+      {/* ══════════════════════════════════════════════ */}
+      {/* SECTION A: CALL FRAMEWORKS                     */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="flex items-center gap-2.5 mb-4 px-4 py-2.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
+        <span className="text-[16px]">📞</span>
+        <p className="text-[14px] font-semibold" style={{ color: '#fff' }}>When You're Calling</p>
+        <p className="text-[12px] ml-auto" style={{ color: 'rgba(255,255,255,.5)' }}>Use these frameworks on live calls</p>
+      </div>
 
       {/* ── Before You Send: Micro-Closes ── */}
       <section className="mb-8">
