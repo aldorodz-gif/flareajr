@@ -14,7 +14,7 @@ const steps = [
   {
     num: 2, gradient: 'linear-gradient(135deg,#C47EAA,#CF8EBB)',
     title: 'A "Describe a Task" Box Appears',
-    body: 'After clicking Agent Mode, this input box appears. Go to the Run Search tab, copy your city prompt, come back, paste it here, then hit the arrow to send.',
+    body: 'After clicking Agent Mode, this input box appears. Go to the Prompt Builder tab, copy your city prompt, come back, paste it here, then hit the arrow to send.',
   },
   {
     num: 3, gradient: 'linear-gradient(135deg,#D97895,#DE8AA0)',

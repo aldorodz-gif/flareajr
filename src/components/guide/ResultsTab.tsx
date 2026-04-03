@@ -44,6 +44,12 @@ const verticals: Record<string, VerticalData> = {
     buyer: { label: "Who to call", tag: "Training or Plant Manager", title: "Training Manager or Plant Manager", body: "They own the readiness of each cohort. If technicians show up distracted by housing, it costs them time and ramp speed. Operations Manager is a strong second." },
     angle: { label: "Outreach angle", tag: "Temp Housing", title: "Cohort housing locked in before each wave", body: "Phased cohorts mean phased housing needs. Lead with the operational efficiency angle, pre-arranged housing means faster ramp, less distraction." },
     email: { subj: "Cohort housing", body: "Kevin,\n\nSaw you're ramping production with phased technician cohorts. That's a significant launch.\n\nBringing in out-of-state techs in waves usually means housing gets re-solved every time. We set it up in advance by cohort so each group lands ready to work.\n\nWorth a quick call before your first wave arrives?" }
+  },
+  sports: {
+    signal: { label: "Signal", tag: "HIGH", title: "Player housing or fellowship program", body: "An NBA G-League affiliate is launching a rotational player development program. 12 players plus coaching staff need furnished housing for a 5-month season. Fellowship and intern cohorts also need placement." },
+    buyer: { label: "Who to call", tag: "Team Operations", title: "Director of Team Operations or Player Services", body: "They coordinate everything off the court — housing, travel, settling in. For fellowship programs, the HR or program coordinator owns the housing need." },
+    angle: { label: "Outreach angle", tag: "Temp Housing + DS", title: "Turnkey player and staff housing", body: "Teams need flexible, furnished housing that works around unpredictable schedules — trades, call-ups, mid-season roster changes. Lead with flexibility and proximity to the facility." },
+    email: { subj: "Player housing program", body: "Jordan,\n\nSaw your team is gearing up for next season with a full roster plus a new fellowship cohort.\n\nHousing for players and staff on unpredictable schedules usually means a lot of last-minute scrambling. We handle furnished, flexible accommodations built around how sports teams actually operate.\n\nWorth a quick call to see if it fits your setup?" }
   }
 };
 
@@ -54,6 +60,7 @@ const verticalBtns = [
   { id: 'healthcare', label: '🏥 Healthcare' },
   { id: 'tech', label: '💻 Tech & Consulting' },
   { id: 'manufacturing', label: '🏭 Manufacturing' },
+  { id: 'sports', label: '🏀 Sports' },
 ];
 
 const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
