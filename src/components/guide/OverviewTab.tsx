@@ -6,40 +6,40 @@ interface OverviewTabProps {
 }
 
 const workflowSteps = [
-  { num: 1, label: 'one time', gradient: 'linear-gradient(160deg,#9B78C8,#A885D4)', title: 'Get into Agent Mode', why: 'This gives you access to live research.', what: 'Turn it on before starting any prospecting task.' },
-  { num: 2, label: 'set once', gradient: 'linear-gradient(160deg,#C47EAA,#CF8EBB)', title: 'Find companies showing demand signals', why: 'You want signs of real movement, not generic hiring noise.', what: 'Search for expansions, relocations, projects, cohorts, and operational growth.' },
-  { num: 3, label: 'every morning', gradient: 'linear-gradient(160deg,#D97895,#DE8AA0)', title: 'Work your results', why: 'Not every result deserves time.', what: 'Prioritize the strongest signals and skip weak or vague findings.' },
-  { num: 4, label: 'before you call', gradient: 'linear-gradient(160deg,#E2907A,#E89D85)', title: 'Research the company', why: 'Context improves relevance.', what: 'Understand what changed and what type of service line need it may create.' },
-  { num: 5, label: 'find the POC', gradient: 'linear-gradient(160deg,#E8A87A,#EDB880)', title: 'Identify the buyer', why: 'The right message to the wrong person still fails.', what: 'Map the likely owner based on the signal and company structure.' },
-  { num: 6, label: 'reach out', gradient: 'linear-gradient(160deg,#EBC980,#F0D490)', title: 'Build the outreach plan', why: 'Your outreach should reflect the signal, not sound copied.', what: 'Turn the business movement into a natural call or email reason tied to the most likely service line.' },
+  { num: 1, label: 'one time', gradient: 'linear-gradient(160deg,#0EA5E9,#38BDF8)', title: 'Get into Agent Mode', why: 'This gives you access to live research.', what: 'Turn it on before starting any prospecting task.' },
+  { num: 2, label: 'set once', gradient: 'linear-gradient(160deg,#3B82F6,#60A5FA)', title: 'Find companies showing demand signals', why: 'You want signs of real movement, not generic hiring noise.', what: 'Search for expansions, relocations, projects, cohorts, and operational growth.' },
+  { num: 3, label: 'every morning', gradient: 'linear-gradient(160deg,#F59E0B,#FBBF24)', title: 'Work your results', why: 'Not every result deserves time.', what: 'Prioritize the strongest signals and skip weak or vague findings.' },
+  { num: 4, label: 'before you call', gradient: 'linear-gradient(160deg,#E11D48,#FB7185)', title: 'Research the company', why: 'Context improves relevance.', what: 'Understand what changed and what type of service line need it may create.' },
+  { num: 5, label: 'find the POC', gradient: 'linear-gradient(160deg,#10B981,#34D399)', title: 'Identify the buyer', why: 'The right message to the wrong person still fails.', what: 'Map the likely owner based on the signal and company structure.' },
+  { num: 6, label: 'reach out', gradient: 'linear-gradient(160deg,#A855F7,#C084FC)', title: 'Build the outreach plan', why: 'Your outreach should reflect the signal, not sound copied.', what: 'Turn the business movement into a natural call or email reason tied to the most likely service line.' },
 ];
 
 const serviceLines = [
-  { name: 'Temporary Housing', desc: 'Furnished apartments and homes for stays typically 30+ days. Project teams, relocating employees, corporate transfers.' },
-  { name: 'Travel', desc: 'Flights, rental cars, and short-stay accommodations. Rotating crews, field teams, and business travelers on project schedules.' },
-  { name: 'Hotels', desc: 'Negotiated hotel programs and rate management. Outage crews, short-term project teams, training groups needing nightly accommodations.' },
-  { name: 'Destination Services', desc: 'Settling-in support for relocating employees: school search, area orientation, DMV, banking setup. Long-term relocations, family moves.' },
+  { name: 'Temporary Housing', desc: 'Furnished apartments and homes for stays typically 30+ days. Project teams, relocating employees, corporate transfers.', color: '#0EA5E9' },
+  { name: 'Travel', desc: 'Flights, rental cars, and short-stay accommodations. Rotating crews, field teams, and business travelers on project schedules.', color: '#F59E0B' },
+  { name: 'Hotels', desc: 'Negotiated hotel programs and rate management. Outage crews, short-term project teams, training groups needing nightly accommodations.', color: '#E11D48' },
+  { name: 'Destination Services', desc: 'Settling-in support for relocating employees: school search, area orientation, DMV, banking setup. Long-term relocations, family moves.', color: '#10B981' },
 ];
 
 const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow>Start Here</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #8B5CF6, #EC4899)">Start Here</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">The Full Prospecting Flow</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Signal to outreach. One clear reason to contact the account. Each tab has one job. Each step builds on the last.
       </p>
 
       {/* NCH Service Lines */}
-      <div className="overflow-hidden border mb-7" style={{ borderColor: 'rgba(99,102,241,.15)' }}>
-        <div className="flex items-center justify-between px-5 py-3" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+      <div className="overflow-hidden border mb-7" style={{ borderColor: 'rgba(139,92,246,.15)' }}>
+        <div className="flex items-center justify-between px-5 py-3" style={{ background: 'linear-gradient(135deg, #1E293B, #312E81)' }}>
           <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.55)' }}>NCH Service Lines</p>
-          <p className="text-[12px]" style={{ color: '#818CF8' }}>Reference this in every tab</p>
+          <p className="text-[12px]" style={{ color: '#C4B5FD' }}>Reference this in every tab</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4">
           {serviceLines.map((sl, i) => (
             <div key={sl.name} className={`p-4 ${i < 3 ? 'md:border-r' : ''}`} style={{ borderColor: '#E2E8F0', background: '#fff' }}>
-              <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#6366F1' }}>{sl.name}</p>
+              <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: sl.color }}>{sl.name}</p>
               <p className="text-[13px] leading-[1.55] text-foreground">{sl.desc}</p>
             </div>
           ))}
@@ -55,7 +55,7 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       {/* Workflow rows */}
       <div className="flex flex-col gap-3">
         {workflowSteps.map((step) => (
-          <div key={step.num} className="flex flex-col md:flex-row overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }}>
+          <div key={step.num} className="flex flex-col md:flex-row overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(0,0,0,.08)', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }}>
             <div className="md:w-[132px] flex md:flex-col items-center md:justify-center gap-2 p-3 md:p-4 text-center flex-shrink-0" style={{ background: step.gradient }}>
               <span className="text-[20px] font-bold leading-none" style={{ color: '#fff' }}>{step.num}</span>
               <small className="text-[11px] font-semibold uppercase tracking-wide leading-tight" style={{ color: 'rgba(255,255,255,.5)' }}>{step.label}</small>
@@ -72,8 +72,8 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
 
       {/* New to outbound / Know the basics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
-        <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(99,102,241,.12)', borderLeftWidth: '3px', borderLeftColor: '#6366F1' }}>
-          <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#6366F1' }}>New to outbound</p>
+        <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(59,130,246,.12)', borderLeftWidth: '3px', borderLeftColor: '#3B82F6' }}>
+          <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#3B82F6' }}>New to outbound</p>
           <p className="text-[13px] leading-[1.6] text-foreground">Follow the tabs left to right. Do not skip ahead. Run the Setup tab first, then Run Search each morning. Read The Thinking tab before your first call.</p>
         </div>
         <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(16,185,129,.12)', borderLeftWidth: '3px', borderLeftColor: '#10B981' }}>
