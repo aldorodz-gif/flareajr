@@ -7,7 +7,6 @@ import MindsetTab from '../components/guide/MindsetTab';
 import SetupTab from '../components/guide/SetupTab';
 import TrackerTab from '../components/guide/TrackerTab';
 import ResultsTab from '../components/guide/ResultsTab';
-import DeeperTab from '../components/guide/DeeperTab';
 import ContactTab from '../components/guide/ContactTab';
 import OutreachTab from '../components/guide/OutreachTab';
 import SignalsTab from '../components/guide/SignalsTab';
@@ -27,7 +26,6 @@ const Index = () => {
     setVisitedTabs(prev => new Set([...prev, activeTab]));
     setActiveTab(tabId);
     setAnimKey(k => k + 1);
-    // Scroll to tab bar
     setTimeout(() => {
       tabBarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 50);
@@ -41,7 +39,6 @@ const Index = () => {
       case 'setup': return <SetupTab {...props} />;
       case 'tracker': return <TrackerTab {...props} />;
       case 'results': return <ResultsTab {...props} />;
-      case 'deeper': return <DeeperTab {...props} />;
       case 'contact': return <ContactTab {...props} />;
       case 'outreach': return <OutreachTab {...props} />;
       case 'signals': return <SignalsTab {...props} />;
@@ -50,7 +47,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#D8E0EC' }}>
+    <div className="min-h-screen bg-background">
       <Header />
       <div ref={tabBarRef}>
         <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />
