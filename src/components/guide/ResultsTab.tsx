@@ -76,7 +76,7 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #E8BE70, #E8A87A)">Step 03: Every Morning</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #E8BE70, #E8A87A)">Step 04: Every Morning</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Work Your Results</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Review overnight results. Prioritize the strongest signals. Move the right accounts into action.

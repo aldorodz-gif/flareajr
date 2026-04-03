@@ -10,9 +10,9 @@ export const TAB_ORDER: TabConfig[] = [
   { id: 'mindset', icon: '🧠', label: 'Mindset' },
   { id: 'tracker', icon: '📡', label: 'Prompt Builder' },
   { id: 'results', icon: '⚡', label: 'Work Your List' },
+  { id: 'signals', icon: '📋', label: 'Score Signals' },
   { id: 'contact', icon: '🎯', label: 'Who to Call' },
   { id: 'outreach', icon: '✉️', label: 'Write Outreach' },
-  { id: 'signals', icon: '📋', label: 'Score Signals' },
 ];
 
 export interface VerticalData {

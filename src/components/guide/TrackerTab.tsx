@@ -70,7 +70,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #5AB8D4, #8B8FE8)">Step 02: Set Once. Runs Every Morning</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #5AB8D4, #8B8FE8)">Step 03: Set Once. Runs Every Morning</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Find Companies Showing Demand Signals</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Copy the prompt for your market and paste it into Agent Mode. Get your first results, then tell ChatGPT when to run it automatically every day.
