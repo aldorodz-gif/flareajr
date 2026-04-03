@@ -28,7 +28,7 @@ const verticalTitles = [
 const ContactTab = ({ onNavigate }: ContactTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #E07878, #E8A87A)">Step 04: Find the Right Person</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #E07878, #E8A87A)">Step 05: Find the Right Person</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Service Line Buyer Map</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Match the buyer to the signal. Start with whoever's job breaks if the need isn't solved. Not whoever has the most obvious title.
