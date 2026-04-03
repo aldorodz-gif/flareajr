@@ -19,6 +19,9 @@ const verticalTitles = [
     { icon: '🏥', name: 'Healthcare', signals: 'Travel clinicians, physician relocation, residency housing', primary: 'Clinical Staffing Manager · Recruitment Manager · Travel Program Manager', nonTrad: 'Physician Recruitment Manager · GME Coordinator · Workforce Planning Manager' },
     { icon: '💻', name: 'Technology & Consulting', signals: 'Relocations, intern housing, office launch, deployment teams', primary: 'Global Mobility Manager · People Operations Manager · Program Manager', nonTrad: 'University Recruiting Manager · Employee Experience Manager · Travel Program Manager' },
   ]},
+  { cols: [
+    { icon: '🏀', name: 'Sports & Entertainment', signals: 'Player housing, fellowship programs, staff rotations, seasonal roster moves', primary: 'Director of Team Operations · Player Services Manager · Program Coordinator', nonTrad: 'Fellowship Program Manager · Travel Coordinator · Front Office Operations Manager' },
+  ]},
 ];
 
 const ContactTab = ({ onNavigate }: ContactTabProps) => {

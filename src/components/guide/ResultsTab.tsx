@@ -60,6 +60,7 @@ const verticalBtns = [
   { id: 'healthcare', label: '🏥 Healthcare' },
   { id: 'tech', label: '💻 Tech & Consulting' },
   { id: 'manufacturing', label: '🏭 Manufacturing' },
+  { id: 'sports', label: '🏀 Sports' },
 ];
 
 const ResultsTab = ({ onNavigate }: ResultsTabProps) => {

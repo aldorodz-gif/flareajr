@@ -62,9 +62,8 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
         </div>
       </div>
 
-      {/* Flow heading */}
       <div className="mb-3">
-        <h3 className="text-[20px] font-semibold text-foreground">Full prospecting flow</h3>
+        <h3 className="text-[20px] font-semibold text-foreground">Step-by-step sequence</h3>
         <p className="text-[13px] text-muted-foreground">Use this as the sequence. Do not skip ahead.</p>
       </div>
 
