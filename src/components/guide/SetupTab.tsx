@@ -38,6 +38,13 @@ const SetupTab = ({ onNavigate }: SetupTabProps) => {
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
       <Eyebrow gradient="linear-gradient(90deg, #5BBFA0, #5AB8D4)">Step 01: One Time Setup</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Get Into Agent Mode</h2>
+      <div className="flex gap-3 items-start p-3.5 mb-5" style={{ background: '#E8D1AC', border: '1px solid rgba(16,65,118,.10)', borderRadius: '10px' }}>
+        <span className="text-[20px] flex-shrink-0">⚡</span>
+        <div>
+          <p className="text-[13px] font-semibold mb-1 text-foreground">Why Agent Mode?</p>
+          <p className="text-[13px] leading-[1.6] text-foreground">Agent Mode turns ChatGPT into a live research assistant that searches the web for you in real time. Normal ChatGPT can't do this — it only knows what it was trained on. With Agent Mode on, it pulls live news, contract awards, and business movements as they happen.</p>
+        </div>
+      </div>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Follow these 5 steps exactly. Each mockup shows what your ChatGPT screen will look like at each stage.
       </p>

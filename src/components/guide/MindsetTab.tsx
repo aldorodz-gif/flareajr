@@ -47,41 +47,6 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
           </div>
         </section>
 
-        {/* Framework */}
-        <section>
-          <h3 className="text-[20px] font-semibold mb-3 text-foreground">Simple framework to keep in mind</h3>
-          <div className="overflow-hidden border" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
-            <div className="px-4 py-2.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
-              <p className="text-[12px] font-bold uppercase tracking-wide" style={{ color: 'rgba(255,255,255,.55)' }}>Simple framework</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 border-b" style={{ borderColor: '#E2E8F0', background: '#fff' }}>
-              {[
-                { num: '01', title: 'Territory trend', desc: 'What industry or segment is growing' },
-                { num: '02', title: 'Business movement', desc: 'What expansion, contract, cohort, or construction is happening' },
-                { num: '03', title: 'Service line fit', desc: 'Why it creates demand for our services' },
-              ].map((f, i) => (
-                <div key={f.num} className={`p-3.5 ${i < 2 ? 'md:border-r' : ''}`} style={{ borderColor: '#E2E8F0' }}>
-                  <p className="text-[12px] font-bold uppercase tracking-wide mb-1 text-muted-foreground">{f.num}</p>
-                  <p className="text-[13px] font-semibold mb-0.5 text-foreground">{f.title}</p>
-                  <p className="text-[13px] text-muted-foreground">{f.desc}</p>
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3" style={{ background: '#fff' }}>
-              {[
-                { num: '04', title: 'Target account', desc: 'Which company is worth going after' },
-                { num: '05', title: 'Right contact', desc: 'Who most likely owns the problem' },
-                { num: '06', title: 'Outreach angle', desc: 'The reason for your call or email right now' },
-              ].map((f, i) => (
-                <div key={f.num} className={`p-3.5 ${i < 2 ? 'md:border-r' : ''}`} style={{ borderColor: '#E2E8F0' }}>
-                  <p className="text-[12px] font-bold uppercase tracking-wide mb-1 text-muted-foreground">{f.num}</p>
-                  <p className="text-[13px] font-semibold mb-0.5 text-foreground">{f.title}</p>
-                  <p className="text-[13px] text-muted-foreground">{f.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Real examples */}
         <section>

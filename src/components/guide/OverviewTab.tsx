@@ -30,15 +30,21 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
         Demand signals are flares — spot them first, and you're already ahead. Flare is a three-tool kit built for the NCH sales team that helps you score signals, build search prompts, and write outreach emails that reference what's actually happening at the account.
       </p>
 
-      {/* How to use it */}
-      <div className="mb-6 p-4 border" style={{ background: 'hsl(var(--card))', borderColor: 'rgba(155,120,200,.15)' }}>
-        <p className="text-[12px] font-bold uppercase tracking-wide mb-2" style={{ color: '#9B78C8' }}>How to use it</p>
-        <ol className="text-[13px] leading-[1.8] text-foreground list-decimal list-inside space-y-1">
-          <li><strong>Score Signals</strong> — Paste a business signal and get an instant HIGH / MEDIUM / LOW score with the likely service line.</li>
-          <li><strong>Prompt Builder</strong> — Pick a city, vertical, and signal type to generate a ready-to-paste ChatGPT search prompt.</li>
-          <li><strong>Write Outreach</strong> — Enter a company, signal, and buyer title to get a first-touch email drafted in NCH's voice.</li>
-        </ol>
-        <p className="text-[12px] mt-2 text-muted-foreground">The other tabs (Setup, Work Your List, Who to Call, Mindset) are reference guides — read them once, revisit when needed.</p>
+      {/* What's New */}
+      <div className="mb-6 p-4 border" style={{ background: 'linear-gradient(135deg, rgba(155,120,200,.06), rgba(16,185,129,.04))', borderColor: 'rgba(155,120,200,.15)' }}>
+        <p className="text-[12px] font-bold uppercase tracking-wide mb-2.5" style={{ color: '#9B78C8' }}>🆕 What's New</p>
+        <div className="flex flex-col gap-1.5">
+          {[
+            'Interactive guided tour — click ❓ Tour in the header to replay anytime',
+            'Theater & Sports verticals added to Work Your List',
+            'Company Research prompt built into Work Your List — no more switching tabs',
+            'Score Signals, Prompt Builder & Email Generator — three live AI tools',
+          ].map((item) => (
+            <p key={item} className="text-[13px] leading-[1.6] text-foreground flex gap-2">
+              <span style={{ color: '#10B981' }}>✓</span> {item}
+            </p>
+          ))}
+        </div>
       </div>
 
       <h3 className="text-[20px] font-semibold mb-1 text-foreground">The Full Prospecting Flow</h3>
