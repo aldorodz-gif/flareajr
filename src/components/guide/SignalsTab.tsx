@@ -17,6 +17,7 @@ const signalRows = [
   { pursue: 'Series B/C + Physical Expansion', skip: '—', why: 'Funding alone is not the signal. The physical move or market entry that follows the funding is.' },
   { pursue: 'Return-to-Office Mandate', skip: '—', why: 'Remote employees relocating for RTO create immediate bridge housing need.' },
   { pursue: 'Sports Team / League Program', skip: 'Fan Events or Game-Day Ops', why: 'Player housing, fellowship programs, and staff rotations create recurring furnished housing needs. Game-day events are one-off with no stay.' },
+  { pursue: 'Theater Production or Residency', skip: 'Single-Night Performances', why: 'LORT theaters and regional companies hire out-of-town actors, directors, and crew for 30+ day runs. One-night touring stops have no housing angle.' },
 ];
 
 interface ScoreResult {
