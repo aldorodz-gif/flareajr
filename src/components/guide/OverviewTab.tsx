@@ -90,11 +90,11 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
         <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(99,102,241,.12)', borderLeftWidth: '3px', borderLeftColor: '#9B78C8' }}>
           <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#9B78C8' }}>New to outbound</p>
-          <p className="text-[13px] leading-[1.6] text-foreground">Follow the tabs left to right. Do not skip ahead. Run the Setup tab first, then Run Search each morning. Read The Thinking tab before your first call.</p>
+          <p className="text-[13px] leading-[1.6] text-foreground">Follow the tabs left to right. Do not skip ahead. Run Setup first, then use the Prompt Builder each morning. Read the Mindset tab before your first call.</p>
         </div>
         <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(16,185,129,.12)', borderLeftWidth: '3px', borderLeftColor: '#10B981' }}>
           <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#10B981' }}>Know the basics</p>
-          <p className="text-[13px] leading-[1.6] text-foreground">Use Run Search daily and Signal Filter as your quick filter. The vertical selector in Work Your List maps your signal to the right angle and contact. The Thinking tab has what most experienced reps overlook.</p>
+          <p className="text-[13px] leading-[1.6] text-foreground">Use the Prompt Builder daily and Score Signals as your quick filter. Write Outreach drafts your first-touch emails. The Mindset tab has what most experienced reps overlook.</p>
         </div>
       </div>
 
