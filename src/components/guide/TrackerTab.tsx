@@ -42,7 +42,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
       <p className="text-[12px] mb-6 text-muted-foreground">Replace <strong className="text-foreground">[YOUR CITY, STATE]</strong> with your market before pasting. That's the only thing you need to change.</p>
 
       {/* Collapsible market examples */}
-      <div className="border overflow-hidden mb-6" style={{ borderColor: 'rgba(99,102,241,.12)' }}>
+      <div className="border overflow-hidden mb-6" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
         <button
           onClick={() => setShowExamples(!showExamples)}
           className="w-full px-4 py-3.5 flex items-center justify-between text-left"
@@ -59,7 +59,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
               { city: 'Atlanta, GA', desc: 'Logistics and distribution expansion, financial services and tech relocations, major construction buildouts.', focus: 'Atlanta focus: Prioritize logistics and distribution expansion, financial services and tech relocations, and major construction and infrastructure buildouts. Atlanta is one of the highest-volume corporate relocation markets in the Southeast.' },
             ].map(ex => (
               <div key={ex.city} className="border-t p-5" style={{ borderColor: '#E2E8F0', background: '#F8FAFC' }}>
-                <p className="text-[12px] font-bold uppercase tracking-wide mb-1" style={{ color: '#6366F1' }}>{ex.city}</p>
+                <p className="text-[12px] font-bold uppercase tracking-wide mb-1" style={{ color: '#9B78C8' }}>{ex.city}</p>
                 <p className="text-[13px] text-muted-foreground mb-3">{ex.desc}</p>
                 <PromptBox>{basePrompt(ex.city.includes('Huntsville') ? 'Huntsville, Alabama' : ex.city.includes('Nashville') ? 'Nashville, Tennessee' : 'Atlanta, Georgia', ex.focus)}</PromptBox>
               </div>
@@ -85,16 +85,16 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
       {/* Custom Prompt Builder */}
       <div className="mt-8 pt-6" style={{ borderTop: '1px solid rgba(14,30,58,.08)' }}>
         <div className="overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+          <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
             <div>
               <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.5)' }}>Quick Tool</p>
               <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>Custom Prompt Builder</p>
             </div>
-            <div className="px-3 py-1.5" style={{ background: 'rgba(99,102,241,.15)' }}>
-              <p className="text-[12px] font-semibold" style={{ color: '#818CF8' }}>Paste into ChatGPT or Claude</p>
+            <div className="px-3 py-1.5" style={{ background: 'rgba(155,120,200,.15)' }}>
+              <p className="text-[12px] font-semibold" style={{ color: '#C4A5DE' }}>Paste into ChatGPT or Claude</p>
             </div>
           </div>
-          <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(99,102,241,.12)', background: '#fff' }}>
+          <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
             <p className="text-[13px] text-muted-foreground mb-4">The city prompts above are your daily engine. Use this when you want a prompt built around a specific vertical or signal type you're already tracking.</p>
             <PromptBox label="Custom Prompt Builder">
 {`Build me a ChatGPT Agent Mode search prompt for the following:

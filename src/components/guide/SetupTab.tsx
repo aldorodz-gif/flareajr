@@ -44,7 +44,7 @@ const SetupTab = ({ onNavigate }: SetupTabProps) => {
 
       <div className="flex flex-col gap-7">
         {steps.map((step) => (
-          <div key={step.num} className="overflow-hidden border" style={{ borderColor: 'rgba(99,102,241,.15)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+          <div key={step.num} className="overflow-hidden border" style={{ borderColor: 'rgba(155,120,200,.15)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
             <div className="flex items-center gap-3.5 px-4 py-3.5" style={{ background: step.gradient }}>
               <div className="min-w-[30px] h-[30px] rounded-full flex items-center justify-center text-[14px] font-semibold flex-shrink-0" style={{ background: 'rgba(255,255,255,.22)', color: '#fff' }}>
                 {step.num}
@@ -68,9 +68,9 @@ const SetupTab = ({ onNavigate }: SetupTabProps) => {
                     <div className="py-2">
                       <div className="px-3.5 py-2 text-[13px] flex items-center gap-2" style={{ color: '#475569' }}>📎 Attach files</div>
                       <div className="px-3.5 py-2 text-[13px] flex items-center gap-2" style={{ color: '#475569' }}>🌐 Search the web</div>
-                      <div className="px-3.5 py-2 text-[13px] font-semibold flex items-center gap-2 border-l-[3px]" style={{ color: '#6366F1', background: '#EEF2FF', borderColor: '#6366F1' }}>
+                      <div className="px-3.5 py-2 text-[13px] font-semibold flex items-center gap-2 border-l-[3px]" style={{ color: '#9B78C8', background: 'rgba(155,120,200,.1)', borderColor: '#9B78C8' }}>
                         ⚡ Agent Mode
-                        <span className="ml-auto text-[11px] px-2 py-0.5 rounded-full" style={{ background: '#6366F1', color: '#fff' }}>click here</span>
+                        <span className="ml-auto text-[11px] px-2 py-0.5 rounded-full" style={{ background: 'linear-gradient(135deg, #9B78C8, #C47EAA)', color: '#fff' }}>click here</span>
                       </div>
                     </div>
                   </div>
@@ -88,7 +88,7 @@ const SetupTab = ({ onNavigate }: SetupTabProps) => {
                     </div>
                     <div className="p-4">
                       <p className="text-[12px] font-medium mb-2.5" style={{ color: '#64748B' }}>Describe a task for your agent</p>
-                      <div className="flex items-center min-h-[60px] p-3.5 border-2 border-dashed" style={{ borderColor: '#6366F1', background: '#F8FAFC' }}>
+                      <div className="flex items-center min-h-[60px] p-3.5 border-2 border-dashed" style={{ borderColor: '#9B78C8', background: '#F8FAFC' }}>
                         <span className="text-[13px] italic" style={{ color: '#94A3B8' }}>Paste your city prompt here, then hit send →</span>
                       </div>
                     </div>
@@ -110,7 +110,7 @@ const SetupTab = ({ onNavigate }: SetupTabProps) => {
                         <p className="text-[12px] leading-[1.7] pr-9" style={{ color: 'rgba(255,255,255,.7)' }}>
                           Search for new <strong style={{ color: 'rgba(255,255,255,.9)' }}>[Your City, State]</strong> business movements that could create demand for <strong style={{ color: 'rgba(255,255,255,.9)' }}>temporary housing, travel, hotels, or destination services</strong>...
                         </p>
-                        <div className="absolute bottom-2.5 right-2.5 w-[26px] h-[26px] rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)' }}>
+                        <div className="absolute bottom-2.5 right-2.5 w-[26px] h-[26px] rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #9B78C8, #C47EAA)' }}>
                           <span className="text-[14px]" style={{ color: '#fff' }}>→</span>
                         </div>
                       </div>
@@ -125,7 +125,7 @@ const SetupTab = ({ onNavigate }: SetupTabProps) => {
                 <div className="max-w-[480px]">
                   <div className="overflow-hidden border" style={{ borderColor: '#E2E8F0', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
                     <div className="flex items-center gap-2.5 px-4 py-3.5 border-b" style={{ borderColor: '#F1F5F9' }}>
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #6366F1, #8B5CF6)' }}>
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #9B78C8, #C47EAA)' }}>
                         <span className="text-[13px]" style={{ color: '#fff' }}>⚡</span>
                       </div>
                       <div>

@@ -31,15 +31,15 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       </p>
 
       {/* NCH Service Lines */}
-      <div className="overflow-hidden border mb-7" style={{ borderColor: 'rgba(99,102,241,.15)' }}>
-        <div className="flex items-center justify-between px-5 py-3" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+      <div className="overflow-hidden border mb-7" style={{ borderColor: 'rgba(155,120,200,.15)' }}>
+        <div className="flex items-center justify-between px-5 py-3" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
           <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.55)' }}>NCH Service Lines</p>
-          <p className="text-[12px]" style={{ color: '#818CF8' }}>Reference this in every tab</p>
+          <p className="text-[12px]" style={{ color: '#C4A5DE' }}>Reference this in every tab</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4">
           {serviceLines.map((sl, i) => (
             <div key={sl.name} className={`p-4 ${i < 3 ? 'md:border-r' : ''}`} style={{ borderColor: '#E2E8F0', background: '#fff' }}>
-              <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#6366F1' }}>{sl.name}</p>
+              <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#9B78C8' }}>{sl.name}</p>
               <p className="text-[13px] leading-[1.55] text-foreground">{sl.desc}</p>
             </div>
           ))}
@@ -55,7 +55,7 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       {/* Workflow rows */}
       <div className="flex flex-col gap-3">
         {workflowSteps.map((step) => (
-          <div key={step.num} className="flex flex-col md:flex-row overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }}>
+          <div key={step.num} className="flex flex-col md:flex-row overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }}>
             <div className="md:w-[132px] flex md:flex-col items-center md:justify-center gap-2 p-3 md:p-4 text-center flex-shrink-0" style={{ background: step.gradient }}>
               <span className="text-[20px] font-bold leading-none" style={{ color: '#fff' }}>{step.num}</span>
               <small className="text-[11px] font-semibold uppercase tracking-wide leading-tight" style={{ color: 'rgba(255,255,255,.5)' }}>{step.label}</small>
@@ -72,8 +72,8 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
 
       {/* New to outbound / Know the basics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
-        <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(99,102,241,.12)', borderLeftWidth: '3px', borderLeftColor: '#6366F1' }}>
-          <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#6366F1' }}>New to outbound</p>
+        <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(99,102,241,.12)', borderLeftWidth: '3px', borderLeftColor: '#9B78C8' }}>
+          <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#9B78C8' }}>New to outbound</p>
           <p className="text-[13px] leading-[1.6] text-foreground">Follow the tabs left to right. Do not skip ahead. Run the Setup tab first, then Run Search each morning. Read The Thinking tab before your first call.</p>
         </div>
         <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(16,185,129,.12)', borderLeftWidth: '3px', borderLeftColor: '#10B981' }}>
