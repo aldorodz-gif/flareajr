@@ -38,7 +38,7 @@ I need:
 Keep it concise and scannable. I'm using this to prepare for a call, not write a report.`}
       </PromptBox>
 
-      <div className="flex gap-3 items-start p-3.5 mt-3" style={{ background: 'rgba(99,102,241,.05)', border: '1px solid rgba(99,102,241,.18)' }}>
+      <div className="flex gap-3 items-start p-3.5 mt-3" style={{ background: 'rgba(155,120,200,.05)', border: '1px solid rgba(99,102,241,.18)' }}>
         <span className="text-[16px] flex-shrink-0 mt-0.5">💡</span>
         <p className="text-[13px] leading-[1.65]" style={{ color: '#1E293B' }}>
           <strong>Use the positive news.</strong> When you open a call with something like <em>"I saw Meridian just landed the Redstone contract — congratulations"</em> — you've shown you're not just another vendor dialing a list.
