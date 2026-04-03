@@ -62,16 +62,16 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #E8BE70, #E8A87A)">Step 03: Every Morning</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #F59E0B, #F97316)">Step 03: Every Morning</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Work Your Results</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Review overnight results. Prioritize the strongest signals. Move the right accounts into action.
       </p>
 
       {/* Sample result */}
-      <Eyebrow>What Each Result Looks Like</Eyebrow>
-      <div className="overflow-hidden border mb-6" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.15)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
-        <div className="flex items-center justify-between px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)', borderBottom: '2px solid #6366F1' }}>
+      <Eyebrow gradient="linear-gradient(90deg, #F59E0B, #EF4444)">What Each Result Looks Like</Eyebrow>
+      <div className="overflow-hidden border mb-6" style={{ background: '#fff', borderColor: 'rgba(245,158,11,.2)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+        <div className="flex items-center justify-between px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #78350F, #92400E)', borderBottom: '2px solid #F59E0B' }}>
           <span className="text-[12px] uppercase tracking-wider font-semibold" style={{ color: 'rgba(255,255,255,.85)' }}>Sample Daily Result — swap with your market</span>
           <span className="text-[11px] font-semibold uppercase tracking-wide px-3 py-1 rounded-full animate-priority-pulse" style={{ color: '#fff' }}>HIGH PRIORITY</span>
         </div>
@@ -83,25 +83,25 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
           ['Estimated Stay', '6–12 months, phased arrivals'],
           ['Priority', 'HIGH. Defined timeline, large headcount, identifiable housing buyer.'],
         ].map(([k, val]) => (
-          <div key={k} className="flex border-b last:border-b-0" style={{ borderColor: '#E2E8F0' }}>
-            <div className="w-[145px] flex-shrink-0 px-3.5 py-2.5 text-[12px] font-semibold border-r" style={{ background: '#F8FAFC', color: '#1E293B', borderColor: '#E2E8F0' }}>{k}</div>
+          <div key={k} className="flex border-b last:border-b-0" style={{ borderColor: '#FDE68A' }}>
+            <div className="w-[145px] flex-shrink-0 px-3.5 py-2.5 text-[12px] font-semibold border-r" style={{ background: '#FFFBEB', color: '#92400E', borderColor: '#FDE68A' }}>{k}</div>
             <div className="px-3.5 py-2.5 text-[13px] flex-1" style={{ color: '#334155' }}>{val}</div>
           </div>
         ))}
       </div>
 
       {/* Triage framework */}
-      <div className="overflow-hidden border mb-4" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.15)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
-        <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+      <div className="overflow-hidden border mb-4" style={{ background: '#fff', borderColor: 'rgba(245,158,11,.2)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+        <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #78350F, #92400E)' }}>
           <span className="text-[12px] uppercase tracking-wider font-semibold" style={{ color: 'rgba(255,255,255,.85)' }}>Simple Triage Framework</span>
         </div>
         {[
-          ['HIGH', 'Clear timeline, real people movement, and a likely buyer you can identify now. Call and research today.'],
-          ['MEDIUM', 'Real change, but timing or ownership is not fully clear yet. Log it and keep watching.'],
-          ['LOW', 'Interesting headline, but no defined movement, timing, or housing use case yet. Skip unless another signal confirms it.'],
-        ].map(([k, val]) => (
-          <div key={k} className="flex border-b last:border-b-0" style={{ borderColor: '#E2E8F0' }}>
-            <div className="w-[120px] flex-shrink-0 px-3.5 py-4 text-[12px] font-bold tracking-wide border-r flex items-center" style={{ background: '#F8FAFC', color: '#1E293B', borderColor: '#E2E8F0' }}>{k}</div>
+          ['HIGH', 'Clear timeline, real people movement, and a likely buyer you can identify now. Call and research today.', '#10B981'],
+          ['MEDIUM', 'Real change, but timing or ownership is not fully clear yet. Log it and keep watching.', '#F59E0B'],
+          ['LOW', 'Interesting headline, but no defined movement, timing, or housing use case yet. Skip unless another signal confirms it.', '#EF4444'],
+        ].map(([k, val, color]) => (
+          <div key={k} className="flex border-b last:border-b-0" style={{ borderColor: '#FDE68A' }}>
+            <div className="w-[120px] flex-shrink-0 px-3.5 py-4 text-[12px] font-bold tracking-wide border-r flex items-center" style={{ background: '#FFFBEB', color: color as string, borderColor: '#FDE68A' }}>{k}</div>
             <div className="px-4 py-4 text-[13px] flex-1 leading-[1.6]" style={{ color: '#334155' }}>{val}</div>
           </div>
         ))}
@@ -109,11 +109,11 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
 
       <div className="flex flex-col gap-2.5 mb-6">
         {[
-          { num: 1, gradient: 'linear-gradient(135deg,#9B78C8,#A885D4)', text: 'Pull High priority first. These go straight onto your call list. Don\'t start anywhere else.' },
-          { num: 2, gradient: 'linear-gradient(135deg,#D97895,#DE8AA0)', text: 'Log it in your CRM. Note the company name and the specific signal. You\'ll use it in every touchpoint.' },
-          { num: 3, gradient: 'linear-gradient(135deg,#EBC980,#F0D490)', text: 'Scroll down to Research the Company before you call. Run the prompt on every HIGH account.' },
+          { num: 1, gradient: 'linear-gradient(135deg,#F59E0B,#FBBF24)', text: 'Pull High priority first. These go straight onto your call list. Don\'t start anywhere else.' },
+          { num: 2, gradient: 'linear-gradient(135deg,#F97316,#FB923C)', text: 'Log it in your CRM. Note the company name and the specific signal. You\'ll use it in every touchpoint.' },
+          { num: 3, gradient: 'linear-gradient(135deg,#EF4444,#F87171)', text: 'Scroll down to Research the Company before you call. Run the prompt on every HIGH account.' },
         ].map(s => (
-          <div key={s.num} className="flex gap-3 items-start p-3.5 border" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.12)', boxShadow: '0 1px 3px rgba(0,0,0,.05)' }}>
+          <div key={s.num} className="flex gap-3 items-start p-3.5 border" style={{ background: '#fff', borderColor: 'rgba(245,158,11,.12)', boxShadow: '0 1px 3px rgba(0,0,0,.05)' }}>
             <div className="min-w-[27px] h-[27px] rounded-full flex items-center justify-center text-[12px] font-semibold flex-shrink-0 mt-0.5" style={{ background: s.gradient, color: '#fff' }}>{s.num}</div>
             <p className="text-[13px] leading-[1.65] text-muted-foreground"><strong className="text-foreground">{s.text.split('.')[0]}.</strong>{s.text.substring(s.text.indexOf('.') + 1)}</p>
           </div>
@@ -121,12 +121,12 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
       </div>
 
       {/* Call vs Email Decision Tree */}
-      <Eyebrow>First Move Decision</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #F59E0B, #10B981)">First Move Decision</Eyebrow>
       <h3 className="text-[18px] font-semibold mb-1.5 text-foreground">Call first or email first?</h3>
       <p className="text-[13px] text-muted-foreground mb-4">For every HIGH priority signal, your first move depends on the signal type. Not personal preference.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-        <div className="overflow-hidden border" style={{ borderColor: 'rgba(99,102,241,.15)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
-          <div className="px-4 py-3 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+        <div className="overflow-hidden border" style={{ borderColor: 'rgba(245,158,11,.2)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+          <div className="px-4 py-3 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #78350F, #92400E)' }}>
             <span>📞</span>
             <span className="text-[14px] font-bold" style={{ color: '#fff' }}>Call First</span>
           </div>
@@ -134,14 +134,14 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
             <p className="text-[12px] font-semibold uppercase tracking-wide mb-2 text-foreground">When the signal is time-bound</p>
             <div className="flex flex-col gap-1.5">
               {['🏗️ Contract award or mobilization starting soon', '⚡ Outage or turnaround with a defined start date', '🎓 Cohort or onboarding class arriving in weeks'].map(t => (
-                <div key={t} className="text-[12px] p-2 border-l-[3px]" style={{ background: '#F8FAFC', borderColor: '#6366F1', color: '#475569' }}>{t}</div>
+                <div key={t} className="text-[12px] p-2 border-l-[3px]" style={{ background: '#FFFBEB', borderColor: '#F59E0B', color: '#475569' }}>{t}</div>
               ))}
             </div>
             <p className="text-[12px] italic mt-2.5 text-muted-foreground">Time pressure = phone. They need a solution now and email gives them room to ignore it.</p>
           </div>
         </div>
-        <div className="overflow-hidden border" style={{ borderColor: 'rgba(99,102,241,.15)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
-          <div className="px-4 py-3 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
+        <div className="overflow-hidden border" style={{ borderColor: 'rgba(16,185,129,.2)', boxShadow: '0 1px 4px rgba(0,0,0,.06)' }}>
+          <div className="px-4 py-3 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #064E3B, #065F46)' }}>
             <span>✉️</span>
             <span className="text-[14px] font-bold" style={{ color: '#fff' }}>Email First</span>
           </div>
@@ -149,7 +149,7 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
             <p className="text-[12px] font-semibold uppercase tracking-wide mb-2 text-foreground">When the signal is early-stage</p>
             <div className="flex flex-col gap-1.5">
               {['🏢 Office opening or market entry: planning phase', '💰 Funding round. No confirmed move timeline yet', '🤝 M&A announcement: integration still being planned'].map(t => (
-                <div key={t} className="text-[12px] p-2 border-l-[3px]" style={{ background: '#F8FAFC', borderColor: '#10B981', color: '#475569' }}>{t}</div>
+                <div key={t} className="text-[12px] p-2 border-l-[3px]" style={{ background: '#ECFDF5', borderColor: '#10B981', color: '#475569' }}>{t}</div>
               ))}
             </div>
             <p className="text-[12px] italic mt-2.5 text-muted-foreground">Longer timeline = email first. Warm them up, earn the call.</p>
@@ -158,7 +158,7 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
       </div>
 
       {/* Vertical selector */}
-      <Eyebrow>See It In Action</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #F97316, #EC4899)">See It In Action</Eyebrow>
       <h3 className="text-[18px] font-semibold mb-1.5 text-foreground">What does this look like in your vertical?</h3>
       <p className="text-[13px] mb-4 text-muted-foreground">Pick the industry you're working and see exactly how the full flow applies: signal, buyer, and outreach angle.</p>
 
@@ -169,8 +169,8 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
             onClick={() => setActiveVertical(b.id)}
             className="px-4 py-2 text-[12px] font-semibold border-2 rounded-full transition-all duration-200"
             style={{
-              background: activeVertical === b.id ? 'linear-gradient(135deg, #8B8FE8, #9B78C8)' : '#fff',
-              borderColor: activeVertical === b.id ? '#6366F1' : '#E2E8F0',
+              background: activeVertical === b.id ? 'linear-gradient(135deg, #F59E0B, #F97316)' : '#fff',
+              borderColor: activeVertical === b.id ? '#F59E0B' : '#E2E8F0',
               color: activeVertical === b.id ? '#fff' : '#64748B',
             }}
           >
@@ -179,58 +179,49 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
         ))}
       </div>
 
-      <div className="overflow-hidden border transition-all duration-300" style={{ background: '#fff', borderColor: 'rgba(99,102,241,.2)', boxShadow: '0 2px 8px rgba(0,0,0,.06)' }}>
+      <div className="overflow-hidden border transition-all duration-300" style={{ background: '#fff', borderColor: 'rgba(245,158,11,.2)', boxShadow: '0 2px 8px rgba(0,0,0,.06)' }}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
           {[v.signal, v.buyer, v.angle].map((col, i) => (
-            <div key={i} className="p-5 md:border-r last:border-r-0" style={{ borderColor: '#D8E0EC' }}>
-              <Eyebrow>{col.label}</Eyebrow>
-              <span className="inline-block text-[11px] font-semibold px-2 py-0.5 mb-2" style={{ background: '#EEF2FF', color: '#4F46E5' }}>{col.tag}</span>
+            <div key={i} className="p-5 md:border-r last:border-r-0" style={{ borderColor: '#FDE68A' }}>
+              <Eyebrow gradient={i === 0 ? 'linear-gradient(90deg, #F59E0B, #FBBF24)' : i === 1 ? 'linear-gradient(90deg, #EC4899, #F472B6)' : 'linear-gradient(90deg, #10B981, #34D399)'}>{col.label}</Eyebrow>
+              <span className="inline-block text-[11px] font-semibold px-2 py-0.5 mb-2" style={{ background: i === 0 ? '#FFFBEB' : i === 1 ? '#FDF2F8' : '#ECFDF5', color: i === 0 ? '#92400E' : i === 1 ? '#9D174D' : '#065F46' }}>{col.tag}</span>
               <h4 className="text-[14px] font-semibold mb-1.5 text-foreground">{col.title}</h4>
               <p className="text-[13px] leading-[1.65] text-muted-foreground">{col.body}</p>
             </div>
           ))}
         </div>
-        <div className="p-5 border-t" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)', borderColor: 'rgba(99,102,241,.2)' }}>
-          <div className="text-[10px] font-semibold uppercase tracking-[1.8px] mb-2.5" style={{ color: '#818CF8' }}>Sample first email</div>
+        <div className="p-5 border-t" style={{ background: 'linear-gradient(135deg, #78350F, #92400E)', borderColor: 'rgba(245,158,11,.2)' }}>
+          <div className="text-[10px] font-semibold uppercase tracking-[1.8px] mb-2.5" style={{ color: '#FBBF24' }}>Sample first email</div>
           <div className="text-[12px] font-semibold mb-2" style={{ color: 'rgba(255,255,255,.55)' }}>Subject: {v.email.subj}</div>
           <div className="text-[13px] leading-[1.85] whitespace-pre-line" style={{ color: 'rgba(255,255,255,.9)' }}>{v.email.body}</div>
         </div>
       </div>
 
-      {/* Research section (merged from deeper tab) */}
+      {/* Research section */}
       <div className="mt-12">
-        <div className="flex items-center gap-4 px-6 py-4" style={{ background: 'linear-gradient(135deg, #1E293B, #1E1B4B)' }}>
-          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(99,102,241,.2)' }}>
+        <div className="flex items-center gap-4 px-6 py-4" style={{ background: 'linear-gradient(135deg, #1E3A5F, #1E1B4B)' }}>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(59,130,246,.2)' }}>
             <span className="text-[16px]">📋</span>
           </div>
           <div>
-            <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.5)' }}>Before Every Call</p>
-            <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>Research the Company First</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[2px] mb-0.5" style={{ color: '#93C5FD' }}>Before You Call</p>
+            <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>Research the Company</p>
           </div>
         </div>
-        <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(99,102,241,.12)', background: '#fff' }}>
-          <p className="text-[13px] text-muted-foreground mb-4">A call without context is just a cold call. Run this on every HIGH priority account before you pick up the phone.</p>
+        <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(59,130,246,.12)', background: '#fff' }}>
+          <p className="text-[13px] text-muted-foreground mb-4">Run this on every HIGH priority account before you pick up the phone. It tells you what changed, why it matters, and who to call.</p>
           <PromptBox label="Company Research Prompt">
-{`Give me a full intelligence brief on [COMPANY NAME] in [CITY] for a sales call.
+{`Research [COMPANY NAME] and tell me:
 
-1. What they do — industry, size, what they're known for
-2. The specific trigger — the expansion, contract, move, or program that flagged them
-3. ⭐ Recent positive news — 2–3 wins or milestones I can open my call with
-4. Most likely service line — temp housing, travel, hotels, or destination services, and why
-5. Estimated people, timing, and duration
-6. Likely pain points for their team
-7. Biggest logistical challenge this movement creates
-
-Concise and scannable. I'm preparing for a call, not writing a report.`}
+1. What does the company do? One sentence.
+2. Where are they headquartered and do they have other offices or job sites?
+3. What recent news, expansion, contract, project, or business change triggered this signal?
+4. Based on that signal, what NCH service line is most likely in play — temporary housing, travel, hotels, or destination services?
+5. Why does that signal create demand for that service line? Be specific.
+6. Who is most likely the internal owner of this need? Give me a title and why that person.
+7. What is the estimated timeline — is this happening now, next quarter, or later?
+8. What is one specific thing I could say on a call that shows I understand their situation?`}
           </PromptBox>
-          <div className="flex gap-3 items-start p-3.5" style={{ background: 'rgba(251,191,36,.06)', border: '1px solid rgba(251,191,36,.2)' }}>
-            <span className="flex-shrink-0">💡</span>
-            <p className="text-[13px] leading-[1.65] text-foreground"><strong>Use the positive news.</strong> When you open a call with something like <em>"I saw [Company] just landed [the contract / won the project], congratulations"</em> — you've shown you're not just another vendor dialing a list.</p>
-          </div>
-          <div className="flex gap-3 items-start p-3.5 mt-3" style={{ background: 'rgba(16,185,129,.05)', border: '1px solid rgba(16,185,129,.18)' }}>
-            <span className="flex-shrink-0">🔗</span>
-            <p className="text-[13px] leading-[1.65] text-foreground">You can also <strong>paste a LinkedIn URL or news article directly</strong> and ask: <em>"Analyze this for temporary housing, travel, hotel, or destination services signals."</em></p>
-          </div>
         </div>
       </div>
 
