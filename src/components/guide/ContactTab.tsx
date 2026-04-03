@@ -20,8 +20,8 @@ const verticalTitles = [
     { icon: '💻', name: 'Technology & Consulting', signals: 'Relocations, intern housing, office launch, deployment teams', primary: 'Global Mobility Manager · People Operations Manager · Program Manager', nonTrad: 'University Recruiting Manager · Employee Experience Manager · Travel Program Manager' },
   ]},
   { cols: [
-    { icon: '🏀', name: 'Sports & Entertainment', signals: 'Player housing, fellowship programs, staff rotations, seasonal roster moves', primary: 'Director of Team Operations · Player Services Manager · Program Coordinator', nonTrad: 'Fellowship Program Manager · Travel Coordinator · Front Office Operations Manager' },
-    { icon: '🎭', name: 'Theater / Performing Arts', signals: 'Production runs, rehearsal periods, touring company stays, seasonal repertory', primary: 'Company Manager · General Manager · Production Manager', nonTrad: 'Housing Coordinator · Artistic Director · Artistic Operations Manager · Resident Stage Manager' },
+    { icon: '🏀', name: 'Sports & Entertainment', signals: 'Draft picks relocating, mid-season trades, spring training rosters, front-office hires across markets', primary: 'Director of Team Operations · Player Development Manager · VP of Basketball/Football Ops', nonTrad: 'Team Services Coordinator · Player Engagement Manager · Scouting Operations Manager' },
+    { icon: '🎭', name: 'Theater / Performing Arts', signals: 'Out-of-town cast arriving for rehearsals, national tour layovers, seasonal repertory staffing, guest artist residencies', primary: 'Company Manager · General Manager · Production Manager', nonTrad: 'Artist Housing Coordinator · Touring Operations Manager · Associate Producer · Resident Stage Manager' },
   ]},
 ];
 
