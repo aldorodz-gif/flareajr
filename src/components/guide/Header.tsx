@@ -26,6 +26,12 @@ const Header = () => {
           className="text-[14px] font-light leading-[1.7] max-w-[760px] animate-hero-rise"
           style={{ color: 'rgba(255,255,255,.55)', animationDelay: '0.16s' }}
         >
+          Built for the NCH sales team by Aldo Rodriguez.
+        </p>
+        <p
+          className="text-[14px] font-light leading-[1.7] max-w-[760px] animate-hero-rise"
+          style={{ color: 'rgba(255,255,255,.55)', animationDelay: '0.24s' }}
+        >
           Use this guide to move from signal to research to the right contact and a more relevant outreach angle.
         </p>
       </div>
