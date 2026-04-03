@@ -108,14 +108,19 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
     }, 200);
   }, []);
 
+  const closeModal = useCallback(() => {
+    localStorage.setItem(DISMISSED_KEY, '1');
+    setOpen(false);
+    onClose?.();
+  }, [onClose]);
+
   const handleNext = useCallback(() => {
     if (step < TOUR_STEPS.length - 1) {
       goTo(step + 1);
     } else {
-      localStorage.setItem(DISMISSED_KEY, '1');
-      setOpen(false);
+      closeModal();
     }
-  }, [step, goTo]);
+  }, [step, goTo, closeModal]);
 
   const handleBack = useCallback(() => {
     if (step > 0) goTo(step - 1);
