@@ -123,11 +123,11 @@
 }
 
 .animate-slide-right {
-  animation: tabSlideRight 0.28s ease both;
+  animation: tabSlideRight 0.4s cubic-bezier(.22,1,.36,1) both;
 }
 
 .animate-slide-left {
-  animation: tabSlideLeft 0.28s ease both;
+  animation: tabSlideLeft 0.4s cubic-bezier(.22,1,.36,1) both;
 }
 
 .animate-card-rise {
