@@ -21,7 +21,7 @@ const verticalTitles = [
   ]},
   { cols: [
     { icon: '🏀', name: 'Sports & Entertainment', signals: 'Player housing, fellowship programs, staff rotations, seasonal roster moves', primary: 'Director of Team Operations · Player Services Manager · Program Coordinator', nonTrad: 'Fellowship Program Manager · Travel Coordinator · Front Office Operations Manager' },
-    { icon: '🎭', name: 'Theater / Performing Arts', signals: 'Production runs, rehearsal periods, touring company stays, seasonal repertory', primary: 'Company Manager · General Manager · Production Manager', nonTrad: 'Artistic Operations Manager · Resident Stage Manager · Producing Director' },
+    { icon: '🎭', name: 'Theater / Performing Arts', signals: 'Production runs, rehearsal periods, touring company stays, seasonal repertory', primary: 'Company Manager · General Manager · Production Manager', nonTrad: 'Housing Coordinator · Artistic Director · Artistic Operations Manager · Resident Stage Manager' },
   ]},
 ];
 

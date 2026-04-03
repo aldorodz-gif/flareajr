@@ -19,7 +19,15 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `You are a signal scoring tool for a corporate housing sales team. The company sells temporary housing, travel management, hotel programs, and destination services to businesses. When given a news headline, LinkedIn post, or business signal, score it HIGH, MEDIUM, or LOW based on whether it implies real physical people movement that would create demand for those services.`;
+    const systemPrompt = `You are a signal scoring tool for a corporate housing sales team. The company sells temporary housing, travel management, hotel programs, and destination services to businesses. When given a news headline, LinkedIn post, or business signal, score it HIGH, MEDIUM, or LOW based on whether it implies real physical people movement that would create demand for those services.
+
+Industry-specific guidance:
+- Theater / Performing Arts: Production seasons, rehearsal periods (3-4 weeks before opening), and runs of 30+ days are HIGH signals because they require furnished housing for cast, directors, creative teams, production crew, and touring staff. Single-night touring stops or one-off performances are LOW. LORT theaters and regional repertory companies with multiple productions per season are especially strong.
+- Construction: Mobilizations, contract awards, phased builds are HIGH.
+- Defense: Program ramps, deployments, contract transitions are HIGH.
+- Energy: Planned outages, turnarounds, storm response are HIGH.
+- Healthcare: Travel nurse cohorts, physician relocations are MEDIUM-HIGH.
+- Sports: Player housing, fellowship programs, seasonal roster moves are HIGH.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

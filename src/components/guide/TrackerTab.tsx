@@ -26,7 +26,7 @@ Keep each entry concise — 3 to 4 lines max. No long paragraphs.
 Close with a one-sentence summary of the strongest opportunity.`;
 
 const VERTICALS = ['Construction', 'Defense', 'Energy', 'Healthcare', 'Technology', 'Manufacturing', 'Sports', 'Theater / Performing Arts', 'Other'];
-const SIGNAL_TYPES = ['Contract award', 'Office relocation', 'Facility expansion', 'Training cohort', 'Merger or acquisition', 'Funding round', 'Return to office mandate', 'Other'];
+const SIGNAL_TYPES = ['Contract award', 'Office relocation', 'Facility expansion', 'Training cohort', 'Merger or acquisition', 'Funding round', 'Return to office mandate', 'Production season or touring', 'Other'];
 
 const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
   const [showExamples, setShowExamples] = useState(false);

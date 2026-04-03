@@ -21,17 +21,15 @@ serve(async (req) => {
 
     const varyInstruction = vary ? " Use a different tone and angle than a typical first outreach — vary the approach while keeping the same rules." : "";
 
-    const referenceEmail = `Here is a real outreach email from a top-performing BDR at NCH. Use it as a style and tone reference — match the warmth, specificity, and professional-but-human feel:
+    const referenceEmail = `Here are real outreach emails from top-performing BDRs at NCH. Use the one closest to the signal's industry as a style and tone reference — match the warmth, specificity, and professional-but-human feel:
 
-"My name is Cedrick Teves, and I work with National Corporate Housing, a trusted partner of the NBA Foundation for Fellowship Housing. We also support NBA teams across the country with their housing needs.
+SPORTS REFERENCE:
+"My name is Cedrick Teves, and I work with National Corporate Housing, a trusted partner of the NBA Foundation for Fellowship Housing. We also support NBA teams across the country with their housing needs. I came across the Chicago Bulls rotational program and wanted to reach out. I understand that housing may not be directly provided, but we'd love to be a resource for your fellows, as well as for any player or staff housing needs that may arise. We specialize in fully furnished, flexible accommodations for interns, fellows, players, and staff. Whether it's short-term stays or longer assignments, we offer turnkey housing with flexible lease terms, consolidated billing, and options tailored to your team's schedule and preferences. I truly appreciate your help in connecting me with the right individual for this."
 
-I came across the Chicago Bulls rotational program and wanted to reach out. I understand that housing may not be directly provided, but we'd love to be a resource for your fellows, as well as for any player or staff housing needs that may arise.
+THEATER / PERFORMING ARTS REFERENCE:
+"I'm reaching out as many theater companies prepare for upcoming productions, rehearsals, and extended runs. I work with arts organizations to provide fully furnished housing for stays of 30+ nights, supporting: cast members during rehearsal and performance runs, directors and creative teams, production and technical crew, touring staff and visiting performers. We offer flexible, move-in ready accommodations in convenient locations — making it easy for your team to settle in and focus on the production, not logistics."
 
-We specialize in fully furnished, flexible accommodations for interns, fellows, players, and staff. Whether it's short-term stays or longer assignments, we offer turnkey housing with flexible lease terms, consolidated billing, and options tailored to your team's schedule and preferences.
-
-I truly appreciate your help in connecting me with the right individual for this."
-
-Key patterns to replicate: lead with a credibility anchor (partnership, existing relationship), reference the specific signal or program you found, acknowledge the buyer's reality before pitching, close with a warm connector ask. Adapt these patterns to the specific signal and company — do NOT copy this email verbatim.`;
+Key patterns to replicate: lead with a credibility anchor (partnership, existing relationship, or industry knowledge), reference the specific signal or program you found, acknowledge the buyer's reality before pitching, close with a warm connector ask. For theater specifically, emphasize the recurring seasonal nature — multiple productions means an ongoing relationship, not a one-time booking. Adapt these patterns to the specific signal and company — do NOT copy these emails verbatim.`;
 
     const systemPrompt = `You are a sales email writer for National Corporate Housing, a company that provides temporary housing, travel management, hotel programs, and destination services to businesses. Write a first outreach email to the ${buyer_title} at ${company}, referencing the signal: ${signal}. The service line is ${service_line}. Rules: under 100 words total, maximum 4 sentences, written like one person texting a colleague not like a sales email. First sentence references the specific signal directly, no generic openers. Second sentence names their likely problem without pitching anything. Third sentence says what NCH does in one plain English sentence, outcome first. Fourth sentence is a low friction ask for a 10 to 15 minute call. No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists. Also write a 2 to 4 word subject line that references the specific signal.${varyInstruction}
 
