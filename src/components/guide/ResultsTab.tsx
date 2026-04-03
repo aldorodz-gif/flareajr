@@ -50,7 +50,7 @@ const verticals: Record<string, VerticalData> = {
     buyer: { label: "Who to call", tag: "Team Operations", title: "Director of Team Operations or Player Services", body: "They coordinate everything off the court — housing, travel, settling in. For fellowship programs, the HR or program coordinator owns the housing need." },
     angle: { label: "Outreach angle", tag: "Temp Housing + DS", title: "Turnkey player and staff housing", body: "Teams need flexible, furnished housing that works around unpredictable schedules — trades, call-ups, mid-season roster changes. Lead with flexibility and proximity to the facility." },
     email: { subj: "Player housing program", body: "Jordan,\n\nSaw your team is gearing up for next season with a full roster plus a new fellowship cohort.\n\nHousing for players and staff on unpredictable schedules usually means a lot of last-minute scrambling. We handle furnished, flexible accommodations built around how sports teams actually operate.\n\nWorth a quick call to see if it fits your setup?" }
-  }
+  },
   theater: {
     signal: { label: "Signal", tag: "HIGH", title: "Upcoming production season with out-of-town talent", body: "A LORT theater is staging 3 productions this spring/summer with runs of 30–60+ days each. Cast, directors, and creative teams are hired from out of town and need furnished housing near the venue." },
     buyer: { label: "Who to call", tag: "Company Manager", title: "Company Manager or General Manager", body: "The company manager coordinates all artist logistics — housing, travel, per diem. They're the first person who feels the pain when housing isn't sorted. Production Manager is a strong secondary." },
