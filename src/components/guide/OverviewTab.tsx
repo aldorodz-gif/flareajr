@@ -61,7 +61,7 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       {/* Workflow rows */}
       <div className="flex flex-col gap-3">
         {workflowSteps.map((step) => (
-          <div key={step.num} className="flex flex-col md:flex-row overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }}>
+          <div key={step.num} className="flex flex-col md:flex-row overflow-hidden border cursor-pointer transition-shadow hover:shadow-md" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }} onClick={() => onNavigate(step.tab)}>
             <div className="md:w-[132px] flex md:flex-col items-center md:justify-center gap-2 p-3 md:p-4 text-center flex-shrink-0" style={{ background: step.gradient }}>
               <span className="text-[20px] font-bold leading-none" style={{ color: '#fff' }}>{step.num}</span>
               <small className="text-[11px] font-semibold uppercase tracking-wide leading-tight" style={{ color: 'rgba(255,255,255,.5)' }}>{step.label}</small>
