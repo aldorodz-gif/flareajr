@@ -49,6 +49,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <WelcomeModal />
       <Header />
       <div ref={tabBarRef}>
         <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />
