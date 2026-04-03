@@ -30,22 +30,6 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
         Demand signals are flares — spot them first, and you're already ahead. Flare is a three-tool kit built for the NCH sales team that helps you score signals, build search prompts, and write outreach emails that reference what's actually happening at the account.
       </p>
 
-      {/* What's New */}
-      <div className="mb-6 p-4 border" style={{ background: 'linear-gradient(135deg, rgba(155,120,200,.06), rgba(16,185,129,.04))', borderColor: 'rgba(155,120,200,.15)' }}>
-        <p className="text-[12px] font-bold uppercase tracking-wide mb-2.5" style={{ color: '#9B78C8' }}>🆕 What's New</p>
-        <div className="flex flex-col gap-1.5">
-          {[
-            'Interactive guided tour — click ❓ Tour in the header to replay anytime',
-            'Theater & Sports verticals added to Work Your List',
-            'Company Research prompt built into Work Your List — no more switching tabs',
-            'Score Signals, Prompt Builder & Email Generator — three live AI tools',
-          ].map((item) => (
-            <p key={item} className="text-[13px] leading-[1.6] text-foreground flex gap-2">
-              <span style={{ color: '#10B981' }}>✓</span> {item}
-            </p>
-          ))}
-        </div>
-      </div>
 
       <h3 className="text-[20px] font-semibold mb-1 text-foreground">The Full Prospecting Flow</h3>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
