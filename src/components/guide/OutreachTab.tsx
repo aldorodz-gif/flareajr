@@ -160,6 +160,15 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
         </div>
       </section>
 
+      {/* ══════════════════════════════════════════════ */}
+      {/* SECTION B: EMAIL FRAMEWORKS                    */}
+      {/* ══════════════════════════════════════════════ */}
+      <div className="flex items-center gap-2.5 mb-4 px-4 py-2.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
+        <span className="text-[16px]">✉️</span>
+        <p className="text-[14px] font-semibold" style={{ color: '#fff' }}>When You're Emailing</p>
+        <p className="text-[12px] ml-auto" style={{ color: 'rgba(255,255,255,.5)' }}>Use the generator + rules below for written outreach</p>
+      </div>
+
       {/* ── Interactive Email Generator ── */}
       <div className="overflow-hidden mb-8">
         <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
