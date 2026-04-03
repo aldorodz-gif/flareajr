@@ -56,10 +56,6 @@ const Header = ({ onReplayTour }: HeaderProps) => {
           >
             FLARE
           </h1>
-          <div
-            className="h-[3px] w-[80px] mt-2 rounded-full"
-            style={{ background: 'linear-gradient(90deg, #fb923c, rgba(251,146,60,0))' }}
-          />
         </div>
 
         {/* Tagline */}
