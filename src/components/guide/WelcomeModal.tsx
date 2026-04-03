@@ -133,11 +133,10 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
   const handleJumpToTab = useCallback(() => {
     const current = TOUR_STEPS[step];
     if (current.tabId && onNavigateToTab) {
-      localStorage.setItem(DISMISSED_KEY, '1');
-      setOpen(false);
+      closeModal();
       onNavigateToTab(current.tabId);
     }
-  }, [step, onNavigateToTab]);
+  }, [step, onNavigateToTab, closeModal]);
 
   if (!open) return null;
 
