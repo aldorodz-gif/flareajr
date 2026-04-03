@@ -25,9 +25,9 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
       <Eyebrow>Start Here</Eyebrow>
-      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">What is Prospect Engine?</h2>
+      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">What is Flare?</h2>
       <p className="text-[13px] max-w-[760px] mb-4 leading-[1.7] text-muted-foreground">
-        Prospect Engine is a three-tool kit built for the NCH sales team. It helps you find companies showing real demand signals, build targeted search prompts, and write outreach emails that reference what's actually happening at the account — not generic templates.
+        Flare is a three-tool kit built for the NCH sales team. It helps you find companies showing real demand signals, build targeted search prompts, and write outreach emails that reference what's actually happening at the account — not generic templates.
       </p>
 
       {/* How to use it */}
