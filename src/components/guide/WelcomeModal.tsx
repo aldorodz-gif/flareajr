@@ -127,9 +127,8 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
   }, [step, goTo]);
 
   const handleSkip = useCallback(() => {
-    localStorage.setItem(DISMISSED_KEY, '1');
-    setOpen(false);
-  }, []);
+    closeModal();
+  }, [closeModal]);
 
   const handleJumpToTab = useCallback(() => {
     const current = TOUR_STEPS[step];
