@@ -163,6 +163,17 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
         </p>
       </div>
 
+      {/* Mobile-first hack */}
+      <div className="flex gap-3 items-start p-4 mb-6 border" style={{ background: 'rgba(91,191,160,.06)', borderColor: 'rgba(91,191,160,.25)' }}>
+        <span className="text-[20px] flex-shrink-0">📱</span>
+        <div>
+          <p className="text-[13px] font-semibold text-foreground mb-1">Hack: Send yourself the email first and read it on your phone.</p>
+          <p className="text-[12px] leading-[1.6] text-muted-foreground">
+            Most buyers read your email on a 4-inch screen between meetings. If it looks like a wall of text on your phone, it's getting skipped. Short sentences. Short paragraphs. Every line should be scannable in 2 seconds. If you wouldn't read it standing in line at a coffee shop — rewrite it.
+          </p>
+        </div>
+      </div>
+
       {/* 4 parts */}
       <p className="text-[14px] font-semibold mb-1.5 text-foreground">What the Body Should Contain</p>
       <p className="text-[13px] mb-4 text-muted-foreground">Nothing else. No company history. No features. Every sentence has one job.</p>
