@@ -24,15 +24,15 @@ const Header = () => {
         </h1>
         <p
           className="text-[14px] font-light leading-[1.7] max-w-[760px] animate-hero-rise"
-          style={{ color: 'rgba(255,255,255,.55)', animationDelay: '0.16s' }}
+          style={{ color: 'rgba(255,255,255,.7)', animationDelay: '0.16s' }}
         >
-          Built for the NCH sales team by Aldo Rodriguez.
+          Demand signals are flares — spot them first, and you're already ahead.
         </p>
         <p
-          className="text-[14px] font-light leading-[1.7] max-w-[760px] animate-hero-rise"
-          style={{ color: 'rgba(255,255,255,.55)', animationDelay: '0.24s' }}
+          className="text-[12px] font-light leading-[1.7] max-w-[760px] animate-hero-rise"
+          style={{ color: 'rgba(255,255,255,.4)', animationDelay: '0.24s' }}
         >
-          Use this guide to move from signal to research to the right contact and a more relevant outreach angle.
+          Built for the NCH sales team by Aldo Rodriguez
         </p>
       </div>
     </header>
