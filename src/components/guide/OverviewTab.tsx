@@ -34,7 +34,7 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
 
       <h3 className="text-[20px] font-semibold mb-1 text-foreground">The Full Prospecting Flow</h3>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
-        Signal to outreach. One clear reason to contact the account. Each tab has one job. Each step builds on the last.
+        Signal to outreach in 7 steps. Each tab has one job. Each step builds on the last. Click any step to jump there.
       </p>
 
       {/* NCH Service Lines */}
