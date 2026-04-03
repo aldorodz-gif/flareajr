@@ -20,7 +20,7 @@ const Header = () => {
             animationDelay: '0.08s',
           }}
         >
-          ChatGPT prospecting agent set up guide
+          Prospect Engine
         </h1>
         <p
           className="text-[14px] font-light leading-[1.7] max-w-[760px] animate-hero-rise"
