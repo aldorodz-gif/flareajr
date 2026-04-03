@@ -37,7 +37,7 @@ const WelcomeModal = () => {
             Welcome to Flare
           </h2>
           <p className="text-[13px] mt-1" style={{ color: 'rgba(255,255,255,.55)' }}>
-            Three AI-powered tools for the NCH sales team.
+            Demand signals are flares — spot them first, and you're already ahead.
           </p>
         </div>
 

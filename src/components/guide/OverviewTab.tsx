@@ -27,7 +27,7 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       <Eyebrow>Start Here</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">What is Flare?</h2>
       <p className="text-[13px] max-w-[760px] mb-4 leading-[1.7] text-muted-foreground">
-        Flare is a three-tool kit built for the NCH sales team. It helps you find companies showing real demand signals, build targeted search prompts, and write outreach emails that reference what's actually happening at the account — not generic templates.
+        Demand signals are flares — spot them first, and you're already ahead. Flare is a three-tool kit built for the NCH sales team that helps you score signals, build search prompts, and write outreach emails that reference what's actually happening at the account.
       </p>
 
       {/* How to use it */}
