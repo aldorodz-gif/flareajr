@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import Header from '../components/guide/Header';
+import WelcomeModal from '../components/guide/WelcomeModal';
 import TabBar from '../components/guide/TabBar';
 import ProgressBar from '../components/guide/ProgressBar';
 import OverviewTab from '../components/guide/OverviewTab';
@@ -48,6 +49,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <WelcomeModal />
       <Header />
       <div ref={tabBarRef}>
         <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />

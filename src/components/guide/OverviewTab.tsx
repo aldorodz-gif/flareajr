@@ -25,7 +25,23 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
       <Eyebrow>Start Here</Eyebrow>
-      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">The Full Prospecting Flow</h2>
+      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">What is Prospect Engine?</h2>
+      <p className="text-[13px] max-w-[760px] mb-4 leading-[1.7] text-muted-foreground">
+        Prospect Engine is a three-tool kit built for the NCH sales team. It helps you find companies showing real demand signals, build targeted search prompts, and write outreach emails that reference what's actually happening at the account — not generic templates.
+      </p>
+
+      {/* How to use it */}
+      <div className="mb-6 p-4 border" style={{ background: 'hsl(var(--card))', borderColor: 'rgba(155,120,200,.15)' }}>
+        <p className="text-[12px] font-bold uppercase tracking-wide mb-2" style={{ color: '#9B78C8' }}>How to use it</p>
+        <ol className="text-[13px] leading-[1.8] text-foreground list-decimal list-inside space-y-1">
+          <li><strong>Score Signals</strong> — Paste a business signal and get an instant HIGH / MEDIUM / LOW score with the likely service line.</li>
+          <li><strong>Prompt Builder</strong> — Pick a city, vertical, and signal type to generate a ready-to-paste ChatGPT search prompt.</li>
+          <li><strong>Write Outreach</strong> — Enter a company, signal, and buyer title to get a first-touch email drafted in NCH's voice.</li>
+        </ol>
+        <p className="text-[12px] mt-2 text-muted-foreground">The other tabs (Setup, Work Your List, Who to Call, Mindset) are reference guides — read them once, revisit when needed.</p>
+      </div>
+
+      <h3 className="text-[20px] font-semibold mb-1 text-foreground">The Full Prospecting Flow</h3>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
         Signal to outreach. One clear reason to contact the account. Each tab has one job. Each step builds on the last.
       </p>
@@ -74,11 +90,11 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
         <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(99,102,241,.12)', borderLeftWidth: '3px', borderLeftColor: '#9B78C8' }}>
           <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#9B78C8' }}>New to outbound</p>
-          <p className="text-[13px] leading-[1.6] text-foreground">Follow the tabs left to right. Do not skip ahead. Run the Setup tab first, then Run Search each morning. Read The Thinking tab before your first call.</p>
+          <p className="text-[13px] leading-[1.6] text-foreground">Follow the tabs left to right. Do not skip ahead. Run Setup first, then use the Prompt Builder each morning. Read the Mindset tab before your first call.</p>
         </div>
         <div className="p-4 border-l-[3px]" style={{ background: '#fff', border: '1px solid rgba(16,185,129,.12)', borderLeftWidth: '3px', borderLeftColor: '#10B981' }}>
           <p className="text-[12px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#10B981' }}>Know the basics</p>
-          <p className="text-[13px] leading-[1.6] text-foreground">Use Run Search daily and Signal Filter as your quick filter. The vertical selector in Work Your List maps your signal to the right angle and contact. The Thinking tab has what most experienced reps overlook.</p>
+          <p className="text-[13px] leading-[1.6] text-foreground">Use the Prompt Builder daily and Score Signals as your quick filter. Write Outreach drafts your first-touch emails. The Mindset tab has what most experienced reps overlook.</p>
         </div>
       </div>
 
