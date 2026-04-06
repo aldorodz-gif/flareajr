@@ -114,7 +114,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
       {/* ═══════════════════════════════════════════════════ */}
 
       {/* Outer animated wrapper with floating + glowing border */}
-      <div className="animate-tool-float mb-12 relative group">
+      <div className="mb-12 relative group">
         {/* Animated gradient border */}
         <div
           className="absolute -inset-[2px] rounded-[20px] animate-border-glow pointer-events-none"
