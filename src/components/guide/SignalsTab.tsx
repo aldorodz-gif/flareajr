@@ -114,116 +114,44 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
       {/* SIGNAL SCORER — THE INTERACTIVE TOOL               */}
       {/* ═══════════════════════════════════════════════════ */}
 
-      {/* Outer animated wrapper with floating + glowing border */}
-      <div className="mb-12 relative group">
-        {/* Animated gradient border */}
-        <div
-          className="absolute -inset-[2px] rounded-[20px] animate-border-glow pointer-events-none"
-          style={{
-            background: 'linear-gradient(135deg, #D6B07A, #9B78C8, #10B981, #D6B07A)',
-            backgroundSize: '300% 300%',
-            animation: 'borderGlow 2.5s ease-in-out infinite, shimmer 4s linear infinite',
-          }}
-        />
-
-        <div
-          className="rounded-2xl overflow-hidden relative"
-          style={{
-            background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #2d1b69 100%)',
-            boxShadow: '0 25px 80px rgba(14,30,58,.45), 0 0 60px rgba(214,176,122,.08)',
-          }}
-        >
-          {/* Ambient glow effects */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-0 right-0 w-[350px] h-[350px] opacity-30" style={{ background: 'radial-gradient(circle, rgba(214,176,122,.5), transparent 70%)' }} />
-            <div className="absolute bottom-0 left-0 w-[250px] h-[250px] opacity-25" style={{ background: 'radial-gradient(circle, rgba(155,120,200,.6), transparent 70%)' }} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-[.06]" style={{ background: 'radial-gradient(circle, rgba(255,255,255,.8), transparent 60%)' }} />
-          </div>
-
-          {/* Radar ping decoration */}
-          <div className="absolute top-6 right-6 pointer-events-none">
-            <div className="relative">
-              <span className="absolute inset-0 rounded-full animate-radar-ping" style={{ background: 'rgba(16,185,129,.3)', width: '44px', height: '44px' }} />
-              <span className="absolute inset-0 rounded-full animate-radar-ping" style={{ background: 'rgba(16,185,129,.2)', width: '44px', height: '44px', animationDelay: '0.8s' }} />
-            </div>
-          </div>
-
-          {/* Header area */}
-          <div className="relative px-6 md:px-8 pt-7 pb-2">
-            <div className="flex items-start justify-between mb-5">
-              <div className="flex items-center gap-4">
-                <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl animate-pulse"
-                  style={{
-                    background: 'linear-gradient(135deg, #D6B07A, #E8BE70)',
-                    boxShadow: '0 8px 30px rgba(214,176,122,.45), 0 0 15px rgba(214,176,122,.2)',
-                  }}
-                >
-                  ⚡
-                </div>
-                <div>
-                  <div className="flex items-center gap-3">
-                    <p className="text-[22px] font-extrabold tracking-tight" style={{ color: '#fff' }}>Signal Scorer</p>
-                    <span
-                      className="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-[.15em] animate-shimmer"
-                      style={{
-                        background: 'linear-gradient(90deg, rgba(214,176,122,.2), rgba(214,176,122,.4), rgba(214,176,122,.2))',
-                        backgroundSize: '200% 100%',
-                        color: '#D6B07A',
-                        border: '1px solid rgba(214,176,122,.3)',
-                      }}
-                    >
-                      AI Tool
-                    </span>
-                  </div>
-                  <p className="text-[14px] mt-1 font-medium" style={{ color: 'rgba(214,176,122,.8)' }}>Paste any signal. I'll tell you if it's worth your time.</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 px-3.5 py-2 rounded-full" style={{ background: 'rgba(16,185,129,.15)', border: '1px solid rgba(16,185,129,.3)', boxShadow: '0 0 20px rgba(16,185,129,.15)' }}>
-                <span className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#10B981', boxShadow: '0 0 8px rgba(16,185,129,.6)' }} />
-                <span className="text-[11px] font-bold tracking-wide" style={{ color: '#10B981' }}>Live</span>
-              </div>
-            </div>
-          </div>
-
-        {/* Interactive body */}
-        <div className="relative px-6 md:px-8 pb-8">
+      <div className="mb-12">
+        <AiToolCard icon="⚡" title="Signal Scorer" subtitle="Paste any signal. I'll tell you if it's worth your time.">
           {!result ? (
             <>
-              {/* Demo typing preview — disappears once user interacts */}
+              {/* Demo typing preview */}
               {!hasInteracted && !signalText && (
-                <div className="mb-5 px-5 py-4 rounded-xl" style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.06)' }}>
-                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: 'rgba(214,176,122,.5)' }}>Example input</p>
-                  <p className="text-[14px] leading-[1.6]" style={{ color: 'rgba(255,255,255,.7)' }}>
+                <div className="mb-5 px-5 py-4 rounded-xl" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.12)' }}>
+                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: 'rgba(251,146,60,.5)' }}>Example input</p>
+                  <p className="text-[14px] leading-[1.6]" style={{ color: '#1a1145' }}>
                     {typingDemo}
-                    <span style={{ opacity: showCursor ? 1 : 0, color: '#D6B07A', transition: 'opacity 0.1s' }}>|</span>
+                    <span style={{ opacity: showCursor ? 1 : 0, color: '#fb923c', transition: 'opacity 0.1s' }}>|</span>
                   </p>
                 </div>
               )}
 
               {/* Example signal chips */}
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className="text-[11px] font-semibold uppercase tracking-wide self-center mr-1" style={{ color: 'rgba(255,255,255,.35)' }}>Try:</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wide self-center mr-1 text-muted-foreground">Try:</span>
                 {exampleSignals.map((ex) => (
                   <button
                     key={ex.label}
                     onClick={() => handleExampleClick(ex.text)}
                     className="px-3 py-1.5 rounded-full text-[12px] font-medium transition-all hover:scale-105"
                     style={{
-                      background: 'rgba(255,255,255,.06)',
-                      border: '1px solid rgba(255,255,255,.1)',
-                      color: 'rgba(255,255,255,.7)',
+                      background: 'rgba(251,146,60,.06)',
+                      border: '1px solid rgba(251,146,60,.15)',
+                      color: '#92400e',
                       cursor: 'pointer',
                     }}
                     onMouseEnter={e => {
-                      (e.target as HTMLElement).style.background = 'rgba(214,176,122,.15)';
-                      (e.target as HTMLElement).style.borderColor = 'rgba(214,176,122,.3)';
-                      (e.target as HTMLElement).style.color = '#D6B07A';
+                      (e.target as HTMLElement).style.background = 'rgba(251,146,60,.15)';
+                      (e.target as HTMLElement).style.borderColor = 'rgba(251,146,60,.3)';
+                      (e.target as HTMLElement).style.color = '#f97316';
                     }}
                     onMouseLeave={e => {
-                      (e.target as HTMLElement).style.background = 'rgba(255,255,255,.06)';
-                      (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,.1)';
-                      (e.target as HTMLElement).style.color = 'rgba(255,255,255,.7)';
+                      (e.target as HTMLElement).style.background = 'rgba(251,146,60,.06)';
+                      (e.target as HTMLElement).style.borderColor = 'rgba(251,146,60,.15)';
+                      (e.target as HTMLElement).style.color = '#92400e';
                     }}
                   >
                     {ex.label}
@@ -240,22 +168,21 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   placeholder="Paste a headline, LinkedIn post, or article excerpt..."
                   className="w-full min-h-[130px] p-5 rounded-xl text-[14px] leading-[1.7] resize-none focus:outline-none transition-all"
                   style={{
-                    background: 'rgba(255,255,255,.95)',
-                    border: '2px solid transparent',
-                    borderImage: signalText.trim() ? 'linear-gradient(135deg, #D6B07A, #9B78C8) 1' : 'none',
-                    borderColor: signalText.trim() ? undefined : 'rgba(255,255,255,.2)',
+                    background: '#FAF7F2',
+                    border: '2px solid',
+                    borderColor: signalText.trim() ? '#fb923c' : 'rgba(251,146,60,.15)',
                     borderRadius: '12px',
                     color: '#1a1145',
                     boxShadow: signalText.trim()
-                      ? '0 0 30px rgba(214,176,122,.15), 0 8px 24px rgba(0,0,0,.1)'
-                      : '0 4px 12px rgba(0,0,0,.1)',
+                      ? '0 0 30px rgba(251,146,60,.1), 0 8px 24px rgba(0,0,0,.06)'
+                      : '0 4px 12px rgba(0,0,0,.04)',
                   }}
                   disabled={loading}
                 />
                 {signalText.trim() && (
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: 'rgba(214,176,122,.12)' }}>
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#D6B07A' }} />
-                    <span className="text-[11px] font-semibold" style={{ color: '#B8943F' }}>Ready</span>
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.1)' }}>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#fb923c' }} />
+                    <span className="text-[11px] font-semibold" style={{ color: '#f97316' }}>Ready</span>
                   </div>
                 )}
               </div>
@@ -267,14 +194,13 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                 className="mt-5 w-full py-4 rounded-xl text-[15px] font-bold tracking-wide transition-all"
                 style={{
                   background: !signalText.trim() || loading
-                    ? 'rgba(255,255,255,.06)'
-                    : 'linear-gradient(135deg, #D6B07A, #E8BE70)',
-                  color: !signalText.trim() || loading ? 'rgba(255,255,255,.25)' : '#0E1E3A',
+                    ? '#f1f0ee'
+                    : 'linear-gradient(135deg, #fb923c, #f97316)',
+                  color: !signalText.trim() || loading ? '#c4c0b8' : '#fff',
                   cursor: !signalText.trim() || loading ? 'not-allowed' : 'pointer',
                   boxShadow: signalText.trim() && !loading
-                    ? '0 8px 30px rgba(214,176,122,.35), 0 0 0 1px rgba(214,176,122,.2)'
+                    ? '0 8px 30px rgba(251,146,60,.3), 0 0 0 1px rgba(251,146,60,.15)'
                     : 'none',
-                  border: !signalText.trim() || loading ? '1px solid rgba(255,255,255,.08)' : 'none',
                   letterSpacing: '.04em',
                 }}
               >
@@ -282,7 +208,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   <span className="flex items-center justify-center gap-3">
                     <span
                       className="w-5 h-5 rounded-full animate-spin"
-                      style={{ border: '2.5px solid rgba(14,30,58,.2)', borderTopColor: '#0E1E3A' }}
+                      style={{ border: '2.5px solid rgba(251,146,60,.2)', borderTopColor: '#fb923c' }}
                     />
                     Analyzing signal...
                   </span>
@@ -297,12 +223,10 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
           ) : (
             /* ─── Results View ─── */
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {/* Score result card */}
               <div
                 className="rounded-xl overflow-hidden"
                 style={{ boxShadow: scoreConfig(result.score).glow }}
               >
-                {/* Score banner */}
                 <div className="px-6 py-6 flex items-center justify-between" style={{ background: scoreConfig(result.score).bg }}>
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-[.2em] mb-1" style={{ color: 'rgba(255,255,255,.6)' }}>Verdict</p>
@@ -314,8 +238,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   <div className="text-[36px]">{scoreConfig(result.score).icon}</div>
                 </div>
 
-                {/* Analysis */}
-                <div className="p-6" style={{ background: 'rgba(255,255,255,.97)' }}>
+                <div className="p-6" style={{ background: '#FAF7F2' }}>
                   <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: '#94A3B8' }}>Analysis</p>
                   <p className="text-[15px] leading-[1.7] mb-5" style={{ color: '#1a1145' }}>{result.reason}</p>
 
@@ -324,7 +247,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                       <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#94A3B8' }}>Service</span>
                       <span
                         className="px-3 py-1 rounded-full text-[12px] font-bold"
-                        style={{ background: '#0E1E3A', color: '#D6B07A' }}
+                        style={{ background: '#0a0a14', color: '#fb923c' }}
                       >
                         {result.service_line}
                       </span>
@@ -341,26 +264,25 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                 onClick={handleReset}
                 className="mt-6 w-full py-3.5 rounded-xl text-[14px] font-bold tracking-wide transition-all"
                 style={{
-                  background: 'rgba(255,255,255,.08)',
-                  border: '1px solid rgba(255,255,255,.15)',
-                  color: '#D6B07A',
+                  background: 'rgba(251,146,60,.06)',
+                  border: '1px solid rgba(251,146,60,.2)',
+                  color: '#f97316',
                   cursor: 'pointer',
                 }}
                 onMouseEnter={e => {
-                  (e.target as HTMLElement).style.background = 'rgba(214,176,122,.12)';
-                  (e.target as HTMLElement).style.borderColor = 'rgba(214,176,122,.3)';
+                  (e.target as HTMLElement).style.background = 'rgba(251,146,60,.12)';
+                  (e.target as HTMLElement).style.borderColor = 'rgba(251,146,60,.3)';
                 }}
                 onMouseLeave={e => {
-                  (e.target as HTMLElement).style.background = 'rgba(255,255,255,.08)';
-                  (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,.15)';
+                  (e.target as HTMLElement).style.background = 'rgba(251,146,60,.06)';
+                  (e.target as HTMLElement).style.borderColor = 'rgba(251,146,60,.2)';
                 }}
               >
                 ← Score Another Signal
               </button>
             </div>
           )}
-        </div>
-        </div>
+        </AiToolCard>
       </div>
 
       {/* ─── Score Legend ─── */}
