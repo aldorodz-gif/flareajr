@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
+import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
 
 interface OutreachTabProps {
@@ -241,54 +242,13 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
       {channel === 'email' && (
         <div className="space-y-8 animate-fade-in">
           {/* ── AI Email Generator (Hero) ── */}
-          <div className="relative mb-0">
-            {/* Animated gradient border — matches Prompt Builder */}
-            <div className="absolute -inset-[2px] animate-border-glow" style={{
-              background: 'linear-gradient(135deg, #D6B07A, #9B78C8, #10B981, #D6B07A)',
-              backgroundSize: '300% 300%',
-            }} />
-            <div className="absolute -inset-[2px] animate-shimmer opacity-40" style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(214,176,122,.3) 50%, transparent 100%)',
-              backgroundSize: '200% 100%',
-            }} />
-
-            <div className="relative overflow-hidden">
-              {/* Header — dark navy with gold, matching Prompt Builder */}
-              <div className="relative flex items-center justify-between px-6 py-5" style={{ background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #0E1E3A 100%)' }}>
-                <div className="absolute top-0 left-1/4 w-40 h-40 opacity-20" style={{ background: 'radial-gradient(circle, #D6B07A, transparent 70%)' }} />
-                <div className="absolute bottom-0 right-1/4 w-32 h-32 opacity-15" style={{ background: 'radial-gradient(circle, #9B78C8, transparent 70%)' }} />
-
-                <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[20px]">✉️</span>
-                    <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 animate-shimmer" style={{
-                      background: 'linear-gradient(90deg, #D6B07A, #E8C98A, #D6B07A)',
-                      backgroundSize: '200% 100%',
-                      color: '#0E1E3A',
-                    }}>AI Tool</span>
-                  </div>
-                  <p className="text-[20px] font-bold tracking-tight" style={{ color: '#fff' }}>First Email Generator</p>
-                  <p className="text-[12px] mt-0.5" style={{ color: 'rgba(255,255,255,.5)' }}>Fill in the details — I'll write your first outreach email</p>
-                </div>
-
-                <div className="relative z-10 flex items-center gap-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: 'rgba(16,185,129,.1)', border: '1px solid rgba(16,185,129,.25)' }}>
-                    <div className="relative">
-                      <div className="w-2 h-2 rounded-full" style={{ background: '#10B981' }} />
-                      <div className="absolute inset-0 w-2 h-2 rounded-full animate-radar-ping" style={{ background: '#10B981' }} />
-                    </div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#10B981' }}>Live</span>
-                  </div>
-                  <div className="hidden md:block px-3 py-1.5" style={{ background: 'rgba(214,176,122,.1)', border: '1px solid rgba(214,176,122,.2)' }}>
-                    <p className="text-[11px] font-semibold" style={{ color: '#D6B07A' }}>Powered by AI</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Body — white with light inputs, matching Prompt Builder */}
-              <div className="p-6 border-x border-b" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
-                <p className="text-[14px] font-medium text-foreground mb-1">Four fields. One click. Your outreach email is ready.</p>
-                <p className="text-[13px] text-muted-foreground mb-5">Enter the company, signal, buyer title, and service line. We'll generate a short, personal email ready to send.</p>
+          <AiToolCard
+            icon="✉️"
+            title="First Email Generator"
+            subtitle="Fill in the details — I'll write your first outreach email"
+          >
+            <p className="text-[14px] font-medium text-foreground mb-1">Four fields. One click. Your outreach email is ready.</p>
+            <p className="text-[13px] text-muted-foreground mb-5">Enter the company, signal, buyer title, and service line. We'll generate a short, personal email ready to send.</p>
 
                 {!result ? (
                   <>
@@ -381,9 +341,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#EF4444' }}>{error}</p>}
                   </>
                 )}
-              </div>
-            </div>
-          </div>
+          </AiToolCard>
 
           {/* ── Email Rules (collapsible) ── */}
           <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--card))' }}>

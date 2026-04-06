@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import PromptBox from './PromptBox';
+import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
 
 interface TrackerTabProps {
@@ -88,52 +89,11 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
       </div>
 
       {/* Interactive Prompt Builder — Hero */}
-      <div className="relative mb-8">
-        {/* Animated gradient border */}
-        <div className="absolute -inset-[2px] rounded-none animate-border-glow" style={{
-          background: 'linear-gradient(135deg, #D6B07A, #9B78C8, #10B981, #D6B07A)',
-          backgroundSize: '300% 300%',
-        }} />
-        <div className="absolute -inset-[2px] rounded-none animate-shimmer opacity-40" style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(214,176,122,.3) 50%, transparent 100%)',
-          backgroundSize: '200% 100%',
-        }} />
-
-        <div className="relative overflow-hidden">
-          {/* Header */}
-          <div className="relative flex items-center justify-between px-6 py-5" style={{ background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #0E1E3A 100%)' }}>
-            <div className="absolute top-0 left-1/4 w-40 h-40 opacity-20" style={{ background: 'radial-gradient(circle, #D6B07A, transparent 70%)' }} />
-            <div className="absolute bottom-0 right-1/4 w-32 h-32 opacity-15" style={{ background: 'radial-gradient(circle, #9B78C8, transparent 70%)' }} />
-
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[20px]">🔧</span>
-                <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 animate-shimmer" style={{
-                  background: 'linear-gradient(90deg, #D6B07A, #E8C98A, #D6B07A)',
-                  backgroundSize: '200% 100%',
-                  color: '#0E1E3A',
-                }}>AI Tool</span>
-              </div>
-              <p className="text-[20px] font-bold tracking-tight" style={{ color: '#fff' }}>Custom Prompt Builder</p>
-              <p className="text-[12px] mt-0.5" style={{ color: 'rgba(255,255,255,.5)' }}>Tell us your market — we'll write the search prompt for you</p>
-            </div>
-
-            <div className="relative z-10 flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: 'rgba(16,185,129,.1)', border: '1px solid rgba(16,185,129,.25)' }}>
-                <div className="relative">
-                  <div className="w-2 h-2 rounded-full" style={{ background: '#10B981' }} />
-                  <div className="absolute inset-0 w-2 h-2 rounded-full animate-radar-ping" style={{ background: '#10B981' }} />
-                </div>
-                <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#10B981' }}>Live</span>
-              </div>
-              <div className="px-3 py-1.5" style={{ background: 'rgba(214,176,122,.1)', border: '1px solid rgba(214,176,122,.2)' }}>
-                <p className="text-[11px] font-semibold" style={{ color: '#D6B07A' }}>Powered by AI</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Body */}
-          <div className="p-6 border-x border-b" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
+      <AiToolCard
+        icon="🔧"
+        title="Custom Prompt Builder"
+        subtitle="Tell us your market — we'll write the search prompt for you"
+      >
             <p className="text-[14px] font-medium text-foreground mb-1">Three fields. One click. Your custom prompt is ready.</p>
             <p className="text-[13px] text-muted-foreground mb-5">Pick your city, choose the industry you're targeting, and select the type of business movement you want to track. We'll generate a search prompt tuned to find companies in your market that likely need temporary housing, travel, or destination services.</p>
 
@@ -275,9 +235,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </div>
+      </AiToolCard>
 
       {/* Schedule — follow-up step */}
       <div className="p-5 mb-6" style={{ background: 'linear-gradient(135deg, rgba(214,176,122,.04), rgba(155,120,200,.04))', border: '1px solid rgba(214,176,122,.15)' }}>
