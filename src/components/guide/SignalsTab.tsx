@@ -343,12 +343,12 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
       </div>
 
       {/* Bottom callout */}
-      <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: 'linear-gradient(135deg, #0E1E3A, #1a1145)', boxShadow: '0 4px 20px rgba(14,30,58,.2)' }}>
-        <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-lg" style={{ background: 'rgba(214,176,122,.15)' }}>
+      <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)', boxShadow: '0 4px 20px rgba(14,30,58,.2)' }}>
+        <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-lg" style={{ background: 'rgba(251,146,60,.15)' }}>
           🔑
         </div>
         <div>
-          <p className="text-[12px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: '#D6B07A' }}>The one question that matters</p>
+          <p className="text-[12px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: '#fb923c' }}>The one question that matters</p>
           <p className="text-[14px] leading-[1.65]" style={{ color: 'rgba(255,255,255,.82)' }}>
             <strong style={{ color: '#fff' }}>Are real people physically going somewhere because of this?</strong> If yes, pursue. If the movement is virtual, speculative, or one day long, move on.
           </p>
