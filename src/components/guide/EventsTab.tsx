@@ -80,9 +80,9 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                   onClick={() => setCity(c)}
                   className="px-3 py-1 rounded-full text-xs font-medium transition-all"
                   style={{
-                    background: city === c ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(255,255,255,.06)',
-                    color: city === c ? '#fff' : 'rgba(255,255,255,.7)',
-                    border: `1px solid ${city === c ? '#fb923c' : 'rgba(255,255,255,.1)'}`,
+                    background: city === c ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
+                    color: city === c ? '#fff' : '#475569',
+                    border: `1px solid ${city === c ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
                   }}
                 >
                   {c}
@@ -107,9 +107,9 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                   onClick={() => setVertical(v)}
                   className="px-3 py-1 rounded-full text-xs font-medium transition-all"
                   style={{
-                    background: vertical === v ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(255,255,255,.06)',
-                    color: vertical === v ? '#fff' : 'rgba(255,255,255,.7)',
-                    border: `1px solid ${vertical === v ? '#fb923c' : 'rgba(255,255,255,.1)'}`,
+                    background: vertical === v ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
+                    color: vertical === v ? '#fff' : '#475569',
+                    border: `1px solid ${vertical === v ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
                   }}
                 >
                   {v}
@@ -128,9 +128,9 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                   onClick={() => setTimeframe(t)}
                   className="px-3 py-1 rounded-full text-xs font-medium transition-all"
                   style={{
-                    background: timeframe === t ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(255,255,255,.06)',
-                    color: timeframe === t ? '#fff' : 'rgba(255,255,255,.7)',
-                    border: `1px solid ${timeframe === t ? '#fb923c' : 'rgba(255,255,255,.1)'}`,
+                    background: timeframe === t ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
+                    color: timeframe === t ? '#fff' : '#475569',
+                    border: `1px solid ${timeframe === t ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
                   }}
                 >
                   {t}
