@@ -8,7 +8,7 @@ interface EventsTabProps {
   onNavigate: (tabId: string) => void;
 }
 
-const CITIES = ['Denver', 'Nashville', 'Atlanta', 'Huntsville', 'Austin', 'Phoenix', 'Charlotte', 'Dallas'];
+const CITIES = ['Nashville', 'Atlanta', 'Huntsville', 'Phoenix', 'Charlotte'];
 const VERTICALS = ['Construction', 'Defense / Aerospace', 'Tech', 'Healthcare', 'Energy', 'Sports', 'Theater', 'Government'];
 const TIMEFRAMES = ['Next 30 days', 'Next 3 months', 'Next 6 months'];
 
