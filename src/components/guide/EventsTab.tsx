@@ -57,7 +57,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
 
   return (
     <main className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
-      <Eyebrow step="08" label="Find Events" />
+      <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 08 · Find Events</Eyebrow>
       <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Networking Event Finder</h2>
       <p className="text-muted-foreground text-sm max-w-2xl">
         Discover conferences, trade shows, and networking events where your target buyers gather — so you can show up where decisions are made.
@@ -204,7 +204,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
         </div>
       )}
 
-      <SectionNav current="events" onNavigate={onNavigate} />
+      <SectionNav currentTab="events" onNavigate={onNavigate} />
     </main>
   );
 };
