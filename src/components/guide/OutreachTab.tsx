@@ -163,9 +163,9 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     key={mc.num}
                     className="rounded-lg overflow-hidden transition-all duration-200 border"
                     style={{
-                      borderColor: isOpen ? '#D6B07A' : 'hsl(var(--border))',
+                      borderColor: isOpen ? '#fb923c' : 'hsl(var(--border))',
                       background: isOpen ? '#FAF7F2' : 'hsl(var(--card))',
-                      boxShadow: isOpen ? '0 2px 12px rgba(214,176,122,.15)' : 'none',
+                      boxShadow: isOpen ? '0 2px 12px rgba(251,146,60,.15)' : 'none',
                     }}
                   >
                     <button
@@ -187,7 +187,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       </span>
                     </button>
                     {isOpen && (
-                      <div className="px-4 pb-4 pt-1 ml-10 border-l-2 animate-fade-in" style={{ borderColor: '#D6B07A' }}>
+                      <div className="px-4 pb-4 pt-1 ml-10 border-l-2 animate-fade-in" style={{ borderColor: '#fb923c' }}>
                         <p className="text-[14px] font-semibold italic mb-2 text-foreground leading-relaxed">{mc.phrase}</p>
                         <p className="text-[13px] leading-[1.7] text-muted-foreground">{mc.why}</p>
                       </div>
@@ -214,7 +214,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
               {BANT.map(b => (
                 <div key={b.letter} className="rounded-lg p-4 border" style={{ background: '#FAF7F2', borderColor: 'hsl(var(--border))' }}>
                   <div className="flex items-center gap-2.5 mb-2.5">
-                    <span className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-bold" style={{ background: '#2F4858', color: '#D6B07A' }}>
+                    <span className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-bold" style={{ background: '#2F4858', color: '#fb923c' }}>
                       {b.letter}
                     </span>
                     <span className="text-[14px] font-semibold text-foreground">{b.label}</span>
@@ -228,7 +228,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
           {/* Bottom line */}
           <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: '#2F4858' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#D6B07A' }}>Bottom line</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#fb923c' }}>Bottom line</span>
             <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.85)' }}>
               Good prospecting starts with a real signal. Good closing starts with alignment you built along the way. When both are working, you don't need to "close hard."
             </p>
@@ -267,9 +267,9 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                             placeholder={f.ph}
                             className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
                             style={{
-                              borderColor: f.val ? 'rgba(214,176,122,.5)' : 'rgba(155,120,200,.2)',
-                              background: f.val ? '#FFFBF5' : '#FAF7F2',
-                              boxShadow: f.val ? '0 0 0 3px rgba(214,176,122,.1)' : 'none',
+                              borderColor: f.val ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                              background: f.val ? '#FFF7ED' : '#FAF7F2',
+                              boxShadow: f.val ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                             }}
                             disabled={loading}
                           />
@@ -282,9 +282,9 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                           onChange={e => setServiceLine(e.target.value)}
                           className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200 appearance-none cursor-pointer"
                           style={{
-                            borderColor: serviceLine ? 'rgba(214,176,122,.5)' : 'rgba(155,120,200,.2)',
-                            background: serviceLine ? '#FFFBF5' : '#FAF7F2',
-                            boxShadow: serviceLine ? '0 0 0 3px rgba(214,176,122,.1)' : 'none',
+                            borderColor: serviceLine ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                            background: serviceLine ? '#FFF7ED' : '#FAF7F2',
+                            boxShadow: serviceLine ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                             color: serviceLine ? 'inherit' : '#9CA3AF',
                           }}
                           disabled={loading}
@@ -300,10 +300,10 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       disabled={!canGenerate || loading}
                       className="w-full py-4 text-[15px] font-bold tracking-wide transition-all"
                       style={{
-                        background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #D6B07A, #C49A5C)',
+                        background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #fb923c, #f97316)',
                         color: !canGenerate || loading ? '#94A3B8' : '#fff',
                         cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
-                        boxShadow: canGenerate && !loading ? '0 4px 15px rgba(214,176,122,.35)' : 'none',
+                        boxShadow: canGenerate && !loading ? '0 4px 15px rgba(251,146,60,.35)' : 'none',
                       }}
                     >
                       {loading ? (
@@ -317,21 +317,21 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                   </>
                 ) : (
                   <>
-                    <div className="mb-4 px-5 py-4" style={{ background: '#FAF7F2', border: '1px solid rgba(214,176,122,.25)' }}>
+                    <div className="mb-4 px-5 py-4" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.25)' }}>
                       <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-1 text-muted-foreground">Subject Line</p>
                       <p className="text-[17px] font-bold text-foreground">{result.subject}</p>
                     </div>
                     <div className="relative px-5 py-5" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
-                      <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1" style={{ background: wordCount > 100 ? 'rgba(201,91,106,.1)' : 'rgba(214,176,122,.15)', color: wordCount > 100 ? '#C95B6A' : '#2F4858', border: `1px solid ${wordCount > 100 ? 'rgba(201,91,106,.25)' : 'rgba(214,176,122,.25)'}` }}>
+                      <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1" style={{ background: wordCount > 100 ? 'rgba(201,91,106,.1)' : 'rgba(251,146,60,.15)', color: wordCount > 100 ? '#C95B6A' : '#2F4858', border: `1px solid ${wordCount > 100 ? 'rgba(201,91,106,.25)' : 'rgba(251,146,60,.25)'}` }}>
                         {wordCount} words
                       </span>
                       <p className="text-[14px] leading-[1.8] whitespace-pre-line pr-16 text-foreground">{result.body}</p>
                     </div>
                     <div className="flex gap-3 mt-5">
-                      <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#10B981' : 'linear-gradient(135deg, #D6B07A, #C49A5C)', color: '#fff', boxShadow: '0 2px 8px rgba(214,176,122,.3)' }}>
+                      <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#10B981' : 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff', boxShadow: '0 2px 8px rgba(251,146,60,.3)' }}>
                         {copied ? '✓ COPIED' : '📋 COPY'}
                       </button>
-                      <button onClick={() => callApi(true)} disabled={loading} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: '#FAF7F2', border: '1px solid rgba(214,176,122,.3)', color: '#2F4858' }}>
+                      <button onClick={() => callApi(true)} disabled={loading} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.3)', color: '#2F4858' }}>
                         {loading ? 'Thinking...' : '🔄 Different angle'}
                       </button>
                       <button onClick={() => { setResult(null); setError(''); }} className="px-6 py-3 text-[13px] font-bold transition-all text-muted-foreground">
@@ -373,7 +373,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                 {/* Tone rule */}
                 <div className="rounded-lg p-4" style={{ background: '#2F4858' }}>
-                  <p className="text-[12px] font-bold tracking-wide mb-2" style={{ color: '#D6B07A' }}>THE PERSONAL TONE RULE</p>
+                  <p className="text-[12px] font-bold tracking-wide mb-2" style={{ color: '#fb923c' }}>THE PERSONAL TONE RULE</p>
                   <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.88)' }}>
                     Write it like you're texting a colleague about someone you both know. No "I wanted to reach out." No "I hope this finds you well." Just one person talking to another.
                   </p>
@@ -402,7 +402,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
             <div className="relative pl-8">
               {/* Timeline line */}
-              <div className="absolute left-[14px] top-3 bottom-3 w-[2px]" style={{ background: 'linear-gradient(to bottom, #D6B07A, #2F4858)' }} />
+              <div className="absolute left-[14px] top-3 bottom-3 w-[2px]" style={{ background: 'linear-gradient(to bottom, #fb923c, #2F4858)' }} />
 
               <div className="flex flex-col gap-4">
                 {EMAIL_PARTS.map(s => (
@@ -410,11 +410,11 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     {/* Dot */}
                     <div
                       className="absolute -left-8 top-4 w-[10px] h-[10px] rounded-full border-2"
-                      style={{ borderColor: '#D6B07A', background: 'hsl(var(--background))' }}
+                      style={{ borderColor: '#fb923c', background: 'hsl(var(--background))' }}
                     />
                     <div className="rounded-lg border overflow-hidden" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--card))' }}>
                       <div className="px-4 py-3 flex items-center gap-2.5" style={{ borderBottom: '1px solid hsl(var(--border))' }}>
-                        <span className="w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold" style={{ background: '#2F4858', color: '#D6B07A' }}>{s.num}</span>
+                        <span className="w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold" style={{ background: '#2F4858', color: '#fb923c' }}>{s.num}</span>
                         <div>
                           <span className="text-[14px] font-semibold text-foreground">{s.title}</span>
                           <span className="text-[12px] text-muted-foreground ml-1.5">— {s.subtitle}</span>
@@ -439,7 +439,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
           {/* Bottom line */}
           <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: '#2F4858' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#D6B07A' }}>Bottom line</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#fb923c' }}>Bottom line</span>
             <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.85)' }}>
               Good prospecting emails aren't about you. They're about one signal, one problem, and one small ask. If you nail those three, the reply rate takes care of itself.
             </p>
