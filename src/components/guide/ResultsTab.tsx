@@ -206,8 +206,8 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
           ))}
         </div>
         <div className="p-5 border-t rounded-b-xl" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)', borderColor: 'rgba(251,146,60,.15)' }}>
-          <div className="text-[10px] font-semibold uppercase tracking-[1.8px] mb-2.5" style={{ color: 'rgba(251,146,60,.6)' }}>Sample first email</div>
-          <div className="text-[12px] font-semibold mb-2" style={{ color: 'rgba(255,255,255,.55)' }}>Subject: {v.email.subj}</div>
+          <div className="text-[10px] font-semibold uppercase tracking-[1.8px] mb-2.5" style={{ color: '#fb923c' }}>Sample first email</div>
+          <div className="text-[12px] font-semibold mb-2" style={{ color: 'rgba(255,255,255,.7)' }}>Subject: {v.email.subj}</div>
           <div className="text-[13px] leading-[1.85] whitespace-pre-line" style={{ color: 'rgba(255,255,255,.9)' }}>{v.email.body}</div>
         </div>
       </div>

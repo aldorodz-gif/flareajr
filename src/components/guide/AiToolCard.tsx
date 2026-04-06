@@ -70,7 +70,7 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
                 </span>
               </div>
               <p className="text-[22px] font-extrabold tracking-tight" style={{ color: '#fff' }}>{title}</p>
-              <p className="text-[13px] mt-1 font-medium" style={{ color: 'rgba(251,191,36,.6)' }}>{subtitle}</p>
+              <p className="text-[13px] mt-1 font-medium" style={{ color: '#fbbf24' }}>{subtitle}</p>
             </div>
 
             <div className="relative z-10 flex items-center gap-3">

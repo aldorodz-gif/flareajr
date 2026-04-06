@@ -121,7 +121,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
               {/* Demo typing preview */}
               {!hasInteracted && !signalText && (
                 <div className="mb-5 px-5 py-4 rounded-xl" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.12)' }}>
-                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: 'rgba(251,146,60,.5)' }}>Example input</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: '#f97316' }}>Example input</p>
                   <p className="text-[14px] leading-[1.6]" style={{ color: '#1a1145' }}>
                     {typingDemo}
                     <span style={{ opacity: showCursor ? 1 : 0, color: '#fb923c', transition: 'opacity 0.1s' }}>|</span>
@@ -229,7 +229,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
               >
                 <div className="px-6 py-6 flex items-center justify-between" style={{ background: scoreConfig(result.score).bg }}>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[.2em] mb-1" style={{ color: 'rgba(255,255,255,.6)' }}>Verdict</p>
+                    <p className="text-[11px] font-bold uppercase tracking-[.2em] mb-1" style={{ color: 'rgba(255,255,255,.8)' }}>Verdict</p>
                     <div className="flex items-baseline gap-3">
                       <span className="text-[36px] font-black tracking-tight" style={{ color: '#fff' }}>{result.score}</span>
                       <span className="text-[15px] font-medium" style={{ color: 'rgba(255,255,255,.85)' }}>{scoreConfig(result.score).label}</span>
@@ -320,7 +320,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
             <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: '#EF4444' }}>Skip</span>
           </div>
           <div className="px-4 py-3.5">
-            <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: 'rgba(255,255,255,.5)' }}>Why it matters</span>
+            <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: 'rgba(255,255,255,.8)' }}>Why it matters</span>
           </div>
         </div>
         {signalRows.map((row, i) => (
