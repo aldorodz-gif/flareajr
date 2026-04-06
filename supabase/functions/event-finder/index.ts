@@ -20,8 +20,9 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const tf = timeframe || "next 3 months";
+    const today = new Date().toISOString().split("T")[0];
 
-    const systemPrompt = `You are a networking event researcher for a corporate housing sales team at National Corporate Housing. Find real, relevant networking events, conferences, trade shows, and industry meetups for a BDR prospecting in the ${vertical} vertical in ${city} within the ${tf}. For each event return: event name, date or date range, location or venue, why it matters for corporate housing sales, the type of attendees likely present, and a suggested outreach angle. Find at least 8 events. Focus on events where decision-makers in ${vertical} gather — conferences, expos, association meetings, chamber of commerce events, industry mixers. Include both large national events happening near ${city} and smaller local networking opportunities. Return ONLY valid JSON, no explanation.`;
+    const systemPrompt = `You are a networking event researcher for a corporate housing sales team at National Corporate Housing. Today's date is ${today}. Find real, relevant networking events, conferences, trade shows, and industry meetups for a BDR prospecting in the ${vertical} vertical in ${city} within the ${tf}. CRITICAL: Only include events that have NOT yet occurred — every event date must be on or after ${today}. Do NOT include any past events. For each event return: event name, date or date range, location or venue, why it matters for corporate housing sales, the type of attendees likely present, and a suggested outreach angle. Find at least 8 events. Focus on events where decision-makers in ${vertical} gather — conferences, expos, association meetings, chamber of commerce events, industry mixers. Include both large national events happening near ${city} and smaller local networking opportunities. Return ONLY valid JSON, no explanation.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
