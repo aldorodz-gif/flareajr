@@ -85,11 +85,20 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
         <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
           {!result ? (
             <>
-              <p className="text-[13px] text-muted-foreground mb-4">Paste a headline, LinkedIn post, or business signal and get an instant score.</p>
+              <div className="mb-5 p-4" style={{ background: '#FAF7F2', borderLeft: '3px solid #9B78C8' }}>
+                <p className="text-[13px] font-semibold text-foreground mb-1.5">What this does</p>
+                <p className="text-[13px] text-muted-foreground leading-[1.6] mb-3">Instantly tells you if a headline is worth pursuing. Instead of spending 5 minutes researching every article, paste the text and get a score in seconds.</p>
+                <p className="text-[13px] font-semibold text-foreground mb-1.5">How to use it</p>
+                <ol className="text-[13px] text-muted-foreground leading-[1.7] list-decimal list-inside space-y-0.5">
+                  <li>Copy a <strong className="text-foreground">headline, LinkedIn post, or key paragraph</strong> from any article</li>
+                  <li>Paste the <strong className="text-foreground">text</strong> below (not the URL — the actual words)</li>
+                  <li>Get a score: <strong style={{ color: '#10B981' }}>HIGH</strong> = call today, <strong style={{ color: '#D97706' }}>MEDIUM</strong> = track it, <strong style={{ color: '#EF4444' }}>LOW</strong> = move on</li>
+                </ol>
+              </div>
               <textarea
                 value={signalText}
                 onChange={e => setSignalText(e.target.value)}
-                placeholder="Paste a headline, LinkedIn post, or business signal here."
+                placeholder={"Example: \"Lockheed Martin awarded $2.3B contract for F-35 sustainment at Fort Worth facility\"\n\nPaste a headline, LinkedIn post, or article excerpt here."}
                 className="w-full min-h-[120px] p-4 border text-[14px] leading-[1.7] resize-none focus:outline-none focus:ring-2"
                 style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }}
                 disabled={loading}
