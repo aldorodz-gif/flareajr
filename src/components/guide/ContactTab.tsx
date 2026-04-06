@@ -28,13 +28,13 @@ const verticalTitles = [
 const ContactTab = ({ onNavigate }: ContactTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #E07878, #E8A87A)">Step 06: Find the Right Person</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 06: Find the Right Person</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Service Line Buyer Map</h2>
-      <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
+      <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(251,146,60,.1)' }}>
         Match the buyer to the signal. Start with whoever's job breaks if the need isn't solved. Not whoever has the most obvious title.
       </p>
 
-      <div className="flex gap-3 items-start p-3.5 mb-6" style={{ background: 'rgba(251,191,36,.06)', border: '1px solid rgba(251,191,36,.2)' }}>
+      <div className="flex gap-3 items-start p-3.5 rounded-lg mb-6" style={{ background: 'rgba(251,146,60,.05)', border: '1px solid rgba(251,146,60,.15)' }}>
         <span className="flex-shrink-0">📌</span>
         <p className="text-[13px] leading-[1.65] text-foreground">
           <strong>The rule:</strong> In most accounts, HR is not the first pain owner. Match the buyer to the signal. Start with whoever's job breaks if the need is not solved.
@@ -56,24 +56,24 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       <p className="text-[13px] mb-4 text-muted-foreground">Start with the signal and service line. Pick the lane that owns the pain first.</p>
 
       {/* Discovery Tree Framework */}
-      <div className="overflow-hidden border mb-6" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
-        <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
-          <p className="text-[12px] font-bold uppercase tracking-[2px] mb-1" style={{ color: '#C4A5DE' }}>Discovery Tree</p>
+      <div className="overflow-hidden rounded-xl border mb-6" style={{ borderColor: 'rgba(251,146,60,.12)' }}>
+        <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
+          <p className="text-[12px] font-bold uppercase tracking-[2px] mb-1" style={{ color: '#fb923c' }}>Discovery Tree</p>
           <p className="text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.7)' }}>Move from surface-level situation to the business impact that gets executive attention.</p>
         </div>
         <div className="flex flex-col">
           {[
-            { level: '01', color: '#9B78C8', label: 'Situation', desc: 'How are they literally doing the thing today?', hint: 'Sourcing own housing · Staging own apartments · Putting people in hotels' },
-            { level: '02', color: '#B07ED4', label: 'Operational Problem', desc: 'Something no one would want to do — the daily friction.', hint: 'Manual sourcing · Scattered expense reports · No consistency across locations' },
-            { level: '03', color: '#C47EAA', label: 'Executive Problem', desc: 'The bad news a VP would have to give a CEO.', hint: 'Recruiting inequities · Housing bottlenecks · Imbalanced spending across programs' },
-            { level: '04', color: '#D97895', label: 'Business Impact', desc: 'The C-level initiative, risk, or KPI that\'s at stake.', hint: 'Overspend · Reduced talent pipeline · Slow market growth · Lose top recruits' },
+            { level: '01', color: '#fb923c', label: 'Situation', desc: 'How are they literally doing the thing today?', hint: 'Sourcing own housing · Staging own apartments · Putting people in hotels' },
+            { level: '02', color: '#f97316', label: 'Operational Problem', desc: 'Something no one would want to do — the daily friction.', hint: 'Manual sourcing · Scattered expense reports · No consistency across locations' },
+            { level: '03', color: '#ea580c', label: 'Executive Problem', desc: 'The bad news a VP would have to give a CEO.', hint: 'Recruiting inequities · Housing bottlenecks · Imbalanced spending across programs' },
+            { level: '04', color: '#c2410c', label: 'Business Impact', desc: 'The C-level initiative, risk, or KPI that\'s at stake.', hint: 'Overspend · Reduced talent pipeline · Slow market growth · Lose top recruits' },
           ].map((step, i) => (
-            <div key={step.level} className={`grid items-center p-4 ${i < 3 ? 'border-b' : ''}`} style={{ gridTemplateColumns: '44px 1fr', borderColor: '#E2E8F0', background: '#fff' }}>
+            <div key={step.level} className={`grid items-center p-4 ${i < 3 ? 'border-b' : ''}`} style={{ gridTemplateColumns: '44px 1fr', borderColor: 'rgba(251,146,60,.08)', background: '#fff' }}>
               <span className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0" style={{ background: step.color, color: '#fff' }}>{step.level}</span>
               <div>
                 <p className="text-[13px] font-semibold text-foreground">{step.label}</p>
                 <p className="text-[12px] text-muted-foreground mb-1">{step.desc}</p>
-                <p className="text-[11px] italic" style={{ color: '#9B78C8' }}>{step.hint}</p>
+                <p className="text-[11px] italic" style={{ color: '#f97316' }}>{step.hint}</p>
               </div>
             </div>
           ))}
@@ -105,14 +105,14 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
             ],
           },
         ].map(ex => (
-          <div key={ex.title} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
-            <div className="px-4 py-3" style={{ background: 'linear-gradient(135deg, #2d1b69, #4a1942)' }}>
+          <div key={ex.title} className="overflow-hidden rounded-xl border" style={{ background: '#fff', borderColor: 'rgba(251,146,60,.12)' }}>
+            <div className="px-4 py-3" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
               <p className="text-[13px] font-semibold" style={{ color: '#fff' }}>{ex.icon} {ex.title}</p>
             </div>
             <div className="p-4 space-y-2.5">
               {ex.rows.map(r => (
                 <div key={r.label}>
-                  <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#9B78C8' }}>{r.label}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#f97316' }}>{r.label}</p>
                   <p className="text-[12px] leading-[1.55] text-foreground">{r.text}</p>
                 </div>
               ))}
@@ -127,14 +127,14 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
 
       <div className="flex flex-col gap-2 mb-6">
         {verticalTitles.map((row, ri) => (
-          <div key={ri} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
+          <div key={ri} className="overflow-hidden rounded-xl border" style={{ background: '#fff', borderColor: 'rgba(251,146,60,.12)' }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               {row.cols.map((col, ci) => (
-                <div key={ci} className={`p-4 ${ci === 0 ? 'md:border-r' : ''}`} style={{ borderColor: '#E2E8F0' }}>
+                <div key={ci} className={`p-4 ${ci === 0 ? 'md:border-r' : ''}`} style={{ borderColor: 'rgba(251,146,60,.08)' }}>
                   <p className="text-[12px] font-semibold mb-1.5 text-foreground">{col.icon} {col.name}</p>
                   <p className="text-[12px] text-muted-foreground mb-1"><strong>Signals:</strong> {col.signals}</p>
                   <p className="text-[12px] text-foreground"><strong>Primary:</strong> {col.primary}</p>
-                  <p className="text-[12px] mt-1" style={{ color: '#9B78C8' }}><strong>Non-traditional:</strong> {col.nonTrad}</p>
+                  <p className="text-[12px] mt-1" style={{ color: '#f97316' }}><strong>Non-traditional:</strong> {col.nonTrad}</p>
                 </div>
               ))}
             </div>
@@ -143,8 +143,8 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       </div>
 
       {/* Prioritization */}
-      <div className="p-5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
-        <p className="text-[12px] font-semibold uppercase tracking-wider mb-3.5" style={{ color: '#C4A5DE' }}>How to Prioritize Your Outreach</p>
+      <div className="p-5 rounded-xl" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
+        <p className="text-[12px] font-semibold uppercase tracking-wider mb-3.5" style={{ color: '#fb923c' }}>How to Prioritize Your Outreach</p>
         <div className="flex flex-col gap-2.5">
           {[
             'Start with the pain owner in operations, project leadership, mobility, facilities, or field logistics.',
@@ -152,13 +152,13 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
             'Bring in procurement or travel later when you need policy alignment, vendor setup, or invoicing support.',
           ].map((text, i) => (
             <div key={i} className="flex gap-3 items-start">
-              <div className="min-w-[22px] h-[22px] rounded-full flex items-center justify-center text-[11px] font-semibold flex-shrink-0" style={{ background: 'linear-gradient(135deg, #9B78C8, #C47EAA)', color: '#fff' }}>{i + 1}</div>
+              <div className="min-w-[22px] h-[22px] rounded-full flex items-center justify-center text-[11px] font-semibold flex-shrink-0" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff' }}>{i + 1}</div>
               <p className="text-[13px] leading-[1.6]" style={{ color: 'rgba(255,255,255,.8)' }}>{text}</p>
             </div>
           ))}
         </div>
         <div className="mt-4 pt-3.5" style={{ borderTop: '1px solid rgba(255,255,255,.1)' }}>
-          <p className="text-[12px] font-semibold uppercase tracking-wide mb-1.5" style={{ color: '#C4A5DE' }}>Pattern to watch</p>
+          <p className="text-[12px] font-semibold uppercase tracking-wide mb-1.5" style={{ color: '#fb923c' }}>Pattern to watch</p>
           <p className="text-[13px] leading-[1.6]" style={{ color: 'rgba(255,255,255,.75)' }}>Project-based industries (construction, energy, defense) buy through <strong style={{ color: '#fff' }}>operations and field leaders</strong>. Program-based industries (tech, consulting, healthcare) buy through <strong style={{ color: '#fff' }}>mobility, travel, facilities, or people operations</strong>.</p>
         </div>
       </div>
