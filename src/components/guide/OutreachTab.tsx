@@ -241,68 +241,55 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
       {channel === 'email' && (
         <div className="space-y-8 animate-fade-in">
           {/* ── AI Email Generator (Hero) ── */}
-          <div className="relative group">
-            <div
-              className="absolute -inset-[2px] rounded-[20px] pointer-events-none"
-              style={{
-                background: 'linear-gradient(135deg, #9B78C8, #D97FAA, #5BBFA0, #9B78C8)',
-                backgroundSize: '300% 300%',
-                animation: 'borderGlow 2.5s ease-in-out infinite, shimmer 4s linear infinite',
-              }}
-            />
+          <div className="relative mb-0">
+            {/* Animated gradient border — matches Prompt Builder */}
+            <div className="absolute -inset-[2px] animate-border-glow" style={{
+              background: 'linear-gradient(135deg, #D6B07A, #9B78C8, #10B981, #D6B07A)',
+              backgroundSize: '300% 300%',
+            }} />
+            <div className="absolute -inset-[2px] animate-shimmer opacity-40" style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(214,176,122,.3) 50%, transparent 100%)',
+              backgroundSize: '200% 100%',
+            }} />
 
-            <div
-              className="rounded-2xl overflow-hidden relative"
-              style={{
-                background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #2d1b69 100%)',
-                boxShadow: '0 25px 80px rgba(14,30,58,.45), 0 0 60px rgba(155,120,200,.08)',
-              }}
-            >
-              {/* Ambient glow */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-0 right-0 w-[350px] h-[350px] opacity-30" style={{ background: 'radial-gradient(circle, rgba(155,120,200,.5), transparent 70%)' }} />
-                <div className="absolute bottom-0 left-0 w-[250px] h-[250px] opacity-25" style={{ background: 'radial-gradient(circle, rgba(217,127,170,.6), transparent 70%)' }} />
-              </div>
+            <div className="relative overflow-hidden">
+              {/* Header — dark navy with gold, matching Prompt Builder */}
+              <div className="relative flex items-center justify-between px-6 py-5" style={{ background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #0E1E3A 100%)' }}>
+                <div className="absolute top-0 left-1/4 w-40 h-40 opacity-20" style={{ background: 'radial-gradient(circle, #D6B07A, transparent 70%)' }} />
+                <div className="absolute bottom-0 right-1/4 w-32 h-32 opacity-15" style={{ background: 'radial-gradient(circle, #9B78C8, transparent 70%)' }} />
 
-              {/* Header */}
-              <div className="relative px-6 md:px-8 pt-7 pb-2">
-                <div className="flex items-start justify-between mb-5">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl animate-pulse"
-                      style={{
-                        background: 'linear-gradient(135deg, #9B78C8, #D97FAA)',
-                        boxShadow: '0 8px 30px rgba(155,120,200,.45)',
-                      }}
-                    >
-                      ✉️
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3">
-                        <p className="text-[22px] font-extrabold tracking-tight" style={{ color: '#fff' }}>First Email Generator</p>
-                        <span
-                          className="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-[.15em]"
-                          style={{
-                            background: 'rgba(155,120,200,.25)',
-                            color: '#C4A5DE',
-                            border: '1px solid rgba(155,120,200,.3)',
-                          }}
-                        >
-                          AI Tool
-                        </span>
-                      </div>
-                      <p className="text-[14px] mt-1 font-medium" style={{ color: 'rgba(196,165,222,.8)' }}>Fill in the details. I'll write your first outreach email.</p>
-                    </div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[20px]">✉️</span>
+                    <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 animate-shimmer" style={{
+                      background: 'linear-gradient(90deg, #D6B07A, #E8C98A, #D6B07A)',
+                      backgroundSize: '200% 100%',
+                      color: '#0E1E3A',
+                    }}>AI Tool</span>
                   </div>
-                  <div className="hidden md:flex items-center gap-2 px-3.5 py-2 rounded-full" style={{ background: 'rgba(155,120,200,.15)', border: '1px solid rgba(155,120,200,.3)' }}>
-                    <span className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#C4A5DE', boxShadow: '0 0 8px rgba(196,165,222,.6)' }} />
-                    <span className="text-[11px] font-bold tracking-wide" style={{ color: '#C4A5DE' }}>Live</span>
+                  <p className="text-[20px] font-bold tracking-tight" style={{ color: '#fff' }}>First Email Generator</p>
+                  <p className="text-[12px] mt-0.5" style={{ color: 'rgba(255,255,255,.5)' }}>Fill in the details — I'll write your first outreach email</p>
+                </div>
+
+                <div className="relative z-10 flex items-center gap-3">
+                  <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: 'rgba(16,185,129,.1)', border: '1px solid rgba(16,185,129,.25)' }}>
+                    <div className="relative">
+                      <div className="w-2 h-2 rounded-full" style={{ background: '#10B981' }} />
+                      <div className="absolute inset-0 w-2 h-2 rounded-full animate-radar-ping" style={{ background: '#10B981' }} />
+                    </div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#10B981' }}>Live</span>
+                  </div>
+                  <div className="hidden md:block px-3 py-1.5" style={{ background: 'rgba(214,176,122,.1)', border: '1px solid rgba(214,176,122,.2)' }}>
+                    <p className="text-[11px] font-semibold" style={{ color: '#D6B07A' }}>Powered by AI</p>
                   </div>
                 </div>
               </div>
 
-              {/* Form / Result */}
-              <div className="relative px-6 md:px-8 pb-8">
+              {/* Body — white with light inputs, matching Prompt Builder */}
+              <div className="p-6 border-x border-b" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
+                <p className="text-[14px] font-medium text-foreground mb-1">Four fields. One click. Your outreach email is ready.</p>
+                <p className="text-[13px] text-muted-foreground mb-5">Enter the company, signal, buyer title, and service line. We'll generate a short, personal email ready to send.</p>
+
                 {!result ? (
                   <>
                     <div className="flex flex-col gap-3 mb-5">
@@ -311,30 +298,39 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                         { val: signal, set: setSignal, ph: 'What happened — contract win, expansion, new office, etc.', icon: '📡' },
                         { val: buyerTitle, set: setBuyerTitle, ph: "Job title of the person you're contacting", icon: '👤' },
                       ].map((f, i) => (
-                        <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all" style={{ background: 'rgba(255,255,255,.06)', border: f.val ? '1px solid rgba(155,120,200,.4)' : '1px solid rgba(255,255,255,.08)', boxShadow: f.val ? '0 0 20px rgba(155,120,200,.1)' : 'none' }}>
-                          <span className="text-[16px] flex-shrink-0">{f.icon}</span>
+                        <div key={i} className="relative">
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">{f.icon}</span>
                           <input
                             type="text"
                             value={f.val}
                             onChange={e => f.set(e.target.value)}
                             placeholder={f.ph}
-                            className="flex-1 bg-transparent text-[14px] focus:outline-none placeholder:text-white/25"
-                            style={{ color: 'rgba(255,255,255,.9)' }}
+                            className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
+                            style={{
+                              borderColor: f.val ? 'rgba(214,176,122,.5)' : 'rgba(155,120,200,.2)',
+                              background: f.val ? '#FFFBF5' : '#FAF7F2',
+                              boxShadow: f.val ? '0 0 0 3px rgba(214,176,122,.1)' : 'none',
+                            }}
                             disabled={loading}
                           />
                         </div>
                       ))}
-                      <div className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all" style={{ background: 'rgba(255,255,255,.06)', border: serviceLine ? '1px solid rgba(155,120,200,.4)' : '1px solid rgba(255,255,255,.08)' }}>
-                        <span className="text-[16px] flex-shrink-0">🎯</span>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none">🎯</span>
                         <select
                           value={serviceLine}
                           onChange={e => setServiceLine(e.target.value)}
-                          className="flex-1 bg-transparent text-[14px] focus:outline-none"
-                          style={{ color: serviceLine ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.25)' }}
+                          className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200 appearance-none cursor-pointer"
+                          style={{
+                            borderColor: serviceLine ? 'rgba(214,176,122,.5)' : 'rgba(155,120,200,.2)',
+                            background: serviceLine ? '#FFFBF5' : '#FAF7F2',
+                            boxShadow: serviceLine ? '0 0 0 3px rgba(214,176,122,.1)' : 'none',
+                            color: serviceLine ? 'inherit' : '#9CA3AF',
+                          }}
                           disabled={loading}
                         >
-                          <option value="" style={{ color: '#333' }}>Select service line</option>
-                          {SERVICE_LINES.map(s => <option key={s} value={s} style={{ color: '#333' }}>{s}</option>)}
+                          <option value="">Select service line</option>
+                          {SERVICE_LINES.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                       </div>
                     </div>
@@ -342,12 +338,12 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     <button
                       onClick={() => callApi(false)}
                       disabled={!canGenerate || loading}
-                      className="w-full py-4 rounded-xl text-[15px] font-bold tracking-wide transition-all"
+                      className="w-full py-4 text-[15px] font-bold tracking-wide transition-all"
                       style={{
-                        background: !canGenerate || loading ? 'rgba(255,255,255,.08)' : 'linear-gradient(135deg, #9B78C8, #D97FAA)',
-                        color: !canGenerate || loading ? 'rgba(255,255,255,.3)' : '#fff',
+                        background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #D6B07A, #C49A5C)',
+                        color: !canGenerate || loading ? '#94A3B8' : '#fff',
                         cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
-                        boxShadow: canGenerate && !loading ? '0 8px 30px rgba(155,120,200,.35)' : 'none',
+                        boxShadow: canGenerate && !loading ? '0 4px 15px rgba(214,176,122,.35)' : 'none',
                       }}
                     >
                       {loading ? (
@@ -357,32 +353,32 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                         </span>
                       ) : '✉️  Write My Email'}
                     </button>
-                    {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#F87171' }}>{error}</p>}
+                    {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#EF4444' }}>{error}</p>}
                   </>
                 ) : (
                   <>
-                    <div className="mb-4 px-5 py-4 rounded-xl" style={{ background: 'rgba(155,120,200,.1)', border: '1px solid rgba(155,120,200,.25)' }}>
-                      <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: 'rgba(196,165,222,.6)' }}>Subject Line</p>
-                      <p className="text-[17px] font-bold" style={{ color: '#fff' }}>{result.subject}</p>
+                    <div className="mb-4 px-5 py-4" style={{ background: '#FAF7F2', border: '1px solid rgba(214,176,122,.25)' }}>
+                      <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-1 text-muted-foreground">Subject Line</p>
+                      <p className="text-[17px] font-bold text-foreground">{result.subject}</p>
                     </div>
-                    <div className="relative px-5 py-5 rounded-xl" style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)' }}>
-                      <span className={`absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-md`} style={{ background: wordCount > 100 ? 'rgba(248,113,113,.2)' : 'rgba(155,120,200,.15)', color: wordCount > 100 ? '#F87171' : '#C4A5DE', border: `1px solid ${wordCount > 100 ? 'rgba(248,113,113,.3)' : 'rgba(155,120,200,.25)'}` }}>
+                    <div className="relative px-5 py-5" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
+                      <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1" style={{ background: wordCount > 100 ? 'rgba(201,91,106,.1)' : 'rgba(214,176,122,.15)', color: wordCount > 100 ? '#C95B6A' : '#2F4858', border: `1px solid ${wordCount > 100 ? 'rgba(201,91,106,.25)' : 'rgba(214,176,122,.25)'}` }}>
                         {wordCount} words
                       </span>
-                      <p className="text-[14px] leading-[1.8] whitespace-pre-line pr-16" style={{ color: 'rgba(255,255,255,.85)' }}>{result.body}</p>
+                      <p className="text-[14px] leading-[1.8] whitespace-pre-line pr-16 text-foreground">{result.body}</p>
                     </div>
                     <div className="flex gap-3 mt-5">
-                      <button onClick={handleCopy} className="px-6 py-3 rounded-xl text-[13px] font-bold transition-all" style={{ background: copied ? 'linear-gradient(135deg, #10B981, #059669)' : 'linear-gradient(135deg, #9B78C8, #D97FAA)', color: '#fff' }}>
+                      <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#10B981' : 'linear-gradient(135deg, #D6B07A, #C49A5C)', color: '#fff', boxShadow: '0 2px 8px rgba(214,176,122,.3)' }}>
                         {copied ? '✓ COPIED' : '📋 COPY'}
                       </button>
-                      <button onClick={() => callApi(true)} disabled={loading} className="px-6 py-3 rounded-xl text-[13px] font-bold transition-all" style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(155,120,200,.3)', color: '#C4A5DE' }}>
+                      <button onClick={() => callApi(true)} disabled={loading} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: '#FAF7F2', border: '1px solid rgba(214,176,122,.3)', color: '#2F4858' }}>
                         {loading ? 'Thinking...' : '🔄 Different angle'}
                       </button>
-                      <button onClick={() => { setResult(null); setError(''); }} className="px-6 py-3 rounded-xl text-[13px] font-bold transition-all" style={{ color: 'rgba(255,255,255,.4)' }}>
+                      <button onClick={() => { setResult(null); setError(''); }} className="px-6 py-3 text-[13px] font-bold transition-all text-muted-foreground">
                         Start over
                       </button>
                     </div>
-                    {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#F87171' }}>{error}</p>}
+                    {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#EF4444' }}>{error}</p>}
                   </>
                 )}
               </div>
