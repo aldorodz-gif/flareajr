@@ -170,81 +170,175 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
       </div>
 
       {/* ── Interactive Email Generator ── */}
-      <div className="overflow-hidden mb-8">
-        <div className="flex items-center justify-between px-5 py-4" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
-          <div>
-            <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.5)' }}>AI Tool</p>
-            <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>First Email Generator</p>
+      <div className="mb-12 relative group">
+        {/* Animated gradient border */}
+        <div
+          className="absolute -inset-[2px] rounded-[20px] pointer-events-none"
+          style={{
+            background: 'linear-gradient(135deg, #9B78C8, #D97FAA, #5BBFA0, #9B78C8)',
+            backgroundSize: '300% 300%',
+            animation: 'borderGlow 2.5s ease-in-out infinite, shimmer 4s linear infinite',
+          }}
+        />
+
+        <div
+          className="rounded-2xl overflow-hidden relative"
+          style={{
+            background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #2d1b69 100%)',
+            boxShadow: '0 25px 80px rgba(14,30,58,.45), 0 0 60px rgba(155,120,200,.08)',
+          }}
+        >
+          {/* Ambient glow effects */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-0 right-0 w-[350px] h-[350px] opacity-30" style={{ background: 'radial-gradient(circle, rgba(155,120,200,.5), transparent 70%)' }} />
+            <div className="absolute bottom-0 left-0 w-[250px] h-[250px] opacity-25" style={{ background: 'radial-gradient(circle, rgba(217,127,170,.6), transparent 70%)' }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-[.06]" style={{ background: 'radial-gradient(circle, rgba(255,255,255,.8), transparent 60%)' }} />
           </div>
-          <div className="px-3 py-1.5" style={{ background: 'rgba(155,120,200,.15)' }}>
-            <p className="text-[12px] font-semibold" style={{ color: '#C4A5DE' }}>Powered by AI</p>
+
+          {/* Radar ping decoration */}
+          <div className="absolute top-6 right-6 pointer-events-none">
+            <div className="relative">
+              <span className="absolute inset-0 rounded-full animate-radar-ping" style={{ background: 'rgba(155,120,200,.3)', width: '44px', height: '44px' }} />
+              <span className="absolute inset-0 rounded-full animate-radar-ping" style={{ background: 'rgba(155,120,200,.2)', width: '44px', height: '44px', animationDelay: '0.8s' }} />
+            </div>
           </div>
-        </div>
-        <div className="p-5 border border-t-0" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#fff' }}>
-          {!result ? (
-            <>
-              <p className="text-[13px] text-muted-foreground mb-4">Fill in the details and get a ready-to-send first outreach email.</p>
-              <div className="flex flex-col gap-3 mb-4">
-                <input type="text" value={company} onChange={e => setCompany(e.target.value)} placeholder="Company you're reaching out to" className="w-full px-4 py-3 border text-[14px] focus:outline-none focus:ring-2" style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }} disabled={loading} />
-                <input type="text" value={signal} onChange={e => setSignal(e.target.value)} placeholder="What happened — contract win, expansion, new office, etc." className="w-full px-4 py-3 border text-[14px] focus:outline-none focus:ring-2" style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }} disabled={loading} />
-                <input type="text" value={buyerTitle} onChange={e => setBuyerTitle(e.target.value)} placeholder="Job title of the person you're contacting" className="w-full px-4 py-3 border text-[14px] focus:outline-none focus:ring-2" style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }} disabled={loading} />
-                <select value={serviceLine} onChange={e => setServiceLine(e.target.value)} className="w-full px-4 py-3 border text-[14px] focus:outline-none focus:ring-2" style={{ borderColor: 'rgba(155,120,200,.2)', background: '#FAF7F2' }} disabled={loading}>
-                  <option value="">Select service line</option>
-                  {SERVICE_LINES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </div>
-              <button
-                onClick={() => callApi(false)}
-                disabled={!canGenerate || loading}
-                className="px-6 py-3 text-[14px] font-semibold transition-all"
-                style={{
-                  background: !canGenerate || loading ? '#94A3B8' : 'linear-gradient(135deg, #9B78C8, #D97FAA)',
-                  color: '#fff',
-                  cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
-                }}
-              >
-                {loading ? 'Thinking...' : 'Write My Email'}
-              </button>
-              {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#C95B6A' }}>{error}</p>}
-            </>
-          ) : (
-            <>
-              <div className="mb-2">
-                <p className="text-[11px] font-semibold uppercase tracking-wider mb-1 text-muted-foreground">Subject Line</p>
-                <p className="text-[15px] font-semibold text-foreground">{result.subject}</p>
-              </div>
-              <div className="relative p-5 border" style={{ borderColor: 'rgba(155,120,200,.12)', background: '#FAF7F2' }}>
-                <span className={`absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1`} style={{ background: wordCount > 100 ? '#C95B6A' : 'rgba(155,120,200,.15)', color: wordCount > 100 ? '#fff' : '#9B78C8' }}>
-                  {wordCount} words
-                </span>
-                <p className="text-[14px] leading-[1.8] whitespace-pre-line pr-16" style={{ color: '#334155' }}>{result.body}</p>
-              </div>
-              <div className="flex gap-3 mt-4">
-                <button
-                  onClick={handleCopy}
-                  className="px-5 py-2.5 text-[13px] font-semibold transition-all"
-                  style={{ background: copied ? 'linear-gradient(135deg, #5BBFA0, #4AAA8A)' : 'linear-gradient(135deg, #9B78C8, #D97FAA)', color: '#fff' }}
+
+          {/* Header area */}
+          <div className="relative px-6 md:px-8 pt-7 pb-2">
+            <div className="flex items-start justify-between mb-5">
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl animate-pulse"
+                  style={{
+                    background: 'linear-gradient(135deg, #9B78C8, #D97FAA)',
+                    boxShadow: '0 8px 30px rgba(155,120,200,.45), 0 0 15px rgba(155,120,200,.2)',
+                  }}
                 >
-                  {copied ? 'COPIED' : 'COPY'}
-                </button>
-                <button
-                  onClick={() => callApi(true)}
-                  disabled={loading}
-                  className="px-5 py-2.5 text-[13px] font-semibold border"
-                  style={{ borderColor: 'rgba(155,120,200,.3)', color: '#9B78C8', background: loading ? '#f1f1f1' : '#fff' }}
-                >
-                  {loading ? 'Thinking...' : 'Try a different angle'}
-                </button>
-                <button
-                  onClick={() => { setResult(null); setError(''); }}
-                  className="px-5 py-2.5 text-[13px] font-semibold text-muted-foreground"
-                >
-                  Start over
-                </button>
+                  ✉️
+                </div>
+                <div>
+                  <div className="flex items-center gap-3">
+                    <p className="text-[22px] font-extrabold tracking-tight" style={{ color: '#fff' }}>First Email Generator</p>
+                    <span
+                      className="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-[.15em] animate-shimmer"
+                      style={{
+                        background: 'linear-gradient(90deg, rgba(155,120,200,.2), rgba(155,120,200,.4), rgba(155,120,200,.2))',
+                        backgroundSize: '200% 100%',
+                        color: '#C4A5DE',
+                        border: '1px solid rgba(155,120,200,.3)',
+                      }}
+                    >
+                      AI Tool
+                    </span>
+                  </div>
+                  <p className="text-[14px] mt-1 font-medium" style={{ color: 'rgba(196,165,222,.8)' }}>Fill in the details. I'll write your first outreach email.</p>
+                </div>
               </div>
-              {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#C95B6A' }}>{error}</p>}
-            </>
-          )}
+              <div className="flex items-center gap-2 px-3.5 py-2 rounded-full" style={{ background: 'rgba(155,120,200,.15)', border: '1px solid rgba(155,120,200,.3)', boxShadow: '0 0 20px rgba(155,120,200,.15)' }}>
+                <span className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#C4A5DE', boxShadow: '0 0 8px rgba(196,165,222,.6)' }} />
+                <span className="text-[11px] font-bold tracking-wide" style={{ color: '#C4A5DE' }}>Live</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive body */}
+          <div className="relative px-6 md:px-8 pb-8">
+            {!result ? (
+              <>
+                <div className="flex flex-col gap-3 mb-5">
+                  {[
+                    { val: company, set: setCompany, ph: "Company you're reaching out to", icon: '🏢' },
+                    { val: signal, set: setSignal, ph: 'What happened — contract win, expansion, new office, etc.', icon: '📡' },
+                    { val: buyerTitle, set: setBuyerTitle, ph: "Job title of the person you're contacting", icon: '👤' },
+                  ].map((f, i) => (
+                    <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all" style={{ background: 'rgba(255,255,255,.06)', border: f.val ? '1px solid rgba(155,120,200,.4)' : '1px solid rgba(255,255,255,.08)', boxShadow: f.val ? '0 0 20px rgba(155,120,200,.1)' : 'none' }}>
+                      <span className="text-[16px] flex-shrink-0">{f.icon}</span>
+                      <input
+                        type="text"
+                        value={f.val}
+                        onChange={e => f.set(e.target.value)}
+                        placeholder={f.ph}
+                        className="flex-1 bg-transparent text-[14px] focus:outline-none placeholder:text-white/25"
+                        style={{ color: 'rgba(255,255,255,.9)' }}
+                        disabled={loading}
+                      />
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all" style={{ background: 'rgba(255,255,255,.06)', border: serviceLine ? '1px solid rgba(155,120,200,.4)' : '1px solid rgba(255,255,255,.08)', boxShadow: serviceLine ? '0 0 20px rgba(155,120,200,.1)' : 'none' }}>
+                    <span className="text-[16px] flex-shrink-0">🎯</span>
+                    <select
+                      value={serviceLine}
+                      onChange={e => setServiceLine(e.target.value)}
+                      className="flex-1 bg-transparent text-[14px] focus:outline-none"
+                      style={{ color: serviceLine ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.25)' }}
+                      disabled={loading}
+                    >
+                      <option value="" style={{ color: '#333' }}>Select service line</option>
+                      {SERVICE_LINES.map(s => <option key={s} value={s} style={{ color: '#333' }}>{s}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => callApi(false)}
+                  disabled={!canGenerate || loading}
+                  className="w-full py-4 rounded-xl text-[15px] font-bold tracking-wide transition-all"
+                  style={{
+                    background: !canGenerate || loading ? 'rgba(255,255,255,.08)' : 'linear-gradient(135deg, #9B78C8, #D97FAA)',
+                    color: !canGenerate || loading ? 'rgba(255,255,255,.3)' : '#fff',
+                    cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
+                    boxShadow: canGenerate && !loading ? '0 8px 30px rgba(155,120,200,.35)' : 'none',
+                  }}
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Writing your email...
+                    </span>
+                  ) : '✉️  Write My Email'}
+                </button>
+                {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#F87171' }}>{error}</p>}
+              </>
+            ) : (
+              <>
+                <div className="mb-4 px-5 py-4 rounded-xl" style={{ background: 'rgba(155,120,200,.1)', border: '1px solid rgba(155,120,200,.25)' }}>
+                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: 'rgba(196,165,222,.6)' }}>Subject Line</p>
+                  <p className="text-[17px] font-bold" style={{ color: '#fff' }}>{result.subject}</p>
+                </div>
+                <div className="relative px-5 py-5 rounded-xl" style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)' }}>
+                  <span className={`absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-md`} style={{ background: wordCount > 100 ? 'rgba(248,113,113,.2)' : 'rgba(155,120,200,.15)', color: wordCount > 100 ? '#F87171' : '#C4A5DE', border: `1px solid ${wordCount > 100 ? 'rgba(248,113,113,.3)' : 'rgba(155,120,200,.25)'}` }}>
+                    {wordCount} words
+                  </span>
+                  <p className="text-[14px] leading-[1.8] whitespace-pre-line pr-16" style={{ color: 'rgba(255,255,255,.85)' }}>{result.body}</p>
+                </div>
+                <div className="flex gap-3 mt-5">
+                  <button
+                    onClick={handleCopy}
+                    className="px-6 py-3 rounded-xl text-[13px] font-bold transition-all"
+                    style={{ background: copied ? 'linear-gradient(135deg, #10B981, #059669)' : 'linear-gradient(135deg, #9B78C8, #D97FAA)', color: '#fff', boxShadow: '0 4px 15px rgba(155,120,200,.3)' }}
+                  >
+                    {copied ? '✓ COPIED' : '📋 COPY'}
+                  </button>
+                  <button
+                    onClick={() => callApi(true)}
+                    disabled={loading}
+                    className="px-6 py-3 rounded-xl text-[13px] font-bold transition-all"
+                    style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(155,120,200,.3)', color: '#C4A5DE' }}
+                  >
+                    {loading ? 'Thinking...' : '🔄 Different angle'}
+                  </button>
+                  <button
+                    onClick={() => { setResult(null); setError(''); }}
+                    className="px-6 py-3 rounded-xl text-[13px] font-bold transition-all"
+                    style={{ color: 'rgba(255,255,255,.4)' }}
+                  >
+                    Start over
+                  </button>
+                </div>
+                {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#F87171' }}>{error}</p>}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
