@@ -117,6 +117,48 @@
   100% { transform: scale(1); }
 }
 
+@keyframes toolFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes radarPing {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes gradientRotate {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+
+.animate-tool-float {
+  animation: toolFloat 4s ease-in-out infinite;
+}
+
+.animate-border-glow {
+  animation: borderGlow 2.5s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+.animate-radar-ping {
+  animation: radarPing 2s ease-out infinite;
+}
+
 .animate-hero-rise {
   animation: heroRise 0.7s cubic-bezier(.22,1,.36,1) forwards;
   opacity: 0;

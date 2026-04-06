@@ -112,43 +112,78 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
       {/* ═══════════════════════════════════════════════════ */}
       {/* SIGNAL SCORER — THE INTERACTIVE TOOL               */}
       {/* ═══════════════════════════════════════════════════ */}
-      <div
-        className="rounded-2xl overflow-hidden mb-12 relative"
-        style={{
-          background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #2d1b69 100%)',
-          boxShadow: '0 20px 60px rgba(14,30,58,.35), 0 0 0 1px rgba(214,176,122,.1)',
-        }}
-      >
-        {/* Ambient glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[300px] h-[300px] opacity-30" style={{ background: 'radial-gradient(circle, rgba(214,176,122,.4), transparent 70%)' }} />
-          <div className="absolute bottom-0 left-0 w-[200px] h-[200px] opacity-20" style={{ background: 'radial-gradient(circle, rgba(155,120,200,.5), transparent 70%)' }} />
-        </div>
 
-        {/* Header area */}
-        <div className="relative px-6 md:px-8 pt-7 pb-2">
-          <div className="flex items-start justify-between mb-5">
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
-                style={{
-                  background: 'linear-gradient(135deg, #D6B07A, #E8BE70)',
-                  boxShadow: '0 6px 20px rgba(214,176,122,.35)',
-                }}
-              >
-                ⚡
-              </div>
-              <div>
-                <p className="text-[20px] font-bold tracking-tight" style={{ color: '#fff' }}>Signal Scorer</p>
-                <p className="text-[13px] mt-0.5" style={{ color: 'rgba(214,176,122,.7)' }}>Paste any signal. I'll tell you if it's worth your time.</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(16,185,129,.12)', border: '1px solid rgba(16,185,129,.25)' }}>
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#10B981' }} />
-              <span className="text-[11px] font-semibold" style={{ color: '#10B981' }}>Ready</span>
+      {/* Outer animated wrapper with floating + glowing border */}
+      <div className="animate-tool-float mb-12 relative group">
+        {/* Animated gradient border */}
+        <div
+          className="absolute -inset-[2px] rounded-[20px] animate-border-glow pointer-events-none"
+          style={{
+            background: 'linear-gradient(135deg, #D6B07A, #9B78C8, #10B981, #D6B07A)',
+            backgroundSize: '300% 300%',
+            animation: 'borderGlow 2.5s ease-in-out infinite, shimmer 4s linear infinite',
+          }}
+        />
+
+        <div
+          className="rounded-2xl overflow-hidden relative"
+          style={{
+            background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 50%, #2d1b69 100%)',
+            boxShadow: '0 25px 80px rgba(14,30,58,.45), 0 0 60px rgba(214,176,122,.08)',
+          }}
+        >
+          {/* Ambient glow effects */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-0 right-0 w-[350px] h-[350px] opacity-30" style={{ background: 'radial-gradient(circle, rgba(214,176,122,.5), transparent 70%)' }} />
+            <div className="absolute bottom-0 left-0 w-[250px] h-[250px] opacity-25" style={{ background: 'radial-gradient(circle, rgba(155,120,200,.6), transparent 70%)' }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] opacity-[.06]" style={{ background: 'radial-gradient(circle, rgba(255,255,255,.8), transparent 60%)' }} />
+          </div>
+
+          {/* Radar ping decoration */}
+          <div className="absolute top-6 right-6 pointer-events-none">
+            <div className="relative">
+              <span className="absolute inset-0 rounded-full animate-radar-ping" style={{ background: 'rgba(16,185,129,.3)', width: '44px', height: '44px' }} />
+              <span className="absolute inset-0 rounded-full animate-radar-ping" style={{ background: 'rgba(16,185,129,.2)', width: '44px', height: '44px', animationDelay: '0.8s' }} />
             </div>
           </div>
-        </div>
+
+          {/* Header area */}
+          <div className="relative px-6 md:px-8 pt-7 pb-2">
+            <div className="flex items-start justify-between mb-5">
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl animate-pulse"
+                  style={{
+                    background: 'linear-gradient(135deg, #D6B07A, #E8BE70)',
+                    boxShadow: '0 8px 30px rgba(214,176,122,.45), 0 0 15px rgba(214,176,122,.2)',
+                  }}
+                >
+                  ⚡
+                </div>
+                <div>
+                  <div className="flex items-center gap-3">
+                    <p className="text-[22px] font-extrabold tracking-tight" style={{ color: '#fff' }}>Signal Scorer</p>
+                    <span
+                      className="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-[.15em] animate-shimmer"
+                      style={{
+                        background: 'linear-gradient(90deg, rgba(214,176,122,.2), rgba(214,176,122,.4), rgba(214,176,122,.2))',
+                        backgroundSize: '200% 100%',
+                        color: '#D6B07A',
+                        border: '1px solid rgba(214,176,122,.3)',
+                      }}
+                    >
+                      AI Tool
+                    </span>
+                  </div>
+                  <p className="text-[14px] mt-1 font-medium" style={{ color: 'rgba(214,176,122,.8)' }}>Paste any signal. I'll tell you if it's worth your time.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 px-3.5 py-2 rounded-full" style={{ background: 'rgba(16,185,129,.15)', border: '1px solid rgba(16,185,129,.3)', boxShadow: '0 0 20px rgba(16,185,129,.15)' }}>
+                <span className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#10B981', boxShadow: '0 0 8px rgba(16,185,129,.6)' }} />
+                <span className="text-[11px] font-bold tracking-wide" style={{ color: '#10B981' }}>Live</span>
+              </div>
+            </div>
+          </div>
 
         {/* Interactive body */}
         <div className="relative px-6 md:px-8 pb-8">
