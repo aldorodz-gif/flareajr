@@ -118,7 +118,7 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
               value={goal}
               onChange={e => setGoal(e.target.value)}
               placeholder="e.g. get inbound DMs from facility managers"
-              className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-orange-400/50"
+              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-orange-400/50"
             />
           </div>
 
