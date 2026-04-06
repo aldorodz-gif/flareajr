@@ -89,9 +89,9 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
                   onClick={() => setVertical(v)}
                   className="px-3 py-1 rounded-full text-xs font-medium transition-all"
                   style={{
-                    background: vertical === v ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(255,255,255,.06)',
-                    color: vertical === v ? '#fff' : 'rgba(255,255,255,.7)',
-                    border: `1px solid ${vertical === v ? '#fb923c' : 'rgba(255,255,255,.1)'}`,
+                    background: vertical === v ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
+                    color: vertical === v ? '#fff' : '#475569',
+                    border: `1px solid ${vertical === v ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
                   }}
                 >
                   {v}
@@ -107,18 +107,18 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
               value={signal}
               onChange={e => setSignal(e.target.value)}
               placeholder="e.g. MLS expansion team announced in Nashville"
-              className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-orange-400/50"
+              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-orange-400/50"
             />
           </div>
 
           {/* Goal (optional) */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>Goal <span className="text-white/30">(optional)</span></label>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>Goal <span className="text-gray-400">(optional)</span></label>
             <input
               value={goal}
               onChange={e => setGoal(e.target.value)}
               placeholder="e.g. get inbound DMs from facility managers"
-              className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-orange-400/50"
+              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-orange-400/50"
             />
           </div>
 
