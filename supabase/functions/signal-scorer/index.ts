@@ -21,13 +21,21 @@ serve(async (req) => {
 
     const systemPrompt = `You are a signal scoring tool for a corporate housing sales team. The company sells temporary housing, travel management, hotel programs, and destination services to businesses. When given a news headline, LinkedIn post, or business signal, score it HIGH, MEDIUM, or LOW based on whether it implies real physical people movement that would create demand for those services.
 
+Scoring philosophy:
+- HIGH: Confirmed physical movement with a defined timeline and identifiable buyer. Action today.
+- MEDIUM: Either (a) real change is happening but timing or ownership is unclear, OR (b) the signal is early-stage (R&D partnership, new program announcement, facility planning, technology development deal) that will likely create physical movement in the future. Flag it as worth tracking.
+- LOW: No plausible path to physical movement — purely virtual, speculative opinion pieces, or single-day events with no stay.
+
+IMPORTANT: Do not score early-stage signals as LOW just because movement hasn't started yet. If a reasonable sales rep would want to track this for follow-up in 3-6 months, score it MEDIUM and explain the future potential.
+
 Industry-specific guidance:
 - Theater / Performing Arts: Production seasons, rehearsal periods (3-4 weeks before opening), and runs of 30+ days are HIGH signals because they require furnished housing for cast, directors, creative teams, production crew, and touring staff. Single-night touring stops or one-off performances are LOW. LORT theaters and regional repertory companies with multiple productions per season are especially strong.
-- Construction: Mobilizations, contract awards, phased builds are HIGH.
-- Defense: Program ramps, deployments, contract transitions are HIGH.
-- Energy: Planned outages, turnarounds, storm response are HIGH.
+- Construction: Mobilizations, contract awards, phased builds are HIGH. Early planning or feasibility studies are MEDIUM.
+- Defense: Program ramps, deployments, contract transitions are HIGH. New R&D contracts, technology partnerships, and program announcements are MEDIUM — they often lead to engineering teams relocating to test sites or manufacturing facilities.
+- Energy: Planned outages, turnarounds, storm response are HIGH. New exploration or development partnerships are MEDIUM.
 - Healthcare: Travel nurse cohorts, physician relocations are MEDIUM-HIGH.
-- Sports: Player housing, fellowship programs, seasonal roster moves are HIGH.`;
+- Sports: Player housing, fellowship programs, seasonal roster moves are HIGH.
+- Aerospace & Aviation: Manufacturing facility buildouts, flight test programs, and new aircraft development partnerships are MEDIUM — they typically lead to engineer and contractor relocations.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
