@@ -359,6 +359,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
             </div>
           )}
         </div>
+        </div>
       </div>
 
       {/* ─── Score Legend ─── */}
