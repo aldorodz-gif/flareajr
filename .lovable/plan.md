@@ -1,23 +1,23 @@
 
+## Problem
+The Setup page has 5 dense step cards stacked vertically, each with gradient headers, mockup visuals, and paragraph-length descriptions. It feels like a wall of content — too much noise, hard to scan, and intimidating for someone just getting started.
 
-## Analysis
+## Plan: Make it warm, clean, and easy to follow
 
-The screenshot shows the static prompt box ("Your Market — Paste into Agent Mode") sitting at the top of the page. This is **redundant** — the interactive Custom Prompt Builder below does the same thing but better, generating a tailored version automatically. Having both creates confusion and the static block looks flat compared to the premium AI tool below it.
+### 1. Add a friendly welcome intro
+Replace the dry "Follow these 5 steps exactly" instruction with a warm, reassuring message: "This takes about 2 minutes. You'll do it once and never again." Frame it as easy, not technical.
 
-## Plan: Restructure the Tracker Tab
+### 2. Simplify the step cards
+- **Reduce visual weight**: Swap the heavy gradient headers for clean, minimal numbered steps with a single accent color
+- **Shorten copy**: Trim each step description to 1 sentence max — action-oriented, no fluff
+- **Use a vertical timeline layout** instead of heavy bordered cards — a thin connecting line with numbered dots feels lighter and more progressive
 
-### 1. Remove the static prompt box
-Delete the raw `[YOUR CITY, STATE]` prompt box and the "Replace [YOUR CITY, STATE]" helper text (lines 79-83). Users should use the builder instead.
+### 3. Keep mockups but make them optional
+- Collapse mockups into expandable "See what this looks like" toggles so the page isn't dominated by screenshots
+- Step 1 mockup stays visible by default (it's the most important), others collapse
 
-### 2. Move the Prompt Builder to the top
-Make the interactive AI tool the first thing users see after the page header. It's the hero of this step — it should lead.
-
-### 3. Fold market examples into the builder as quick-select chips
-Instead of a separate collapsible section with full prompt boxes, add clickable city chips (Huntsville, Nashville, Atlanta) inside the builder that auto-fill the city field. This keeps the examples useful without the boring collapsible block.
-
-### 4. Move the schedule prompt below the builder
-Keep the "Set your schedule" instruction and its prompt box after the builder, styled as a lightweight follow-up step (e.g., a small card or callout) rather than a standalone section.
+### 4. Add a confidence booster at the bottom
+A small callout: "That's it — you're set up. Head to the Prompt Builder to build your first search." with a button to navigate there.
 
 ### Files changed
-- `src/components/guide/TrackerTab.tsx` — restructure layout, remove static prompt, add city preset chips to builder, reorder sections
-
+- `src/components/guide/SetupTab.tsx` — full redesign of layout, copy, and visual hierarchy
