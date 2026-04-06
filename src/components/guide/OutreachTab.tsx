@@ -341,9 +341,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#EF4444' }}>{error}</p>}
                   </>
                 )}
-              </div>
-            </div>
-          </div>
+          </AiToolCard>
 
           {/* ── Email Rules (collapsible) ── */}
           <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--card))' }}>
