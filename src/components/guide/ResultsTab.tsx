@@ -219,7 +219,7 @@ const ResultsTab = ({ onNavigate }: ResultsTabProps) => {
             <span className="text-[16px]">📋</span>
           </div>
           <div>
-            <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(251,146,60,.5)' }}>Before Every Call</p>
+            <p className="text-[13px] font-bold uppercase tracking-wider" style={{ color: '#fb923c' }}>Before Every Call</p>
             <p className="text-[18px] font-semibold" style={{ color: '#fff' }}>Research the Company First</p>
           </div>
         </div>

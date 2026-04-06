@@ -8,9 +8,9 @@ interface MindsetTabProps {
 const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #D97FAA, #E8A87A)">Step 02: Prospecting Philosophy</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #fb923c, #ea580c)">Step 02: Prospecting Philosophy</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Mindset</h2>
-      <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
+      <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(251,146,60,.1)' }}>
         Come back here when your outreach feels generic, when you're stuck, or when you need to refocus on what actually matters.
       </p>
 
@@ -20,9 +20,9 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
           <h3 className="text-[20px] font-semibold mb-1 text-foreground">We Sell Company Goals</h3>
           <p className="text-[13px] text-muted-foreground mb-4">Disguised as temp housing & relocation. Every buyer conversation starts with what the company is trying to achieve — not what we offer.</p>
 
-          <div className="overflow-hidden border mb-4" style={{ borderColor: 'rgba(155,120,200,.12)' }}>
-            <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
-              <p className="text-[12px] font-bold uppercase tracking-[2px]" style={{ color: '#C4A5DE' }}>The Buyer Persona Chain</p>
+          <div className="overflow-hidden rounded-xl border mb-4" style={{ borderColor: 'rgba(251,146,60,.12)' }}>
+            <div className="px-4 py-3.5" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
+              <p className="text-[12px] font-bold uppercase tracking-[2px]" style={{ color: '#fb923c' }}>The Buyer Persona Chain</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3">
               {[
@@ -30,7 +30,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
                 { icon: '⚙️', title: 'Programs & Initiatives', desc: 'Intern cohorts, LDPs, rotational programs, office launches, project mobilizations — the initiatives that execute on those goals.' },
                 { icon: '👥', title: 'The Talent to Make It Happen', desc: 'HR Managers, Department Heads, L&D, Recruiters, Interns, LDPs, Trainees — the people who physically need to move.' },
               ].map((step, i) => (
-                <div key={step.title} className={`p-4 ${i < 2 ? 'md:border-r' : ''}`} style={{ background: '#fff', borderColor: '#E2E8F0' }}>
+                <div key={step.title} className={`p-4 ${i < 2 ? 'md:border-r' : ''}`} style={{ background: '#fff', borderColor: 'rgba(251,146,60,.08)' }}>
                   <p className="text-[20px] mb-1.5">{step.icon}</p>
                   <p className="text-[13px] font-semibold mb-1 text-foreground">{step.title}</p>
                   <p className="text-[12px] leading-[1.6] text-muted-foreground">{step.desc}</p>
@@ -39,7 +39,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
             </div>
           </div>
 
-          <div className="flex gap-3 items-start p-3.5" style={{ background: 'rgba(155,120,200,.05)', border: '1px solid rgba(99,102,241,.18)' }}>
+          <div className="flex gap-3 items-start p-3.5 rounded-lg" style={{ background: 'rgba(251,146,60,.05)', border: '1px solid rgba(251,146,60,.15)' }}>
             <span className="text-[16px] flex-shrink-0 mt-0.5">💡</span>
             <p className="text-[13px] leading-[1.65] text-foreground">
               <strong>Example — Intern/Trainee Program:</strong> The company goal is growth. The initiative is the intern class. The talent is HR, Department Heads, and L&D coordinating 50 interns arriving in June. That's your signal — and your opening.
@@ -52,14 +52,14 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
           <h3 className="text-[20px] font-semibold mb-1 text-foreground">Use market intelligence before building lists</h3>
           <p className="text-[13px] text-muted-foreground mb-3">The goal is to see where movement is building in your market. Then focus your prospecting there.</p>
 
-          <div className="p-4 border mb-3" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
+          <div className="p-4 rounded-xl border mb-3" style={{ background: '#fff', borderColor: 'rgba(251,146,60,.12)' }}>
             <p className="text-[12px] font-bold uppercase tracking-wide mb-2.5 text-muted-foreground">Ask yourself</p>
             <div className="flex flex-col gap-1.5">
               {['What is changing in my market right now?', 'Does it imply physical people movement?', 'Which companies are tied to it, and who inside owns the problem?'].map(q => (
-                <p key={q} className="text-[13px] text-foreground flex gap-2.5"><span className="font-bold" style={{ color: '#C47EAA' }}>→</span> {q}</p>
+                <p key={q} className="text-[13px] text-foreground flex gap-2.5"><span className="font-bold" style={{ color: '#fb923c' }}>→</span> {q}</p>
               ))}
             </div>
-            <p className="text-[13px] text-muted-foreground mt-2.5 pt-2.5" style={{ borderTop: '1px solid #E2E8F0' }}>Run a territory prompt first to spot where demand is forming. Then go deeper on specific companies, contacts, and angles.</p>
+            <p className="text-[13px] text-muted-foreground mt-2.5 pt-2.5" style={{ borderTop: '1px solid rgba(251,146,60,.08)' }}>Run a territory prompt first to spot where demand is forming. Then go deeper on specific companies, contacts, and angles.</p>
           </div>
         </section>
 
@@ -74,7 +74,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
               { title: 'Major facility expansions and phased projects', body: 'A manufacturer or energy company launches a new site, expands an existing one, or moves through multiple phases of a project.', look: 'Plant construction, phased openings, project mobilization, commissioning.' },
               { title: 'New operating bases or regional launches', body: 'A company establishes a new branch, regional hub, operations center, or service base in your market.', look: 'New bases, new hubs, branch openings, service center launches.' },
             ].map(c => (
-              <div key={c.title} className="p-4 border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
+              <div key={c.title} className="p-4 rounded-xl border" style={{ background: '#FAF7F2', borderColor: 'rgba(251,146,60,.12)' }}>
                 <strong className="block text-[14px] mb-2 text-foreground">{c.title}</strong>
                 <p className="text-[13px] leading-[1.65] mb-2 text-muted-foreground">{c.body}</p>
                 <p className="text-[13px] leading-[1.65] text-muted-foreground"><strong className="text-foreground">What to look for:</strong> {c.look}</p>
@@ -94,9 +94,9 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
               { title: 'They treat the signal as a one-time event', body: 'A company that mobilizes once will mobilize again. Once you\'ve placed an account, watch their signals. Re-engage before the next project starts.' },
               { title: 'They wait for the account to be "ready"', body: 'By the time an account is fully ready, they\'ve already called three other vendors. The best time to reach a project manager is the week the contract drops. Early outreach with a real signal reference earns a conversation.' },
             ].map(m => (
-              <div key={m.title} className="overflow-hidden border" style={{ background: '#fff', borderColor: 'rgba(155,120,200,.12)' }}>
+              <div key={m.title} className="overflow-hidden rounded-lg border" style={{ background: '#fff', borderColor: 'rgba(251,146,60,.12)' }}>
                 <div className="grid" style={{ gridTemplateColumns: '3px 1fr' }}>
-                  <div style={{ background: 'linear-gradient(135deg, #9B78C8, #C47EAA)' }} />
+                  <div style={{ background: 'linear-gradient(135deg, #fb923c, #ea580c)' }} />
                   <div className="p-4">
                     <p className="text-[13px] font-semibold mb-1 text-foreground">{m.title}</p>
                     <p className="text-[13px] leading-[1.6] text-muted-foreground">{m.body}</p>
@@ -109,7 +109,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
 
         {/* Every account is different */}
         <section>
-          <div className="flex gap-3 items-start p-4" style={{ background: '#E8D1AC', border: '1px solid rgba(16,65,118,.10)', borderRadius: '10px' }}>
+          <div className="flex gap-3 items-start p-4 rounded-xl" style={{ background: 'rgba(251,146,60,.08)', border: '1px solid rgba(251,146,60,.2)' }}>
             <span className="text-[20px] flex-shrink-0">⭐</span>
             <div>
               <p className="text-[13px] font-semibold mb-1 text-foreground">Every account is different. Sell like it.</p>
