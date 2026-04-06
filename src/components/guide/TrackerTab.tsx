@@ -64,7 +64,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
       </p>
 
       {/* Why this matters — context block */}
-      <div className="mb-6 p-4" style={{ background: 'linear-gradient(135deg, rgba(214,176,122,.06), rgba(155,120,200,.06))', border: '1px solid rgba(214,176,122,.15)' }}>
+      <div className="mb-6 p-4" style={{ background: 'linear-gradient(135deg, rgba(251,146,60,.06), rgba(155,120,200,.06))', border: '1px solid rgba(251,146,60,.15)' }}>
         <p className="text-[13px] leading-[1.7] text-muted-foreground">
           <strong className="text-foreground">Why this works:</strong> Most reps wait for RFPs or referrals. This tool builds you a custom search prompt that finds companies <em>before</em> they start shopping — while they're still planning. You'll know who needs housing before your competitors do.
         </p>
@@ -78,7 +78,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
           { num: '3', icon: '⏰', title: 'Automate', desc: 'Tell ChatGPT to run it every weekday at 7 AM. Wake up to fresh leads daily.' },
         ].map(step => (
           <div key={step.num} className="p-4 text-center" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-            <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center text-[14px] font-bold" style={{ background: 'linear-gradient(135deg, #D6B07A, #C49A5C)', color: '#fff' }}>
+            <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center text-[14px] font-bold" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff' }}>
               {step.num}
             </div>
             <span className="text-[16px]">{step.icon}</span>
@@ -108,10 +108,10 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                     disabled={loading}
                     className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium transition-all duration-200"
                     style={{
-                      background: city === preset.value ? 'linear-gradient(135deg, #D6B07A, #C49A5C)' : '#F1F5F9',
+                      background: city === preset.value ? 'linear-gradient(135deg, #fb923c, #f97316)' : '#F1F5F9',
                       color: city === preset.value ? '#fff' : '#475569',
-                      border: `1px solid ${city === preset.value ? '#D6B07A' : '#E2E8F0'}`,
-                      boxShadow: city === preset.value ? '0 2px 8px rgba(214,176,122,.3)' : 'none',
+                      border: `1px solid ${city === preset.value ? '#fb923c' : '#E2E8F0'}`,
+                      boxShadow: city === preset.value ? '0 2px 8px rgba(251,146,60,.3)' : 'none',
                     }}
                   >
                     <span>{preset.icon}</span>
@@ -131,9 +131,9 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   placeholder="e.g. Denver, Colorado"
                   className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
                   style={{
-                    borderColor: city ? 'rgba(214,176,122,.5)' : 'rgba(155,120,200,.2)',
-                    background: city ? '#FFFBF5' : '#FAF7F2',
-                    boxShadow: city ? '0 0 0 3px rgba(214,176,122,.1)' : 'none',
+                    borderColor: city ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                    background: city ? '#FFF7ED' : '#FAF7F2',
+                    boxShadow: city ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                   }}
                   disabled={loading}
                 />
@@ -145,9 +145,9 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   onChange={e => setVertical(e.target.value)}
                   className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200 appearance-none cursor-pointer"
                   style={{
-                    borderColor: vertical ? 'rgba(214,176,122,.5)' : 'rgba(155,120,200,.2)',
-                    background: vertical ? '#FFFBF5' : '#FAF7F2',
-                    boxShadow: vertical ? '0 0 0 3px rgba(214,176,122,.1)' : 'none',
+                    borderColor: vertical ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                    background: vertical ? '#FFF7ED' : '#FAF7F2',
+                    boxShadow: vertical ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                   }}
                   disabled={loading}
                 >
@@ -162,9 +162,9 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   onChange={e => setSignalType(e.target.value)}
                   className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200 appearance-none cursor-pointer"
                   style={{
-                    borderColor: signalType ? 'rgba(214,176,122,.5)' : 'rgba(155,120,200,.2)',
-                    background: signalType ? '#FFFBF5' : '#FAF7F2',
-                    boxShadow: signalType ? '0 0 0 3px rgba(214,176,122,.1)' : 'none',
+                    borderColor: signalType ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                    background: signalType ? '#FFF7ED' : '#FAF7F2',
+                    boxShadow: signalType ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                   }}
                   disabled={loading}
                 >
@@ -197,10 +197,10 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
               disabled={!canBuild || loading}
               className="px-7 py-3.5 text-[14px] font-bold tracking-wide transition-all duration-200"
               style={{
-                background: !canBuild || loading ? '#94A3B8' : 'linear-gradient(135deg, #D6B07A, #C49A5C)',
+                background: !canBuild || loading ? '#94A3B8' : 'linear-gradient(135deg, #fb923c, #f97316)',
                 color: '#fff',
                 cursor: !canBuild || loading ? 'not-allowed' : 'pointer',
-                boxShadow: canBuild && !loading ? '0 4px 15px rgba(214,176,122,.35)' : 'none',
+                boxShadow: canBuild && !loading ? '0 4px 15px rgba(251,146,60,.35)' : 'none',
               }}
             >
               {loading ? '⏳ Building...' : '⚡ Build My Prompt'}
@@ -217,12 +217,12 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   <li>Review your results, then schedule it (see below)</li>
                 </ol>
                 <div className="relative p-5" style={{ background: 'linear-gradient(135deg, #0E1E3A, #1a1145)' }}>
-                  <div className="absolute top-0 right-0 w-24 h-24 opacity-10" style={{ background: 'radial-gradient(circle, #D6B07A, transparent 70%)' }} />
+                  <div className="absolute top-0 right-0 w-24 h-24 opacity-10" style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)' }} />
                   <button
                     onClick={handleCopyPrompt}
                     className="absolute top-3 right-3 text-[11px] font-bold px-4 py-2 tracking-wider z-10 transition-all duration-200"
                     style={{
-                      background: copied ? 'linear-gradient(135deg, #10B981, #059669)' : 'linear-gradient(135deg, #D6B07A, #C49A5C)',
+                      background: copied ? 'linear-gradient(135deg, #10B981, #059669)' : 'linear-gradient(135deg, #fb923c, #f97316)',
                       color: copied ? '#fff' : '#0E1E3A',
                       boxShadow: '0 2px 8px rgba(0,0,0,.2)',
                     }}
@@ -238,7 +238,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
       </AiToolCard>
 
       {/* Schedule — follow-up step */}
-      <div className="p-5 mb-6" style={{ background: 'linear-gradient(135deg, rgba(214,176,122,.04), rgba(155,120,200,.04))', border: '1px solid rgba(214,176,122,.15)' }}>
+      <div className="p-5 mb-6" style={{ background: 'linear-gradient(135deg, rgba(251,146,60,.04), rgba(155,120,200,.04))', border: '1px solid rgba(251,146,60,.15)' }}>
         <div className="flex items-center gap-2 mb-1.5">
           <span className="text-[16px]">⏰</span>
           <p className="text-[14px] font-semibold text-foreground">Last step: Automate it so it runs without you</p>
