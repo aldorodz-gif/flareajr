@@ -11,6 +11,8 @@ import ResultsTab from '../components/guide/ResultsTab';
 import ContactTab from '../components/guide/ContactTab';
 import OutreachTab from '../components/guide/OutreachTab';
 import SignalsTab from '../components/guide/SignalsTab';
+import EventsTab from '../components/guide/EventsTab';
+import LinkedInTab from '../components/guide/LinkedInTab';
 import { TAB_ORDER } from '../components/guide/types';
 
 const Index = () => {
@@ -44,6 +46,8 @@ const Index = () => {
       case 'contact': return <ContactTab {...props} />;
       case 'outreach': return <OutreachTab {...props} />;
       case 'signals': return <SignalsTab {...props} />;
+      case 'events': return <EventsTab {...props} />;
+      case 'linkedin': return <LinkedInTab {...props} />;
       default: return null;
     }
   };
