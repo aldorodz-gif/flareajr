@@ -235,9 +235,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </div>
+      </AiToolCard>
 
       {/* Schedule — follow-up step */}
       <div className="p-5 mb-6" style={{ background: 'linear-gradient(135deg, rgba(214,176,122,.04), rgba(155,120,200,.04))', border: '1px solid rgba(214,176,122,.15)' }}>
