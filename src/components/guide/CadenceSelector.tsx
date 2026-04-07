@@ -30,7 +30,7 @@ export const CADENCE_TYPES: CadenceType[] = [
       { touchNum: 1, day: 1, channel: 'email', purpose: 'Signal-based intro — reference what you found', tone: 'Curious, specific' },
       { touchNum: 2, day: 3, channel: 'call', purpose: 'Follow up on email — mention what you sent', tone: 'Brief, human' },
       { touchNum: 3, day: 5, channel: 'email', purpose: 'Add value — share a relevant insight or case study', tone: 'Helpful, no pitch' },
-      { touchNum: 4, day: 9, channel: 'linkedin', purpose: 'Connect request with personal note', tone: 'Warm, referencing prior touches' },
+      { touchNum: 4, day: 9, channel: 'email', purpose: 'Social proof — share a relevant case study or win', tone: 'Credible, peer-level' },
       { touchNum: 5, day: 14, channel: 'email', purpose: 'Breakup email — leave the door open', tone: 'Respectful, direct' },
     ],
   },
@@ -42,7 +42,7 @@ export const CADENCE_TYPES: CadenceType[] = [
     touches: 7,
     duration: '28 days',
     steps: [
-      { touchNum: 1, day: 1, channel: 'linkedin', purpose: 'Engage with their content — comment or share', tone: 'Genuine interest' },
+      { touchNum: 1, day: 1, channel: 'email', purpose: 'Signal-based intro — tie to their recent initiative', tone: 'Researched, specific' },
       { touchNum: 2, day: 3, channel: 'email', purpose: 'Signal-based intro — tie to their initiative', tone: 'Researched, specific' },
       { touchNum: 3, day: 5, channel: 'call', purpose: 'Warm call — reference your email and LinkedIn', tone: 'Familiar, brief' },
       { touchNum: 4, day: 10, channel: 'email', purpose: 'Value drop — industry insight or benchmark', tone: 'Peer-level expertise' },
@@ -73,7 +73,7 @@ export const CADENCE_TYPES: CadenceType[] = [
     duration: '21 days',
     steps: [
       { touchNum: 1, day: 1, channel: 'email', purpose: 'New signal or trigger — reason to reconnect', tone: 'Fresh, not apologetic' },
-      { touchNum: 2, day: 5, channel: 'linkedin', purpose: 'Engage with recent activity — show you\'re paying attention', tone: 'Casual, genuine' },
+      { touchNum: 2, day: 5, channel: 'email', purpose: 'Value add — share a relevant insight or market trend', tone: 'Helpful, giving' },
       { touchNum: 3, day: 10, channel: 'email', purpose: 'Share something valuable — new case study or market shift', tone: 'Giving, not asking' },
       { touchNum: 4, day: 21, channel: 'call', purpose: 'Direct outreach — tie everything together', tone: 'Confident, warm' },
     ],
