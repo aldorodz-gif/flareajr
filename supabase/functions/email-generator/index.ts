@@ -9,8 +9,8 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { company, signal, buyer_title, service_line, vary, article_content, article_title } = await req.json();
-    if (!company || (!signal && !article_content) || !buyer_title || !service_line) {
+    const { company, signal, buyer_title, service_line, vary } = await req.json();
+    if (!company || !signal || !buyer_title || !service_line) {
       return new Response(JSON.stringify({ error: "All fields are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -20,24 +20,6 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const varyInstruction = vary ? " Use a different tone and angle than a typical first outreach — vary the approach while keeping the same rules." : "";
-
-    // Build the signal context block
-    let signalBlock: string;
-    if (article_content) {
-      signalBlock = `
-ARTICLE SOURCE (use this as your primary intelligence):
-Title: "${article_title || 'Unknown'}"
-Content: ${article_content}
-
-INSTRUCTIONS FOR USING THE ARTICLE:
-- Read the article carefully and extract the SPECIFIC detail most relevant to corporate housing needs
-- Reference a concrete fact, quote, number, or event from the article — not a vague summary
-- The first sentence of the email MUST reference something specific from this article that the buyer would recognize
-- Do NOT say "I saw an article about..." — instead, reference the specific event, announcement, or fact directly
-${signal ? `\nAdditional context from the BDR: ${signal}` : ''}`;
-    } else {
-      signalBlock = `Signal: ${signal}`;
-    }
 
     const referenceEmail = `Here are real outreach emails from top-performing BDRs at NCH. Use the one closest to the signal's industry as a style and tone reference — match the warmth, specificity, and professional-but-human feel:
 
@@ -49,38 +31,7 @@ THEATER / PERFORMING ARTS REFERENCE:
 
 Key patterns to replicate: lead with a credibility anchor (partnership, existing relationship, or industry knowledge), reference the specific signal or program you found, acknowledge the buyer's reality before pitching, close with a warm connector ask. For theater specifically, emphasize the recurring seasonal nature — multiple productions means an ongoing relationship, not a one-time booking. Adapt these patterns to the specific signal and company — do NOT copy these emails verbatim.`;
 
-    const systemPrompt = `You are a sales email writer for National Corporate Housing, a company that provides temporary housing, travel management, hotel programs, and destination services to businesses. Write a first outreach email to the ${buyer_title} at ${company}. The service line is ${service_line}.
-
-${signalBlock}
-
-THE 4-SENTENCE EMAIL STRUCTURE (follow this EXACTLY):
-
-SENTENCE 1 — One specific observation (proof you actually looked)
-✓ DO THIS: "Saw [Company] just [landed the contract / kicked off the expansion], congrats, that's a big one."
-✗ NOT THIS: "I came across your company and was impressed by what you do."
-Pull a CONCRETE detail — a name, number, date, or project name from the signal/article. Never generic.
-
-SENTENCE 2 — One sentence naming their likely problem (NOT your solution)
-✓ DO THIS: "Mobilizations like that move fast — travel, lodging, or temporary housing for incoming crews is usually the thing that gets figured out last."
-✗ NOT THIS: "We help teams get placed quickly with the right mix of temporary housing."
-Name the pain THEY feel. Do not pitch anything yet.
-
-SENTENCE 3 — One sentence on what you do (plain English, outcome-first)
-✓ DO THIS: "We help get crews placed before they land — temporary housing, hotels, or travel support handled cleanly."
-✗ NOT THIS: "We help teams get placed quickly and keep moves, travel, and lodging organized."
-Lead with the outcome, not the company. One sentence max.
-
-SENTENCE 4 — One ask (the smallest possible yes)
-✓ DO THIS: "Worth a quick 15-minute call to see if it makes sense for your Q2 timeline?"
-✗ NOT THIS: "I'd love to schedule a 30-minute demo to walk you through our platform."
-Low friction. 10-15 minutes. Tie to their timeline if possible.
-
-ADDITIONAL RULES:
-- Under 100 words total, maximum 4 sentences
-- Written like one person texting a colleague — not like a sales email
-- No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists.
-- Subject line: 2-4 words referencing the specific signal
-- MOBILE FIRST: Most recipients read on phones. Short sentences, no walls of text. Scannable in 2 seconds on a 4-inch display.${varyInstruction}
+    const systemPrompt = `You are a sales email writer for National Corporate Housing, a company that provides temporary housing, travel management, hotel programs, and destination services to businesses. Write a first outreach email to the ${buyer_title} at ${company}, referencing the signal: ${signal}. The service line is ${service_line}. Rules: under 100 words total, maximum 4 sentences, written like one person texting a colleague not like a sales email. First sentence references the specific signal directly, no generic openers. Second sentence names their likely problem without pitching anything. Third sentence says what NCH does in one plain English sentence, outcome first. Fourth sentence is a low friction ask for a 10 to 15 minute call. No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists. Also write a 2 to 4 word subject line that references the specific signal. IMPORTANT: Most recipients read email on their phones. Write for a small screen — short sentences, short paragraphs, no walls of text. Every sentence should be scannable in 2 seconds on a 4-inch display.${varyInstruction}
 
 ${referenceEmail}`;
 

@@ -3,8 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
-import CadenceSelector, { type CadenceType } from './CadenceSelector';
-import CadenceBuilder from './CadenceBuilder';
 
 interface OutreachTabProps {
   onNavigate: (tabId: string) => void;
@@ -62,7 +60,6 @@ const EMAIL_PARTS = [
 const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
   const [channel, setChannel] = useState<'call' | 'email'>('call');
   const [expandedClose, setExpandedClose] = useState<number | null>(null);
-  const [selectedCadence, setSelectedCadence] = useState<CadenceType | null>(null);
 
   // Email generator state
   const [company, setCompany] = useState('');
@@ -114,15 +111,11 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     setError('');
     if (!vary) setResult(null);
     try {
+      const signalText = articleContent
+        ? `Article: "${scrapedTitle}". Content: ${articleContent}`
+        : signal.trim();
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
-        body: {
-          company: company.trim(),
-          signal: signal.trim(),
-          buyer_title: buyerTitle.trim(),
-          service_line: serviceLine,
-          vary,
-          ...(articleContent ? { article_content: articleContent, article_title: scrapedTitle } : {}),
-        },
+        body: { company: company.trim(), signal: signalText, buyer_title: buyerTitle.trim(), service_line: serviceLine, vary },
       });
       if (fnError) throw fnError;
       if (data.error) throw new Error(data.error);
@@ -282,24 +275,11 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
       {/* ══════════════════════════════════════════════ */}
       {channel === 'email' && (
         <div className="space-y-8 animate-fade-in">
-          {/* ── Cadence Builder Section ── */}
-          <AiToolCard
-            icon="🔁"
-            title="Email Sequence Builder"
-            subtitle="Choose a cadence type — then generate each touch in order"
-          >
-            {!selectedCadence ? (
-              <CadenceSelector onSelect={setSelectedCadence} />
-            ) : (
-              <CadenceBuilder cadence={selectedCadence} onBack={() => setSelectedCadence(null)} />
-            )}
-          </AiToolCard>
-
-          {/* ── Single Email Generator ── */}
+          {/* ── AI Email Generator (Hero) ── */}
           <AiToolCard
             icon="✉️"
-            title="Quick Single Email"
-            subtitle="Just need one email? Generate a standalone first touch"
+            title="First Email Generator"
+            subtitle="Fill in the details — I'll write your first outreach email"
           >
             <p className="text-[14px] font-medium text-foreground mb-1">Four fields. One click. Your outreach email is ready.</p>
             <p className="text-[13px] text-muted-foreground mb-5">Enter the company, signal, buyer title, and service line. We'll generate a short, personal email ready to send.</p>
