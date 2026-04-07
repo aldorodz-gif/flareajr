@@ -539,7 +539,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                         className="px-4 py-3 rounded-lg"
                         style={{ background: `${channelColor[step.channel]}08`, border: `1px solid ${channelColor[step.channel]}20` }}
                       >
-                        <p className="text-[12px] font-semibold text-foreground mb-1">{channelIcon[step.channel]} {step.channel === 'call' ? 'Call' : step.channel === 'linkedin' ? 'LinkedIn' : 'Voicemail'} touch — use the frameworks from the Calling tab</p>
+                        <p className="text-[12px] font-semibold text-foreground mb-1">{channelIcon[step.channel]} {step.channel === 'call' ? 'Call' : 'Voicemail'} touch — use the frameworks from the Calling tab</p>
                         <p className="text-[11px] text-muted-foreground leading-relaxed">{step.purpose}</p>
                       </div>
                     )}
