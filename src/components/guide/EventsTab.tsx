@@ -1,14 +1,15 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { US_STATES } from './usStatesData';
 
 interface EventsTabProps {
   onNavigate: (tabId: string) => void;
 }
 
-const CITIES = ['Nashville', 'Atlanta', 'Huntsville', 'Charlotte', 'New York'];
 const VERTICALS = ['Construction', 'Defense / Aerospace', 'Tech', 'Healthcare', 'Energy', 'Sports', 'Theater', 'Government'];
 const TIMEFRAMES = ['Next 30 days', 'Next 3 months', 'Next 6 months'];
 
@@ -29,6 +30,7 @@ const PRIORITY_COLORS: Record<string, { bg: string; text: string }> = {
 };
 
 const EventsTab = ({ onNavigate }: EventsTabProps) => {
+  const [selectedState, setSelectedState] = useState('');
   const [city, setCity] = useState('');
   const [vertical, setVertical] = useState('');
   const [timeframe, setTimeframe] = useState('Next 3 months');
@@ -36,14 +38,26 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const citiesForState = useMemo(() => {
+    if (!selectedState) return [];
+    const state = US_STATES.find(s => s.abbreviation === selectedState);
+    return state?.cities || [];
+  }, [selectedState]);
+
+  const handleStateChange = (value: string) => {
+    setSelectedState(value);
+    setCity(''); // reset city when state changes
+  };
+
   const handleSearch = useCallback(async () => {
     if (!city || !vertical) return;
     setLoading(true);
     setError('');
     setEvents([]);
     try {
+      const stateName = US_STATES.find(s => s.abbreviation === selectedState)?.name || '';
       const { data, error: fnError } = await supabase.functions.invoke('event-finder', {
-        body: { city, vertical, timeframe },
+        body: { city: `${city}, ${stateName}`, vertical, timeframe },
       });
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
@@ -53,7 +67,9 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
     } finally {
       setLoading(false);
     }
-  }, [city, vertical, timeframe]);
+  }, [city, vertical, timeframe, selectedState]);
+
+  const stateName = US_STATES.find(s => s.abbreviation === selectedState)?.name || '';
 
   return (
     <main className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
@@ -63,80 +79,79 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
         Discover conferences, trade shows, and networking events where your target buyers gather — so you can show up where decisions are made.
       </p>
 
-      {/* ── AI Tool ── */}
       <AiToolCard
         icon="🎪"
         title="Event Finder"
         subtitle="AI-powered event discovery for your target market"
       >
         <div className="space-y-4">
-          {/* City */}
-          <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>City</label>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {CITIES.map(c => (
-                <button
-                  key={c}
-                  onClick={() => setCity(c)}
-                  className="px-3 py-1 rounded-full text-xs font-medium transition-all"
-                  style={{
-                    background: city === c ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
-                    color: city === c ? '#fff' : '#475569',
-                    border: `1px solid ${city === c ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
-                  }}
-                >
-                  {c}
-                </button>
-              ))}
+          {/* State & City */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold mb-1.5 text-accent">State</label>
+              <Select value={selectedState} onValueChange={handleStateChange}>
+                <SelectTrigger className="w-full bg-background border-border text-foreground">
+                  <SelectValue placeholder="Select a state…" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {US_STATES.map(s => (
+                    <SelectItem key={s.abbreviation} value={s.abbreviation}>
+                      {s.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <input
-              value={city}
-              onChange={e => setCity(e.target.value)}
-              placeholder="Or type a city..."
-              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-orange-400/50"
-            />
+
+            <div>
+              <label className="block text-xs font-semibold mb-1.5 text-accent">City</label>
+              <Select value={city} onValueChange={setCity} disabled={!selectedState}>
+                <SelectTrigger className="w-full bg-background border-border text-foreground">
+                  <SelectValue placeholder={selectedState ? 'Select a city…' : 'Choose a state first'} />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {citiesForState.map(c => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Vertical */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>Vertical</label>
-            <div className="flex flex-wrap gap-2">
-              {VERTICALS.map(v => (
-                <button
-                  key={v}
-                  onClick={() => setVertical(v)}
-                  className="px-3 py-1 rounded-full text-xs font-medium transition-all"
-                  style={{
-                    background: vertical === v ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
-                    color: vertical === v ? '#fff' : '#475569',
-                    border: `1px solid ${vertical === v ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
-                  }}
-                >
-                  {v}
-                </button>
-              ))}
-            </div>
+            <label className="block text-xs font-semibold mb-1.5 text-accent">Vertical</label>
+            <Select value={vertical} onValueChange={setVertical}>
+              <SelectTrigger className="w-full bg-background border-border text-foreground">
+                <SelectValue placeholder="Select an industry…" />
+              </SelectTrigger>
+              <SelectContent>
+                {VERTICALS.map(v => (
+                  <SelectItem key={v} value={v}>
+                    {v}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Timeframe */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>Timeframe</label>
-            <div className="flex gap-2">
-              {TIMEFRAMES.map(t => (
-                <button
-                  key={t}
-                  onClick={() => setTimeframe(t)}
-                  className="px-3 py-1 rounded-full text-xs font-medium transition-all"
-                  style={{
-                    background: timeframe === t ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
-                    color: timeframe === t ? '#fff' : '#475569',
-                    border: `1px solid ${timeframe === t ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
-                  }}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
+            <label className="block text-xs font-semibold mb-1.5 text-accent">Timeframe</label>
+            <Select value={timeframe} onValueChange={setTimeframe}>
+              <SelectTrigger className="w-full bg-background border-border text-foreground">
+                <SelectValue placeholder="Select timeframe…" />
+              </SelectTrigger>
+              <SelectContent>
+                {TIMEFRAMES.map(t => (
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Generate */}
@@ -162,7 +177,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
       {events.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-lg font-bold text-foreground">
-            {events.length} Events Found — {vertical} in {city}
+            {events.length} Events Found — {vertical} in {city}, {stateName}
           </h3>
           <div className="space-y-3">
             {events.map((ev, i) => {
@@ -170,11 +185,10 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
               return (
                 <div
                   key={i}
-                  className="rounded-xl p-4 space-y-2"
-                  style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.12)' }}
+                  className="rounded-xl p-4 space-y-2 bg-card border border-border"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <h4 className="font-bold text-sm" style={{ color: '#1E293B' }}>{ev.name}</h4>
+                    <h4 className="font-bold text-sm text-foreground">{ev.name}</h4>
                     <span
                       className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
                       style={{ background: pc.bg, color: pc.text }}
@@ -182,19 +196,19 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                       {ev.priority}
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-3 text-xs" style={{ color: '#64748b' }}>
+                  <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
                     <span>📅 {ev.date}</span>
                     <span>📍 {ev.location}</span>
                   </div>
-                  <p className="text-xs" style={{ color: '#475569' }}>{ev.why}</p>
+                  <p className="text-xs text-muted-foreground">{ev.why}</p>
                   <div className="flex flex-col md:flex-row gap-3 pt-1">
                     <div className="flex-1 rounded-lg p-2.5" style={{ background: 'rgba(251,146,60,.06)' }}>
                       <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#fb923c' }}>WHO'S THERE</span>
-                      <p className="text-xs" style={{ color: '#475569' }}>{ev.attendees}</p>
+                      <p className="text-xs text-muted-foreground">{ev.attendees}</p>
                     </div>
                     <div className="flex-1 rounded-lg p-2.5" style={{ background: 'rgba(99,102,241,.06)' }}>
                       <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#6366f1' }}>YOUR ANGLE</span>
-                      <p className="text-xs" style={{ color: '#475569' }}>{ev.angle}</p>
+                      <p className="text-xs text-muted-foreground">{ev.angle}</p>
                     </div>
                   </div>
                 </div>
