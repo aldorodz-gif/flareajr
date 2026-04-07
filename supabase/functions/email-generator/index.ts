@@ -9,8 +9,8 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { company, signal, buyer_title, service_line, vary } = await req.json();
-    if (!company || !signal || !buyer_title || !service_line) {
+    const { company, signal, buyer_title, service_line, vary, article_content, article_title } = await req.json();
+    if (!company || (!signal && !article_content) || !buyer_title || !service_line) {
       return new Response(JSON.stringify({ error: "All fields are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -20,6 +20,24 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const varyInstruction = vary ? " Use a different tone and angle than a typical first outreach — vary the approach while keeping the same rules." : "";
+
+    // Build the signal context block
+    let signalBlock: string;
+    if (article_content) {
+      signalBlock = `
+ARTICLE SOURCE (use this as your primary intelligence):
+Title: "${article_title || 'Unknown'}"
+Content: ${article_content}
+
+INSTRUCTIONS FOR USING THE ARTICLE:
+- Read the article carefully and extract the SPECIFIC detail most relevant to corporate housing needs
+- Reference a concrete fact, quote, number, or event from the article — not a vague summary
+- The first sentence of the email MUST reference something specific from this article that the buyer would recognize
+- Do NOT say "I saw an article about..." — instead, reference the specific event, announcement, or fact directly
+${signal ? `\nAdditional context from the BDR: ${signal}` : ''}`;
+    } else {
+      signalBlock = `Signal: ${signal}`;
+    }
 
     const referenceEmail = `Here are real outreach emails from top-performing BDRs at NCH. Use the one closest to the signal's industry as a style and tone reference — match the warmth, specificity, and professional-but-human feel:
 
@@ -31,7 +49,11 @@ THEATER / PERFORMING ARTS REFERENCE:
 
 Key patterns to replicate: lead with a credibility anchor (partnership, existing relationship, or industry knowledge), reference the specific signal or program you found, acknowledge the buyer's reality before pitching, close with a warm connector ask. For theater specifically, emphasize the recurring seasonal nature — multiple productions means an ongoing relationship, not a one-time booking. Adapt these patterns to the specific signal and company — do NOT copy these emails verbatim.`;
 
-    const systemPrompt = `You are a sales email writer for National Corporate Housing, a company that provides temporary housing, travel management, hotel programs, and destination services to businesses. Write a first outreach email to the ${buyer_title} at ${company}, referencing the signal: ${signal}. The service line is ${service_line}. Rules: under 100 words total, maximum 4 sentences, written like one person texting a colleague not like a sales email. First sentence references the specific signal directly, no generic openers. Second sentence names their likely problem without pitching anything. Third sentence says what NCH does in one plain English sentence, outcome first. Fourth sentence is a low friction ask for a 10 to 15 minute call. No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists. Also write a 2 to 4 word subject line that references the specific signal. IMPORTANT: Most recipients read email on their phones. Write for a small screen — short sentences, short paragraphs, no walls of text. Every sentence should be scannable in 2 seconds on a 4-inch display.${varyInstruction}
+    const systemPrompt = `You are a sales email writer for National Corporate Housing, a company that provides temporary housing, travel management, hotel programs, and destination services to businesses. Write a first outreach email to the ${buyer_title} at ${company}. The service line is ${service_line}.
+
+${signalBlock}
+
+Rules: under 100 words total, maximum 4 sentences, written like one person texting a colleague not like a sales email. First sentence references the specific signal directly — pull a CONCRETE detail (a name, a number, a date, a project name) from the source material. No generic openers. Second sentence names their likely problem without pitching anything. Third sentence says what NCH does in one plain English sentence, outcome first. Fourth sentence is a low friction ask for a 10 to 15 minute call. No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists. Also write a 2 to 4 word subject line that references the specific signal. IMPORTANT: Most recipients read email on their phones. Write for a small screen — short sentences, short paragraphs, no walls of text. Every sentence should be scannable in 2 seconds on a 4-inch display.${varyInstruction}
 
 ${referenceEmail}`;
 
