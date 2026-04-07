@@ -72,7 +72,38 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
   const [copied, setCopied] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
 
-  const canGenerate = company.trim() && signal.trim() && buyerTitle.trim() && serviceLine;
+  // Article scraping state
+  const [articleContent, setArticleContent] = useState('');
+  const [scrapingUrl, setScrapingUrl] = useState(false);
+  const [scrapedTitle, setScrapedTitle] = useState('');
+
+  const isUrl = (text: string) => /^https?:\/\/.+/i.test(text.trim());
+
+  const handleSignalChange = useCallback(async (value: string) => {
+    setSignal(value);
+    setArticleContent('');
+    setScrapedTitle('');
+
+    if (isUrl(value.trim()) && value.trim().length > 10) {
+      setScrapingUrl(true);
+      try {
+        const { data, error: fnError } = await supabase.functions.invoke('article-scraper', {
+          body: { url: value.trim() },
+        });
+        if (fnError) throw fnError;
+        if (data.error) throw new Error(data.error);
+        setArticleContent(data.content || '');
+        setScrapedTitle(data.title || '');
+      } catch {
+        setArticleContent('');
+        setScrapedTitle('');
+      } finally {
+        setScrapingUrl(false);
+      }
+    }
+  }, []);
+
+  const canGenerate = company.trim() && (signal.trim() || articleContent) && buyerTitle.trim() && serviceLine;
 
   const callApi = useCallback(async (vary = false) => {
     if (!canGenerate) return;
@@ -80,8 +111,11 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     setError('');
     if (!vary) setResult(null);
     try {
+      const signalText = articleContent
+        ? `Article: "${scrapedTitle}". Content: ${articleContent}`
+        : signal.trim();
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
-        body: { company: company.trim(), signal: signal.trim(), buyer_title: buyerTitle.trim(), service_line: serviceLine, vary },
+        body: { company: company.trim(), signal: signalText, buyer_title: buyerTitle.trim(), service_line: serviceLine, vary },
       });
       if (fnError) throw fnError;
       if (data.error) throw new Error(data.error);
@@ -91,7 +125,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     } finally {
       setLoading(false);
     }
-  }, [company, signal, buyerTitle, serviceLine, canGenerate]);
+  }, [company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle, canGenerate]);
 
   const wordCount = result ? result.body.split(/\s+/).filter(Boolean).length : 0;
 
@@ -253,28 +287,71 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                 {!result ? (
                   <>
                     <div className="flex flex-col gap-3 mb-5">
-                      {[
-                        { val: company, set: setCompany, ph: "Company you're reaching out to", icon: '🏢' },
-                        { val: signal, set: setSignal, ph: 'What happened — contract win, expansion, new office, etc.', icon: '📡' },
-                        { val: buyerTitle, set: setBuyerTitle, ph: "Job title of the person you're contacting", icon: '👤' },
-                      ].map((f, i) => (
-                        <div key={i} className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">{f.icon}</span>
-                          <input
-                            type="text"
-                            value={f.val}
-                            onChange={e => f.set(e.target.value)}
-                            placeholder={f.ph}
-                            className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
-                            style={{
-                              borderColor: f.val ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                              background: f.val ? '#FFF7ED' : '#FAF7F2',
-                              boxShadow: f.val ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
-                            }}
-                            disabled={loading}
-                          />
+                      {/* Company */}
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">🏢</span>
+                        <input
+                          type="text"
+                          value={company}
+                          onChange={e => setCompany(e.target.value)}
+                          placeholder="Company you're reaching out to"
+                          className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
+                          style={{
+                            borderColor: company ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                            background: company ? '#FFF7ED' : '#FAF7F2',
+                            boxShadow: company ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
+                          }}
+                          disabled={loading}
+                        />
+                      </div>
+
+                      {/* Signal — supports URL or plain text */}
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">{isUrl(signal) ? '🔗' : '📡'}</span>
+                        <input
+                          type="text"
+                          value={signal}
+                          onChange={e => handleSignalChange(e.target.value)}
+                          placeholder="Paste an article link or describe what happened"
+                          className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
+                          style={{
+                            borderColor: signal ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                            background: signal ? '#FFF7ED' : '#FAF7F2',
+                            boxShadow: signal ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
+                          }}
+                          disabled={loading}
+                        />
+                        {scrapingUrl && (
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-[12px] text-muted-foreground">
+                            <span className="w-3 h-3 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
+                            Reading article...
+                          </span>
+                        )}
+                      </div>
+                      {articleContent && !scrapingUrl && (
+                        <div className="flex items-center gap-2 px-3 py-2 rounded-lg text-[12px]" style={{ background: 'rgba(91,187,160,.08)', border: '1px solid rgba(91,187,160,.2)' }}>
+                          <span>✅</span>
+                          <span className="text-foreground font-medium truncate">Article loaded{scrapedTitle ? `: ${scrapedTitle}` : ''}</span>
                         </div>
-                      ))}
+                      )}
+
+                      {/* Buyer Title */}
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">👤</span>
+                        <input
+                          type="text"
+                          value={buyerTitle}
+                          onChange={e => setBuyerTitle(e.target.value)}
+                          placeholder="Job title of the person you're contacting"
+                          className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
+                          style={{
+                            borderColor: buyerTitle ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
+                            background: buyerTitle ? '#FFF7ED' : '#FAF7F2',
+                            boxShadow: buyerTitle ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
+                          }}
+                          disabled={loading}
+                        />
+                      </div>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none">🎯</span>
                         <select
