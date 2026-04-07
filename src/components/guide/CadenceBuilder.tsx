@@ -314,6 +314,23 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                     </div>
                     <p className="text-[13px] text-foreground leading-snug">{step.purpose}</p>
                     <p className="text-[11px] text-muted-foreground mt-0.5 italic">Tone: {step.tone}</p>
+
+                    {/* Why this works */}
+                    <Collapsible>
+                      <CollapsibleTrigger
+                        onClick={e => e.stopPropagation()}
+                        className="mt-1.5 flex items-center gap-1 text-[11px] font-semibold transition-colors group"
+                        style={{ color: '#fb923c' }}
+                      >
+                        <span className="group-data-[state=open]:rotate-90 transition-transform text-[10px]">▶</span>
+                        Why this works
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-1 pl-3.5">
+                        <p className="text-[11px] leading-relaxed text-muted-foreground" style={{ maxWidth: 420 }}>
+                          {getWhyText(step)}
+                        </p>
+                      </CollapsibleContent>
+                    </Collapsible>
                   </div>
                 </button>
 
