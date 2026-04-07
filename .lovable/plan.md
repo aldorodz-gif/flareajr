@@ -1,29 +1,27 @@
 
-# Redesign: Work Your List Tab
+# Redesign: Who to Call Tab
 
 ## Problems
-1. **Flat layout** — everything is the same visual weight: white cards, light borders, text blocks
-2. **Too much reading** — the morning routine steps are paragraph-heavy; the sample result is a plain table
-3. **No visual hierarchy** — your eye doesn't know where to start or what matters most
+1. **Feels like a PDF** — dense text blocks, flat white cards, everything the same visual weight
+2. **Vertical titles section is a wall** — 8 verticals × 4 lines each = massive scroll of small text
+3. **Discovery Tree examples are static paragraphs** — no interactivity, hard to scan
+4. **No visual rhythm** — header → text → cards → text → cards → text with no variation
 
 ## Fixes
 
-### 1. Morning routine → Visual timeline with icons
-Replace the 3 text-heavy numbered steps with a horizontal (desktop) / vertical (mobile) **visual timeline** using large icons and short action phrases instead of paragraphs:
-- 📥 **Scan** → Pull HIGH signals
-- 📝 **Log** → CRM: company + signal + service line  
-- 🔍 **Research** → Run the prompt below
+### 1. POC Finder Prompt → Hero treatment
+Move the AI prompt into a styled card matching the AiToolCard pattern (dark gradient, LIVE indicator). It's the most actionable thing on the page — make it feel like a tool, not a text block.
 
-One line each. No paragraphs. The detail lives in the rest of the tab.
+### 2. Discovery Tree → Interactive accordion
+Convert the 4 levels into an accordion — each level expands to show the description and hints. Compact by default, interactive to explore. The worked examples become expandable too.
 
-### 2. Sample result → More visual, less table
-Add color-coded priority badge styling, a subtle gradient left-border accent, and break the dense table into a cleaner card with the signal as the hero element (larger text, highlighted).
+### 3. Vertical titles → Tabbed/filterable cards
+Instead of showing all 8 verticals at once, let users **click a vertical** to see its titles. Show a row of icon buttons (🔨 🛡️ 🏭 ⚡ 🏥 💻 🏀 🎭) and only display the selected vertical's card. Cuts visible content by 87%.
 
-### 3. Research prompt section → Collapsible
-Keep the research prompt but wrap it in an expandable section so the page feels shorter on first load. The tip boxes stay inside.
-
-### 4. Cross-reference cards → Add subtle icons and hover lift
-Already decent but need slightly more visual pop — add colored icon backgrounds.
+### 4. Visual variety
+- Add the orange left-border accent on the "rule" callout
+- Use icon pill backgrounds on the prioritization steps
+- Add hover/transition effects on interactive elements
 
 ## Files changed
-- `src/components/guide/ResultsTab.tsx` — restructure layout
+- `src/components/guide/ContactTab.tsx` — full restructure
