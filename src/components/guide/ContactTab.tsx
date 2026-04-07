@@ -503,48 +503,51 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       </div>
 
       {/* ── Outreach Priority Order ── */}
-      <div className="rounded-xl overflow-hidden border border-border shadow-sm">
-        <div className="p-6 bg-secondary space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: ACCENT }}>Outreach Priority Order</p>
-          <div className="space-y-3">
-            {[
-              {
-                num: 1, title: 'Pain Owner',
-                who: 'Operations, project leadership, mobility, or field logistics.',
-                say: '"I work with companies like yours that are [SIGNAL] — the teams I support usually need housing handled before crews arrive. Is that something you\'re dealing with?"',
-              },
-              {
-                num: 2, title: 'Non-Traditional Title',
-                who: 'Whoever coordinates the move, launch, or outage.',
-                say: '"I noticed [COMPANY] is [SIGNAL]. I often work with the person coordinating logistics for these kinds of moves — is that you, or can you point me to the right person?"',
-              },
-              {
-                num: 3, title: 'Procurement / Travel',
-                who: 'Later — for vendor setup, invoicing, and compliance.',
-                say: '"We\'re already working with [PAIN OWNER NAME] on housing for [PROJECT]. They suggested I reach out to get us set up as a vendor — what\'s the best way to start that process?"',
-              },
-            ].map((s) => (
-              <div key={s.num} className="p-4 rounded-lg bg-secondary-foreground/5 space-y-2.5">
-                <div className="flex gap-3 items-center">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 text-white" style={{ background: ACCENT }}>{s.num}</div>
-                  <div>
-                    <p className="text-sm font-semibold text-secondary-foreground">{s.title}</p>
-                    <p className="text-[11px] text-secondary-foreground/50">{s.who}</p>
-                  </div>
-                </div>
-                <div className="ml-11 p-3 rounded-lg bg-secondary-foreground/5" style={{ borderLeft: `2px solid ${ACCENT}` }}>
-                  <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: ACCENT }}>What to say</p>
-                  <p className="text-xs leading-relaxed italic text-secondary-foreground/75">{s.say}</p>
+      <div>
+        <Eyebrow>Outreach Priority Order</Eyebrow>
+        <p className="text-sm text-muted-foreground mb-4">Reach out in this order for the highest conversion rate.</p>
+
+        <div className="space-y-3">
+          {[
+            {
+              num: 1, title: 'Pain Owner',
+              who: 'Operations, project leadership, mobility, or field logistics.',
+              say: '"I work with companies like yours that are [SIGNAL] — the teams I support usually need housing handled before crews arrive. Is that something you\'re dealing with?"',
+            },
+            {
+              num: 2, title: 'Non-Traditional Title',
+              who: 'Whoever coordinates the move, launch, or outage.',
+              say: '"I noticed [COMPANY] is [SIGNAL]. I often work with the person coordinating logistics for these kinds of moves — is that you, or can you point me to the right person?"',
+            },
+            {
+              num: 3, title: 'Procurement / Travel',
+              who: 'Later — for vendor setup, invoicing, and compliance.',
+              say: '"We\'re already working with [PAIN OWNER NAME] on housing for [PROJECT]. They suggested I reach out to get us set up as a vendor — what\'s the best way to start that process?"',
+            },
+          ].map((s) => (
+            <div key={s.num} className="rounded-xl overflow-hidden border border-border shadow-sm">
+              <div className="flex gap-3 items-center px-5 py-4 bg-card">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 text-white" style={{ background: ACCENT }}>{s.num}</div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{s.title}</p>
+                  <p className="text-[11px] text-muted-foreground">{s.who}</p>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="pt-4 flex gap-3 items-start border-t border-secondary-foreground/10">
-            <span className="text-sm shrink-0">💡</span>
-            <p className="text-xs leading-relaxed text-secondary-foreground/60">
-              <strong className="text-secondary-foreground/85">Pattern:</strong> Project-based industries (construction, energy, defense) buy through <strong style={{ color: ACCENT }}>operations & field leaders</strong>. Program-based (tech, healthcare) buy through <strong style={{ color: ACCENT }}>mobility & people ops</strong>.
-            </p>
-          </div>
+              <div className="px-5 pb-4 pt-0 bg-card">
+                <div className="ml-11 p-3 rounded-lg bg-background border border-border" style={{ borderLeftWidth: 3, borderLeftColor: ACCENT }}>
+                  <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: ACCENT }}>What to say</p>
+                  <p className="text-xs leading-relaxed italic text-foreground">{s.say}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 flex gap-3 items-start p-4 rounded-lg bg-card border border-border">
+          <span className="text-sm shrink-0">💡</span>
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            <strong className="text-foreground">Pattern:</strong> Project-based industries (construction, energy, defense) buy through <strong style={{ color: ACCENT }}>operations & field leaders</strong>. Program-based (tech, healthcare) buy through <strong style={{ color: ACCENT }}>mobility & people ops</strong>.
+          </p>
         </div>
       </div>
 
