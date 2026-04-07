@@ -28,8 +28,37 @@ const OverviewTab = ({ onNavigate }: OverviewTabProps) => {
       <Eyebrow>Start Here</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">What is Flare?</h2>
       <p className="text-[13px] max-w-[760px] mb-4 leading-[1.7] text-muted-foreground">
-        Demand signals are flares — spot them first, and you're already ahead. Flare is a three-tool kit built for the NCH sales team that helps you score signals, build search prompts, and write outreach emails that reference what's actually happening at the account.
+        Flare is a 5-tool prospecting kit for NCH BDRs. It finds companies with active housing needs, scores the signal, identifies the right buyer, and drafts outreach — so you spend less time researching and more time selling.
       </p>
+
+      {/* Daily routine block */}
+      <div className="mb-7 overflow-hidden border" style={{ borderColor: 'rgba(251,146,60,.2)', background: '#fff' }}>
+        <div className="px-5 py-3" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)' }}>
+          <p className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,.85)' }}>
+            Your daily routine with Flare <span style={{ color: '#fb923c' }}>— under 30 min</span>
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4">
+          {[
+            { num: '1', action: 'Check your overnight Prompt Builder results for new signals', icon: '📡' },
+            { num: '2', action: 'Score them HIGH / MEDIUM / LOW in seconds', icon: '⚡' },
+            { num: '3', action: 'Find the right buyer title for each company', icon: '🎯' },
+            { num: '4', action: 'Send a signal-specific email or make the call', icon: '✉️' },
+          ].map((item, i) => (
+            <div key={item.num} className={`p-4 ${i < 3 ? 'md:border-r' : ''}`} style={{ borderColor: '#E2E8F0' }}>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[16px]">{item.icon}</span>
+                <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#9B78C8' }}>Step {item.num}</span>
+              </div>
+              <p className="text-[13px] leading-[1.55] text-foreground">{item.action}</p>
+            </div>
+          ))}
+        </div>
+        <div className="px-5 py-2.5" style={{ background: 'rgba(155,120,200,.04)', borderTop: '1px solid rgba(155,120,200,.08)' }}>
+          <p className="text-[12px] text-muted-foreground"><strong className="text-foreground">Weekly:</strong> Find networking events. Post on LinkedIn.</p>
+        </div>
+      </div>
+
 
 
       <h3 className="text-[20px] font-semibold mb-1 text-foreground">The Full Prospecting Flow</h3>
