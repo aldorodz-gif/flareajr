@@ -72,7 +72,38 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
   const [copied, setCopied] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
 
-  const canGenerate = company.trim() && signal.trim() && buyerTitle.trim() && serviceLine;
+  // Article scraping state
+  const [articleContent, setArticleContent] = useState('');
+  const [scrapingUrl, setScrapingUrl] = useState(false);
+  const [scrapedTitle, setScrapedTitle] = useState('');
+
+  const isUrl = (text: string) => /^https?:\/\/.+/i.test(text.trim());
+
+  const handleSignalChange = useCallback(async (value: string) => {
+    setSignal(value);
+    setArticleContent('');
+    setScrapedTitle('');
+
+    if (isUrl(value.trim()) && value.trim().length > 10) {
+      setScrapingUrl(true);
+      try {
+        const { data, error: fnError } = await supabase.functions.invoke('article-scraper', {
+          body: { url: value.trim() },
+        });
+        if (fnError) throw fnError;
+        if (data.error) throw new Error(data.error);
+        setArticleContent(data.content || '');
+        setScrapedTitle(data.title || '');
+      } catch {
+        setArticleContent('');
+        setScrapedTitle('');
+      } finally {
+        setScrapingUrl(false);
+      }
+    }
+  }, []);
+
+  const canGenerate = company.trim() && (signal.trim() || articleContent) && buyerTitle.trim() && serviceLine;
 
   const callApi = useCallback(async (vary = false) => {
     if (!canGenerate) return;
