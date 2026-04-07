@@ -329,10 +329,27 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                           {step.emailType}
                         </span>
                       )}
+                      {isEmailChannel && step.angle && (
+                        <span
+                          className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                          style={{ background: 'rgba(99,102,241,.08)', color: '#6366F1', border: '1px solid rgba(99,102,241,.2)' }}
+                        >
+                          {step.angle}
+                        </span>
+                      )}
                       <span className="text-[11px] text-muted-foreground ml-auto">Day {step.day}</span>
                     </div>
                     <p className="text-[13px] text-foreground leading-snug">{step.purpose}</p>
                     <p className="text-[11px] text-muted-foreground mt-0.5 italic">Tone: {step.tone}</p>
+                    {/* Duplicate angle warning */}
+                    {isEmailChannel && step.angle && (() => {
+                      const otherEmailSteps = editableSteps.filter(s => s.channel === 'email' && s.touchNum !== step.touchNum && s.angle === step.angle);
+                      return otherEmailSteps.length > 0 ? (
+                        <p className="text-[10px] mt-1 px-2 py-1 rounded" style={{ background: 'rgba(251,146,60,.08)', color: '#d97706', border: '1px solid rgba(251,146,60,.15)' }}>
+                          ⚠️ Same angle as Touch {otherEmailSteps.map(s => s.touchNum).join(', ')} — consider varying for impact
+                        </p>
+                      ) : null;
+                    })()}
                   </div>
                 </button>
 
