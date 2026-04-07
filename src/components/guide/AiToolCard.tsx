@@ -20,18 +20,18 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
         style={{ background: 'radial-gradient(ellipse, rgba(251,146,60,.2), transparent 70%)' }}
       />
 
-      {/* Animated gradient border — Flare orange/purple/green */}
+      {/* Subtle gradient border */}
       <div
-        className="absolute -inset-[2px] rounded-xl animate-border-glow"
+        className="absolute -inset-[1px] rounded-xl animate-border-glow"
         style={{
-          background: 'linear-gradient(135deg, #fb923c, #9B78C8, #10B981, #fb923c)',
+          background: 'linear-gradient(135deg, rgba(251,146,60,.4), rgba(155,120,200,.3), rgba(16,185,129,.3), rgba(251,146,60,.4))',
           backgroundSize: '300% 300%',
         }}
       />
       <div
-        className="absolute -inset-[2px] rounded-xl animate-shimmer opacity-50"
+        className="absolute -inset-[1px] rounded-xl animate-shimmer opacity-30"
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(251,146,60,.4) 50%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(251,146,60,.25) 50%, transparent 100%)',
           backgroundSize: '200% 100%',
         }}
       />
@@ -40,7 +40,7 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
         {/* ── Header ── */}
         <div
           className="relative px-6 py-6 overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 70%, #3b1560 100%)' }}
+          style={{ background: 'linear-gradient(135deg, #1a2744 0%, #1e1650 40%, #2d1b69 70%, #4a2080 100%)' }}
         >
           {/* Ambient orbs — matching Flare header */}
           <div className="absolute top-0 right-1/4 w-44 h-44 opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(251,146,60,.6), transparent 70%)' }} />
@@ -89,7 +89,7 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
         </div>
 
         {/* ── Body ── */}
-        <div className="p-6 border-x border-b rounded-b-xl" style={{ borderColor: 'rgba(251,146,60,.12)', background: '#fff' }}>
+        <div className="p-6 border-x border-b rounded-b-xl" style={{ borderColor: 'rgba(14,30,58,.08)', background: '#FAF7F2' }}>
           {children}
         </div>
       </div>
