@@ -3,7 +3,7 @@ import { useState } from 'react';
 export interface CadenceStep {
   touchNum: number;
   day: number;
-  channel: 'email' | 'call' | 'linkedin' | 'voicemail';
+  channel: 'email' | 'call' | 'voicemail';
   purpose: string;
   tone: string;
 }
@@ -83,8 +83,13 @@ export const CADENCE_TYPES: CadenceType[] = [
 const channelIcon: Record<string, string> = {
   email: '✉️',
   call: '📞',
-  linkedin: '💼',
   voicemail: '🎙️',
+};
+
+const channelColor: Record<string, string> = {
+  email: '#fb923c',
+  call: '#5BBFA0',
+  voicemail: '#8B8FE8',
 };
 
 const channelColor: Record<string, string> = {
