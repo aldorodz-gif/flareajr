@@ -16,9 +16,9 @@ const TOUR_STEPS: TourStep[] = [
   {
     icon: '🔥',
     title: 'Welcome to Flare',
-    subtitle: 'Your daily prospecting engine',
-    description: 'Demand signals are flares — spot them first, and you\'re already ahead.',
-    detail: 'This walkthrough takes 30 seconds. It\'ll show you the 5 tools inside and how they connect.',
+    subtitle: '5 AI tools to fill your pipeline',
+    description: 'Flare helps NCH BDRs find companies with active housing needs, identify the right buyer, and send signal-specific outreach — without spending hours researching.',
+    detail: 'This 30-second walkthrough shows you each tool and how they connect into a daily routine.',
     gradient: 'linear-gradient(135deg, #0F0F1A 0%, #1a1145 30%, #2d1b69 60%, #4a1942 100%)',
   },
   {

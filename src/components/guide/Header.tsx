@@ -62,20 +62,52 @@ const Header = ({ onReplayTour }: HeaderProps) => {
           />
         </div>
 
-        {/* Tagline */}
+        {/* Subtitle */}
         <p
-          className="text-[15px] md:text-[16px] font-light leading-[1.7] max-w-[520px] animate-hero-rise"
-          style={{ color: 'rgba(255,255,255,.7)', animationDelay: '0.14s' }}
+          className="text-[13px] md:text-[14px] font-semibold uppercase tracking-widest animate-hero-rise"
+          style={{ color: 'rgba(251,146,60,.85)', animationDelay: '0.1s' }}
         >
-          Demand signals are flares — spot them first, and you're already ahead.
+          The NCH BDR Prospecting Toolkit
         </p>
+
+        {/* Value prop */}
+        <p
+          className="text-[15px] md:text-[16px] font-light leading-[1.7] max-w-[520px] mt-2 animate-hero-rise"
+          style={{ color: 'rgba(255,255,255,.75)', animationDelay: '0.14s' }}
+        >
+          Find companies that need housing now. Know who to call. Send the right message. Every morning in under 30 minutes.
+        </p>
+
+        {/* Tool badges */}
+        <div className="flex flex-wrap gap-2 mt-4 animate-hero-rise" style={{ animationDelay: '0.2s' }}>
+          {[
+            { icon: '📡', label: 'Prompt Builder' },
+            { icon: '⚡', label: 'Signal Scorer' },
+            { icon: '✉️', label: 'Email Generator' },
+            { icon: '📅', label: 'Event Finder' },
+            { icon: '💼', label: 'LinkedIn Strategy' },
+          ].map((tool) => (
+            <span
+              key={tool.label}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium"
+              style={{
+                background: 'rgba(255,255,255,.08)',
+                border: '1px solid rgba(255,255,255,.1)',
+                color: 'rgba(255,255,255,.7)',
+              }}
+            >
+              <span>{tool.icon}</span>
+              {tool.label}
+            </span>
+          ))}
+        </div>
 
         {/* Credit */}
         <p
-          className="text-[11px] mt-3 animate-hero-rise tracking-wide uppercase"
-          style={{ color: 'rgba(255,255,255,.3)', animationDelay: '0.22s' }}
+          className="text-[11px] mt-4 animate-hero-rise tracking-wide uppercase"
+          style={{ color: 'rgba(255,255,255,.25)', animationDelay: '0.26s' }}
         >
-          Built for the NCH sales team by Aldo Rodriguez
+          Built by Aldo Rodriguez
         </p>
       </div>
     </header>
