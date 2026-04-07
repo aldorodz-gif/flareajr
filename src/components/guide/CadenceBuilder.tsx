@@ -45,6 +45,14 @@ const EMAIL_TYPE_OPTIONS = [
   'New angle / re-approach',
 ];
 
+const ANGLE_OPTIONS = [
+  'Pain-based',
+  'ROI-based',
+  'Social proof',
+  'Curiosity',
+  'Trigger-based',
+];
+
 const CHANNEL_OPTIONS: CadenceStep['channel'][] = ['email', 'call', 'linkedin', 'voicemail'];
 
 interface EmailResult {
@@ -58,6 +66,7 @@ interface GeneratedEmails {
 
 interface EditableStep extends CadenceStep {
   emailType: string;
+  angle: string;
 }
 
 const SERVICE_LINES = ['Temporary Housing', 'Travel', 'Hotels', 'Destination Services'];
@@ -74,6 +83,16 @@ function inferEmailType(purpose: string): string {
   return 'Signal-based intro';
 }
 
+function inferAngle(purpose: string, touchNum: number): string {
+  const p = purpose.toLowerCase();
+  if (p.includes('signal') || p.includes('trigger') || p.includes('news')) return 'Trigger-based';
+  if (p.includes('case study') || p.includes('social proof') || p.includes('proof')) return 'Social proof';
+  if (p.includes('roi') || p.includes('value') || p.includes('benchmark') || p.includes('insight')) return 'ROI-based';
+  if (p.includes('pain') || p.includes('problem') || p.includes('agitat')) return 'Pain-based';
+  if (p.includes('breakup') || p.includes('curiosity') || p.includes('door')) return 'Curiosity';
+  const defaults = ['Trigger-based', 'Pain-based', 'ROI-based', 'Social proof', 'Curiosity'];
+  return defaults[(touchNum - 1) % defaults.length];
+}
 interface CadenceBuilderProps {
   cadence: CadenceType;
   onBack: () => void;
@@ -92,7 +111,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
 
   // Editable steps — initialized from cadence
   const [editableSteps, setEditableSteps] = useState<EditableStep[]>(
-    cadence.steps.map(s => ({ ...s, emailType: inferEmailType(s.purpose) }))
+    cadence.steps.map(s => ({ ...s, emailType: inferEmailType(s.purpose), angle: inferAngle(s.purpose, s.touchNum) }))
   );
 
   // Article scraping
@@ -141,7 +160,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
     setLoading(true);
     setError('');
     try {
-      const touchContext = `This is touch #${step.touchNum} of a ${editableSteps.length}-touch ${cadence.title} cadence over ${cadence.duration}. Day ${step.day}. Channel: ${step.channel}. Email type: ${step.emailType}. Purpose: ${step.purpose}. Tone: ${step.tone}.${step.touchNum > 1 ? ` Previous touches have already been sent — this is a follow-up, not a first email.` : ''}`;
+      const touchContext = `This is touch #${step.touchNum} of a ${editableSteps.length}-touch ${cadence.title} cadence over ${cadence.duration}. Day ${step.day}. Channel: ${step.channel}. Email type: ${step.emailType}. Angle: ${step.angle}. Purpose: ${step.purpose}. Tone: ${step.tone}.${step.touchNum > 1 ? ` Previous touches have already been sent — this is a follow-up, not a first email.` : ''}`;
 
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
         body: {
@@ -310,10 +329,27 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                           {step.emailType}
                         </span>
                       )}
+                      {isEmailChannel && step.angle && (
+                        <span
+                          className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                          style={{ background: 'rgba(99,102,241,.08)', color: '#6366F1', border: '1px solid rgba(99,102,241,.2)' }}
+                        >
+                          {step.angle}
+                        </span>
+                      )}
                       <span className="text-[11px] text-muted-foreground ml-auto">Day {step.day}</span>
                     </div>
                     <p className="text-[13px] text-foreground leading-snug">{step.purpose}</p>
                     <p className="text-[11px] text-muted-foreground mt-0.5 italic">Tone: {step.tone}</p>
+                    {/* Duplicate angle warning */}
+                    {isEmailChannel && step.angle && (() => {
+                      const otherEmailSteps = editableSteps.filter(s => s.channel === 'email' && s.touchNum !== step.touchNum && s.angle === step.angle);
+                      return otherEmailSteps.length > 0 ? (
+                        <p className="text-[10px] mt-1 px-2 py-1 rounded" style={{ background: 'rgba(251,146,60,.08)', color: '#d97706', border: '1px solid rgba(251,146,60,.15)' }}>
+                          ⚠️ Same angle as Touch {otherEmailSteps.map(s => s.touchNum).join(', ')} — consider varying for impact
+                        </p>
+                      ) : null;
+                    })()}
                   </div>
                 </button>
 
@@ -398,6 +434,19 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                           </div>
                         )}
 
+                        {step.channel === 'email' && (
+                          <div>
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Angle</label>
+                            <select
+                              value={step.angle}
+                              onChange={e => updateStep(step.touchNum, { angle: e.target.value })}
+                              className="w-full px-3 py-2 border text-[13px] focus:outline-none rounded-lg appearance-none cursor-pointer"
+                              style={{ borderColor: 'hsl(var(--border))', background: '#fff' }}
+                            >
+                              {ANGLE_OPTIONS.map(a => <option key={a} value={a}>{a}</option>)}
+                            </select>
+                          </div>
+                        )}
                         <div>
                           <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Goal / Purpose</label>
                           <input
