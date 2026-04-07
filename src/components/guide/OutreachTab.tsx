@@ -111,8 +111,12 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     setError('');
     if (!vary) setResult(null);
     try {
+      const signalText = articleContent
+        ? `Article: "${scrapedTitle}". Content: ${articleContent}`
+        : signal.trim();
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
-        body: { company: company.trim(), signal: signal.trim(), buyer_title: buyerTitle.trim(), service_line: serviceLine, vary },
+        body: { company: company.trim(), signal: signalText, buyer_title: buyerTitle.trim(), service_line: serviceLine, vary },
+      });
       });
       if (fnError) throw fnError;
       if (data.error) throw new Error(data.error);
