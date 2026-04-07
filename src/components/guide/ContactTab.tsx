@@ -203,42 +203,82 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       <Eyebrow>Discovery Tree</Eyebrow>
       <p className="text-[13px] text-muted-foreground mb-4">Move from surface situation → business impact. Click each level to explore.</p>
 
-      <div className="rounded-xl overflow-hidden border mb-5" style={{ borderColor: 'rgba(251,146,60,.12)' }}>
-        {discoveryLevels.map((step, i) => (
-          <div key={step.level}>
-            <button
-              onClick={() => setOpenLevel(openLevel === i ? null : i)}
-              className="w-full flex items-center gap-3.5 p-4 text-left transition-colors hover:bg-opacity-50"
-              style={{ background: openLevel === i ? 'rgba(251,146,60,.04)' : '#fff', borderBottom: i < 3 ? '1px solid rgba(251,146,60,.08)' : 'none' }}
-            >
-              <span
-                className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0"
-                style={{ background: step.color, color: '#fff', boxShadow: `0 2px 8px ${step.color}40` }}
+      <div className="rounded-xl overflow-hidden mb-5" style={{ boxShadow: '0 2px 16px rgba(0,0,0,.08)' }}>
+        {discoveryLevels.map((step, i) => {
+          const isOpen = openLevel === i;
+          const isLast = i === discoveryLevels.length - 1;
+          return (
+            <div key={step.level}>
+              <button
+                onClick={() => setOpenLevel(isOpen ? null : i)}
+                className="w-full flex items-center gap-3.5 p-4 text-left transition-all"
+                style={{
+                  background: isOpen ? step.color : '#fff',
+                  borderBottom: !isLast ? '1px solid rgba(251,146,60,.08)' : 'none',
+                }}
               >
-                {step.level}
-              </span>
-              <div className="flex-1">
-                <p className="text-[14px] font-semibold text-foreground">{step.label}</p>
-              </div>
-              <svg
-                className="w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform duration-200"
-                style={{ transform: openLevel === i ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                <span
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0"
+                  style={{
+                    background: isOpen ? 'rgba(255,255,255,.25)' : step.color,
+                    color: '#fff',
+                    boxShadow: `0 2px 8px ${step.color}40`,
+                  }}
+                >
+                  {step.level}
+                </span>
+                <div className="flex-1">
+                  <p className="text-[14px] font-semibold" style={{ color: isOpen ? '#fff' : 'inherit' }}>{step.label}</p>
+                  {!isOpen && <p className="text-[11px] text-muted-foreground mt-0.5">{step.desc}</p>}
+                </div>
+                <svg
+                  className="w-4 h-4 flex-shrink-0 transition-transform duration-200"
+                  style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', color: isOpen ? 'rgba(255,255,255,.7)' : '#94A3B8' }}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300"
+                style={{ maxHeight: isOpen ? '500px' : '0', opacity: isOpen ? 1 : 0 }}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div
-              className="overflow-hidden transition-all duration-300"
-              style={{ maxHeight: openLevel === i ? '120px' : '0', opacity: openLevel === i ? 1 : 0 }}
-            >
-              <div className="px-4 pb-4 pl-[68px]">
-                <p className="text-[13px] text-muted-foreground mb-1">{step.desc}</p>
-                <p className="text-[12px] italic" style={{ color: '#f97316' }}>{step.hint}</p>
+                <div className="p-5 space-y-4" style={{ background: '#fff', borderLeft: `3px solid ${step.color}` }}>
+                  {/* Questions */}
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color: step.color }}>💬 Ask These Questions</p>
+                    <div className="space-y-2">
+                      {step.questions.map((q, qi) => (
+                        <div key={qi} className="flex gap-2.5 items-start p-2.5 rounded-lg" style={{ background: 'rgba(251,146,60,.03)', border: '1px solid rgba(251,146,60,.08)' }}>
+                          <span className="text-[11px] font-bold mt-0.5 flex-shrink-0" style={{ color: step.color }}>{qi + 1}.</span>
+                          <p className="text-[12.5px] leading-[1.6] text-foreground">{q}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Listen For */}
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-wide mb-2" style={{ color: '#64748B' }}>👂 Listen For</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {step.listenFor.map(tag => (
+                        <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium" style={{ background: `${step.color}12`, color: step.color, border: `1px solid ${step.color}25` }}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Transition */}
+                  <div className="flex gap-2.5 items-start p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.04)', borderLeft: `3px solid ${step.color}` }}>
+                    <span className="text-[13px] flex-shrink-0">→</span>
+                    <p className="text-[12px] leading-[1.6] font-medium" style={{ color: step.color }}>{step.transition}</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* ── Worked Examples: Expandable ── */}
