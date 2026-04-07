@@ -170,9 +170,10 @@ const workedExamples = [
   },
 ];
 
-// Consistent accent colors from design system
-const ORANGE = 'hsl(25, 95%, 53%)'; // #f97316
-const ORANGE_LIGHT = 'hsl(30, 96%, 62%)'; // #fb923c
+// Subtle accent — used sparingly for indicators and labels
+const ACCENT = 'hsl(25, 95%, 53%)';
+const ACCENT_SOFT = 'hsl(25, 80%, 94%)'; // very light warm tint for backgrounds
+const ACCENT_MID = 'hsl(25, 60%, 85%)'; // medium warm for borders
 
 const ContactTab = ({ onNavigate }: ContactTabProps) => {
   const [selectedVertical, setSelectedVertical] = useState(0);
@@ -188,37 +189,37 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       <div>
         <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 05: Find the Right Person</Eyebrow>
         <h2 className="text-2xl font-semibold mb-1.5 leading-tight text-foreground">Who to Call</h2>
-        <p className="text-sm text-muted-foreground max-w-[760px] pb-4 border-b border-border/40">
+        <p className="text-sm text-muted-foreground max-w-[760px] pb-4 border-b border-border">
           The right message to the wrong person still fails. Match the buyer to the signal.
         </p>
       </div>
 
       {/* ── Rule callout ── */}
-      <div className="flex gap-3 items-start p-4 rounded-lg bg-card border border-border/60" style={{ borderLeftWidth: 4, borderLeftColor: ORANGE }}>
-        <span className="text-lg shrink-0">📌</span>
+      <div className="flex gap-3 items-start p-4 rounded-lg bg-card border border-border" style={{ borderLeftWidth: 3, borderLeftColor: ACCENT }}>
+        <span className="text-base shrink-0">📌</span>
         <p className="text-sm leading-relaxed text-foreground">
           <strong>HR is rarely the first pain owner.</strong> Start with whoever's job breaks if the need isn't solved — the project manager, operations lead, or mobilization coordinator.
         </p>
       </div>
 
-      {/* ── POC Finder: Hero AI Tool ── */}
-      <div className="rounded-xl overflow-hidden shadow-lg">
-        <div className="px-5 py-4 flex items-center justify-between bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050]">
+      {/* ── POC Finder: AI Tool ── */}
+      <div className="rounded-xl overflow-hidden border border-border shadow-sm">
+        <div className="px-5 py-4 flex items-center justify-between bg-secondary">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center bg-orange-500/15">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: 'hsl(25, 95%, 53%, 0.15)' }}>
               <span className="text-base">🎯</span>
             </div>
             <div>
-              <p className="text-sm font-bold text-white">POC Finder Prompt</p>
-              <p className="text-[11px] text-white/50">Run after your company research</p>
+              <p className="text-sm font-bold text-secondary-foreground">POC Finder Prompt</p>
+              <p className="text-[11px] text-secondary-foreground/50">Run after your company research</p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/12 border border-orange-500/25">
-            <span className="w-2 h-2 rounded-full animate-pulse bg-orange-500" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-orange-500">AI Tool</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: 'hsl(25, 95%, 53%, 0.12)', border: '1px solid hsl(25, 95%, 53%, 0.25)' }}>
+            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: ACCENT }} />
+            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: ACCENT }}>AI Tool</span>
           </div>
         </div>
-        <div className="p-5 bg-card border border-t-0 border-border/40 rounded-b-xl">
+        <div className="p-5 bg-card">
           <PromptBox label="Paste into ChatGPT after your company research">
 {`For [COMPANY NAME] — a company that is [DESCRIBE THE SIGNAL] — identify the best person to contact for temporary housing, travel, hotels, or destination services.
 
@@ -245,12 +246,11 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
               <button
                 key={vert.name}
                 onClick={() => { setSelectedVertical(i); setExpandedTitle(null); }}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all border ${
                   active
-                    ? 'text-white shadow-md scale-105'
-                    : 'bg-card text-muted-foreground border border-border/60 hover:border-orange-500/30'
+                    ? 'bg-foreground text-background border-foreground shadow-sm'
+                    : 'bg-card text-muted-foreground border-border hover:border-foreground/20'
                 }`}
-                style={active ? { background: `linear-gradient(135deg, ${ORANGE_LIGHT}, ${ORANGE})` } : undefined}
               >
                 <span className="text-sm">{vert.icon}</span>
                 {vert.name}
@@ -260,37 +260,36 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
         </div>
 
         {/* Selected vertical card */}
-        <div className="rounded-xl overflow-hidden border border-border/60 shadow-sm">
-          <div className="px-5 py-3.5 flex items-center gap-2.5 bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050]">
+        <div className="rounded-xl overflow-hidden border border-border shadow-sm">
+          <div className="px-5 py-3.5 flex items-center gap-2.5 bg-secondary">
             <span className="text-xl">{v.icon}</span>
-            <p className="text-base font-semibold text-white">{v.name}</p>
+            <p className="text-base font-semibold text-secondary-foreground">{v.name}</p>
           </div>
           <div className="p-5 bg-card space-y-5">
             {/* Signals */}
-            <div className="p-3 rounded-lg bg-background/60">
+            <div className="p-3 rounded-lg bg-background border border-border">
               <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Common Signals</p>
               <p className="text-sm text-foreground">{v.signals}</p>
             </div>
 
             {/* Primary Titles — expandable */}
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide mb-3 text-orange-500">🎯 Primary Titles — click for opener</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide mb-3" style={{ color: ACCENT }}>🎯 Primary Titles — click for opener</p>
               <div className="space-y-1.5">
                 {v.primary.map((t, ti) => {
                   const isExp = expandedTitle === ti;
                   return (
-                    <div key={t.title} className="rounded-lg overflow-hidden border border-border/40 transition-all">
+                    <div key={t.title} className="rounded-lg overflow-hidden border border-border transition-all">
                       <button
                         onClick={() => setExpandedTitle(isExp ? null : ti)}
                         className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all ${
-                          isExp ? 'text-white' : 'bg-card hover:bg-background/60'
+                          isExp ? 'bg-foreground text-background' : 'bg-card hover:bg-background'
                         }`}
-                        style={isExp ? { background: `linear-gradient(135deg, ${ORANGE_LIGHT}, ${ORANGE})` } : undefined}
                       >
-                        <span className={`w-2 h-2 rounded-full shrink-0 ${isExp ? 'bg-white' : 'bg-orange-500'}`} />
+                        <span className={`w-2 h-2 rounded-full shrink-0 ${isExp ? 'bg-background' : ''}`} style={!isExp ? { background: ACCENT } : undefined} />
                         <span className="text-sm font-medium flex-1">{t.title}</span>
                         <svg
-                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isExp ? 'text-white/70' : 'text-muted-foreground'}`}
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 opacity-40`}
                           style={{ transform: isExp ? 'rotate(180deg)' : 'rotate(0deg)' }}
                           fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
                         >
@@ -301,14 +300,14 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                         className="overflow-hidden transition-all duration-300"
                         style={{ maxHeight: isExp ? '200px' : '0', opacity: isExp ? 1 : 0 }}
                       >
-                        <div className="px-4 py-3 ml-5 space-y-2.5 border-l-2 border-orange-500/20 bg-card">
+                        <div className="px-4 py-3 ml-5 space-y-2.5 bg-card" style={{ borderLeft: `2px solid ${ACCENT}` }}>
                           <div>
                             <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">They care about</p>
                             <p className="text-xs text-foreground">{t.cares}</p>
                           </div>
                           <div>
                             <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">Sample opener</p>
-                            <p className="text-xs leading-relaxed italic text-orange-500">{t.opener}</p>
+                            <p className="text-xs leading-relaxed italic" style={{ color: ACCENT }}>{t.opener}</p>
                           </div>
                         </div>
                       </div>
@@ -320,10 +319,10 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
 
             {/* Non-traditional */}
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide mb-2 text-purple-400">💡 Non-Traditional Titles</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide mb-2 text-muted-foreground">💡 Non-Traditional Titles</p>
               <div className="flex flex-wrap gap-1.5">
                 {v.nonTrad.map(t => (
-                  <span key={t} className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-purple-500/5 border border-purple-500/15 text-purple-400">
+                  <span key={t} className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-background border border-border text-foreground">
                     {t}
                   </span>
                 ))}
@@ -331,11 +330,11 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
             </div>
 
             {/* LinkedIn search tip */}
-            <div className="flex gap-2.5 items-start p-3 rounded-lg bg-background/60 border-l-[3px] border-orange-500">
+            <div className="flex gap-2.5 items-start p-3 rounded-lg bg-background border border-border" style={{ borderLeftWidth: 3, borderLeftColor: ACCENT }}>
               <span className="text-sm shrink-0">🔍</span>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">LinkedIn Search Tip</p>
-                <p className="text-xs leading-snug font-mono text-orange-500">{v.linkedInTip}</p>
+                <p className="text-xs leading-snug font-mono text-foreground">{v.linkedInTip}</p>
               </div>
             </div>
           </div>
@@ -347,35 +346,34 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
         <Eyebrow>Discovery Tree</Eyebrow>
         <p className="text-sm text-muted-foreground mb-4">Move from surface situation → business impact. Click each level for questions to ask.</p>
 
-        <div className="rounded-xl overflow-hidden shadow-md border border-border/40">
+        <div className="rounded-xl overflow-hidden border border-border shadow-sm">
           {discoveryLevels.map((step, i) => {
             const isOpen = openLevel === i;
             const isLast = i === discoveryLevels.length - 1;
-            // Gradient from light to dark orange across levels
-            const levelColors = ['hsl(30,96%,62%)', 'hsl(25,95%,53%)', 'hsl(22,90%,47%)', 'hsl(20,85%,40%)'];
-            const color = levelColors[i];
+            const stepNum = i + 1;
             return (
               <div key={step.level}>
                 <button
                   onClick={() => setOpenLevel(isOpen ? null : i)}
-                  className="w-full flex items-center gap-4 p-4 text-left transition-all"
-                  style={{
-                    background: isOpen ? color : 'hsl(var(--card))',
-                    borderBottom: !isLast ? '1px solid hsl(var(--border) / 0.4)' : 'none',
-                  }}
+                  className={`w-full flex items-center gap-4 p-4 text-left transition-all ${
+                    isOpen ? 'bg-foreground text-background' : 'bg-card hover:bg-background'
+                  }`}
+                  style={{ borderBottom: !isLast ? '1px solid hsl(var(--border))' : 'none' }}
                 >
                   <span
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 text-white shadow-md"
-                    style={{ background: isOpen ? 'rgba(255,255,255,.25)' : color }}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                      isOpen ? 'bg-background text-foreground' : 'text-card-foreground'
+                    }`}
+                    style={!isOpen ? { background: ACCENT, color: '#fff' } : undefined}
                   >
                     {step.level}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-semibold ${isOpen ? 'text-white' : 'text-foreground'}`}>{step.label}</p>
+                    <p className="text-sm font-semibold">{step.label}</p>
                     {!isOpen && <p className="text-xs text-muted-foreground mt-0.5 truncate">{step.desc}</p>}
                   </div>
                   <svg
-                    className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isOpen ? 'text-white/70' : 'text-muted-foreground'}`}
+                    className="w-4 h-4 shrink-0 transition-transform duration-200 opacity-40"
                     style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
                   >
@@ -386,13 +384,13 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                   className="overflow-hidden transition-all duration-300"
                   style={{ maxHeight: isOpen ? '500px' : '0', opacity: isOpen ? 1 : 0 }}
                 >
-                  <div className="p-5 space-y-4 bg-card" style={{ borderLeft: `3px solid ${color}` }}>
+                  <div className="p-5 space-y-4 bg-card" style={{ borderLeft: `3px solid ${ACCENT}` }}>
                     <div>
-                      <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color }}>💬 Ask These Questions</p>
+                      <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color: ACCENT }}>💬 Ask These Questions</p>
                       <div className="space-y-1.5">
                         {step.questions.map((q, qi) => (
-                          <div key={qi} className="flex gap-2.5 items-start p-2.5 rounded-lg bg-background/40 border border-border/30">
-                            <span className="text-[11px] font-bold mt-0.5 shrink-0" style={{ color }}>{qi + 1}.</span>
+                          <div key={qi} className="flex gap-2.5 items-start p-2.5 rounded-lg bg-background border border-border">
+                            <span className="text-[11px] font-bold mt-0.5 shrink-0" style={{ color: ACCENT }}>{qi + 1}.</span>
                             <p className="text-xs leading-relaxed text-foreground">{q}</p>
                           </div>
                         ))}
@@ -402,15 +400,15 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                       <p className="text-[11px] font-bold uppercase tracking-wide mb-2 text-muted-foreground">👂 Listen For</p>
                       <div className="flex flex-wrap gap-1.5">
                         {step.listenFor.map(tag => (
-                          <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium border" style={{ color, borderColor: `${color}40`, background: `${color}10` }}>
+                          <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium border border-border bg-background text-foreground">
                             {tag}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <div className="flex gap-2.5 items-start p-3 rounded-lg bg-background/40" style={{ borderLeft: `3px solid ${color}` }}>
+                    <div className="flex gap-2.5 items-start p-3 rounded-lg bg-background border border-border" style={{ borderLeftWidth: 3, borderLeftColor: ACCENT }}>
                       <span className="text-sm shrink-0">→</span>
-                      <p className="text-xs leading-relaxed font-medium" style={{ color }}>{step.transition}</p>
+                      <p className="text-xs leading-relaxed font-medium text-foreground">{step.transition}</p>
                     </div>
                   </div>
                 </div>
@@ -428,24 +426,24 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
         <div className="space-y-3">
           {workedExamples.map((ex, i) => {
             const isOpen = openExample === i;
-            const levelColors = ['hsl(30,96%,62%)', 'hsl(25,95%,53%)', 'hsl(22,90%,47%)', 'hsl(20,85%,40%)'];
             return (
-              <div key={ex.title} className="rounded-xl overflow-hidden shadow-md border border-border/40">
+              <div key={ex.title} className="rounded-xl overflow-hidden border border-border shadow-sm">
                 <button
                   onClick={() => setOpenExample(isOpen ? null : i)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left transition-all"
-                  style={{ background: isOpen ? 'linear-gradient(135deg, hsl(var(--navy)), #1e1050)' : 'hsl(var(--card))' }}
+                  className={`w-full flex items-center justify-between px-5 py-4 text-left transition-all ${
+                    isOpen ? 'bg-secondary' : 'bg-card hover:bg-background'
+                  }`}
                 >
                   <div className="min-w-0">
-                    <p className={`text-sm font-semibold ${isOpen ? 'text-white' : 'text-foreground'}`}>
+                    <p className={`text-sm font-semibold ${isOpen ? 'text-secondary-foreground' : 'text-foreground'}`}>
                       {ex.icon} {ex.title}
                     </p>
-                    <p className={`text-xs mt-0.5 truncate ${isOpen ? 'text-white/50' : 'text-muted-foreground'}`}>
+                    <p className={`text-xs mt-0.5 truncate ${isOpen ? 'text-secondary-foreground/50' : 'text-muted-foreground'}`}>
                       {ex.scenario.substring(0, 65)}…
                     </p>
                   </div>
                   <svg
-                    className={`w-4 h-4 shrink-0 ml-3 transition-transform duration-200 ${isOpen ? 'text-white/50' : 'text-muted-foreground'}`}
+                    className="w-4 h-4 shrink-0 ml-3 transition-transform duration-200 opacity-40"
                     style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
                   >
@@ -456,9 +454,9 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                   className="overflow-hidden transition-all duration-300"
                   style={{ maxHeight: isOpen ? '800px' : '0', opacity: isOpen ? 1 : 0 }}
                 >
-                  <div className="p-5 space-y-4 bg-card border-l-[3px] border-orange-500">
+                  <div className="p-5 space-y-4 bg-card" style={{ borderLeft: `3px solid ${ACCENT}` }}>
                     {/* Scenario */}
-                    <div className="p-3 rounded-lg bg-background/60">
+                    <div className="p-3 rounded-lg bg-background border border-border">
                       <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Scenario</p>
                       <p className="text-sm leading-relaxed text-foreground">{ex.scenario}</p>
                     </div>
@@ -466,15 +464,15 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                     {/* Discovery progression */}
                     <div className="space-y-1.5">
                       {ex.rows.map((r, ri) => (
-                        <div key={r.label} className="flex gap-3 items-start p-3 rounded-lg bg-background/30 border border-border/30">
+                        <div key={r.label} className="flex gap-3 items-start p-3 rounded-lg bg-background border border-border">
                           <span
                             className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 text-white"
-                            style={{ background: levelColors[ri] }}
+                            style={{ background: ACCENT }}
                           >
                             {r.level}
                           </span>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: levelColors[ri] }}>{r.label}</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5 text-muted-foreground">{r.label}</p>
                             <p className="text-xs leading-relaxed text-foreground">{r.text}</p>
                           </div>
                         </div>
@@ -482,19 +480,19 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                     </div>
 
                     {/* Key Insight */}
-                    <div className="flex gap-2.5 items-start p-3 rounded-lg bg-orange-500/5 border-l-[3px] border-orange-600">
+                    <div className="flex gap-2.5 items-start p-3 rounded-lg bg-background border border-border" style={{ borderLeftWidth: 3, borderLeftColor: ACCENT }}>
                       <span className="text-sm shrink-0">💡</span>
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5 text-orange-600">Key Insight</p>
+                        <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: ACCENT }}>Key Insight</p>
                         <p className="text-xs leading-relaxed text-foreground">{ex.keyInsight}</p>
                       </div>
                     </div>
 
                     {/* Suggested Opener */}
-                    <div className="p-4 rounded-lg bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050]">
-                      <p className="text-[10px] font-bold uppercase tracking-wide mb-1.5 text-orange-500">✉️ Suggested Opener</p>
-                      <p className="text-xs leading-relaxed italic text-white/85">{ex.suggestedOpener}</p>
-                      <p className="text-[11px] mt-2.5 text-white/40">Best contact: <strong className="text-orange-500">{ex.bestContact}</strong></p>
+                    <div className="p-4 rounded-lg bg-secondary">
+                      <p className="text-[10px] font-bold uppercase tracking-wide mb-1.5" style={{ color: ACCENT }}>✉️ Suggested Opener</p>
+                      <p className="text-xs leading-relaxed italic text-secondary-foreground/85">{ex.suggestedOpener}</p>
+                      <p className="text-[11px] mt-2.5 text-secondary-foreground/40">Best contact: <strong style={{ color: ACCENT }}>{ex.bestContact}</strong></p>
                     </div>
                   </div>
                 </div>
@@ -505,9 +503,9 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       </div>
 
       {/* ── Outreach Priority Order ── */}
-      <div className="rounded-xl overflow-hidden shadow-lg">
-        <div className="p-6 bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050] space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">Outreach Priority Order</p>
+      <div className="rounded-xl overflow-hidden border border-border shadow-sm">
+        <div className="p-6 bg-secondary space-y-4">
+          <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: ACCENT }}>Outreach Priority Order</p>
           <div className="space-y-3">
             {[
               {
@@ -526,25 +524,25 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                 say: '"We\'re already working with [PAIN OWNER NAME] on housing for [PROJECT]. They suggested I reach out to get us set up as a vendor — what\'s the best way to start that process?"',
               },
             ].map((s) => (
-              <div key={s.num} className="p-4 rounded-lg bg-white/5 space-y-2.5">
+              <div key={s.num} className="p-4 rounded-lg bg-secondary-foreground/5 space-y-2.5">
                 <div className="flex gap-3 items-center">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 text-white" style={{ background: `linear-gradient(135deg, ${ORANGE_LIGHT}, ${ORANGE})` }}>{s.num}</div>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 text-white" style={{ background: ACCENT }}>{s.num}</div>
                   <div>
-                    <p className="text-sm font-semibold text-white">{s.title}</p>
-                    <p className="text-[11px] text-white/50">{s.who}</p>
+                    <p className="text-sm font-semibold text-secondary-foreground">{s.title}</p>
+                    <p className="text-[11px] text-secondary-foreground/50">{s.who}</p>
                   </div>
                 </div>
-                <div className="ml-11 p-3 rounded-lg bg-orange-500/8 border-l-2 border-orange-500/30">
-                  <p className="text-[10px] font-bold uppercase tracking-wide mb-1 text-orange-500">What to say</p>
-                  <p className="text-xs leading-relaxed italic text-white/75">{s.say}</p>
+                <div className="ml-11 p-3 rounded-lg bg-secondary-foreground/5" style={{ borderLeft: `2px solid ${ACCENT}` }}>
+                  <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: ACCENT }}>What to say</p>
+                  <p className="text-xs leading-relaxed italic text-secondary-foreground/75">{s.say}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="pt-4 flex gap-3 items-start border-t border-white/8">
+          <div className="pt-4 flex gap-3 items-start border-t border-secondary-foreground/10">
             <span className="text-sm shrink-0">💡</span>
-            <p className="text-xs leading-relaxed text-white/60">
-              <strong className="text-white/85">Pattern:</strong> Project-based industries (construction, energy, defense) buy through <strong className="text-orange-500">operations & field leaders</strong>. Program-based (tech, healthcare) buy through <strong className="text-orange-500">mobility & people ops</strong>.
+            <p className="text-xs leading-relaxed text-secondary-foreground/60">
+              <strong className="text-secondary-foreground/85">Pattern:</strong> Project-based industries (construction, energy, defense) buy through <strong style={{ color: ACCENT }}>operations & field leaders</strong>. Program-based (tech, healthcare) buy through <strong style={{ color: ACCENT }}>mobility & people ops</strong>.
             </p>
           </div>
         </div>
