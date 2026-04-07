@@ -83,6 +83,16 @@ function inferEmailType(purpose: string): string {
   return 'Signal-based intro';
 }
 
+function inferAngle(purpose: string, touchNum: number): string {
+  const p = purpose.toLowerCase();
+  if (p.includes('signal') || p.includes('trigger') || p.includes('news')) return 'Trigger-based';
+  if (p.includes('case study') || p.includes('social proof') || p.includes('proof')) return 'Social proof';
+  if (p.includes('roi') || p.includes('value') || p.includes('benchmark') || p.includes('insight')) return 'ROI-based';
+  if (p.includes('pain') || p.includes('problem') || p.includes('agitat')) return 'Pain-based';
+  if (p.includes('breakup') || p.includes('curiosity') || p.includes('door')) return 'Curiosity';
+  const defaults = ['Trigger-based', 'Pain-based', 'ROI-based', 'Social proof', 'Curiosity'];
+  return defaults[(touchNum - 1) % defaults.length];
+}
 interface CadenceBuilderProps {
   cadence: CadenceType;
   onBack: () => void;
