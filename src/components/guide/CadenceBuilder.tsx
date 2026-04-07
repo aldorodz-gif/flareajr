@@ -66,6 +66,7 @@ interface GeneratedEmails {
 
 interface EditableStep extends CadenceStep {
   emailType: string;
+  angle: string;
 }
 
 const SERVICE_LINES = ['Temporary Housing', 'Travel', 'Hotels', 'Destination Services'];
