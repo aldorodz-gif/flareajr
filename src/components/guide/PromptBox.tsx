@@ -23,25 +23,20 @@ const PromptBox = ({ children, label }: PromptBoxProps) => {
   return (
     <div>
       {label && (
-        <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[2px] my-2" style={{ color: '#9B78C8' }}>
-          <span className="inline-block w-3.5 h-0.5" style={{ background: 'linear-gradient(90deg, #8B8FE8, #D97FAA)' }} />
+        <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[2px] my-2 text-muted-foreground">
+          <span className="inline-block w-3.5 h-0.5 bg-border" />
           {label}
-          <span className="h-px flex-1 ml-2.5" style={{ background: 'rgba(14,30,58,.08)' }} />
+          <span className="h-px flex-1 ml-2.5 bg-border" />
         </div>
       )}
-      <div data-prompt-id={label} className="relative p-5 mb-4 border" style={{ background: 'linear-gradient(135deg, #1a1145, #2d1b69)', borderColor: 'rgba(155,120,200,.3)' }}>
+      <div data-prompt-id={label} className="relative p-5 mb-4 rounded-lg bg-background border border-border">
         <button
           onClick={handleCopy}
-          className={`absolute top-3 right-3 text-[11px] font-semibold px-3 py-1.5 tracking-wide z-10 transition-all duration-150 ${copied ? 'animate-copy-burst' : ''}`}
-          style={{
-            background: copied ? 'linear-gradient(135deg, #5BBFA0, #4AAA8A)' : 'linear-gradient(135deg, #9B78C8, #D97FAA)',
-            color: '#fff',
-            border: 'none',
-          }}
+          className={`absolute top-3 right-3 text-[11px] font-semibold px-3 py-1.5 tracking-wide z-10 transition-all duration-150 rounded-md bg-secondary text-secondary-foreground hover:opacity-90 ${copied ? 'animate-copy-burst' : ''}`}
         >
           {copied ? 'COPIED ✓' : 'COPY'}
         </button>
-        <pre className="text-[13px] leading-[1.85] whitespace-pre-wrap break-words pr-24 font-sans" style={{ color: '#E2E8F0' }}>
+        <pre className="text-[13px] leading-[1.85] whitespace-pre-wrap break-words pr-24 font-sans text-foreground">
           {children}
         </pre>
       </div>
