@@ -434,6 +434,19 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                           </div>
                         )}
 
+                        {step.channel === 'email' && (
+                          <div>
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Angle</label>
+                            <select
+                              value={step.angle}
+                              onChange={e => updateStep(step.touchNum, { angle: e.target.value })}
+                              className="w-full px-3 py-2 border text-[13px] focus:outline-none rounded-lg appearance-none cursor-pointer"
+                              style={{ borderColor: 'hsl(var(--border))', background: '#fff' }}
+                            >
+                              {ANGLE_OPTIONS.map(a => <option key={a} value={a}>{a}</option>)}
+                            </select>
+                          </div>
+                        )}
                         <div>
                           <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Goal / Purpose</label>
                           <input
