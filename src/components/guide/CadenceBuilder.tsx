@@ -45,6 +45,14 @@ const EMAIL_TYPE_OPTIONS = [
   'New angle / re-approach',
 ];
 
+const ANGLE_OPTIONS = [
+  'Pain-based',
+  'ROI-based',
+  'Social proof',
+  'Curiosity',
+  'Trigger-based',
+];
+
 const CHANNEL_OPTIONS: CadenceStep['channel'][] = ['email', 'call', 'linkedin', 'voicemail'];
 
 interface EmailResult {
