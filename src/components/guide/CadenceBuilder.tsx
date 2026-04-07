@@ -160,7 +160,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
     setLoading(true);
     setError('');
     try {
-      const touchContext = `This is touch #${step.touchNum} of a ${editableSteps.length}-touch ${cadence.title} cadence over ${cadence.duration}. Day ${step.day}. Channel: ${step.channel}. Email type: ${step.emailType}. Purpose: ${step.purpose}. Tone: ${step.tone}.${step.touchNum > 1 ? ` Previous touches have already been sent — this is a follow-up, not a first email.` : ''}`;
+      const touchContext = `This is touch #${step.touchNum} of a ${editableSteps.length}-touch ${cadence.title} cadence over ${cadence.duration}. Day ${step.day}. Channel: ${step.channel}. Email type: ${step.emailType}. Angle: ${step.angle}. Purpose: ${step.purpose}. Tone: ${step.tone}.${step.touchNum > 1 ? ` Previous touches have already been sent — this is a follow-up, not a first email.` : ''}`;
 
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
         body: {
