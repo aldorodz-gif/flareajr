@@ -16,6 +16,18 @@ const channelColor: Record<string, string> = {
   voicemail: '#8B8FE8',
 };
 
+const EMAIL_TYPE_OPTIONS = [
+  'Signal-based intro',
+  'Value add / insight',
+  'Social proof / case study',
+  'Problem agitation',
+  'Breakup / last chance',
+  'Follow-up nudge',
+  'New angle / re-approach',
+];
+
+const CHANNEL_OPTIONS: CadenceStep['channel'][] = ['email', 'call', 'linkedin', 'voicemail'];
+
 interface EmailResult {
   subject: string;
   body: string;
@@ -25,7 +37,23 @@ interface GeneratedEmails {
   [touchNum: number]: EmailResult;
 }
 
+interface EditableStep extends CadenceStep {
+  emailType: string;
+}
+
 const SERVICE_LINES = ['Temporary Housing', 'Travel', 'Hotels', 'Destination Services'];
+
+function inferEmailType(purpose: string): string {
+  const p = purpose.toLowerCase();
+  if (p.includes('intro') || p.includes('signal')) return 'Signal-based intro';
+  if (p.includes('value') || p.includes('insight')) return 'Value add / insight';
+  if (p.includes('case study') || p.includes('social proof') || p.includes('proof')) return 'Social proof / case study';
+  if (p.includes('breakup') || p.includes('last') || p.includes('door open')) return 'Breakup / last chance';
+  if (p.includes('follow') || p.includes('nudge') || p.includes('next step')) return 'Follow-up nudge';
+  if (p.includes('problem') || p.includes('pain') || p.includes('agitat')) return 'Problem agitation';
+  if (p.includes('new angle') || p.includes('reconnect') || p.includes('new signal')) return 'New angle / re-approach';
+  return 'Signal-based intro';
+}
 
 interface CadenceBuilderProps {
   cadence: CadenceType;
@@ -43,10 +71,18 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState<number | null>(null);
 
+  // Editable steps — initialized from cadence
+  const [editableSteps, setEditableSteps] = useState<EditableStep[]>(
+    cadence.steps.map(s => ({ ...s, emailType: inferEmailType(s.purpose) }))
+  );
+
   // Article scraping
   const [articleContent, setArticleContent] = useState('');
   const [scrapingUrl, setScrapingUrl] = useState(false);
   const [scrapedTitle, setScrapedTitle] = useState('');
+
+  // Editing state
+  const [editingStep, setEditingStep] = useState<number | null>(null);
 
   const isUrl = (text: string) => /^https?:\/\/.+/i.test(text.trim());
 
@@ -75,14 +111,18 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
 
   const canGenerate = company.trim() && (signal.trim() || articleContent) && buyerTitle.trim() && serviceLine;
 
-  const currentStep = cadence.steps.find(s => s.touchNum === activeStep)!;
+  const updateStep = useCallback((touchNum: number, updates: Partial<EditableStep>) => {
+    setEditableSteps(prev => prev.map(s =>
+      s.touchNum === touchNum ? { ...s, ...updates } : s
+    ));
+  }, []);
 
-  const generateForStep = useCallback(async (step: CadenceStep) => {
+  const generateForStep = useCallback(async (step: EditableStep) => {
     if (!canGenerate) return;
     setLoading(true);
     setError('');
     try {
-      const touchContext = `This is touch #${step.touchNum} of a ${cadence.touches}-touch ${cadence.title} cadence over ${cadence.duration}. Day ${step.day}. Channel: ${step.channel}. Purpose: ${step.purpose}. Tone: ${step.tone}.${step.touchNum > 1 ? ` Previous touches have already been sent — this is a follow-up, not a first email.` : ''}`;
+      const touchContext = `This is touch #${step.touchNum} of a ${editableSteps.length}-touch ${cadence.title} cadence over ${cadence.duration}. Day ${step.day}. Channel: ${step.channel}. Email type: ${step.emailType}. Purpose: ${step.purpose}. Tone: ${step.tone}.${step.touchNum > 1 ? ` Previous touches have already been sent — this is a follow-up, not a first email.` : ''}`;
 
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
         body: {
@@ -102,7 +142,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
     } finally {
       setLoading(false);
     }
-  }, [company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle, canGenerate, cadence]);
+  }, [company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle, canGenerate, cadence, editableSteps]);
 
   const handleCopy = useCallback((touchNum: number, email: EmailResult) => {
     navigator.clipboard.writeText(`Subject: ${email.subject}\n\n${email.body}`).then(() => {
@@ -111,7 +151,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
     });
   }, []);
 
-  const emailSteps = cadence.steps.filter(s => s.channel === 'email');
+  const emailSteps = editableSteps.filter(s => s.channel === 'email');
 
   return (
     <div className="animate-fade-in">
@@ -128,7 +168,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
           <span className="text-[24px]">{cadence.icon}</span>
           <div>
             <h3 className="text-[18px] font-bold text-foreground">{cadence.title} Cadence</h3>
-            <p className="text-[12px] text-muted-foreground">{cadence.touches} touches · {cadence.duration}</p>
+            <p className="text-[12px] text-muted-foreground">{editableSteps.length} touches · {cadence.duration}</p>
           </div>
         </div>
       </div>
@@ -190,19 +230,19 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
         )}
       </div>
 
-      {/* Cadence timeline */}
+      {/* Editable cadence timeline */}
       <div className="relative">
-        {/* Steps */}
         <div className="flex flex-col gap-0">
-          {cadence.steps.map((step, idx) => {
+          {editableSteps.map((step, idx) => {
             const isActive = activeStep === step.touchNum;
             const hasEmail = !!generatedEmails[step.touchNum];
             const isEmailChannel = step.channel === 'email';
+            const isEditing = editingStep === step.touchNum;
 
             return (
               <div key={step.touchNum} className="relative">
                 {/* Connector line */}
-                {idx < cadence.steps.length - 1 && (
+                {idx < editableSteps.length - 1 && (
                   <div
                     className="absolute left-[18px] top-[44px] w-[2px]"
                     style={{
@@ -235,7 +275,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                       <span className="text-[13px] font-bold text-foreground">Touch {step.touchNum}</span>
                       <span
                         className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
@@ -243,6 +283,14 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                       >
                         {step.channel}
                       </span>
+                      {isEmailChannel && (
+                        <span
+                          className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                          style={{ background: 'rgba(47,72,88,.06)', color: '#2F4858', border: '1px solid rgba(47,72,88,.1)' }}
+                        >
+                          {step.emailType}
+                        </span>
+                      )}
                       <span className="text-[11px] text-muted-foreground ml-auto">Day {step.day}</span>
                     </div>
                     <p className="text-[13px] text-foreground leading-snug">{step.purpose}</p>
@@ -250,78 +298,167 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                   </div>
                 </button>
 
-                {/* Expanded: generate email for this step */}
-                {isActive && isEmailChannel && (
+                {/* Expanded panel for active step */}
+                {isActive && (
                   <div className="ml-[54px] mr-3 mb-3 animate-fade-in">
-                    {!generatedEmails[step.touchNum] ? (
-                      <div>
-                        <button
-                          onClick={() => generateForStep(step)}
-                          disabled={!canGenerate || loading}
-                          className="w-full py-3 text-[13px] font-bold tracking-wide rounded-lg transition-all"
-                          style={{
-                            background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #fb923c, #f97316)',
-                            color: !canGenerate || loading ? '#94A3B8' : '#fff',
-                            cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
-                            boxShadow: canGenerate && !loading ? '0 4px 15px rgba(251,146,60,.3)' : 'none',
-                          }}
-                        >
-                          {loading ? (
-                            <span className="flex items-center justify-center gap-2">
-                              <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                              Writing touch {step.touchNum}...
-                            </span>
-                          ) : `✉️  Generate Touch ${step.touchNum} Email`}
-                        </button>
-                        {!canGenerate && (
-                          <p className="text-[11px] text-muted-foreground mt-2 text-center">Fill in all context fields above first</p>
+                    {/* Edit toggle */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setEditingStep(isEditing ? null : step.touchNum); }}
+                        className="text-[11px] font-semibold px-3 py-1.5 rounded-md transition-colors"
+                        style={{
+                          background: isEditing ? '#2F4858' : 'rgba(47,72,88,.06)',
+                          color: isEditing ? '#FAF7F2' : 'hsl(var(--foreground))',
+                        }}
+                      >
+                        {isEditing ? '✓ Done editing' : '✏️ Edit this step'}
+                      </button>
+                    </div>
+
+                    {/* Edit form */}
+                    {isEditing && (
+                      <div
+                        className="rounded-lg p-4 mb-3 space-y-3 animate-fade-in"
+                        style={{ background: 'rgba(47,72,88,.03)', border: '1px solid hsl(var(--border))' }}
+                      >
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Day</label>
+                            <input
+                              type="number" min={0} max={60}
+                              value={step.day}
+                              onChange={e => updateStep(step.touchNum, { day: parseInt(e.target.value) || 0 })}
+                              className="w-full px-3 py-2 border text-[13px] focus:outline-none rounded-lg"
+                              style={{ borderColor: 'hsl(var(--border))', background: '#fff' }}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Channel</label>
+                            <select
+                              value={step.channel}
+                              onChange={e => updateStep(step.touchNum, { channel: e.target.value as CadenceStep['channel'] })}
+                              className="w-full px-3 py-2 border text-[13px] focus:outline-none rounded-lg appearance-none cursor-pointer"
+                              style={{ borderColor: 'hsl(var(--border))', background: '#fff' }}
+                            >
+                              {CHANNEL_OPTIONS.map(c => (
+                                <option key={c} value={c}>{channelIcon[c]} {c.charAt(0).toUpperCase() + c.slice(1)}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        {step.channel === 'email' && (
+                          <div>
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Email Type</label>
+                            <select
+                              value={step.emailType}
+                              onChange={e => updateStep(step.touchNum, { emailType: e.target.value })}
+                              className="w-full px-3 py-2 border text-[13px] focus:outline-none rounded-lg appearance-none cursor-pointer"
+                              style={{ borderColor: 'hsl(var(--border))', background: '#fff' }}
+                            >
+                              {EMAIL_TYPE_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+                            </select>
+                          </div>
                         )}
-                      </div>
-                    ) : (
-                      <div className="rounded-lg border overflow-hidden" style={{ borderColor: 'rgba(251,146,60,.2)' }}>
-                        <div className="px-4 py-3" style={{ background: '#FAF7F2', borderBottom: '1px solid rgba(251,146,60,.15)' }}>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Subject</p>
-                          <p className="text-[15px] font-bold text-foreground">{generatedEmails[step.touchNum].subject}</p>
+
+                        <div>
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Goal / Purpose</label>
+                          <input
+                            type="text"
+                            value={step.purpose}
+                            onChange={e => updateStep(step.touchNum, { purpose: e.target.value })}
+                            className="w-full px-3 py-2 border text-[13px] focus:outline-none rounded-lg"
+                            style={{ borderColor: 'hsl(var(--border))', background: '#fff' }}
+                          />
                         </div>
-                        <div className="px-4 py-4" style={{ background: 'hsl(var(--card))' }}>
-                          <p className="text-[13px] leading-[1.8] whitespace-pre-line text-foreground">
-                            {generatedEmails[step.touchNum].body}
-                          </p>
-                        </div>
-                        <div className="flex gap-2 px-4 py-3" style={{ background: '#FAF7F2', borderTop: '1px solid rgba(251,146,60,.15)' }}>
-                          <button
-                            onClick={() => handleCopy(step.touchNum, generatedEmails[step.touchNum])}
-                            className="px-4 py-2 text-[12px] font-bold rounded-lg transition-all"
-                            style={{
-                              background: copied === step.touchNum ? '#10B981' : 'linear-gradient(135deg, #fb923c, #f97316)',
-                              color: '#fff',
-                            }}
-                          >
-                            {copied === step.touchNum ? '✓ Copied' : '📋 Copy'}
-                          </button>
-                          <button
-                            onClick={() => generateForStep(step)}
-                            disabled={loading}
-                            className="px-4 py-2 text-[12px] font-bold rounded-lg transition-all"
-                            style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' }}
-                          >
-                            {loading ? '...' : '🔄 Rewrite'}
-                          </button>
+
+                        <div>
+                          <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">Tone</label>
+                          <input
+                            type="text"
+                            value={step.tone}
+                            onChange={e => updateStep(step.touchNum, { tone: e.target.value })}
+                            className="w-full px-3 py-2 border text-[13px] focus:outline-none rounded-lg"
+                            style={{ borderColor: 'hsl(var(--border))', background: '#fff' }}
+                          />
                         </div>
                       </div>
                     )}
-                    {error && <p className="mt-2 text-[12px] font-medium" style={{ color: '#EF4444' }}>{error}</p>}
-                  </div>
-                )}
 
-                {/* Non-email active step: coaching note */}
-                {isActive && !isEmailChannel && (
-                  <div
-                    className="ml-[54px] mr-3 mb-3 px-4 py-3 rounded-lg animate-fade-in"
-                    style={{ background: `${channelColor[step.channel]}08`, border: `1px solid ${channelColor[step.channel]}20` }}
-                  >
-                    <p className="text-[12px] font-semibold text-foreground mb-1">{channelIcon[step.channel]} {step.channel === 'call' ? 'Call' : step.channel === 'linkedin' ? 'LinkedIn' : 'Voicemail'} touch — use the frameworks from the Calling tab</p>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed">{step.purpose}</p>
+                    {/* Generate / result for email steps */}
+                    {isEmailChannel && (
+                      <>
+                        {!generatedEmails[step.touchNum] ? (
+                          <div>
+                            <button
+                              onClick={() => generateForStep(step)}
+                              disabled={!canGenerate || loading}
+                              className="w-full py-3 text-[13px] font-bold tracking-wide rounded-lg transition-all"
+                              style={{
+                                background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #fb923c, #f97316)',
+                                color: !canGenerate || loading ? '#94A3B8' : '#fff',
+                                cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
+                                boxShadow: canGenerate && !loading ? '0 4px 15px rgba(251,146,60,.3)' : 'none',
+                              }}
+                            >
+                              {loading ? (
+                                <span className="flex items-center justify-center gap-2">
+                                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                  Writing touch {step.touchNum}...
+                                </span>
+                              ) : `✉️  Generate Touch ${step.touchNum} Email`}
+                            </button>
+                            {!canGenerate && (
+                              <p className="text-[11px] text-muted-foreground mt-2 text-center">Fill in all context fields above first</p>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="rounded-lg border overflow-hidden" style={{ borderColor: 'rgba(251,146,60,.2)' }}>
+                            <div className="px-4 py-3" style={{ background: '#FAF7F2', borderBottom: '1px solid rgba(251,146,60,.15)' }}>
+                              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Subject</p>
+                              <p className="text-[15px] font-bold text-foreground">{generatedEmails[step.touchNum].subject}</p>
+                            </div>
+                            <div className="px-4 py-4" style={{ background: 'hsl(var(--card))' }}>
+                              <p className="text-[13px] leading-[1.8] whitespace-pre-line text-foreground">
+                                {generatedEmails[step.touchNum].body}
+                              </p>
+                            </div>
+                            <div className="flex gap-2 px-4 py-3" style={{ background: '#FAF7F2', borderTop: '1px solid rgba(251,146,60,.15)' }}>
+                              <button
+                                onClick={() => handleCopy(step.touchNum, generatedEmails[step.touchNum])}
+                                className="px-4 py-2 text-[12px] font-bold rounded-lg transition-all"
+                                style={{
+                                  background: copied === step.touchNum ? '#10B981' : 'linear-gradient(135deg, #fb923c, #f97316)',
+                                  color: '#fff',
+                                }}
+                              >
+                                {copied === step.touchNum ? '✓ Copied' : '📋 Copy'}
+                              </button>
+                              <button
+                                onClick={() => generateForStep(step)}
+                                disabled={loading}
+                                className="px-4 py-2 text-[12px] font-bold rounded-lg transition-all"
+                                style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                              >
+                                {loading ? '...' : '🔄 Rewrite'}
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {error && <p className="mt-2 text-[12px] font-medium" style={{ color: '#EF4444' }}>{error}</p>}
+                      </>
+                    )}
+
+                    {/* Non-email: coaching note */}
+                    {!isEmailChannel && (
+                      <div
+                        className="px-4 py-3 rounded-lg"
+                        style={{ background: `${channelColor[step.channel]}08`, border: `1px solid ${channelColor[step.channel]}20` }}
+                      >
+                        <p className="text-[12px] font-semibold text-foreground mb-1">{channelIcon[step.channel]} {step.channel === 'call' ? 'Call' : step.channel === 'linkedin' ? 'LinkedIn' : 'Voicemail'} touch — use the frameworks from the Calling tab</p>
+                        <p className="text-[11px] text-muted-foreground leading-relaxed">{step.purpose}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
