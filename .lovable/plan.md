@@ -1,49 +1,29 @@
 
+# Redesign: Work Your List Tab
 
-# Make Flare Immediately Understandable to New Users
+## Problems
+1. **Flat layout** — everything is the same visual weight: white cards, light borders, text blocks
+2. **Too much reading** — the morning routine steps are paragraph-heavy; the sample result is a plain table
+3. **No visual hierarchy** — your eye doesn't know where to start or what matters most
 
-## The Problem
-People open Flare and don't understand: **what is this**, **who is it for**, and **how does it help me**. The welcome modal says "demand signals are flares" — which means nothing to someone who hasn't used it. The header is equally vague. There's no clear value proposition.
+## Fixes
 
-## The Fix — Three Changes
+### 1. Morning routine → Visual timeline with icons
+Replace the 3 text-heavy numbered steps with a horizontal (desktop) / vertical (mobile) **visual timeline** using large icons and short action phrases instead of paragraphs:
+- 📥 **Scan** → Pull HIGH signals
+- 📝 **Log** → CRM: company + signal + service line  
+- 🔍 **Research** → Run the prompt below
 
-### 1. Rewrite the Header to explain the value in plain English
-**Current**: Giant "FLARE" wordmark + "Demand signals are flares — spot them first" + "Built for the NCH sales team"
+One line each. No paragraphs. The detail lives in the rest of the tab.
 
-**New**: Keep the FLARE wordmark but add a clear one-liner underneath:
-- **Subtitle**: "The NCH BDR Prospecting Toolkit"
-- **Value prop**: "Find companies that need housing now. Know who to call. Send the right message. Every morning in under 30 minutes."
-- **What's inside**: A compact row of 5 tool badges — Prompt Builder, Signal Scorer, Email Generator, Event Finder, LinkedIn Strategy
+### 2. Sample result → More visual, less table
+Add color-coded priority badge styling, a subtle gradient left-border accent, and break the dense table into a cleaner card with the signal as the hero element (larger text, highlighted).
 
-This immediately tells someone: this is for BDRs, it helps with prospecting, and here are the tools.
+### 3. Research prompt section → Collapsible
+Keep the research prompt but wrap it in an expandable section so the page feels shorter on first load. The tip boxes stay inside.
 
-### 2. Rewrite the Welcome Modal first slide to be concrete
-**Current first slide**: "Your daily prospecting engine" / "Demand signals are flares..."
+### 4. Cross-reference cards → Add subtle icons and hover lift
+Already decent but need slightly more visual pop — add colored icon backgrounds.
 
-**New first slide**:
-- **Title**: "Welcome to Flare"
-- **Subtitle**: "5 AI tools to fill your pipeline"
-- **Description**: "Flare helps NCH BDRs find companies with active housing needs, identify the right buyer, and send signal-specific outreach — without spending hours researching."
-- **Detail**: "This 30-second walkthrough shows you each tool and how they connect into a daily routine."
-
-### 3. Add a "What You'll Do Each Day" block to the Overview tab
-Replace the current abstract intro with a concrete daily routine summary at the top:
-
-> **Your daily routine with Flare (under 30 min)**
-> 1. Check your overnight Prompt Builder results for new signals
-> 2. Score them HIGH / MEDIUM / LOW in seconds
-> 3. Find the right buyer title for each company
-> 4. Send a signal-specific email or make the call
->
-> **Weekly**: Find networking events. Post on LinkedIn.
-
-This gives a BDR an immediate mental model of how this fits into their day.
-
-## Files Changed
-- `src/components/guide/Header.tsx` — Add subtitle, value prop line, and tool badges
-- `src/components/guide/WelcomeModal.tsx` — Rewrite first tour step copy
-- `src/components/guide/OverviewTab.tsx` — Add "Your daily routine" block above the current content
-
-## What stays the same
-Everything else — the tabs, tools, workflow steps, service lines reference. This is purely about the first 10 seconds of the experience.
-
+## Files changed
+- `src/components/guide/ResultsTab.tsx` — restructure layout
