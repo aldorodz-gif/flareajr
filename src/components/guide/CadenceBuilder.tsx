@@ -24,14 +24,12 @@ function getWhyText(step: { channel: string; emailType?: string; purpose: string
 const channelIcon: Record<string, string> = {
   email: '✉️',
   call: '📞',
-  linkedin: '💼',
   voicemail: '🎙️',
 };
 
 const channelColor: Record<string, string> = {
   email: '#fb923c',
   call: '#5BBFA0',
-  linkedin: '#6366F1',
   voicemail: '#8B8FE8',
 };
 
@@ -53,7 +51,7 @@ const ANGLE_OPTIONS = [
   'Trigger-based',
 ];
 
-const CHANNEL_OPTIONS: CadenceStep['channel'][] = ['email', 'call', 'linkedin', 'voicemail'];
+const CHANNEL_OPTIONS: CadenceStep['channel'][] = ['email', 'call', 'voicemail'];
 
 interface EmailResult {
   subject: string;

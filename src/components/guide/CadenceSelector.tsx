@@ -92,12 +92,6 @@ const channelColor: Record<string, string> = {
   voicemail: '#8B8FE8',
 };
 
-const channelColor: Record<string, string> = {
-  email: '#fb923c',
-  call: '#5BBFA0',
-  linkedin: '#6366F1',
-  voicemail: '#8B8FE8',
-};
 
 interface CadenceSelectorProps {
   onSelect: (cadence: CadenceType) => void;
