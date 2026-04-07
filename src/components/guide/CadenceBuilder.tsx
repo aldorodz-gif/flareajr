@@ -111,7 +111,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
 
   // Editable steps — initialized from cadence
   const [editableSteps, setEditableSteps] = useState<EditableStep[]>(
-    cadence.steps.map(s => ({ ...s, emailType: inferEmailType(s.purpose) }))
+    cadence.steps.map(s => ({ ...s, emailType: inferEmailType(s.purpose), angle: inferAngle(s.purpose, s.touchNum) }))
   );
 
   // Article scraping
