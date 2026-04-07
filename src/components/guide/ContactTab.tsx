@@ -19,10 +19,46 @@ const verticals = [
 ];
 
 const discoveryLevels = [
-  { level: '01', color: '#fb923c', label: 'Situation', desc: 'How are they literally doing the thing today?', hint: 'Sourcing own housing · Staging own apartments · Putting people in hotels' },
-  { level: '02', color: '#f97316', label: 'Operational Problem', desc: 'The daily friction no one wants to own.', hint: 'Manual sourcing · Scattered expense reports · No consistency across locations' },
-  { level: '03', color: '#ea580c', label: 'Executive Problem', desc: 'The bad news a VP would have to give a CEO.', hint: 'Recruiting inequities · Housing bottlenecks · Imbalanced spending' },
-  { level: '04', color: '#c2410c', label: 'Business Impact', desc: 'The C-level initiative, risk, or KPI at stake.', hint: 'Overspend · Reduced talent pipeline · Slow growth · Lose top recruits' },
+  {
+    level: '01', color: '#fb923c', label: 'Situation', desc: 'How are they literally doing the thing today?',
+    questions: [
+      'When your team travels for this project, how does housing get handled today?',
+      'Who typically owns finding and booking accommodations?',
+      'Are people sourcing their own places, or is there a central process?',
+    ],
+    listenFor: ['Hotels', 'Airbnb', 'Per diem', 'Everyone does their own thing', 'Admin handles it'],
+    transition: 'Once you hear "everyone does their own thing" — you\'re in. Go to Level 02.',
+  },
+  {
+    level: '02', color: '#f97316', label: 'Operational Problem', desc: 'The daily friction no one wants to own.',
+    questions: [
+      'How much time does your team spend coordinating housing logistics?',
+      'What happens when someone shows up and the unit isn\'t ready — or the commute is 90 minutes?',
+      'How do you track what you\'re actually spending across locations?',
+    ],
+    listenFor: ['Hours per week', 'No-shows', 'Complaints', 'Over budget', 'No visibility'],
+    transition: 'When they quantify the pain (hours, dollars, complaints) — escalate to Level 03.',
+  },
+  {
+    level: '03', color: '#ea580c', label: 'Executive Problem', desc: 'The bad news a VP would have to give a CEO.',
+    questions: [
+      'If this keeps happening, what does your VP have to report up?',
+      'Has housing ever delayed a project timeline or lost you a candidate?',
+      'What would leadership say if they saw the total spend across all locations?',
+    ],
+    listenFor: ['Timeline risk', 'Lost candidates', 'Board visibility', 'Audit exposure', 'Inconsistency'],
+    transition: 'When it becomes a leadership-level problem — connect it to the business in Level 04.',
+  },
+  {
+    level: '04', color: '#c2410c', label: 'Business Impact', desc: 'The C-level initiative, risk, or KPI at stake.',
+    questions: [
+      'What\'s the cost of a one-week delay on this project?',
+      'How does housing fit into your broader talent retention or recruiting strategy?',
+      'If you could eliminate housing as a variable entirely, what would that unlock?',
+    ],
+    listenFor: ['$M per week', 'Competitive disadvantage', 'Board milestone', 'Growth blocker'],
+    transition: 'You\'re at impact. Now position your solution against the KPI they just named.',
+  },
 ];
 
 const workedExamples = [
