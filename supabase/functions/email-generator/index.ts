@@ -53,7 +53,34 @@ Key patterns to replicate: lead with a credibility anchor (partnership, existing
 
 ${signalBlock}
 
-Rules: under 100 words total, maximum 4 sentences, written like one person texting a colleague not like a sales email. First sentence references the specific signal directly — pull a CONCRETE detail (a name, a number, a date, a project name) from the source material. No generic openers. Second sentence names their likely problem without pitching anything. Third sentence says what NCH does in one plain English sentence, outcome first. Fourth sentence is a low friction ask for a 10 to 15 minute call. No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists. Also write a 2 to 4 word subject line that references the specific signal. IMPORTANT: Most recipients read email on their phones. Write for a small screen — short sentences, short paragraphs, no walls of text. Every sentence should be scannable in 2 seconds on a 4-inch display.${varyInstruction}
+THE 4-SENTENCE EMAIL STRUCTURE (follow this EXACTLY):
+
+SENTENCE 1 — One specific observation (proof you actually looked)
+✓ DO THIS: "Saw [Company] just [landed the contract / kicked off the expansion], congrats, that's a big one."
+✗ NOT THIS: "I came across your company and was impressed by what you do."
+Pull a CONCRETE detail — a name, number, date, or project name from the signal/article. Never generic.
+
+SENTENCE 2 — One sentence naming their likely problem (NOT your solution)
+✓ DO THIS: "Mobilizations like that move fast — travel, lodging, or temporary housing for incoming crews is usually the thing that gets figured out last."
+✗ NOT THIS: "We help teams get placed quickly with the right mix of temporary housing."
+Name the pain THEY feel. Do not pitch anything yet.
+
+SENTENCE 3 — One sentence on what you do (plain English, outcome-first)
+✓ DO THIS: "We help get crews placed before they land — temporary housing, hotels, or travel support handled cleanly."
+✗ NOT THIS: "We help teams get placed quickly and keep moves, travel, and lodging organized."
+Lead with the outcome, not the company. One sentence max.
+
+SENTENCE 4 — One ask (the smallest possible yes)
+✓ DO THIS: "Worth a quick 15-minute call to see if it makes sense for your Q2 timeline?"
+✗ NOT THIS: "I'd love to schedule a 30-minute demo to walk you through our platform."
+Low friction. 10-15 minutes. Tie to their timeline if possible.
+
+ADDITIONAL RULES:
+- Under 100 words total, maximum 4 sentences
+- Written like one person texting a colleague — not like a sales email
+- No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists.
+- Subject line: 2-4 words referencing the specific signal
+- MOBILE FIRST: Most recipients read on phones. Short sentences, no walls of text. Scannable in 2 seconds on a 4-inch display.${varyInstruction}
 
 ${referenceEmail}`;
 
