@@ -8,14 +8,94 @@ interface ContactTabProps {
 }
 
 const verticals = [
-  { icon: '🔨', name: 'Construction', signals: 'Mobilization, new site launch, phased buildouts', primary: 'Project Manager · Site Superintendent · Director of Operations', nonTrad: 'Mobilization Manager · Labor Coordinator · Commissioning Manager' },
-  { icon: '🛡️', name: 'Defense', signals: 'Program ramp, deployment, contract transition', primary: 'Program Manager · Site Lead · Operations Director', nonTrad: 'Deployment Manager · Gov\'t Services Manager · Contract Transition Manager' },
-  { icon: '🏭', name: 'Manufacturing', signals: 'Plant launch, installs, training cohorts, outages', primary: 'Plant Manager · Operations Manager · Training Manager', nonTrad: 'Launch Manager · Production Readiness Manager · Maintenance Outage Lead' },
-  { icon: '⚡', name: 'Energy', signals: 'Turnarounds, outages, storm response, field maintenance', primary: 'Outage Manager · Turnaround Manager · Field Operations Manager', nonTrad: 'Crew Logistics Manager · Shutdown Planner · Project Controls Manager' },
-  { icon: '🏥', name: 'Healthcare', signals: 'Travel clinicians, physician relocation, residency housing', primary: 'Clinical Staffing Manager · Recruitment Manager · Travel Program Manager', nonTrad: 'Physician Recruitment Manager · GME Coordinator · Workforce Planning Manager' },
-  { icon: '💻', name: 'Tech', signals: 'Relocations, intern housing, office launch, deployment teams', primary: 'Global Mobility Manager · People Operations Manager · Program Manager', nonTrad: 'University Recruiting Manager · Employee Experience Manager · Travel Program Manager' },
-  { icon: '🏀', name: 'Sports', signals: 'Draft picks, mid-season trades, spring training, front-office hires', primary: 'Director of Team Operations · Player Development Manager · VP of Ops', nonTrad: 'Team Services Coordinator · Player Engagement Manager · Scouting Ops Manager' },
-  { icon: '🎭', name: 'Theater', signals: 'Cast arrivals, national tour layovers, seasonal staffing, guest residencies', primary: 'Company Manager · General Manager · Production Manager', nonTrad: 'Artist Housing Coordinator · Touring Ops Manager · Associate Producer' },
+  {
+    icon: '🔨', name: 'Construction',
+    signals: 'Mobilization, new site launch, phased buildouts',
+    primary: [
+      { title: 'Project Manager', cares: 'On-time delivery, crew readiness', opener: '"I saw you\'re mobilizing crews for [PROJECT] — how are you handling housing for the ramp?"' },
+      { title: 'Site Superintendent', cares: 'Daily ops, crew availability', opener: '"When crews arrive on-site, who\'s making sure they have a place to stay that\'s close enough to be productive?"' },
+      { title: 'Director of Operations', cares: 'Cost control, multi-site consistency', opener: '"Across your active sites, how consistent is the housing experience for traveling crews?"' },
+    ],
+    nonTrad: ['Mobilization Manager', 'Labor Coordinator', 'Commissioning Manager'],
+    linkedInTip: 'Search: "mobilization" OR "site operations" + company name',
+  },
+  {
+    icon: '🛡️', name: 'Defense',
+    signals: 'Program ramp, deployment, contract transition',
+    primary: [
+      { title: 'Program Manager', cares: 'Contract milestones, team readiness', opener: '"With the [CONTRACT] transition, how are you staging housing for the incoming team?"' },
+      { title: 'Site Lead', cares: 'On-ground ops, personnel welfare', opener: '"For your team deploying to [LOCATION], what\'s the current plan for 30+ day stays?"' },
+      { title: 'Operations Director', cares: 'Cost, compliance, continuity', opener: '"How do you handle housing when you\'re ramping 50+ people into a new program site?"' },
+    ],
+    nonTrad: ['Deployment Manager', 'Gov\'t Services Manager', 'Contract Transition Manager'],
+    linkedInTip: 'Search: "program operations" OR "deployment" + company name',
+  },
+  {
+    icon: '🏭', name: 'Manufacturing',
+    signals: 'Plant launch, installs, training cohorts, outages',
+    primary: [
+      { title: 'Plant Manager', cares: 'Launch timeline, production output', opener: '"With the new plant opening in [CITY], how are you housing the commissioning crews?"' },
+      { title: 'Operations Manager', cares: 'Workforce availability, daily rhythm', opener: '"During install phase, what happens when a tech arrives and housing falls through?"' },
+      { title: 'Training Manager', cares: 'Cohort logistics, retention', opener: '"For your training cohorts rotating through [FACILITY], who handles their accommodations?"' },
+    ],
+    nonTrad: ['Launch Manager', 'Production Readiness Manager', 'Maintenance Outage Lead'],
+    linkedInTip: 'Search: "plant launch" OR "commissioning" OR "outage" + company name',
+  },
+  {
+    icon: '⚡', name: 'Energy',
+    signals: 'Turnarounds, outages, storm response, field maintenance',
+    primary: [
+      { title: 'Outage Manager', cares: 'Schedule adherence, crew logistics', opener: '"During your next turnaround, how are you planning to house 100+ contractors within commuting distance?"' },
+      { title: 'Turnaround Manager', cares: 'Compressed timelines, cost per day', opener: '"What\'s your current setup for housing during the spring outage season?"' },
+      { title: 'Field Operations Manager', cares: 'Crew welfare, retention in remote areas', opener: '"For your field crews in [REGION], how do you keep housing quality consistent?"' },
+    ],
+    nonTrad: ['Crew Logistics Manager', 'Shutdown Planner', 'Project Controls Manager'],
+    linkedInTip: 'Search: "turnaround" OR "outage manager" OR "field operations" + company name',
+  },
+  {
+    icon: '🏥', name: 'Healthcare',
+    signals: 'Travel clinicians, physician relocation, residency housing',
+    primary: [
+      { title: 'Clinical Staffing Manager', cares: 'Fill rates, clinician satisfaction', opener: '"For your travel nurses on 13-week assignments, how does housing get handled today?"' },
+      { title: 'Recruitment Manager', cares: 'Offer competitiveness, candidate experience', opener: '"When a top candidate asks about relocation support, what can you offer them today?"' },
+      { title: 'Travel Program Manager', cares: 'Cost per assignment, quality control', opener: '"Across your travel program, how do you ensure housing quality without spending hours per placement?"' },
+    ],
+    nonTrad: ['Physician Recruitment Manager', 'GME Coordinator', 'Workforce Planning Manager'],
+    linkedInTip: 'Search: "travel nurse program" OR "GME coordinator" OR "physician recruitment" + org name',
+  },
+  {
+    icon: '💻', name: 'Tech',
+    signals: 'Relocations, intern housing, office launch, deployment teams',
+    primary: [
+      { title: 'Global Mobility Manager', cares: 'Policy compliance, employee experience', opener: '"With [COMPANY] expanding to [CITY], how are you handling temporary housing during the transition?"' },
+      { title: 'People Operations Manager', cares: 'Employee satisfaction, onboarding', opener: '"For new hires relocating, what does the first 30 days of housing look like?"' },
+      { title: 'Program Manager', cares: 'Deployment logistics, team readiness', opener: '"When you deploy a team to a client site for 3+ months, who owns the housing piece?"' },
+    ],
+    nonTrad: ['University Recruiting Manager', 'Employee Experience Manager', 'Travel Program Manager'],
+    linkedInTip: 'Search: "global mobility" OR "people operations" OR "intern program" + company name',
+  },
+  {
+    icon: '🏀', name: 'Sports',
+    signals: 'Draft picks, mid-season trades, spring training, front-office hires',
+    primary: [
+      { title: 'Director of Team Operations', cares: 'Player readiness, family experience', opener: '"When you bring in a mid-season trade, how quickly can you get them settled with housing?"' },
+      { title: 'Player Development Manager', cares: 'Player focus, off-field stability', opener: '"For your draft picks arriving this summer, what does the housing setup look like?"' },
+      { title: 'VP of Ops', cares: 'Brand experience, cost management', opener: '"Across spring training and the regular season, how do you manage housing for 20+ players and staff?"' },
+    ],
+    nonTrad: ['Team Services Coordinator', 'Player Engagement Manager', 'Scouting Ops Manager'],
+    linkedInTip: 'Search: "team operations" OR "player services" + team name',
+  },
+  {
+    icon: '🎭', name: 'Theater',
+    signals: 'Cast arrivals, national tour layovers, seasonal staffing, guest residencies',
+    primary: [
+      { title: 'Company Manager', cares: 'Cast welfare, per diem budgets', opener: '"For your upcoming production, how are you housing out-of-town cast for the run?"' },
+      { title: 'General Manager', cares: 'Production budget, vendor relationships', opener: '"Across your season, what does housing spend look like for guest artists and touring casts?"' },
+      { title: 'Production Manager', cares: 'Logistics, timeline, rehearsal proximity', opener: '"When cast arrives for rehearsals, who makes sure they\'re close to the venue and settled in?"' },
+    ],
+    nonTrad: ['Artist Housing Coordinator', 'Touring Ops Manager', 'Associate Producer'],
+    linkedInTip: 'Search: "company manager" OR "production manager" + theater/company name',
+  },
 ];
 
 const discoveryLevels = [
@@ -64,21 +144,29 @@ const discoveryLevels = [
 const workedExamples = [
   {
     icon: '🏭', title: 'Manufacturing Plant Launch',
+    scenario: 'New EV battery plant opening in rural Tennessee — 200+ technicians relocating over 4 months.',
     rows: [
-      { label: 'Situation', text: 'New EV battery plant opening in rural Tennessee — 200+ technicians relocating over 4 months.' },
-      { label: 'Operational', text: 'Crews arriving to no-shows, double bookings, and 90-minute commutes. Per diem 40% over budget.' },
-      { label: 'Executive', text: '"We\'re three weeks behind on commissioning because we can\'t get crews on-site reliably."' },
-      { label: 'Impact', text: 'Delayed production · $2M+/week in lost output · Board-level launch milestone at risk' },
+      { level: '01', label: 'Situation', text: 'Crews sourcing their own housing on Airbnb. Some commuting 90+ minutes. No central process.', color: '#fb923c' },
+      { level: '02', label: 'Operational', text: 'No-shows, double bookings, per diem 40% over budget. HR fielding 10+ complaints/week.', color: '#f97316' },
+      { level: '03', label: 'Executive', text: '"We\'re three weeks behind on commissioning because we can\'t get crews on-site reliably."', color: '#ea580c' },
+      { level: '04', label: 'Impact', text: 'Delayed production · $2M+/week in lost output · Board-level launch milestone at risk.', color: '#c2410c' },
     ],
+    keyInsight: 'The Plant Manager doesn\'t think of this as a "housing" problem — it\'s a "why aren\'t my crews on-site" problem.',
+    suggestedOpener: '"I saw your Tennessee plant is ramping commissioning — when 200 techs arrive over the next 4 months, who\'s making sure they have a place to stay that keeps them productive?"',
+    bestContact: 'Plant Manager or Launch Manager',
   },
   {
     icon: '🏥', title: 'Healthcare Fellowship Program',
+    scenario: '35 fellows across 6 teaching hospitals — different start dates, families, 30-day notice windows.',
     rows: [
-      { label: 'Situation', text: '35 fellows across 6 teaching hospitals — different start dates, families, 30-day notice windows.' },
-      { label: 'Operational', text: 'GME coordinators spending 15+ hours per fellow sourcing apartments and fielding complaints.' },
-      { label: 'Executive', text: '"We lost two top candidates to programs that offered better relocation support."' },
-      { label: 'Impact', text: 'Weakened physician pipeline · Coordinator turnover · Competitive disadvantage in recruiting' },
+      { level: '01', label: 'Situation', text: 'GME coordinators manually sourcing apartments. Fellows finding their own housing.', color: '#fb923c' },
+      { level: '02', label: 'Operational', text: '15+ hours per fellow on housing logistics. Quality inconsistent across sites.', color: '#f97316' },
+      { level: '03', label: 'Executive', text: '"We lost two top candidates to programs that offered better relocation support."', color: '#ea580c' },
+      { level: '04', label: 'Impact', text: 'Weakened physician pipeline · Coordinator burnout · Competitive disadvantage in recruiting.', color: '#c2410c' },
     ],
+    keyInsight: 'The GME Coordinator is drowning but doesn\'t have budget authority. The DIO or Recruitment Manager does.',
+    suggestedOpener: '"I work with teaching hospitals that have streamlined fellow housing — are your GME coordinators still spending 15+ hours per fellow on apartment sourcing?"',
+    bestContact: 'Physician Recruitment Manager or DIO',
   },
 ];
 
@@ -86,6 +174,7 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
   const [selectedVertical, setSelectedVertical] = useState(0);
   const [openLevel, setOpenLevel] = useState<number | null>(null);
   const [openExample, setOpenExample] = useState<number | null>(null);
+  const [expandedTitle, setExpandedTitle] = useState<number | null>(null);
 
   const v = verticals[selectedVertical];
 
@@ -138,14 +227,14 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
 
       {/* ── Vertical Titles: Filterable ── */}
       <Eyebrow>Best Titles by Vertical</Eyebrow>
-      <p className="text-[13px] text-muted-foreground mb-4">Pick the vertical. See who to target first.</p>
+      <p className="text-[13px] text-muted-foreground mb-4">Pick the vertical. See who to target — and exactly what to say.</p>
 
       {/* Vertical selector pills */}
       <div className="flex flex-wrap gap-2 mb-4">
         {verticals.map((vert, i) => (
           <button
             key={vert.name}
-            onClick={() => setSelectedVertical(i)}
+            onClick={() => { setSelectedVertical(i); setExpandedTitle(null); }}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[12px] font-medium transition-all"
             style={{
               background: i === selectedVertical ? 'linear-gradient(135deg, #fb923c, #f97316)' : '#FAF7F2',
@@ -168,32 +257,70 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
           <p className="text-[15px] font-semibold" style={{ color: '#fff' }}>{v.name}</p>
         </div>
         <div className="p-5" style={{ background: '#fff' }}>
+          {/* Signals */}
           <div className="mb-4 p-3 rounded-lg" style={{ background: '#FAF7F2' }}>
             <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Common Signals</p>
             <p className="text-[13px] text-foreground">{v.signals}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide mb-2" style={{ color: '#fb923c' }}>🎯 Primary Titles</p>
-              <div className="space-y-1.5">
-                {v.primary.split(' · ').map(t => (
-                  <div key={t} className="flex items-center gap-2 p-2.5 rounded-lg" style={{ background: 'rgba(251,146,60,.04)', border: '1px solid rgba(251,146,60,.1)' }}>
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#fb923c' }} />
-                    <p className="text-[13px] font-medium text-foreground">{t}</p>
+
+          {/* Primary Titles — now expandable with openers */}
+          <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color: '#fb923c' }}>🎯 Primary Titles — click for opener</p>
+          <div className="space-y-2 mb-4">
+            {v.primary.map((t, ti) => {
+              const isExp = expandedTitle === ti;
+              return (
+                <div key={t.title}>
+                  <button
+                    onClick={() => setExpandedTitle(isExp ? null : ti)}
+                    className="w-full flex items-center gap-2.5 p-3 rounded-lg text-left transition-all"
+                    style={{
+                      background: isExp ? '#fb923c' : 'rgba(251,146,60,.04)',
+                      border: `1px solid ${isExp ? '#fb923c' : 'rgba(251,146,60,.1)'}`,
+                    }}
+                  >
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: isExp ? '#fff' : '#fb923c' }} />
+                    <span className="text-[13px] font-medium flex-1" style={{ color: isExp ? '#fff' : 'inherit' }}>{t.title}</span>
+                    <svg
+                      className="w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200"
+                      style={{ transform: isExp ? 'rotate(180deg)' : 'rotate(0deg)', color: isExp ? 'rgba(255,255,255,.7)' : '#94A3B8' }}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: isExp ? '200px' : '0', opacity: isExp ? 1 : 0 }}>
+                    <div className="px-3 pt-2.5 pb-3 ml-4 space-y-2" style={{ borderLeft: '2px solid rgba(251,146,60,.2)' }}>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">They care about</p>
+                        <p className="text-[12px] text-foreground">{t.cares}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">Sample opener</p>
+                        <p className="text-[12px] leading-[1.6] italic" style={{ color: '#f97316' }}>{t.opener}</p>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Non-traditional */}
+          <p className="text-[11px] font-bold uppercase tracking-wide mb-2" style={{ color: '#9B78C8' }}>💡 Non-Traditional Titles</p>
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {v.nonTrad.map(t => (
+              <span key={t} className="px-2.5 py-1.5 rounded-lg text-[12px] font-medium" style={{ background: 'rgba(155,120,200,.06)', border: '1px solid rgba(155,120,200,.15)', color: '#7C5DAC' }}>
+                {t}
+              </span>
+            ))}
+          </div>
+
+          {/* LinkedIn search tip */}
+          <div className="flex gap-2.5 items-start p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.03)', borderLeft: '3px solid #fb923c' }}>
+            <span className="text-[13px] flex-shrink-0">🔍</span>
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wide mb-2" style={{ color: '#9B78C8' }}>💡 Non-Traditional</p>
-              <div className="space-y-1.5">
-                {v.nonTrad.split(' · ').map(t => (
-                  <div key={t} className="flex items-center gap-2 p-2.5 rounded-lg" style={{ background: 'rgba(155,120,200,.04)', border: '1px solid rgba(155,120,200,.1)' }}>
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#9B78C8' }} />
-                    <p className="text-[13px] font-medium text-foreground">{t}</p>
-                  </div>
-                ))}
-              </div>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">LinkedIn Search Tip</p>
+              <p className="text-[12px] leading-[1.5] font-mono" style={{ color: '#f97316' }}>{v.linkedInTip}</p>
             </div>
           </div>
         </div>
@@ -201,7 +328,7 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
 
       {/* ── Discovery Tree: Accordion ── */}
       <Eyebrow>Discovery Tree</Eyebrow>
-      <p className="text-[13px] text-muted-foreground mb-4">Move from surface situation → business impact. Click each level to explore.</p>
+      <p className="text-[13px] text-muted-foreground mb-4">Move from surface situation → business impact. Click each level for questions to ask.</p>
 
       <div className="rounded-xl overflow-hidden mb-5" style={{ boxShadow: '0 2px 16px rgba(0,0,0,.08)' }}>
         {discoveryLevels.map((step, i) => {
@@ -244,7 +371,6 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                 style={{ maxHeight: isOpen ? '500px' : '0', opacity: isOpen ? 1 : 0 }}
               >
                 <div className="p-5 space-y-4" style={{ background: '#fff', borderLeft: `3px solid ${step.color}` }}>
-                  {/* Questions */}
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color: step.color }}>💬 Ask These Questions</p>
                     <div className="space-y-2">
@@ -256,8 +382,6 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                       ))}
                     </div>
                   </div>
-
-                  {/* Listen For */}
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-wide mb-2" style={{ color: '#64748B' }}>👂 Listen For</p>
                     <div className="flex flex-wrap gap-1.5">
@@ -268,8 +392,6 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                       ))}
                     </div>
                   </div>
-
-                  {/* Transition */}
                   <div className="flex gap-2.5 items-start p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.04)', borderLeft: `3px solid ${step.color}` }}>
                     <span className="text-[13px] flex-shrink-0">→</span>
                     <p className="text-[12px] leading-[1.6] font-medium" style={{ color: step.color }}>{step.transition}</p>
@@ -281,57 +403,121 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
         })}
       </div>
 
-      {/* ── Worked Examples: Expandable ── */}
-      <p className="text-[13px] font-semibold text-foreground mb-3">See it in practice</p>
-      <div className="flex flex-col gap-3 mb-8">
-        {workedExamples.map((ex, i) => (
-          <div key={ex.title} className="rounded-xl overflow-hidden border" style={{ borderColor: 'rgba(251,146,60,.12)' }}>
-            <button
-              onClick={() => setOpenExample(openExample === i ? null : i)}
-              className="w-full flex items-center justify-between px-5 py-3.5 text-left transition-colors"
-              style={{ background: openExample === i ? 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' : '#FAF7F2' }}
-            >
-              <p className="text-[13px] font-semibold" style={{ color: openExample === i ? '#fff' : 'inherit' }}>
-                {ex.icon} {ex.title}
-              </p>
-              <svg
-                className="w-4 h-4 flex-shrink-0 transition-transform duration-200"
-                style={{ color: openExample === i ? 'rgba(255,255,255,.5)' : '#94A3B8', transform: openExample === i ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+      {/* ── Worked Examples: Full walkthroughs ── */}
+      <Eyebrow>See It In Practice</Eyebrow>
+      <p className="text-[13px] text-muted-foreground mb-4">Full discovery walkthroughs with the opener you'd actually use.</p>
+
+      <div className="flex flex-col gap-4 mb-8">
+        {workedExamples.map((ex, i) => {
+          const isOpen = openExample === i;
+          return (
+            <div key={ex.title} className="rounded-xl overflow-hidden" style={{ boxShadow: '0 2px 16px rgba(0,0,0,.08)' }}>
+              <button
+                onClick={() => setOpenExample(isOpen ? null : i)}
+                className="w-full flex items-center justify-between px-5 py-4 text-left transition-all"
+                style={{ background: isOpen ? 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' : '#FAF7F2' }}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div
-              className="overflow-hidden transition-all duration-300"
-              style={{ maxHeight: openExample === i ? '300px' : '0', opacity: openExample === i ? 1 : 0 }}
-            >
-              <div className="p-4 space-y-3" style={{ background: '#fff' }}>
-                {ex.rows.map(r => (
-                  <div key={r.label} className="flex gap-3 items-start">
-                    <span className="text-[10px] font-bold uppercase tracking-wide mt-0.5 min-w-[70px]" style={{ color: '#f97316' }}>{r.label}</span>
-                    <p className="text-[12px] leading-[1.6] text-foreground">{r.text}</p>
+                <div>
+                  <p className="text-[14px] font-semibold" style={{ color: isOpen ? '#fff' : 'inherit' }}>
+                    {ex.icon} {ex.title}
+                  </p>
+                  <p className="text-[11px] mt-0.5" style={{ color: isOpen ? 'rgba(255,255,255,.5)' : '#94A3B8' }}>
+                    {ex.scenario.substring(0, 60)}…
+                  </p>
+                </div>
+                <svg
+                  className="w-4 h-4 flex-shrink-0 transition-transform duration-200"
+                  style={{ color: isOpen ? 'rgba(255,255,255,.5)' : '#94A3B8', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300"
+                style={{ maxHeight: isOpen ? '800px' : '0', opacity: isOpen ? 1 : 0 }}
+              >
+                <div className="p-5 space-y-4" style={{ background: '#fff', borderLeft: '3px solid #fb923c' }}>
+                  {/* Scenario */}
+                  <div className="p-3 rounded-lg" style={{ background: '#FAF7F2' }}>
+                    <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Scenario</p>
+                    <p className="text-[13px] leading-[1.6] text-foreground">{ex.scenario}</p>
                   </div>
-                ))}
+
+                  {/* Discovery progression */}
+                  <div className="space-y-2">
+                    {ex.rows.map(r => (
+                      <div key={r.label} className="flex gap-3 items-start p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.02)', border: '1px solid rgba(251,146,60,.08)' }}>
+                        <span
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5"
+                          style={{ background: r.color, color: '#fff' }}
+                        >
+                          {r.level}
+                        </span>
+                        <div className="flex-1">
+                          <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: r.color }}>{r.label}</p>
+                          <p className="text-[12px] leading-[1.6] text-foreground">{r.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Key Insight */}
+                  <div className="flex gap-2.5 items-start p-3 rounded-lg" style={{ background: 'rgba(234,88,12,.05)', borderLeft: '3px solid #ea580c' }}>
+                    <span className="text-[13px] flex-shrink-0">💡</span>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: '#ea580c' }}>Key Insight</p>
+                      <p className="text-[12px] leading-[1.6] text-foreground">{ex.keyInsight}</p>
+                    </div>
+                  </div>
+
+                  {/* Suggested Opener */}
+                  <div className="p-3 rounded-lg" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
+                    <p className="text-[10px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#fb923c' }}>✉️ Suggested Opener</p>
+                    <p className="text-[12.5px] leading-[1.6] italic" style={{ color: 'rgba(255,255,255,.85)' }}>{ex.suggestedOpener}</p>
+                    <p className="text-[11px] mt-2" style={{ color: 'rgba(255,255,255,.4)' }}>Best contact: <strong style={{ color: '#fb923c' }}>{ex.bestContact}</strong></p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* ── Prioritization ── */}
+      {/* ── Prioritization — with what to say ── */}
       <div className="rounded-xl overflow-hidden" style={{ boxShadow: '0 4px 20px rgba(0,0,0,.1)' }}>
         <div className="p-5" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
           <p className="text-[12px] font-semibold uppercase tracking-wider mb-4" style={{ color: '#fb923c' }}>Outreach Priority Order</p>
           <div className="flex flex-col gap-3">
             {[
-              { num: 1, text: 'Pain owner — operations, project leadership, mobility, or field logistics.' },
-              { num: 2, text: 'Non-traditional title — whoever coordinates the move, launch, or outage.' },
-              { num: 3, text: 'Procurement / travel — later, for vendor setup and invoicing.' },
+              {
+                num: 1, title: 'Pain Owner',
+                who: 'Operations, project leadership, mobility, or field logistics.',
+                say: '"I work with companies like yours that are [SIGNAL] — the teams I support usually need housing handled before crews arrive. Is that something you\'re dealing with?"',
+              },
+              {
+                num: 2, title: 'Non-Traditional Title',
+                who: 'Whoever coordinates the move, launch, or outage.',
+                say: '"I noticed [COMPANY] is [SIGNAL]. I often work with the person coordinating logistics for these kinds of moves — is that you, or can you point me to the right person?"',
+              },
+              {
+                num: 3, title: 'Procurement / Travel',
+                who: 'Later — for vendor setup, invoicing, and compliance.',
+                say: '"We\'re already working with [PAIN OWNER NAME] on housing for [PROJECT]. They suggested I reach out to get us set up as a vendor — what\'s the best way to start that process?"',
+              },
             ].map((s) => (
-              <div key={s.num} className="flex gap-3 items-center p-3 rounded-lg" style={{ background: 'rgba(255,255,255,.05)' }}>
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff' }}>{s.num}</div>
-                <p className="text-[13px] leading-[1.5]" style={{ color: 'rgba(255,255,255,.85)' }}>{s.text}</p>
+              <div key={s.num} className="p-4 rounded-lg" style={{ background: 'rgba(255,255,255,.05)' }}>
+                <div className="flex gap-3 items-center mb-2.5">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff' }}>{s.num}</div>
+                  <div>
+                    <p className="text-[13px] font-semibold" style={{ color: '#fff' }}>{s.title}</p>
+                    <p className="text-[11px]" style={{ color: 'rgba(255,255,255,.5)' }}>{s.who}</p>
+                  </div>
+                </div>
+                <div className="ml-11 p-2.5 rounded-lg" style={{ background: 'rgba(251,146,60,.08)', borderLeft: '2px solid rgba(251,146,60,.3)' }}>
+                  <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: '#fb923c' }}>What to say</p>
+                  <p className="text-[11.5px] leading-[1.6] italic" style={{ color: 'rgba(255,255,255,.75)' }}>{s.say}</p>
+                </div>
               </div>
             ))}
           </div>
