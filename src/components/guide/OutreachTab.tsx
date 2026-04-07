@@ -62,6 +62,7 @@ const EMAIL_PARTS = [
 const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
   const [channel, setChannel] = useState<'call' | 'email'>('call');
   const [expandedClose, setExpandedClose] = useState<number | null>(null);
+  const [selectedCadence, setSelectedCadence] = useState<CadenceType | null>(null);
 
   // Email generator state
   const [company, setCompany] = useState('');
