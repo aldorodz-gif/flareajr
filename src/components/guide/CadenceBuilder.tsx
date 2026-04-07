@@ -15,7 +15,6 @@ const WHY_THIS_WORKS: Record<string, string> = {
 
 function getWhyText(step: { channel: string; emailType?: string; purpose: string }): string {
   if (step.channel === 'call') return 'A phone call after an email creates a multi-channel impression. Even if they don\'t pick up, the attempt signals confidence and seriousness.';
-  if (step.channel === 'linkedin') return 'LinkedIn adds a face and a profile to your name. A thoughtful connect note or content engagement warms the relationship before you ever pitch.';
   if (step.channel === 'voicemail') return 'A short voicemail referencing prior touches shows persistence without desperation. It also gives them your voice — which builds trust faster than text.';
   if (step.emailType && WHY_THIS_WORKS[step.emailType]) return WHY_THIS_WORKS[step.emailType];
   return 'Each touch in the sequence builds on the last. Consistency and variety across channels is what separates reps who book meetings from those who don\'t.';
