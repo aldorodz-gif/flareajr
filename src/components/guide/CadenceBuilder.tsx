@@ -82,19 +82,16 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
     setLoading(true);
     setError('');
     try {
-      const signalText = articleContent
-        ? `Article: "${scrapedTitle}". Content: ${articleContent}`
-        : signal.trim();
-
       const touchContext = `This is touch #${step.touchNum} of a ${cadence.touches}-touch ${cadence.title} cadence over ${cadence.duration}. Day ${step.day}. Channel: ${step.channel}. Purpose: ${step.purpose}. Tone: ${step.tone}.${step.touchNum > 1 ? ` Previous touches have already been sent — this is a follow-up, not a first email.` : ''}`;
 
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
         body: {
           company: company.trim(),
-          signal: `${signalText}\n\nCADENCE CONTEXT: ${touchContext}`,
+          signal: `${signal.trim()}${signal.trim() ? '\n\n' : ''}CADENCE CONTEXT: ${touchContext}`,
           buyer_title: buyerTitle.trim(),
           service_line: serviceLine,
           vary: step.touchNum > 1,
+          ...(articleContent ? { article_content: articleContent, article_title: scrapedTitle } : {}),
         },
       });
       if (fnError) throw fnError;
