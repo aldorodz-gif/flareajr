@@ -1,6 +1,25 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { CadenceType, CadenceStep } from './CadenceSelector';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+
+const WHY_THIS_WORKS: Record<string, string> = {
+  'Signal-based intro': 'Leading with something specific about them — a news article, a hire, a move — proves you did your homework. It earns the right to a reply.',
+  'Value add / insight': 'Sharing something useful without asking for anything builds credibility. It positions you as a resource, not just another rep selling.',
+  'Social proof / case study': 'Buyers trust peers more than pitches. A short proof point from a similar company reduces perceived risk and sparks curiosity.',
+  'Problem agitation': 'Naming a pain they likely feel makes them think "this person gets it." It creates urgency without being pushy.',
+  'Breakup / last chance': 'The breakup email works because it removes pressure. People respond when they feel the window is closing, not when they feel chased.',
+  'Follow-up nudge': 'Most deals are won in the follow-up, not the first touch. A short nudge keeps you top-of-mind without annoying them.',
+  'New angle / re-approach': 'A fresh signal or angle gives you a legitimate reason to reach back out. It resets the conversation instead of repeating the old one.',
+};
+
+function getWhyText(step: { channel: string; emailType?: string; purpose: string }): string {
+  if (step.channel === 'call') return 'A phone call after an email creates a multi-channel impression. Even if they don\'t pick up, the attempt signals confidence and seriousness.';
+  if (step.channel === 'linkedin') return 'LinkedIn adds a face and a profile to your name. A thoughtful connect note or content engagement warms the relationship before you ever pitch.';
+  if (step.channel === 'voicemail') return 'A short voicemail referencing prior touches shows persistence without desperation. It also gives them your voice — which builds trust faster than text.';
+  if (step.emailType && WHY_THIS_WORKS[step.emailType]) return WHY_THIS_WORKS[step.emailType];
+  return 'Each touch in the sequence builds on the last. Consistency and variety across channels is what separates reps who book meetings from those who don\'t.';
+}
 
 const channelIcon: Record<string, string> = {
   email: '✉️',
