@@ -15,7 +15,6 @@ const WHY_THIS_WORKS: Record<string, string> = {
 
 function getWhyText(step: { channel: string; emailType?: string; purpose: string }): string {
   if (step.channel === 'call') return 'A phone call after an email creates a multi-channel impression. Even if they don\'t pick up, the attempt signals confidence and seriousness.';
-  if (step.channel === 'linkedin') return 'LinkedIn adds a face and a profile to your name. A thoughtful connect note or content engagement warms the relationship before you ever pitch.';
   if (step.channel === 'voicemail') return 'A short voicemail referencing prior touches shows persistence without desperation. It also gives them your voice — which builds trust faster than text.';
   if (step.emailType && WHY_THIS_WORKS[step.emailType]) return WHY_THIS_WORKS[step.emailType];
   return 'Each touch in the sequence builds on the last. Consistency and variety across channels is what separates reps who book meetings from those who don\'t.';
@@ -24,14 +23,12 @@ function getWhyText(step: { channel: string; emailType?: string; purpose: string
 const channelIcon: Record<string, string> = {
   email: '✉️',
   call: '📞',
-  linkedin: '💼',
   voicemail: '🎙️',
 };
 
 const channelColor: Record<string, string> = {
   email: '#fb923c',
   call: '#5BBFA0',
-  linkedin: '#6366F1',
   voicemail: '#8B8FE8',
 };
 
@@ -53,7 +50,7 @@ const ANGLE_OPTIONS = [
   'Trigger-based',
 ];
 
-const CHANNEL_OPTIONS: CadenceStep['channel'][] = ['email', 'call', 'linkedin', 'voicemail'];
+const CHANNEL_OPTIONS: CadenceStep['channel'][] = ['email', 'call', 'voicemail'];
 
 interface EmailResult {
   subject: string;
@@ -541,7 +538,7 @@ const CadenceBuilder = ({ cadence, onBack }: CadenceBuilderProps) => {
                         className="px-4 py-3 rounded-lg"
                         style={{ background: `${channelColor[step.channel]}08`, border: `1px solid ${channelColor[step.channel]}20` }}
                       >
-                        <p className="text-[12px] font-semibold text-foreground mb-1">{channelIcon[step.channel]} {step.channel === 'call' ? 'Call' : step.channel === 'linkedin' ? 'LinkedIn' : 'Voicemail'} touch — use the frameworks from the Calling tab</p>
+                        <p className="text-[12px] font-semibold text-foreground mb-1">{channelIcon[step.channel]} {step.channel === 'call' ? 'Call' : 'Voicemail'} touch — use the frameworks from the Calling tab</p>
                         <p className="text-[11px] text-muted-foreground leading-relaxed">{step.purpose}</p>
                       </div>
                     )}
