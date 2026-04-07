@@ -100,7 +100,7 @@ const verticals = [
 
 const discoveryLevels = [
   {
-    level: '01', color: '#fb923c', label: 'Situation', desc: 'How are they literally doing the thing today?',
+    level: '01', label: 'Situation', desc: 'How are they literally doing the thing today?',
     questions: [
       'When your team travels for this project, how does housing get handled today?',
       'Who typically owns finding and booking accommodations?',
@@ -110,7 +110,7 @@ const discoveryLevels = [
     transition: 'Once you hear "everyone does their own thing" — you\'re in. Go to Level 02.',
   },
   {
-    level: '02', color: '#f97316', label: 'Operational Problem', desc: 'The daily friction no one wants to own.',
+    level: '02', label: 'Operational Problem', desc: 'The daily friction no one wants to own.',
     questions: [
       'How much time does your team spend coordinating housing logistics?',
       'What happens when someone shows up and the unit isn\'t ready — or the commute is 90 minutes?',
@@ -120,7 +120,7 @@ const discoveryLevels = [
     transition: 'When they quantify the pain (hours, dollars, complaints) — escalate to Level 03.',
   },
   {
-    level: '03', color: '#ea580c', label: 'Executive Problem', desc: 'The bad news a VP would have to give a CEO.',
+    level: '03', label: 'Executive Problem', desc: 'The bad news a VP would have to give a CEO.',
     questions: [
       'If this keeps happening, what does your VP have to report up?',
       'Has housing ever delayed a project timeline or lost you a candidate?',
@@ -130,7 +130,7 @@ const discoveryLevels = [
     transition: 'When it becomes a leadership-level problem — connect it to the business in Level 04.',
   },
   {
-    level: '04', color: '#c2410c', label: 'Business Impact', desc: 'The C-level initiative, risk, or KPI at stake.',
+    level: '04', label: 'Business Impact', desc: 'The C-level initiative, risk, or KPI at stake.',
     questions: [
       'What\'s the cost of a one-week delay on this project?',
       'How does housing fit into your broader talent retention or recruiting strategy?',
@@ -146,10 +146,10 @@ const workedExamples = [
     icon: '🏭', title: 'Manufacturing Plant Launch',
     scenario: 'New EV battery plant opening in rural Tennessee — 200+ technicians relocating over 4 months.',
     rows: [
-      { level: '01', label: 'Situation', text: 'Crews sourcing their own housing on Airbnb. Some commuting 90+ minutes. No central process.', color: '#fb923c' },
-      { level: '02', label: 'Operational', text: 'No-shows, double bookings, per diem 40% over budget. HR fielding 10+ complaints/week.', color: '#f97316' },
-      { level: '03', label: 'Executive', text: '"We\'re three weeks behind on commissioning because we can\'t get crews on-site reliably."', color: '#ea580c' },
-      { level: '04', label: 'Impact', text: 'Delayed production · $2M+/week in lost output · Board-level launch milestone at risk.', color: '#c2410c' },
+      { level: '01', label: 'Situation', text: 'Crews sourcing their own housing on Airbnb. Some commuting 90+ minutes. No central process.' },
+      { level: '02', label: 'Operational', text: 'No-shows, double bookings, per diem 40% over budget. HR fielding 10+ complaints/week.' },
+      { level: '03', label: 'Executive', text: '"We\'re three weeks behind on commissioning because we can\'t get crews on-site reliably."' },
+      { level: '04', label: 'Impact', text: 'Delayed production · $2M+/week in lost output · Board-level launch milestone at risk.' },
     ],
     keyInsight: 'The Plant Manager doesn\'t think of this as a "housing" problem — it\'s a "why aren\'t my crews on-site" problem.',
     suggestedOpener: '"I saw your Tennessee plant is ramping commissioning — when 200 techs arrive over the next 4 months, who\'s making sure they have a place to stay that keeps them productive?"',
@@ -159,16 +159,20 @@ const workedExamples = [
     icon: '🏥', title: 'Healthcare Fellowship Program',
     scenario: '35 fellows across 6 teaching hospitals — different start dates, families, 30-day notice windows.',
     rows: [
-      { level: '01', label: 'Situation', text: 'GME coordinators manually sourcing apartments. Fellows finding their own housing.', color: '#fb923c' },
-      { level: '02', label: 'Operational', text: '15+ hours per fellow on housing logistics. Quality inconsistent across sites.', color: '#f97316' },
-      { level: '03', label: 'Executive', text: '"We lost two top candidates to programs that offered better relocation support."', color: '#ea580c' },
-      { level: '04', label: 'Impact', text: 'Weakened physician pipeline · Coordinator burnout · Competitive disadvantage in recruiting.', color: '#c2410c' },
+      { level: '01', label: 'Situation', text: 'GME coordinators manually sourcing apartments. Fellows finding their own housing.' },
+      { level: '02', label: 'Operational', text: '15+ hours per fellow on housing logistics. Quality inconsistent across sites.' },
+      { level: '03', label: 'Executive', text: '"We lost two top candidates to programs that offered better relocation support."' },
+      { level: '04', label: 'Impact', text: 'Weakened physician pipeline · Coordinator burnout · Competitive disadvantage in recruiting.' },
     ],
     keyInsight: 'The GME Coordinator is drowning but doesn\'t have budget authority. The DIO or Recruitment Manager does.',
     suggestedOpener: '"I work with teaching hospitals that have streamlined fellow housing — are your GME coordinators still spending 15+ hours per fellow on apartment sourcing?"',
     bestContact: 'Physician Recruitment Manager or DIO',
   },
 ];
+
+// Consistent accent colors from design system
+const ORANGE = 'hsl(25, 95%, 53%)'; // #f97316
+const ORANGE_LIGHT = 'hsl(30, 96%, 62%)'; // #fb923c
 
 const ContactTab = ({ onNavigate }: ContactTabProps) => {
   const [selectedVertical, setSelectedVertical] = useState(0);
@@ -179,39 +183,42 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
   const v = verticals[selectedVertical];
 
   return (
-    <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 05: Find the Right Person</Eyebrow>
-      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Who to Call</h2>
-      <p className="text-[13px] max-w-[760px] mb-6 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(251,146,60,.1)' }}>
-        The right message to the wrong person still fails. Match the buyer to the signal.
-      </p>
+    <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10 space-y-8">
+      {/* ── Header ── */}
+      <div>
+        <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 05: Find the Right Person</Eyebrow>
+        <h2 className="text-2xl font-semibold mb-1.5 leading-tight text-foreground">Who to Call</h2>
+        <p className="text-sm text-muted-foreground max-w-[760px] pb-4 border-b border-border/40">
+          The right message to the wrong person still fails. Match the buyer to the signal.
+        </p>
+      </div>
 
-      {/* Rule callout */}
-      <div className="flex gap-3 items-start p-4 rounded-lg mb-7" style={{ background: 'rgba(251,146,60,.04)', borderLeft: '4px solid #fb923c', border: '1px solid rgba(251,146,60,.12)', borderLeftWidth: '4px' }}>
-        <span className="text-[18px] flex-shrink-0">📌</span>
-        <p className="text-[13px] leading-[1.65] text-foreground">
+      {/* ── Rule callout ── */}
+      <div className="flex gap-3 items-start p-4 rounded-lg bg-card border border-border/60" style={{ borderLeftWidth: 4, borderLeftColor: ORANGE }}>
+        <span className="text-lg shrink-0">📌</span>
+        <p className="text-sm leading-relaxed text-foreground">
           <strong>HR is rarely the first pain owner.</strong> Start with whoever's job breaks if the need isn't solved — the project manager, operations lead, or mobilization coordinator.
         </p>
       </div>
 
       {/* ── POC Finder: Hero AI Tool ── */}
-      <div className="rounded-xl overflow-hidden mb-8" style={{ boxShadow: '0 4px 24px rgba(0,0,0,.12)' }}>
-        <div className="px-5 py-4 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
+      <div className="rounded-xl overflow-hidden shadow-lg">
+        <div className="px-5 py-4 flex items-center justify-between bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: 'rgba(251,146,60,.15)' }}>
-              <span className="text-[16px]">🎯</span>
+            <div className="w-9 h-9 rounded-full flex items-center justify-center bg-orange-500/15">
+              <span className="text-base">🎯</span>
             </div>
             <div>
-              <p className="text-[14px] font-bold" style={{ color: '#fff' }}>POC Finder Prompt</p>
-              <p className="text-[11px]" style={{ color: 'rgba(255,255,255,.5)' }}>Run after your company research</p>
+              <p className="text-sm font-bold text-white">POC Finder Prompt</p>
+              <p className="text-[11px] text-white/50">Run after your company research</p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.12)', border: '1px solid rgba(251,146,60,.25)' }}>
-            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#fb923c' }} />
-            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#fb923c' }}>AI Tool</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/12 border border-orange-500/25">
+            <span className="w-2 h-2 rounded-full animate-pulse bg-orange-500" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-orange-500">AI Tool</span>
           </div>
         </div>
-        <div className="p-5" style={{ background: '#fff', borderLeft: '1px solid rgba(251,146,60,.12)', borderRight: '1px solid rgba(251,146,60,.12)', borderBottom: '1px solid rgba(251,146,60,.12)', borderRadius: '0 0 12px 12px' }}>
+        <div className="p-5 bg-card border border-t-0 border-border/40 rounded-b-xl">
           <PromptBox label="Paste into ChatGPT after your company research">
 {`For [COMPANY NAME] — a company that is [DESCRIBE THE SIGNAL] — identify the best person to contact for temporary housing, travel, hotels, or destination services.
 
@@ -226,269 +233,282 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
       </div>
 
       {/* ── Vertical Titles: Filterable ── */}
-      <Eyebrow>Best Titles by Vertical</Eyebrow>
-      <p className="text-[13px] text-muted-foreground mb-4">Pick the vertical. See who to target — and exactly what to say.</p>
+      <div>
+        <Eyebrow>Best Titles by Vertical</Eyebrow>
+        <p className="text-sm text-muted-foreground mb-4">Pick the vertical. See who to target — and exactly what to say.</p>
 
-      {/* Vertical selector pills */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {verticals.map((vert, i) => (
-          <button
-            key={vert.name}
-            onClick={() => { setSelectedVertical(i); setExpandedTitle(null); }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[12px] font-medium transition-all"
-            style={{
-              background: i === selectedVertical ? 'linear-gradient(135deg, #fb923c, #f97316)' : '#FAF7F2',
-              color: i === selectedVertical ? '#fff' : '#64748B',
-              border: `1px solid ${i === selectedVertical ? 'transparent' : 'rgba(251,146,60,.15)'}`,
-              boxShadow: i === selectedVertical ? '0 4px 12px rgba(251,146,60,.3)' : 'none',
-              transform: i === selectedVertical ? 'scale(1.05)' : 'scale(1)',
-            }}
-          >
-            <span className="text-[14px]">{vert.icon}</span>
-            {vert.name}
-          </button>
-        ))}
-      </div>
-
-      {/* Selected vertical card */}
-      <div className="rounded-xl overflow-hidden border mb-8 transition-all" style={{ borderColor: 'rgba(251,146,60,.15)', boxShadow: '0 2px 12px rgba(0,0,0,.06)' }}>
-        <div className="px-5 py-3.5 flex items-center gap-2" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 50%, #1e1050 100%)' }}>
-          <span className="text-[20px]">{v.icon}</span>
-          <p className="text-[15px] font-semibold" style={{ color: '#fff' }}>{v.name}</p>
+        {/* Vertical selector pills */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {verticals.map((vert, i) => {
+            const active = i === selectedVertical;
+            return (
+              <button
+                key={vert.name}
+                onClick={() => { setSelectedVertical(i); setExpandedTitle(null); }}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                  active
+                    ? 'text-white shadow-md scale-105'
+                    : 'bg-card text-muted-foreground border border-border/60 hover:border-orange-500/30'
+                }`}
+                style={active ? { background: `linear-gradient(135deg, ${ORANGE_LIGHT}, ${ORANGE})` } : undefined}
+              >
+                <span className="text-sm">{vert.icon}</span>
+                {vert.name}
+              </button>
+            );
+          })}
         </div>
-        <div className="p-5" style={{ background: '#fff' }}>
-          {/* Signals */}
-          <div className="mb-4 p-3 rounded-lg" style={{ background: '#FAF7F2' }}>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Common Signals</p>
-            <p className="text-[13px] text-foreground">{v.signals}</p>
-          </div>
 
-          {/* Primary Titles — now expandable with openers */}
-          <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color: '#fb923c' }}>🎯 Primary Titles — click for opener</p>
-          <div className="space-y-2 mb-4">
-            {v.primary.map((t, ti) => {
-              const isExp = expandedTitle === ti;
-              return (
-                <div key={t.title}>
-                  <button
-                    onClick={() => setExpandedTitle(isExp ? null : ti)}
-                    className="w-full flex items-center gap-2.5 p-3 rounded-lg text-left transition-all"
-                    style={{
-                      background: isExp ? '#fb923c' : 'rgba(251,146,60,.04)',
-                      border: `1px solid ${isExp ? '#fb923c' : 'rgba(251,146,60,.1)'}`,
-                    }}
-                  >
-                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: isExp ? '#fff' : '#fb923c' }} />
-                    <span className="text-[13px] font-medium flex-1" style={{ color: isExp ? '#fff' : 'inherit' }}>{t.title}</span>
-                    <svg
-                      className="w-3.5 h-3.5 flex-shrink-0 transition-transform duration-200"
-                      style={{ transform: isExp ? 'rotate(180deg)' : 'rotate(0deg)', color: isExp ? 'rgba(255,255,255,.7)' : '#94A3B8' }}
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  <div className="overflow-hidden transition-all duration-300" style={{ maxHeight: isExp ? '200px' : '0', opacity: isExp ? 1 : 0 }}>
-                    <div className="px-3 pt-2.5 pb-3 ml-4 space-y-2" style={{ borderLeft: '2px solid rgba(251,146,60,.2)' }}>
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">They care about</p>
-                        <p className="text-[12px] text-foreground">{t.cares}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">Sample opener</p>
-                        <p className="text-[12px] leading-[1.6] italic" style={{ color: '#f97316' }}>{t.opener}</p>
+        {/* Selected vertical card */}
+        <div className="rounded-xl overflow-hidden border border-border/60 shadow-sm">
+          <div className="px-5 py-3.5 flex items-center gap-2.5 bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050]">
+            <span className="text-xl">{v.icon}</span>
+            <p className="text-base font-semibold text-white">{v.name}</p>
+          </div>
+          <div className="p-5 bg-card space-y-5">
+            {/* Signals */}
+            <div className="p-3 rounded-lg bg-background/60">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Common Signals</p>
+              <p className="text-sm text-foreground">{v.signals}</p>
+            </div>
+
+            {/* Primary Titles — expandable */}
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide mb-3 text-orange-500">🎯 Primary Titles — click for opener</p>
+              <div className="space-y-1.5">
+                {v.primary.map((t, ti) => {
+                  const isExp = expandedTitle === ti;
+                  return (
+                    <div key={t.title} className="rounded-lg overflow-hidden border border-border/40 transition-all">
+                      <button
+                        onClick={() => setExpandedTitle(isExp ? null : ti)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all ${
+                          isExp ? 'text-white' : 'bg-card hover:bg-background/60'
+                        }`}
+                        style={isExp ? { background: `linear-gradient(135deg, ${ORANGE_LIGHT}, ${ORANGE})` } : undefined}
+                      >
+                        <span className={`w-2 h-2 rounded-full shrink-0 ${isExp ? 'bg-white' : 'bg-orange-500'}`} />
+                        <span className="text-sm font-medium flex-1">{t.title}</span>
+                        <svg
+                          className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isExp ? 'text-white/70' : 'text-muted-foreground'}`}
+                          style={{ transform: isExp ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      <div
+                        className="overflow-hidden transition-all duration-300"
+                        style={{ maxHeight: isExp ? '200px' : '0', opacity: isExp ? 1 : 0 }}
+                      >
+                        <div className="px-4 py-3 ml-5 space-y-2.5 border-l-2 border-orange-500/20 bg-card">
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">They care about</p>
+                            <p className="text-xs text-foreground">{t.cares}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">Sample opener</p>
+                            <p className="text-xs leading-relaxed italic text-orange-500">{t.opener}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            </div>
 
-          {/* Non-traditional */}
-          <p className="text-[11px] font-bold uppercase tracking-wide mb-2" style={{ color: '#9B78C8' }}>💡 Non-Traditional Titles</p>
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {v.nonTrad.map(t => (
-              <span key={t} className="px-2.5 py-1.5 rounded-lg text-[12px] font-medium" style={{ background: 'rgba(155,120,200,.06)', border: '1px solid rgba(155,120,200,.15)', color: '#7C5DAC' }}>
-                {t}
-              </span>
-            ))}
-          </div>
-
-          {/* LinkedIn search tip */}
-          <div className="flex gap-2.5 items-start p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.03)', borderLeft: '3px solid #fb923c' }}>
-            <span className="text-[13px] flex-shrink-0">🔍</span>
+            {/* Non-traditional */}
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">LinkedIn Search Tip</p>
-              <p className="text-[12px] leading-[1.5] font-mono" style={{ color: '#f97316' }}>{v.linkedInTip}</p>
+              <p className="text-[11px] font-bold uppercase tracking-wide mb-2 text-purple-400">💡 Non-Traditional Titles</p>
+              <div className="flex flex-wrap gap-1.5">
+                {v.nonTrad.map(t => (
+                  <span key={t} className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-purple-500/5 border border-purple-500/15 text-purple-400">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* LinkedIn search tip */}
+            <div className="flex gap-2.5 items-start p-3 rounded-lg bg-background/60 border-l-[3px] border-orange-500">
+              <span className="text-sm shrink-0">🔍</span>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-0.5">LinkedIn Search Tip</p>
+                <p className="text-xs leading-snug font-mono text-orange-500">{v.linkedInTip}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Discovery Tree: Accordion ── */}
-      <Eyebrow>Discovery Tree</Eyebrow>
-      <p className="text-[13px] text-muted-foreground mb-4">Move from surface situation → business impact. Click each level for questions to ask.</p>
+      {/* ── Discovery Tree ── */}
+      <div>
+        <Eyebrow>Discovery Tree</Eyebrow>
+        <p className="text-sm text-muted-foreground mb-4">Move from surface situation → business impact. Click each level for questions to ask.</p>
 
-      <div className="rounded-xl overflow-hidden mb-5" style={{ boxShadow: '0 2px 16px rgba(0,0,0,.08)' }}>
-        {discoveryLevels.map((step, i) => {
-          const isOpen = openLevel === i;
-          const isLast = i === discoveryLevels.length - 1;
-          return (
-            <div key={step.level}>
-              <button
-                onClick={() => setOpenLevel(isOpen ? null : i)}
-                className="w-full flex items-center gap-3.5 p-4 text-left transition-all"
-                style={{
-                  background: isOpen ? step.color : '#fff',
-                  borderBottom: !isLast ? '1px solid rgba(251,146,60,.08)' : 'none',
-                }}
-              >
-                <span
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0"
+        <div className="rounded-xl overflow-hidden shadow-md border border-border/40">
+          {discoveryLevels.map((step, i) => {
+            const isOpen = openLevel === i;
+            const isLast = i === discoveryLevels.length - 1;
+            // Gradient from light to dark orange across levels
+            const levelColors = ['hsl(30,96%,62%)', 'hsl(25,95%,53%)', 'hsl(22,90%,47%)', 'hsl(20,85%,40%)'];
+            const color = levelColors[i];
+            return (
+              <div key={step.level}>
+                <button
+                  onClick={() => setOpenLevel(isOpen ? null : i)}
+                  className="w-full flex items-center gap-4 p-4 text-left transition-all"
                   style={{
-                    background: isOpen ? 'rgba(255,255,255,.25)' : step.color,
-                    color: '#fff',
-                    boxShadow: `0 2px 8px ${step.color}40`,
+                    background: isOpen ? color : 'hsl(var(--card))',
+                    borderBottom: !isLast ? '1px solid hsl(var(--border) / 0.4)' : 'none',
                   }}
                 >
-                  {step.level}
-                </span>
-                <div className="flex-1">
-                  <p className="text-[14px] font-semibold" style={{ color: isOpen ? '#fff' : 'inherit' }}>{step.label}</p>
-                  {!isOpen && <p className="text-[11px] text-muted-foreground mt-0.5">{step.desc}</p>}
-                </div>
-                <svg
-                  className="w-4 h-4 flex-shrink-0 transition-transform duration-200"
-                  style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', color: isOpen ? 'rgba(255,255,255,.7)' : '#94A3B8' }}
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                  <span
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 text-white shadow-md"
+                    style={{ background: isOpen ? 'rgba(255,255,255,.25)' : color }}
+                  >
+                    {step.level}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold ${isOpen ? 'text-white' : 'text-foreground'}`}>{step.label}</p>
+                    {!isOpen && <p className="text-xs text-muted-foreground mt-0.5 truncate">{step.desc}</p>}
+                  </div>
+                  <svg
+                    className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isOpen ? 'text-white/70' : 'text-muted-foreground'}`}
+                    style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div
+                  className="overflow-hidden transition-all duration-300"
+                  style={{ maxHeight: isOpen ? '500px' : '0', opacity: isOpen ? 1 : 0 }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                className="overflow-hidden transition-all duration-300"
-                style={{ maxHeight: isOpen ? '500px' : '0', opacity: isOpen ? 1 : 0 }}
-              >
-                <div className="p-5 space-y-4" style={{ background: '#fff', borderLeft: `3px solid ${step.color}` }}>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color: step.color }}>💬 Ask These Questions</p>
-                    <div className="space-y-2">
-                      {step.questions.map((q, qi) => (
-                        <div key={qi} className="flex gap-2.5 items-start p-2.5 rounded-lg" style={{ background: 'rgba(251,146,60,.03)', border: '1px solid rgba(251,146,60,.08)' }}>
-                          <span className="text-[11px] font-bold mt-0.5 flex-shrink-0" style={{ color: step.color }}>{qi + 1}.</span>
-                          <p className="text-[12.5px] leading-[1.6] text-foreground">{q}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wide mb-2" style={{ color: '#64748B' }}>👂 Listen For</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {step.listenFor.map(tag => (
-                        <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium" style={{ background: `${step.color}12`, color: step.color, border: `1px solid ${step.color}25` }}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex gap-2.5 items-start p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.04)', borderLeft: `3px solid ${step.color}` }}>
-                    <span className="text-[13px] flex-shrink-0">→</span>
-                    <p className="text-[12px] leading-[1.6] font-medium" style={{ color: step.color }}>{step.transition}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ── Worked Examples: Full walkthroughs ── */}
-      <Eyebrow>See It In Practice</Eyebrow>
-      <p className="text-[13px] text-muted-foreground mb-4">Full discovery walkthroughs with the opener you'd actually use.</p>
-
-      <div className="flex flex-col gap-4 mb-8">
-        {workedExamples.map((ex, i) => {
-          const isOpen = openExample === i;
-          return (
-            <div key={ex.title} className="rounded-xl overflow-hidden" style={{ boxShadow: '0 2px 16px rgba(0,0,0,.08)' }}>
-              <button
-                onClick={() => setOpenExample(isOpen ? null : i)}
-                className="w-full flex items-center justify-between px-5 py-4 text-left transition-all"
-                style={{ background: isOpen ? 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' : '#FAF7F2' }}
-              >
-                <div>
-                  <p className="text-[14px] font-semibold" style={{ color: isOpen ? '#fff' : 'inherit' }}>
-                    {ex.icon} {ex.title}
-                  </p>
-                  <p className="text-[11px] mt-0.5" style={{ color: isOpen ? 'rgba(255,255,255,.5)' : '#94A3B8' }}>
-                    {ex.scenario.substring(0, 60)}…
-                  </p>
-                </div>
-                <svg
-                  className="w-4 h-4 flex-shrink-0 transition-transform duration-200"
-                  style={{ color: isOpen ? 'rgba(255,255,255,.5)' : '#94A3B8', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                className="overflow-hidden transition-all duration-300"
-                style={{ maxHeight: isOpen ? '800px' : '0', opacity: isOpen ? 1 : 0 }}
-              >
-                <div className="p-5 space-y-4" style={{ background: '#fff', borderLeft: '3px solid #fb923c' }}>
-                  {/* Scenario */}
-                  <div className="p-3 rounded-lg" style={{ background: '#FAF7F2' }}>
-                    <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Scenario</p>
-                    <p className="text-[13px] leading-[1.6] text-foreground">{ex.scenario}</p>
-                  </div>
-
-                  {/* Discovery progression */}
-                  <div className="space-y-2">
-                    {ex.rows.map(r => (
-                      <div key={r.label} className="flex gap-3 items-start p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.02)', border: '1px solid rgba(251,146,60,.08)' }}>
-                        <span
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5"
-                          style={{ background: r.color, color: '#fff' }}
-                        >
-                          {r.level}
-                        </span>
-                        <div className="flex-1">
-                          <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: r.color }}>{r.label}</p>
-                          <p className="text-[12px] leading-[1.6] text-foreground">{r.text}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Key Insight */}
-                  <div className="flex gap-2.5 items-start p-3 rounded-lg" style={{ background: 'rgba(234,88,12,.05)', borderLeft: '3px solid #ea580c' }}>
-                    <span className="text-[13px] flex-shrink-0">💡</span>
+                  <div className="p-5 space-y-4 bg-card" style={{ borderLeft: `3px solid ${color}` }}>
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: '#ea580c' }}>Key Insight</p>
-                      <p className="text-[12px] leading-[1.6] text-foreground">{ex.keyInsight}</p>
+                      <p className="text-[11px] font-bold uppercase tracking-wide mb-2.5" style={{ color }}>💬 Ask These Questions</p>
+                      <div className="space-y-1.5">
+                        {step.questions.map((q, qi) => (
+                          <div key={qi} className="flex gap-2.5 items-start p-2.5 rounded-lg bg-background/40 border border-border/30">
+                            <span className="text-[11px] font-bold mt-0.5 shrink-0" style={{ color }}>{qi + 1}.</span>
+                            <p className="text-xs leading-relaxed text-foreground">{q}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Suggested Opener */}
-                  <div className="p-3 rounded-lg" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
-                    <p className="text-[10px] font-bold uppercase tracking-wide mb-1.5" style={{ color: '#fb923c' }}>✉️ Suggested Opener</p>
-                    <p className="text-[12.5px] leading-[1.6] italic" style={{ color: 'rgba(255,255,255,.85)' }}>{ex.suggestedOpener}</p>
-                    <p className="text-[11px] mt-2" style={{ color: 'rgba(255,255,255,.4)' }}>Best contact: <strong style={{ color: '#fb923c' }}>{ex.bestContact}</strong></p>
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wide mb-2 text-muted-foreground">👂 Listen For</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {step.listenFor.map(tag => (
+                          <span key={tag} className="px-2.5 py-1 rounded-full text-[11px] font-medium border" style={{ color, borderColor: `${color}40`, background: `${color}10` }}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-2.5 items-start p-3 rounded-lg bg-background/40" style={{ borderLeft: `3px solid ${color}` }}>
+                      <span className="text-sm shrink-0">→</span>
+                      <p className="text-xs leading-relaxed font-medium" style={{ color }}>{step.transition}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
-      {/* ── Prioritization — with what to say ── */}
-      <div className="rounded-xl overflow-hidden" style={{ boxShadow: '0 4px 20px rgba(0,0,0,.1)' }}>
-        <div className="p-5" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)' }}>
-          <p className="text-[12px] font-semibold uppercase tracking-wider mb-4" style={{ color: '#fb923c' }}>Outreach Priority Order</p>
-          <div className="flex flex-col gap-3">
+      {/* ── Worked Examples ── */}
+      <div>
+        <Eyebrow>See It In Practice</Eyebrow>
+        <p className="text-sm text-muted-foreground mb-4">Full discovery walkthroughs with the opener you'd actually use.</p>
+
+        <div className="space-y-3">
+          {workedExamples.map((ex, i) => {
+            const isOpen = openExample === i;
+            const levelColors = ['hsl(30,96%,62%)', 'hsl(25,95%,53%)', 'hsl(22,90%,47%)', 'hsl(20,85%,40%)'];
+            return (
+              <div key={ex.title} className="rounded-xl overflow-hidden shadow-md border border-border/40">
+                <button
+                  onClick={() => setOpenExample(isOpen ? null : i)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left transition-all"
+                  style={{ background: isOpen ? 'linear-gradient(135deg, hsl(var(--navy)), #1e1050)' : 'hsl(var(--card))' }}
+                >
+                  <div className="min-w-0">
+                    <p className={`text-sm font-semibold ${isOpen ? 'text-white' : 'text-foreground'}`}>
+                      {ex.icon} {ex.title}
+                    </p>
+                    <p className={`text-xs mt-0.5 truncate ${isOpen ? 'text-white/50' : 'text-muted-foreground'}`}>
+                      {ex.scenario.substring(0, 65)}…
+                    </p>
+                  </div>
+                  <svg
+                    className={`w-4 h-4 shrink-0 ml-3 transition-transform duration-200 ${isOpen ? 'text-white/50' : 'text-muted-foreground'}`}
+                    style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div
+                  className="overflow-hidden transition-all duration-300"
+                  style={{ maxHeight: isOpen ? '800px' : '0', opacity: isOpen ? 1 : 0 }}
+                >
+                  <div className="p-5 space-y-4 bg-card border-l-[3px] border-orange-500">
+                    {/* Scenario */}
+                    <div className="p-3 rounded-lg bg-background/60">
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1">Scenario</p>
+                      <p className="text-sm leading-relaxed text-foreground">{ex.scenario}</p>
+                    </div>
+
+                    {/* Discovery progression */}
+                    <div className="space-y-1.5">
+                      {ex.rows.map((r, ri) => (
+                        <div key={r.label} className="flex gap-3 items-start p-3 rounded-lg bg-background/30 border border-border/30">
+                          <span
+                            className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 text-white"
+                            style={{ background: levelColors[ri] }}
+                          >
+                            {r.level}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: levelColors[ri] }}>{r.label}</p>
+                            <p className="text-xs leading-relaxed text-foreground">{r.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Key Insight */}
+                    <div className="flex gap-2.5 items-start p-3 rounded-lg bg-orange-500/5 border-l-[3px] border-orange-600">
+                      <span className="text-sm shrink-0">💡</span>
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5 text-orange-600">Key Insight</p>
+                        <p className="text-xs leading-relaxed text-foreground">{ex.keyInsight}</p>
+                      </div>
+                    </div>
+
+                    {/* Suggested Opener */}
+                    <div className="p-4 rounded-lg bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050]">
+                      <p className="text-[10px] font-bold uppercase tracking-wide mb-1.5 text-orange-500">✉️ Suggested Opener</p>
+                      <p className="text-xs leading-relaxed italic text-white/85">{ex.suggestedOpener}</p>
+                      <p className="text-[11px] mt-2.5 text-white/40">Best contact: <strong className="text-orange-500">{ex.bestContact}</strong></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Outreach Priority Order ── */}
+      <div className="rounded-xl overflow-hidden shadow-lg">
+        <div className="p-6 bg-gradient-to-br from-[hsl(var(--navy))] to-[#1e1050] space-y-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">Outreach Priority Order</p>
+          <div className="space-y-3">
             {[
               {
                 num: 1, title: 'Pain Owner',
@@ -506,25 +526,25 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
                 say: '"We\'re already working with [PAIN OWNER NAME] on housing for [PROJECT]. They suggested I reach out to get us set up as a vendor — what\'s the best way to start that process?"',
               },
             ].map((s) => (
-              <div key={s.num} className="p-4 rounded-lg" style={{ background: 'rgba(255,255,255,.05)' }}>
-                <div className="flex gap-3 items-center mb-2.5">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-bold flex-shrink-0" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff' }}>{s.num}</div>
+              <div key={s.num} className="p-4 rounded-lg bg-white/5 space-y-2.5">
+                <div className="flex gap-3 items-center">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 text-white" style={{ background: `linear-gradient(135deg, ${ORANGE_LIGHT}, ${ORANGE})` }}>{s.num}</div>
                   <div>
-                    <p className="text-[13px] font-semibold" style={{ color: '#fff' }}>{s.title}</p>
-                    <p className="text-[11px]" style={{ color: 'rgba(255,255,255,.5)' }}>{s.who}</p>
+                    <p className="text-sm font-semibold text-white">{s.title}</p>
+                    <p className="text-[11px] text-white/50">{s.who}</p>
                   </div>
                 </div>
-                <div className="ml-11 p-2.5 rounded-lg" style={{ background: 'rgba(251,146,60,.08)', borderLeft: '2px solid rgba(251,146,60,.3)' }}>
-                  <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: '#fb923c' }}>What to say</p>
-                  <p className="text-[11.5px] leading-[1.6] italic" style={{ color: 'rgba(255,255,255,.75)' }}>{s.say}</p>
+                <div className="ml-11 p-3 rounded-lg bg-orange-500/8 border-l-2 border-orange-500/30">
+                  <p className="text-[10px] font-bold uppercase tracking-wide mb-1 text-orange-500">What to say</p>
+                  <p className="text-xs leading-relaxed italic text-white/75">{s.say}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-3.5 flex gap-3 items-start" style={{ borderTop: '1px solid rgba(255,255,255,.08)' }}>
-            <span className="text-[14px] flex-shrink-0">💡</span>
-            <p className="text-[12px] leading-[1.6]" style={{ color: 'rgba(255,255,255,.6)' }}>
-              <strong style={{ color: 'rgba(255,255,255,.85)' }}>Pattern:</strong> Project-based industries (construction, energy, defense) buy through <strong style={{ color: '#fb923c' }}>operations & field leaders</strong>. Program-based (tech, healthcare) buy through <strong style={{ color: '#fb923c' }}>mobility & people ops</strong>.
+          <div className="pt-4 flex gap-3 items-start border-t border-white/8">
+            <span className="text-sm shrink-0">💡</span>
+            <p className="text-xs leading-relaxed text-white/60">
+              <strong className="text-white/85">Pattern:</strong> Project-based industries (construction, energy, defense) buy through <strong className="text-orange-500">operations & field leaders</strong>. Program-based (tech, healthcare) buy through <strong className="text-orange-500">mobility & people ops</strong>.
             </p>
           </div>
         </div>
