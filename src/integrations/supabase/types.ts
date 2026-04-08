@@ -14,7 +14,241 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activity_log: {
+        Row: {
+          action_type: string
+          company_name: string | null
+          contact_name: string | null
+          id: string
+          logged_at: string
+          notes: string | null
+          prospect_id: string | null
+          task_id: string | null
+          user_id: string
+        }
+        Insert: {
+          action_type: string
+          company_name?: string | null
+          contact_name?: string | null
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          prospect_id?: string | null
+          task_id?: string | null
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          company_name?: string | null
+          contact_name?: string | null
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          prospect_id?: string | null
+          task_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_log_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activity_log_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pipeline_items: {
+        Row: {
+          company_name: string
+          contact_name: string | null
+          contact_title: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          prospect_id: string | null
+          stage: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_name: string
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          prospect_id?: string | null
+          stage?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          prospect_id?: string | null
+          stage?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_items_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prospects: {
+        Row: {
+          city: string | null
+          company_name: string
+          contact_name: string | null
+          contact_title: string | null
+          created_at: string
+          generated_date: string | null
+          id: string
+          industry: string | null
+          recommended_titles: string[] | null
+          score: number | null
+          signal_detail: string | null
+          signal_type: string | null
+          status: string | null
+          use_case: string | null
+          user_id: string
+        }
+        Insert: {
+          city?: string | null
+          company_name: string
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          generated_date?: string | null
+          id?: string
+          industry?: string | null
+          recommended_titles?: string[] | null
+          score?: number | null
+          signal_detail?: string | null
+          signal_type?: string | null
+          status?: string | null
+          use_case?: string | null
+          user_id: string
+        }
+        Update: {
+          city?: string | null
+          company_name?: string
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          generated_date?: string | null
+          id?: string
+          industry?: string | null
+          recommended_titles?: string[] | null
+          score?: number | null
+          signal_detail?: string | null
+          signal_type?: string | null
+          status?: string | null
+          use_case?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          company_name: string
+          completed_at: string | null
+          contact_name: string | null
+          contact_title: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          notes: string | null
+          prospect_id: string | null
+          reason: string | null
+          signal: string | null
+          status: string
+          task_type: string
+          user_id: string
+        }
+        Insert: {
+          company_name: string
+          completed_at?: string | null
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          prospect_id?: string | null
+          reason?: string | null
+          signal?: string | null
+          status?: string
+          task_type?: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string
+          completed_at?: string | null
+          contact_name?: string | null
+          contact_title?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          prospect_id?: string | null
+          reason?: string | null
+          signal?: string | null
+          status?: string
+          task_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_prospect_id_fkey"
+            columns: ["prospect_id"]
+            isOneToOne: false
+            referencedRelation: "prospects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_settings: {
+        Row: {
+          created_at: string
+          id: string
+          prompt_focus: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt_focus?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt_focus?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
