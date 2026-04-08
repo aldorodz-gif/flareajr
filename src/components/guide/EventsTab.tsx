@@ -195,6 +195,9 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
               📋 Copy All
             </button>
           </div>
+          <p className="text-xs text-muted-foreground italic">
+            ⚠️ Event details and links are AI-generated. Please verify dates, venues, and URLs before attending or sharing.
+          </p>
           <div className="space-y-3">
             {events.map((ev, i) => {
               const pc = PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.Medium;
