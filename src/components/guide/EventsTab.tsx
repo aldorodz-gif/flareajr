@@ -106,6 +106,17 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
   const [selectedState, setSelectedState] = useState('');
   const [city, setCity] = useState('');
   const [vertical, setVertical] = useState('');
+  const [subVertical, setSubVertical] = useState('');
+
+  const subVerticals = useMemo(() => {
+    if (!vertical) return [];
+    return VERTICALS[vertical] || [];
+  }, [vertical]);
+
+  const handleVerticalChange = (value: string) => {
+    setVertical(value);
+    setSubVertical('');
+  };
   const [timeframe, setTimeframe] = useState('Next 3 months');
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(false);
