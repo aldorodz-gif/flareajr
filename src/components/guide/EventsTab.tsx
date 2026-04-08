@@ -208,7 +208,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h4 className="font-bold text-sm text-foreground">
-                      {ev.url ? (
+                      {ev.url && ev.url.trim() !== '' ? (
                         <a href={ev.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent underline underline-offset-2 transition-colors">
                           {ev.name} ↗
                         </a>
