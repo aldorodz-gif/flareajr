@@ -204,21 +204,39 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
             </div>
           </div>
 
-          {/* Vertical */}
-          <div>
-            <label className="block text-xs font-semibold mb-1.5 text-accent">Vertical</label>
-            <Select value={vertical} onValueChange={setVertical}>
-              <SelectTrigger className="w-full bg-background border-border text-foreground">
-                <SelectValue placeholder="Select an industry…" />
-              </SelectTrigger>
-              <SelectContent>
-                {VERTICALS.map(v => (
-                  <SelectItem key={v} value={v}>
-                    {v}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Vertical & Sub-Vertical */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold mb-1.5 text-accent">Vertical</label>
+              <Select value={vertical} onValueChange={handleVerticalChange}>
+                <SelectTrigger className="w-full bg-background border-border text-foreground">
+                  <SelectValue placeholder="Select an industry…" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {Object.keys(VERTICALS).map(v => (
+                    <SelectItem key={v} value={v}>
+                      {v}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold mb-1.5 text-accent">Sub-Vertical</label>
+              <Select value={subVertical} onValueChange={setSubVertical} disabled={!vertical}>
+                <SelectTrigger className="w-full bg-background border-border text-foreground">
+                  <SelectValue placeholder={vertical ? 'Select a focus area…' : 'Choose a vertical first'} />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {subVerticals.map(sv => (
+                    <SelectItem key={sv} value={sv}>
+                      {sv}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Timeframe */}
