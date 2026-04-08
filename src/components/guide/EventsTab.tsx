@@ -281,7 +281,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-foreground">
-              {events.length} Events Found — {vertical} in {city}, {stateName}
+              {events.length} Events Found — {subVertical || vertical} in {city}, {stateName}
             </h3>
             <button
               onClick={() => {
