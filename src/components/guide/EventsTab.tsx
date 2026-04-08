@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
@@ -177,9 +178,23 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
       {/* ── Results ── */}
       {events.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-foreground">
-            {events.length} Events Found — {vertical} in {city}, {stateName}
-          </h3>
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-lg font-bold text-foreground">
+              {events.length} Events Found — {vertical} in {city}, {stateName}
+            </h3>
+            <button
+              onClick={() => {
+                const text = events.map((ev, i) =>
+                  `${i + 1}. ${ev.name}\n   📅 ${ev.date}  📍 ${ev.location}\n   Priority: ${ev.priority}\n   Why: ${ev.why}\n   Who's There: ${ev.attendees}\n   Your Angle: ${ev.angle}${ev.url ? `\n   Link: ${ev.url}` : ''}`
+                ).join('\n\n');
+                navigator.clipboard.writeText(text);
+                toast.success('All events copied to clipboard');
+              }}
+              className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
+            >
+              📋 Copy All
+            </button>
+          </div>
           <div className="space-y-3">
             {events.map((ev, i) => {
               const pc = PRIORITY_COLORS[ev.priority] || PRIORITY_COLORS.Medium;
