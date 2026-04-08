@@ -152,7 +152,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
     } finally {
       setLoading(false);
     }
-  }, [city, vertical, timeframe, selectedState]);
+  }, [city, vertical, subVertical, timeframe, selectedState]);
 
   const stateName = US_STATES.find(s => s.abbreviation === selectedState)?.name || '';
 
