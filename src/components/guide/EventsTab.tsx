@@ -21,6 +21,7 @@ interface EventItem {
   attendees: string;
   angle: string;
   priority: string;
+  url?: string;
 }
 
 const PRIORITY_COLORS: Record<string, { bg: string; text: string }> = {
@@ -188,7 +189,13 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                   className="rounded-xl p-4 space-y-2 bg-card border border-border"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <h4 className="font-bold text-sm text-foreground">{ev.name}</h4>
+                    <h4 className="font-bold text-sm text-foreground">
+                      {ev.url ? (
+                        <a href={ev.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent underline underline-offset-2 transition-colors">
+                          {ev.name} ↗
+                        </a>
+                      ) : ev.name}
+                    </h4>
                     <span
                       className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0"
                       style={{ background: pc.bg, color: pc.text }}
