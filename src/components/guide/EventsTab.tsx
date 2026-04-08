@@ -11,7 +11,78 @@ interface EventsTabProps {
   onNavigate: (tabId: string) => void;
 }
 
-const VERTICALS = ['Construction', 'Defense / Aerospace', 'Tech', 'Healthcare', 'Energy', 'Sports', 'Theater', 'Government'];
+const VERTICALS: Record<string, string[]> = {
+  'Relocation & Mobility': [
+    'Corporate relocation programs',
+    'Global mobility teams',
+    'Talent acquisition & new hire relocation',
+    'Executive relocation',
+    'RMC partners & relocation management companies',
+    'Mergers & acquisitions employee moves',
+    'Internal transfers & rotational leadership programs',
+  ],
+  'Project Teams & Consultants': [
+    'Management consulting firms',
+    'IT implementation teams',
+    'ERP & system rollout teams',
+    'Training & enablement teams',
+    'Audit & advisory teams',
+    'Engineering consulting firms',
+    'Staffing & professional services firms',
+    'Client site deployment teams',
+  ],
+  'Government & Defense Contractors': [
+    'Federal contractors',
+    'Defense contractors',
+    'Aerospace & aviation contractors',
+    'Intelligence & cybersecurity firms',
+    'Military support contractors',
+    'Base & facility support vendors',
+    'Program & project management offices',
+    'Public sector consulting firms',
+  ],
+  'Tech': [
+    'Software companies scaling teams',
+    'Data center development & operations',
+    'IT services & managed service providers',
+    'Cybersecurity firms',
+    'Hardware deployment teams',
+    'Telecom & network infrastructure companies',
+    'AI & engineering teams on project-based work',
+    'Startup expansions & new office launches',
+  ],
+  'Healthcare': [
+    'Travel nurses & clinicians',
+    'Hospital systems & health networks',
+    'Medical device companies',
+    'Pharmaceutical companies',
+    'Healthcare consulting firms',
+    'Clinical trial teams',
+    'Healthcare IT & EMR implementation teams',
+    'Lab & diagnostics companies',
+  ],
+  'Construction & Field Services': [
+    'General contractors',
+    'Subcontractors & specialty trades',
+    'Engineering & design-build firms',
+    'Infrastructure & civil construction',
+    'Utility & energy crews',
+    'Renewable energy projects (solar, wind, battery storage)',
+    'Oil & gas field teams',
+    'Commissioning & installation crews',
+    'Property restoration & disaster recovery teams',
+  ],
+  'Intern Programs': [
+    'Corporate intern housing programs',
+    'Summer associate programs (consulting, finance, legal)',
+    'Engineering & tech intern cohorts',
+    'Government & defense intern programs',
+    'Healthcare residency & fellowship housing',
+    'University-partnered corporate programs',
+    'Apprenticeship & trade programs',
+    'Large-scale seasonal workforce programs',
+  ],
+};
 const TIMEFRAMES = ['Next 30 days', 'Next 3 months', 'Next 6 months'];
 
 interface EventItem {
@@ -35,6 +106,17 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
   const [selectedState, setSelectedState] = useState('');
   const [city, setCity] = useState('');
   const [vertical, setVertical] = useState('');
+  const [subVertical, setSubVertical] = useState('');
+
+  const subVerticals = useMemo(() => {
+    if (!vertical) return [];
+    return VERTICALS[vertical] || [];
+  }, [vertical]);
+
+  const handleVerticalChange = (value: string) => {
+    setVertical(value);
+    setSubVertical('');
+  };
   const [timeframe, setTimeframe] = useState('Next 3 months');
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -58,8 +140,9 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
     setEvents([]);
     try {
       const stateName = US_STATES.find(s => s.abbreviation === selectedState)?.name || '';
+      const verticalQuery = subVertical ? `${vertical} — ${subVertical}` : vertical;
       const { data, error: fnError } = await supabase.functions.invoke('event-finder', {
-        body: { city: `${city}, ${stateName}`, vertical, timeframe },
+        body: { city: `${city}, ${stateName}`, vertical: verticalQuery, timeframe },
       });
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
@@ -69,7 +152,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
     } finally {
       setLoading(false);
     }
-  }, [city, vertical, timeframe, selectedState]);
+  }, [city, vertical, subVertical, timeframe, selectedState]);
 
   const stateName = US_STATES.find(s => s.abbreviation === selectedState)?.name || '';
 
@@ -122,21 +205,39 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
             </div>
           </div>
 
-          {/* Vertical */}
-          <div>
-            <label className="block text-xs font-semibold mb-1.5 text-accent">Vertical</label>
-            <Select value={vertical} onValueChange={setVertical}>
-              <SelectTrigger className="w-full bg-background border-border text-foreground">
-                <SelectValue placeholder="Select an industry…" />
-              </SelectTrigger>
-              <SelectContent>
-                {VERTICALS.map(v => (
-                  <SelectItem key={v} value={v}>
-                    {v}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Vertical & Sub-Vertical */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold mb-1.5 text-accent">Vertical</label>
+              <Select value={vertical} onValueChange={handleVerticalChange}>
+                <SelectTrigger className="w-full bg-background border-border text-foreground">
+                  <SelectValue placeholder="Select an industry…" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {Object.keys(VERTICALS).map(v => (
+                    <SelectItem key={v} value={v}>
+                      {v}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold mb-1.5 text-accent">Sub-Vertical</label>
+              <Select value={subVertical} onValueChange={setSubVertical} disabled={!vertical}>
+                <SelectTrigger className="w-full bg-background border-border text-foreground">
+                  <SelectValue placeholder={vertical ? 'Select a focus area…' : 'Choose a vertical first'} />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {subVerticals.map(sv => (
+                    <SelectItem key={sv} value={sv}>
+                      {sv}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Timeframe */}
@@ -180,7 +281,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-foreground">
-              {events.length} Events Found — {vertical} in {city}, {stateName}
+              {events.length} Events Found — {subVertical || vertical} in {city}, {stateName}
             </h3>
             <button
               onClick={() => {
