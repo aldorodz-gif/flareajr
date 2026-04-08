@@ -140,8 +140,9 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
     setEvents([]);
     try {
       const stateName = US_STATES.find(s => s.abbreviation === selectedState)?.name || '';
+      const verticalQuery = subVertical ? `${vertical} — ${subVertical}` : vertical;
       const { data, error: fnError } = await supabase.functions.invoke('event-finder', {
-        body: { city: `${city}, ${stateName}`, vertical, timeframe },
+        body: { city: `${city}, ${stateName}`, vertical: verticalQuery, timeframe },
       });
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
