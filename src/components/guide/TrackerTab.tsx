@@ -9,7 +9,8 @@ interface TrackerTabProps {
   onNavigate: (tabId: string) => void;
 }
 
-const VERTICALS = ['Construction', 'Defense', 'Energy', 'Healthcare', 'Technology', 'Manufacturing', 'Sports', 'Theater / Performing Arts', 'Other'];
+import { VERTICAL_NAMES } from './verticalsData';
+const VERTICALS = VERTICAL_NAMES;
 const SIGNAL_TYPES = ['Contract award', 'Office relocation', 'Facility expansion', 'Training cohort', 'Merger or acquisition', 'Funding round', 'Return to office mandate', 'Production season or touring', 'Other'];
 
 const CITY_PRESETS = [

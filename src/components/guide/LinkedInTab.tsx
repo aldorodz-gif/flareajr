@@ -8,7 +8,8 @@ interface LinkedInTabProps {
   onNavigate: (tabId: string) => void;
 }
 
-const VERTICALS = ['Construction', 'Defense / Aerospace', 'Tech', 'Healthcare', 'Energy', 'Sports', 'Theater', 'Government'];
+import { VERTICAL_NAMES } from './verticalsData';
+const VERTICALS = VERTICAL_NAMES;
 
 interface PostItem {
   number: number;
