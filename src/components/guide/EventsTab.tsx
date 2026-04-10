@@ -297,7 +297,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
             </button>
           </div>
           <p className="text-xs text-muted-foreground italic">
-            ⚠️ Event details and links are AI-generated. Please verify dates, venues, and URLs before attending or sharing.
+            ✅ Only events with supporting public-web evidence and a working site are shown.
           </p>
           <div className="space-y-3">
             {events.map((ev, i) => {
