@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
