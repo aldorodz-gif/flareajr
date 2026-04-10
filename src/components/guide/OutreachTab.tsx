@@ -411,6 +411,48 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       </span>
                       <p className="text-[14px] leading-[1.8] whitespace-pre-line pr-16 text-foreground">{result.body}</p>
                     </div>
+
+                    {/* Article insight */}
+                    {result.article_insight && (
+                      <div className="mt-4 flex items-start gap-2.5 px-4 py-3 rounded-lg" style={{ background: 'rgba(91,187,160,.08)', border: '1px solid rgba(91,187,160,.2)' }}>
+                        <span className="text-[14px] mt-0.5">🎯</span>
+                        <div>
+                          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-0.5">Key Signal Identified</p>
+                          <p className="text-[13px] leading-relaxed text-foreground">{result.article_insight}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Suggested targets */}
+                    {result.suggested_targets && result.suggested_targets.length > 0 && (
+                      <div className="mt-4 rounded-lg border overflow-hidden" style={{ borderColor: 'rgba(251,146,60,.25)', background: '#FAF7F2' }}>
+                        <div className="px-4 py-3 flex items-center gap-2" style={{ background: '#2F4858' }}>
+                          <span className="text-[14px]">👥</span>
+                          <p className="text-[13px] font-bold" style={{ color: '#fb923c' }}>Suggested Targets at {company}</p>
+                        </div>
+                        <div className="divide-y" style={{ borderColor: 'rgba(251,146,60,.12)' }}>
+                          {result.suggested_targets.map((t, i) => (
+                            <div key={i} className="flex items-start gap-3 px-4 py-3">
+                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style={{ background: '#2F4858', color: '#fb923c' }}>
+                                {i + 1}
+                              </span>
+                              <div>
+                                <p className="text-[14px] font-semibold text-foreground">{t.title}</p>
+                                <p className="text-[12px] text-muted-foreground leading-relaxed">{t.reason}</p>
+                              </div>
+                              <button
+                                onClick={() => { setBuyerTitle(t.title); setResult(null); }}
+                                className="ml-auto text-[11px] font-bold px-3 py-1.5 rounded-md flex-shrink-0 transition-colors hover:opacity-80"
+                                style={{ background: 'rgba(251,146,60,.12)', color: '#f97316', border: '1px solid rgba(251,146,60,.25)' }}
+                              >
+                                Use this title
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex gap-3 mt-5">
                       <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#10B981' : 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff', boxShadow: '0 2px 8px rgba(251,146,60,.3)' }}>
                         {copied ? '✓ COPIED' : '📋 COPY'}
