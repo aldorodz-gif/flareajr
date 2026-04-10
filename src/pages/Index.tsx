@@ -7,7 +7,7 @@ import OverviewTab from '../components/guide/OverviewTab';
 import MindsetTab from '../components/guide/MindsetTab';
 import SetupTab from '../components/guide/SetupTab';
 import TrackerTab from '../components/guide/TrackerTab';
-import ResultsTab from '../components/guide/ResultsTab';
+
 import ContactTab from '../components/guide/ContactTab';
 import OutreachTab from '../components/guide/OutreachTab';
 import SignalsTab from '../components/guide/SignalsTab';
@@ -42,7 +42,7 @@ const Index = () => {
       case 'mindset': return <MindsetTab {...props} />;
       case 'setup': return <SetupTab {...props} />;
       case 'tracker': return <TrackerTab {...props} />;
-      case 'results': return <ResultsTab {...props} />;
+      
       case 'contact': return <ContactTab {...props} />;
       case 'outreach': return <OutreachTab {...props} />;
       case 'signals': return <SignalsTab {...props} />;
