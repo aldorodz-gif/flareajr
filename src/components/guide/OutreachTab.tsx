@@ -10,9 +10,16 @@ interface OutreachTabProps {
 
 const SERVICE_LINES = ['Temporary Housing', 'Travel', 'Hotels', 'Destination Services'];
 
+interface SuggestedTarget {
+  title: string;
+  reason: string;
+}
+
 interface EmailResult {
   subject: string;
   body: string;
+  suggested_targets?: SuggestedTarget[];
+  article_insight?: string;
 }
 
 /* ───── Micro-close data ───── */
