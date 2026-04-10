@@ -19,7 +19,22 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    const isArticle = signal.startsWith("Article:");
     const varyInstruction = vary ? " Use a different tone and angle than a typical first outreach — vary the approach while keeping the same rules." : "";
+
+    const articleInstructions = isArticle ? `
+ARTICLE ANALYSIS INSTRUCTIONS — THIS IS CRITICAL:
+You have been given a scraped article about ${company}. You MUST:
+1. Read the article content deeply. Identify the SPECIFIC event, announcement, initiative, hire, expansion, contract, partnership, or news it describes.
+2. Your email MUST reference the specific detail from the article — not a vague summary. Name the project, the location, the contract value, the new hire, whatever the article is about.
+3. Connect that specific detail to a housing/travel/lodging need that would logically follow. Be concrete: "a 200-person construction crew mobilizing to [City]" not "your growing team."
+4. The subject line MUST reference the specific article topic — not generic words like "partnership" or "growth."
+
+SUGGESTED TARGETS — You MUST also suggest 3-5 specific job titles at ${company} who would be the best people to reach based on what the article describes. Think about:
+- Who is responsible for the project/initiative mentioned in the article?
+- Who handles logistics, travel, or housing for the type of work described?
+- Who would feel the pain of NOT having housing/travel solved?
+For each title, give a one-sentence reason why they're a good target based on the article.` : "";
 
     const referenceEmail = `Here are real outreach emails from top-performing BDRs at NCH. Use the one closest to the signal's industry as a style and tone reference — match the warmth, specificity, and professional-but-human feel:
 
@@ -32,8 +47,37 @@ THEATER / PERFORMING ARTS REFERENCE:
 Key patterns to replicate: lead with a credibility anchor (partnership, existing relationship, or industry knowledge), reference the specific signal or program you found, acknowledge the buyer's reality before pitching, close with a warm connector ask. For theater specifically, emphasize the recurring seasonal nature — multiple productions means an ongoing relationship, not a one-time booking. Adapt these patterns to the specific signal and company — do NOT copy these emails verbatim.`;
 
     const systemPrompt = `You are a sales email writer for National Corporate Housing, a company that provides temporary housing, travel management, hotel programs, and destination services to businesses. Write a first outreach email to the ${buyer_title} at ${company}, referencing the signal: ${signal}. The service line is ${service_line}. Rules: under 100 words total, maximum 4 sentences, written like one person texting a colleague not like a sales email. First sentence references the specific signal directly, no generic openers. Second sentence names their likely problem without pitching anything. Third sentence says what NCH does in one plain English sentence, outcome first. Fourth sentence is a low friction ask for a 10 to 15 minute call. No "I hope this email finds you well." No "I wanted to reach out." No company history. No feature lists. Also write a 2 to 4 word subject line that references the specific signal. IMPORTANT: Most recipients read email on their phones. Write for a small screen — short sentences, short paragraphs, no walls of text. Every sentence should be scannable in 2 seconds on a 4-inch display.${varyInstruction}
+${articleInstructions}
 
 ${referenceEmail}`;
+
+    // Build tool schema — include suggested_targets when article is provided
+    const emailProperties: Record<string, unknown> = {
+      subject: { type: "string", description: "2-4 word subject line referencing the specific signal from the article" },
+      body: { type: "string", description: "Email body, under 100 words, max 4 sentences. Must reference specific details from the article." },
+    };
+    const required = ["subject", "body"];
+
+    if (isArticle) {
+      emailProperties.suggested_targets = {
+        type: "array",
+        description: "3-5 recommended job titles to target at this company based on the article, with reasoning",
+        items: {
+          type: "object",
+          properties: {
+            title: { type: "string", description: "Specific job title (e.g. 'VP of Construction Operations')" },
+            reason: { type: "string", description: "One sentence explaining why this person is a good target based on the article" },
+          },
+          required: ["title", "reason"],
+          additionalProperties: false,
+        },
+      };
+      emailProperties.article_insight = {
+        type: "string",
+        description: "One sentence summarizing the key detail from the article that creates a housing/travel need",
+      };
+      required.push("suggested_targets", "article_insight");
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -51,14 +95,11 @@ ${referenceEmail}`;
           type: "function",
           function: {
             name: "write_email",
-            description: "Generate a sales outreach email",
+            description: "Generate a sales outreach email with optional target suggestions",
             parameters: {
               type: "object",
-              properties: {
-                subject: { type: "string", description: "2-4 word subject line" },
-                body: { type: "string", description: "Email body, under 100 words, max 4 sentences" },
-              },
-              required: ["subject", "body"],
+              properties: emailProperties,
+              required,
               additionalProperties: false,
             },
           },
