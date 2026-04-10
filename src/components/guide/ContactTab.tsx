@@ -9,19 +9,30 @@ interface ContactTabProps {
 
 const verticals = [
   {
-    icon: '🔨', name: 'Construction',
-    signals: 'Mobilization, new site launch, phased buildouts',
+    icon: '🚚', name: 'Relocation & Mobility',
+    signals: 'Corporate relocations, global mobility programs, new hire moves, M&A integration',
     primary: [
-      { title: 'Project Manager', cares: 'On-time delivery, crew readiness', opener: '"I saw you\'re mobilizing crews for [PROJECT] — how are you handling housing for the ramp?"' },
-      { title: 'Site Superintendent', cares: 'Daily ops, crew availability', opener: '"When crews arrive on-site, who\'s making sure they have a place to stay that\'s close enough to be productive?"' },
-      { title: 'Director of Operations', cares: 'Cost control, multi-site consistency', opener: '"Across your active sites, how consistent is the housing experience for traveling crews?"' },
+      { title: 'Global Mobility Manager', cares: 'Policy compliance, employee experience', opener: '"With [COMPANY] expanding to [CITY], how are you handling temporary housing during the transition?"' },
+      { title: 'Talent Acquisition Director', cares: 'Candidate experience, offer competitiveness', opener: '"When a top candidate asks about relocation support, what can you offer them today?"' },
+      { title: 'HR Director', cares: 'Employee retention, smooth transitions', opener: '"For employees relocating as part of the [PROGRAM], who owns the housing piece?"' },
     ],
-    nonTrad: ['Mobilization Manager', 'Labor Coordinator', 'Commissioning Manager'],
-    linkedInTip: 'Search: "mobilization" OR "site operations" + company name',
+    nonTrad: ['Relocation Coordinator', 'Executive Relocation Specialist', 'RMC Account Manager'],
+    linkedInTip: 'Search: "global mobility" OR "relocation manager" OR "talent acquisition" + company name',
   },
   {
-    icon: '🛡️', name: 'Defense',
-    signals: 'Program ramp, deployment, contract transition',
+    icon: '💼', name: 'Project Teams & Consultants',
+    signals: 'Client engagements, ERP rollouts, system implementations, training deployments',
+    primary: [
+      { title: 'Engagement Manager', cares: 'Client delivery, team logistics', opener: '"When your team deploys to a client site for 3+ months, who owns the housing piece?"' },
+      { title: 'Director of Operations', cares: 'Cost control, multi-site consistency', opener: '"Across your active engagements, how consistent is the housing experience for traveling teams?"' },
+      { title: 'Travel Program Manager', cares: 'Cost per assignment, quality control', opener: '"How do you manage housing for consulting teams rotating through different client locations?"' },
+    ],
+    nonTrad: ['Deployment Manager', 'Resource Manager', 'Client Services Director'],
+    linkedInTip: 'Search: "engagement manager" OR "consulting operations" OR "deployment" + company name',
+  },
+  {
+    icon: '🛡️', name: 'Government & Defense Contractors',
+    signals: 'Program ramp, deployment, contract transition, base operations',
     primary: [
       { title: 'Program Manager', cares: 'Contract milestones, team readiness', opener: '"With the [CONTRACT] transition, how are you staging housing for the incoming team?"' },
       { title: 'Site Lead', cares: 'On-ground ops, personnel welfare', opener: '"For your team deploying to [LOCATION], what\'s the current plan for 30+ day stays?"' },
@@ -31,41 +42,8 @@ const verticals = [
     linkedInTip: 'Search: "program operations" OR "deployment" + company name',
   },
   {
-    icon: '🏭', name: 'Manufacturing',
-    signals: 'Plant launch, installs, training cohorts, outages',
-    primary: [
-      { title: 'Plant Manager', cares: 'Launch timeline, production output', opener: '"With the new plant opening in [CITY], how are you housing the commissioning crews?"' },
-      { title: 'Operations Manager', cares: 'Workforce availability, daily rhythm', opener: '"During install phase, what happens when a tech arrives and housing falls through?"' },
-      { title: 'Training Manager', cares: 'Cohort logistics, retention', opener: '"For your training cohorts rotating through [FACILITY], who handles their accommodations?"' },
-    ],
-    nonTrad: ['Launch Manager', 'Production Readiness Manager', 'Maintenance Outage Lead'],
-    linkedInTip: 'Search: "plant launch" OR "commissioning" OR "outage" + company name',
-  },
-  {
-    icon: '⚡', name: 'Energy',
-    signals: 'Turnarounds, outages, storm response, field maintenance',
-    primary: [
-      { title: 'Outage Manager', cares: 'Schedule adherence, crew logistics', opener: '"During your next turnaround, how are you planning to house 100+ contractors within commuting distance?"' },
-      { title: 'Turnaround Manager', cares: 'Compressed timelines, cost per day', opener: '"What\'s your current setup for housing during the spring outage season?"' },
-      { title: 'Field Operations Manager', cares: 'Crew welfare, retention in remote areas', opener: '"For your field crews in [REGION], how do you keep housing quality consistent?"' },
-    ],
-    nonTrad: ['Crew Logistics Manager', 'Shutdown Planner', 'Project Controls Manager'],
-    linkedInTip: 'Search: "turnaround" OR "outage manager" OR "field operations" + company name',
-  },
-  {
-    icon: '🏥', name: 'Healthcare',
-    signals: 'Travel clinicians, physician relocation, residency housing',
-    primary: [
-      { title: 'Clinical Staffing Manager', cares: 'Fill rates, clinician satisfaction', opener: '"For your travel nurses on 13-week assignments, how does housing get handled today?"' },
-      { title: 'Recruitment Manager', cares: 'Offer competitiveness, candidate experience', opener: '"When a top candidate asks about relocation support, what can you offer them today?"' },
-      { title: 'Travel Program Manager', cares: 'Cost per assignment, quality control', opener: '"Across your travel program, how do you ensure housing quality without spending hours per placement?"' },
-    ],
-    nonTrad: ['Physician Recruitment Manager', 'GME Coordinator', 'Workforce Planning Manager'],
-    linkedInTip: 'Search: "travel nurse program" OR "GME coordinator" OR "physician recruitment" + org name',
-  },
-  {
     icon: '💻', name: 'Tech',
-    signals: 'Relocations, intern housing, office launch, deployment teams',
+    signals: 'Relocations, intern housing, office launch, deployment teams, data center builds',
     primary: [
       { title: 'Global Mobility Manager', cares: 'Policy compliance, employee experience', opener: '"With [COMPANY] expanding to [CITY], how are you handling temporary housing during the transition?"' },
       { title: 'People Operations Manager', cares: 'Employee satisfaction, onboarding', opener: '"For new hires relocating, what does the first 30 days of housing look like?"' },
@@ -75,26 +53,37 @@ const verticals = [
     linkedInTip: 'Search: "global mobility" OR "people operations" OR "intern program" + company name',
   },
   {
-    icon: '🏀', name: 'Sports',
-    signals: 'Draft picks, mid-season trades, spring training, front-office hires',
+    icon: '🏥', name: 'Healthcare',
+    signals: 'Travel clinicians, physician relocation, residency housing, clinical trials',
     primary: [
-      { title: 'Director of Team Operations', cares: 'Player readiness, family experience', opener: '"When you bring in a mid-season trade, how quickly can you get them settled with housing?"' },
-      { title: 'Player Development Manager', cares: 'Player focus, off-field stability', opener: '"For your draft picks arriving this summer, what does the housing setup look like?"' },
-      { title: 'VP of Ops', cares: 'Brand experience, cost management', opener: '"Across spring training and the regular season, how do you manage housing for 20+ players and staff?"' },
+      { title: 'Clinical Staffing Manager', cares: 'Fill rates, clinician satisfaction', opener: '"For your travel nurses on 13-week assignments, how does housing get handled today?"' },
+      { title: 'Recruitment Manager', cares: 'Offer competitiveness, candidate experience', opener: '"When a top candidate asks about relocation support, what can you offer them today?"' },
+      { title: 'Travel Program Manager', cares: 'Cost per assignment, quality control', opener: '"Across your travel program, how do you ensure housing quality without spending hours per placement?"' },
     ],
-    nonTrad: ['Team Services Coordinator', 'Player Engagement Manager', 'Scouting Ops Manager'],
-    linkedInTip: 'Search: "team operations" OR "player services" + team name',
+    nonTrad: ['Physician Recruitment Manager', 'GME Coordinator', 'Workforce Planning Manager'],
+    linkedInTip: 'Search: "travel nurse program" OR "GME coordinator" OR "physician recruitment" + org name',
   },
   {
-    icon: '🎭', name: 'Theater',
-    signals: 'Cast arrivals, national tour layovers, seasonal staffing, guest residencies',
+    icon: '🔨', name: 'Construction & Field Services',
+    signals: 'Mobilization, new site launch, phased buildouts, energy projects, utility crews',
     primary: [
-      { title: 'Company Manager', cares: 'Cast welfare, per diem budgets', opener: '"For your upcoming production, how are you housing out-of-town cast for the run?"' },
-      { title: 'General Manager', cares: 'Production budget, vendor relationships', opener: '"Across your season, what does housing spend look like for guest artists and touring casts?"' },
-      { title: 'Production Manager', cares: 'Logistics, timeline, rehearsal proximity', opener: '"When cast arrives for rehearsals, who makes sure they\'re close to the venue and settled in?"' },
+      { title: 'Project Manager', cares: 'On-time delivery, crew readiness', opener: '"I saw you\'re mobilizing crews for [PROJECT] — how are you handling housing for the ramp?"' },
+      { title: 'Site Superintendent', cares: 'Daily ops, crew availability', opener: '"When crews arrive on-site, who\'s making sure they have a place to stay that\'s close enough to be productive?"' },
+      { title: 'Director of Operations', cares: 'Cost control, multi-site consistency', opener: '"Across your active sites, how consistent is the housing experience for traveling crews?"' },
     ],
-    nonTrad: ['Artist Housing Coordinator', 'Touring Ops Manager', 'Associate Producer'],
-    linkedInTip: 'Search: "company manager" OR "production manager" + theater/company name',
+    nonTrad: ['Mobilization Manager', 'Labor Coordinator', 'Commissioning Manager', 'Outage Manager'],
+    linkedInTip: 'Search: "mobilization" OR "site operations" OR "field operations" + company name',
+  },
+  {
+    icon: '🎓', name: 'Intern Programs',
+    signals: 'Summer cohorts, fellowship housing, apprenticeships, seasonal workforce',
+    primary: [
+      { title: 'University Recruiting Manager', cares: 'Intern experience, program logistics', opener: '"For your summer intern cohort arriving in [CITY], how are you handling housing this year?"' },
+      { title: 'Program Director', cares: 'Cohort logistics, retention, experience quality', opener: '"When 30+ interns arrive for the summer, who coordinates their living arrangements?"' },
+      { title: 'HR Manager', cares: 'Budget, compliance, participant satisfaction', opener: '"What does your current housing setup look like for seasonal program participants?"' },
+    ],
+    nonTrad: ['Intern Program Coordinator', 'Early Careers Manager', 'Workforce Development Manager'],
+    linkedInTip: 'Search: "intern program" OR "early careers" OR "university recruiting" + company name',
   },
 ];
 
