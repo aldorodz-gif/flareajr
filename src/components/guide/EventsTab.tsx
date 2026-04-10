@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
@@ -310,9 +311,12 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                   <div className="flex items-start justify-between gap-3">
                     <h4 className="font-bold text-sm text-foreground">
                       {ev.url && ev.url.trim() !== '' ? (
-                        <a href={ev.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent underline underline-offset-2 transition-colors">
-                          {ev.name} ↗
-                        </a>
+                        <span className="inline-flex items-center gap-1.5">
+                          <a href={ev.url} target="_blank" rel="noopener noreferrer" className="hover:text-accent underline underline-offset-2 transition-colors">
+                            {ev.name} ↗
+                          </a>
+                          <CheckCircle size={14} className="text-green-500 shrink-0" aria-label="Verified link" />
+                        </span>
                       ) : ev.name}
                     </h4>
                     <span
