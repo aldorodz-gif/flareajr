@@ -125,7 +125,7 @@ const looksLikeBlankPage = (value: string) => {
   return !normalized || normalized.length < 60 || /(domain for sale|buy this domain|parked free|under construction|coming soon|page not found|404 not found|website is for sale)/.test(normalized);
 };
 
-const fetchWithTimeout = (url: string, init: RequestInit = {}, timeoutMs = 15000) => fetch(url, {
+const fetchWithTimeout = (url: string, init: RequestInit = {}, timeoutMs = 8000) => fetch(url, {
   ...init,
   signal: AbortSignal.timeout(timeoutMs),
   headers: {
@@ -255,8 +255,10 @@ async function verifyEvent(event: EventItem, city: string): Promise<EventItem | 
     }))
     .sort((a, b) => b.score - a.score)[0];
 
-  const validatedOriginal = event.url ? await validateUrl(event.url) : null;
-  const validatedSearch = bestSearchResult?.score >= 6 ? await validateUrl(bestSearchResult.result.url) : null;
+  const [validatedOriginal, validatedSearch] = await Promise.all([
+    event.url ? validateUrl(event.url) : Promise.resolve(null),
+    bestSearchResult?.score >= 6 ? validateUrl(bestSearchResult.result.url) : Promise.resolve(null),
+  ]);
 
   const candidates = [
     validatedOriginal?.ok
@@ -332,7 +334,7 @@ serve(async (req) => {
       "7) Prefer fewer high-confidence events over a longer list of uncertain events.",
       "5) Focus on well-known recurring events from established organizations: national associations with local chapters, chambers of commerce, convention & visitors bureaus, major industry trade shows.",
       "For each event return: event name, hosting organization, date or date range, location or venue, why it matters for corporate housing sales, the type of attendees likely present, and a suggested outreach angle.",
-      "Find at least 12 candidate events. Focus on events where decision-makers in " + vertical + " gather.",
+      "Find 8 high-confidence candidate events. Focus on events where decision-makers in " + vertical + " gather.",
       "ALL events must take place within " + city + " city limits.",
       "Return ONLY valid JSON, no explanation."
     ].join(" ");
