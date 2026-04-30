@@ -5,7 +5,7 @@ import TabBar from '../components/guide/TabBar';
 import ProgressBar from '../components/guide/ProgressBar';
 import OverviewTab from '../components/guide/OverviewTab';
 import MindsetTab from '../components/guide/MindsetTab';
-import SetupTab from '../components/guide/SetupTab';
+
 import TrackerTab from '../components/guide/TrackerTab';
 import DashboardTab from '../components/guide/DashboardTab';
 
@@ -42,7 +42,7 @@ const Index = () => {
       case 'dashboard': return <DashboardTab />;
       case 'workflow': return <OverviewTab {...props} />;
       case 'mindset': return <MindsetTab {...props} />;
-      case 'setup': return <SetupTab {...props} />;
+      
       case 'tracker': return <TrackerTab {...props} />;
       
       case 'contact': return <ContactTab {...props} />;
