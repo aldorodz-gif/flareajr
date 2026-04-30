@@ -6,13 +6,12 @@ interface OverviewTabProps {
 }
 
 const workflowSteps = [
-  { num: 1, tab: 'setup', label: 'one time', gradient: 'linear-gradient(160deg,#9B78C8,#A885D4)', title: 'Set Up Agent Mode', why: 'This gives you access to live research.', what: 'Turn it on before starting any prospecting task.' },
-  { num: 2, tab: 'mindset', label: 'read once', gradient: 'linear-gradient(160deg,#B07DD0,#BC8BDC)', title: 'Get Your Mindset Right', why: 'You\'re solving a logistics problem, not pitching a service.', what: 'Learn the Buyer Persona Chain: Goals → Programs → Talent, and internalize why HR isn\'t your buyer.' },
-  { num: 3, tab: 'tracker', label: 'set once', gradient: 'linear-gradient(160deg,#C47EAA,#CF8EBB)', title: 'Build Your Search Prompts', why: 'You want signs of real movement, not generic hiring noise.', what: 'Search for expansions, relocations, projects, cohorts, and operational growth.' },
-  { num: 4, tab: 'results', label: 'every morning', gradient: 'linear-gradient(160deg,#D97895,#DE8AA0)', title: 'Work Your Results', why: 'Not every result deserves time.', what: 'Prioritize the strongest signals and skip weak or vague findings.' },
-  { num: 5, tab: 'signals', label: 'quick filter', gradient: 'linear-gradient(160deg,#E2907A,#E89D85)', title: 'Score the Signals', why: 'Context improves relevance.', what: 'Run each signal through the scoring framework to decide if it\'s worth pursuing.' },
-  { num: 6, tab: 'contact', label: 'find the POC', gradient: 'linear-gradient(160deg,#E8A87A,#EDB880)', title: 'Identify the Buyer', why: 'The right message to the wrong person still fails.', what: 'Map the likely owner based on the signal, company structure, and the Discovery Tree.' },
-  { num: 7, tab: 'outreach', label: 'reach out', gradient: 'linear-gradient(160deg,#EBC980,#F0D490)', title: 'Write Your Outreach', why: 'Your outreach should reflect the signal, not sound copied.', what: 'Use the call techniques or email generator to build a first touch tied to the most likely service line.' },
+  { num: 1, tab: 'mindset', label: 'read once', gradient: 'linear-gradient(160deg,#B07DD0,#BC8BDC)', title: 'Get Your Mindset Right', why: 'You\'re solving a logistics problem, not pitching a service.', what: 'Learn the Buyer Persona Chain: Goals → Programs → Talent, and internalize why HR isn\'t your buyer.' },
+  { num: 2, tab: 'tracker', label: 'set once', gradient: 'linear-gradient(160deg,#C47EAA,#CF8EBB)', title: 'Build Your Search Prompts', why: 'You want signs of real movement, not generic hiring noise.', what: 'Search for expansions, relocations, projects, cohorts, and operational growth.' },
+  { num: 3, tab: 'results', label: 'every morning', gradient: 'linear-gradient(160deg,#D97895,#DE8AA0)', title: 'Work Your Results', why: 'Not every result deserves time.', what: 'Prioritize the strongest signals and skip weak or vague findings.' },
+  { num: 4, tab: 'signals', label: 'quick filter', gradient: 'linear-gradient(160deg,#E2907A,#E89D85)', title: 'Score the Signals', why: 'Context improves relevance.', what: 'Run each signal through the scoring framework to decide if it\'s worth pursuing.' },
+  { num: 5, tab: 'contact', label: 'find the POC', gradient: 'linear-gradient(160deg,#E8A87A,#EDB880)', title: 'Identify the Buyer', why: 'The right message to the wrong person still fails.', what: 'Map the likely owner based on the signal, company structure, and the Discovery Tree.' },
+  { num: 6, tab: 'outreach', label: 'reach out', gradient: 'linear-gradient(160deg,#EBC980,#F0D490)', title: 'Write Your Outreach', why: 'Your outreach should reflect the signal, not sound copied.', what: 'Use the call techniques or email generator to build a first touch tied to the most likely service line.' },
 ];
 
 const serviceLines = [
