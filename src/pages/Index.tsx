@@ -8,6 +8,7 @@ import MindsetTab from '../components/guide/MindsetTab';
 
 import TrackerTab from '../components/guide/TrackerTab';
 import DashboardTab from '../components/guide/DashboardTab';
+import MarketHeatTab from '../components/guide/MarketHeatTab';
 
 import ContactTab from '../components/guide/ContactTab';
 import OutreachTab from '../components/guide/OutreachTab';
