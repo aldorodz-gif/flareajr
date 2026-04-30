@@ -228,24 +228,45 @@ export type Database = {
       user_settings: {
         Row: {
           created_at: string
+          home_city: string
+          home_state: string
+          home_vertical: string
           id: string
+          last_scan_at: string | null
           prompt_focus: string | null
           updated_at: string
           user_id: string
+          weekly_goal_meetings: number
+          weekly_goal_outreach: number
+          weekly_goal_pipeline: number
         }
         Insert: {
           created_at?: string
+          home_city?: string
+          home_state?: string
+          home_vertical?: string
           id?: string
+          last_scan_at?: string | null
           prompt_focus?: string | null
           updated_at?: string
           user_id: string
+          weekly_goal_meetings?: number
+          weekly_goal_outreach?: number
+          weekly_goal_pipeline?: number
         }
         Update: {
           created_at?: string
+          home_city?: string
+          home_state?: string
+          home_vertical?: string
           id?: string
+          last_scan_at?: string | null
           prompt_focus?: string | null
           updated_at?: string
           user_id?: string
+          weekly_goal_meetings?: number
+          weekly_goal_outreach?: number
+          weekly_goal_pipeline?: number
         }
         Relationships: []
       }
