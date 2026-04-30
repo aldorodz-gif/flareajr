@@ -7,6 +7,7 @@ import OverviewTab from '../components/guide/OverviewTab';
 import MindsetTab from '../components/guide/MindsetTab';
 import SetupTab from '../components/guide/SetupTab';
 import TrackerTab from '../components/guide/TrackerTab';
+import DashboardTab from '../components/guide/DashboardTab';
 
 import ContactTab from '../components/guide/ContactTab';
 import OutreachTab from '../components/guide/OutreachTab';
@@ -16,7 +17,7 @@ import LinkedInTab from '../components/guide/LinkedInTab';
 import { TAB_ORDER } from '../components/guide/types';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('workflow');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set());
   const [slideDir, setSlideDir] = useState<'right' | 'left'>('right');
   const [animKey, setAnimKey] = useState(0);
@@ -38,6 +39,7 @@ const Index = () => {
   const renderTab = () => {
     const props = { onNavigate: handleTabChange };
     switch (activeTab) {
+      case 'dashboard': return <DashboardTab />;
       case 'workflow': return <OverviewTab {...props} />;
       case 'mindset': return <MindsetTab {...props} />;
       case 'setup': return <SetupTab {...props} />;

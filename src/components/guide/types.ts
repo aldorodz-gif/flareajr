@@ -5,6 +5,7 @@ export interface TabConfig {
 }
 
 export const TAB_ORDER: TabConfig[] = [
+  { id: 'dashboard', icon: '🏠', label: 'Dashboard' },
   { id: 'workflow', icon: '🗺️', label: 'Overview' },
   { id: 'setup', icon: '⚙️', label: 'Setup' },
   { id: 'tracker', icon: '📡', label: 'Prompt Builder' },
