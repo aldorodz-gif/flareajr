@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import Eyebrow from './Eyebrow';
-import { BDRS, KPI_LABELS, MONTHS, QUARTERS, type CalcRow } from './bdrCalculatorData';
+import { BDRS, KPI_LABELS, MONTHS, QUARTERS, revenueForGp, type CalcRow } from './bdrCalculatorData';
 
 const fmt = (v: number | null, kind: 'currency' | 'percent' | 'number') => {
   if (v === null || v === undefined || Number.isNaN(v)) return '—';
