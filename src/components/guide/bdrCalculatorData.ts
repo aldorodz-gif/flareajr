@@ -21,7 +21,24 @@ export interface CalcRow {
   totalCommPred: number | null;
 }
 
-export interface BDR { id: string; name: string; market: string; rows: Record<string, CalcRow>; }
+export interface BDR {
+  id: string;
+  name: string;
+  market: string;
+  annualRevenueGoal: number;
+  annualGpGoal: number;
+  rows: Record<string, CalcRow>;
+}
+
+// GP Margin (derived from Top Line Rev Goal / GP Goal). Used to convert any GP figure to the
+// Top Line Revenue required to produce it (Revenue Needed = GP / margin).
+export const gpMargin = (b: BDR) => b.annualGpGoal / b.annualRevenueGoal;
+export const revenueForGp = (b: BDR, gp: number | null | undefined) => {
+  if (gp === null || gp === undefined || Number.isNaN(gp)) return null;
+  const m = gpMargin(b);
+  if (!m) return null;
+  return gp / m;
+};
 
 export const BDRS: BDR[] = [
   {
