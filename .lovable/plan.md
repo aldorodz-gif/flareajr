@@ -1,64 +1,77 @@
+## Plan: BDR Scoreboard on the Dashboard (from your Excel Calculator)
 
-## Scope lock — only these changes will be made
+### What you'll see
+A new **"BDR Scoreboard"** card at the top of the Dashboard with:
+- A **BDR dropdown**: Hallie Bellack / Matthew Griffith (more BDRs added later by editing one file)
+- A **Year + Month** selector (defaults to current month, 2026)
+- A clean grid of the Calculator's KPIs for that BDR / month, using the **exact labels from your sheet**:
+  - Monthly GP Goal
+  - Actual GP Standings
+  - Act Variance $ to Goal
+  - Act Variance % to Goal
+  - Act # Days Needed to Goal
+  - Act # Full Month Bookings to Goal
+  - GP in Group Pipeline
+  - Total Pipeline
+  - Actual + Pipeline GP
+  - Exp Variance $ to Goal
+  - Exp Variance % to Goal
+  - Remaining Pipeline Need
+  - Commission Earned
+  - Commission Forecast – Pipeline
+  - Total Monthly Commission Prediction
+- A **Quarter rollup row** ("Q1 / Q2 / Q3 / Q4 / Year") with totals matching your sheet's summary rows (rows 16, 19–22, 50–55).
+- Color cues using your Flare palette: green when "Actual ≥ Goal", orange when behind, navy labels on warm tan card.
 
-Confirming the merge plan is **strictly limited** to adding one new Dashboard tab. Nothing else in the app changes.
+### Data source (this round = static snapshot from your file)
+Because you said "use the labels in the Excel doc" and only Hallie + Matt for now, the cleanest first step is a **typed snapshot** of the Calculator data, not a live OneDrive sync. The data lives in:
 
----
+- `src/components/guide/bdrCalculatorData.ts` — one constant per BDR with the same column headers as row 2 of the Calculator sheet, and one row per month for 2025 and 2026 (plus quarter and "All" rollups).
 
-## ✅ What WILL change
+Hallie's numbers are pulled directly from the file you uploaded (rows 3–14 = 2025 monthly, row 16 = 2025 All, rows 19–22 = 2025 quarterly, rows 34–45 = 2026 monthly, row 50 = 2026 All, rows 52–55 = 2026 quarterly).
 
-### 1. New tab registration
-- `src/components/guide/types.ts` — add `{ id: 'dashboard', icon: '🏠', label: 'Dashboard' }` as the **first** entry in `TAB_ORDER`.
-- `src/pages/Index.tsx` — import `DashboardTab`, add a `case 'dashboard'` to the switch, change initial `activeTab` from `'workflow'` to `'dashboard'`.
+Matt (Griffith, Matthew) is **not in the Calculator sheet** of your file — only Hallie is. His numbers are derived from the **"2026 Goals Firm"** tab (rows 20–21 give his monthly Revenue + GP goals) and the **"% of BDRs to Goal"** tab (his monthly GP Actual). For fields the Calculator computes (variance %, days-needed, commission), I'll apply the **same formulas** the Calculator uses so labels and math stay consistent.
 
-### 2. New files (created, no existing files touched)
-- `src/components/guide/DashboardTab.tsx` — the dashboard page
-- `src/components/guide/MarketSelector.tsx` — State + City + Vertical dropdowns + 🔄 Refresh / Scan button
-- `src/components/guide/GoalsVsPace.tsx` — placeholder widget (Outreach / Meetings / Pipeline $ progress bars + on-track/behind label)
-- `src/components/guide/TopVerticals.tsx` — ranked list of the 7 canonical verticals most active in the chosen market
-- `src/components/guide/LeadFeed.tsx` — Flare-styled cards listing leads pulled from the scan
-- `src/components/guide/InventoryMap.tsx` — Leaflet map of Core Inventory properties for the chosen city
-- `src/components/guide/inventoryData.ts` — seed inventory properties (a few demo markets)
+If later you want true live sync from OneDrive, that's a separate (already-scoped) follow-up — I'll note it but not build it now.
 
-### 3. New edge function
-- `supabase/functions/dashboard-scan/index.ts` — accepts `{ state, city, vertical }`, calls Lovable AI (`google/gemini-2.5-flash`), returns `{ leads: [...], topVerticals: [...] }`. Uses existing `LOVABLE_API_KEY` — no new secrets.
+### Files
 
-### 4. Database migration (additive only)
-Add columns to existing `user_settings` table — no new tables, no changes to existing columns:
+**New**
+- `src/components/guide/bdrCalculatorData.ts` — `BDRS` array + `getCalculatorRow(bdrId, year, period)` helper. Periods: `'2025-Jan' … '2026-Dec'`, `'2025-Q1' … '2026-Q4'`, `'2025-All'`, `'2026-All'`.
+- `src/components/guide/BdrScoreboard.tsx` — the card component: BDR dropdown + Year/Month selector + KPI grid + quarter rollup strip.
+
+**Edited**
+- `src/components/guide/DashboardTab.tsx` — render `<BdrScoreboard />` directly under the existing "Your Market Dashboard" header card, above the Goals vs Pace / Top Verticals row.
+
+**Not touched**
+- No DB migration, no edge function, no schema change.
+- `GoalsVsPace`, `MarketSelector`, `TopVerticals`, `LeadFeed`, `InventoryMap` stay exactly as they are.
+
+### UI sketch
 ```text
-home_state           text     default ''
-home_city            text     default ''
-home_vertical        text     default 'all'
-weekly_goal_outreach int      default 25
-weekly_goal_meetings int      default 5
-weekly_goal_pipeline int      default 100000
-last_scan_at         timestamptz
+┌──────────────────────────────────────────────────────────────┐
+│ BDR Scoreboard                  [BDR: Hallie ▾]  [Mar 2026 ▾]│
+│──────────────────────────────────────────────────────────────│
+│ Monthly GP Goal     $5,022     Act Variance $   −$2,196     │
+│ Actual GP Standings $2,826     Act Variance %   56.3%       │
+│ Days Needed to Goal 73.2       Bookings to Goal 2.4         │
+│ GP in Group Pipe    $100       Total Pipeline   $100        │
+│ Actual + Pipeline   $2,926     Exp Variance     −$2,096     │
+│ Commission Earned   $141.31    Comm Forecast    $5.00       │
+│                              Total Comm Prediction  $146.31  │
+│──────────────────────────────────────────────────────────────│
+│ 2026 Quarters: Q1 $11,337 · Q2 $9,984 · Q3 $6,592 · Q4 $5,108│
+└──────────────────────────────────────────────────────────────┘
 ```
-Leads from the scan write into the existing `prospects` table (already has the right columns). "Add to Pipeline" writes to existing `pipeline_items`. No schema changes there.
 
-### 5. Dependencies
-- Add `leaflet`, `react-leaflet`, `@types/leaflet` for the map. No other deps added.
+### Technical notes
+- Numbers stored as `number | null`; renderer formats `$#,##0` for money, `0.0%` for percentages, `0.0` for day/booking counts. `null` shows as `—`.
+- "Achieving goal" badge: green when `Actual GP ≥ Monthly GP Goal`, orange otherwise — matches your Flare palette (`#10B981` / `#fb923c`).
+- Adding a third BDR later = append one entry to `BDRS` in `bdrCalculatorData.ts`. No other file changes.
 
----
+### Out of scope (this round)
+- Live OneDrive/Excel sync (the earlier-approved Goals vs Pace plan). I'll keep that on the shelf — say the word and I'll wire it up after this lands.
+- Editing values in the app (read-only display).
+- Pulling the GP-by-BDRs deal-level table or the Pipeline tabs.
 
-## ❌ What WILL NOT change
-
-- ❌ No edits to any other tab (Overview, Setup, Prompt Builder, Score Signals, Who to Call, Write Outreach, Level Up, Find Events, LinkedIn Strategy)
-- ❌ No edits to `verticalsData.ts` — the new components import from it, they don't modify it
-- ❌ No edits to `TabBar.tsx`, `Header.tsx`, `ProgressBar.tsx`, `WelcomeModal.tsx`, `AiToolCard.tsx`, `Eyebrow.tsx`, or any shared component
-- ❌ No edits to any existing edge function (`email-generator`, `event-finder`, `signal-scorer`, `prompt-builder`, `linkedin-strategy`, `article-scraper`)
-- ❌ No design system changes — uses the existing dark navy/orange Flare palette, `AiToolCard` shell, and `Eyebrow` tags
-- ❌ Nothing from the uploaded HTML prototype's cream/teal styling is imported
-- ❌ No new auth flow, no new RLS rewrites — the migration only adds columns to a table that already has RLS
-- ❌ No new "Today" tab, no new "Pipeline" tab, no new "Inventory" tab — the map lives **inside** the Dashboard tab
-
----
-
-## Build order (one pass)
-1. Migration: add columns to `user_settings`
-2. Edge function: `dashboard-scan`
-3. Add deps: leaflet + react-leaflet
-4. Create the 7 new component files + seed inventory data
-5. Register the tab in `types.ts` and `Index.tsx`
-
-If this scope is right, approve and I'll execute exactly this — nothing more.
+Approve and I'll build exactly this.
