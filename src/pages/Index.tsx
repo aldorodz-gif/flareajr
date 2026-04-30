@@ -41,6 +41,7 @@ const Index = () => {
     const props = { onNavigate: handleTabChange };
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
+      case 'market': return <MarketHeatTab />;
       
       case 'mindset': return <MindsetTab {...props} />;
       
