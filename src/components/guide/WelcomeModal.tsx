@@ -22,15 +22,6 @@ const TOUR_STEPS: TourStep[] = [
     gradient: 'linear-gradient(135deg, #0F0F1A 0%, #1a1145 30%, #2d1b69 60%, #4a1942 100%)',
   },
   {
-    icon: '🗺️',
-    title: 'Step 1: Overview',
-    subtitle: 'See the full prospecting flow',
-    description: 'Start here. It maps out the entire signal-to-outreach sequence so you know what each step does before you do it.',
-    detail: 'Read this once on day one. Come back whenever you need a refresher on the flow.',
-    tabId: 'workflow',
-    gradient: 'linear-gradient(135deg, #1a1145, #2d1b69)',
-  },
-  {
     icon: '📡',
     title: 'Step 2: Prompt Builder',
     subtitle: 'Find companies showing demand signals',
