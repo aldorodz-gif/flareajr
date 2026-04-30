@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import AiToolCard from './AiToolCard';
+import BdrScoreboard from './BdrScoreboard';
 import MarketSelector from './MarketSelector';
 import GoalsVsPace from './GoalsVsPace';
 import TopVerticals, { VerticalShare } from './TopVerticals';
@@ -126,6 +127,8 @@ const DashboardTab = () => {
           </p>
         </AiToolCard>
       </div>
+
+      <BdrScoreboard />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
         <GoalsVsPace
