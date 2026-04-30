@@ -116,13 +116,6 @@ export const KPI_LABELS: Array<{ key: keyof CalcRow; label: string; format: "cur
   { key: "actVarPct", label: "Act Variance % to Goal", format: "percent" },
   { key: "actDaysNeeded", label: "Act # Days Needed to Goal", format: "number" },
   { key: "actBookingsToGoal", label: "Act # Full Month Bookings to Goal", format: "number" },
-  { key: "gpGroupPipe", label: "GP in Group Pipeline", format: "currency" },
-  { key: "totalPipe", label: "Total Pipeline", format: "currency" },
-  { key: "actPlusPipe", label: "Actual + Pipeline GP", format: "currency" },
-  { key: "expVarDollar", label: "Exp Variance $ to Goal", format: "currency" },
-  { key: "expVarPct", label: "Exp Variance % to Goal", format: "percent" },
-  { key: "remainPipeNeed", label: "Remaining Pipeline Need", format: "currency" },
   { key: "commEarned", label: "Commission Earned", format: "currency" },
-  { key: "commForecast", label: "Commission Forecast – Pipeline", format: "currency" },
   { key: "totalCommPred", label: "Total Monthly Commission Prediction", format: "currency" },
 ];
