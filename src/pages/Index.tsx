@@ -8,6 +8,7 @@ import MindsetTab from '../components/guide/MindsetTab';
 
 import TrackerTab from '../components/guide/TrackerTab';
 import DashboardTab from '../components/guide/DashboardTab';
+import MarketHeatTab from '../components/guide/MarketHeatTab';
 
 import ContactTab from '../components/guide/ContactTab';
 import OutreachTab from '../components/guide/OutreachTab';
@@ -40,6 +41,7 @@ const Index = () => {
     const props = { onNavigate: handleTabChange };
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
+      case 'market': return <MarketHeatTab />;
       
       case 'mindset': return <MindsetTab {...props} />;
       
