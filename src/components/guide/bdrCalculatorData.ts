@@ -82,7 +82,7 @@ export const BDRS: BDR[] = [
   },
   },
   {
-    id: "matt", name: "Griffith, Matthew", market: "Nashville",
+    id: "matt", name: "Griffith, Matthew", market: "Nashville", annualRevenueGoal: 335016, annualGpGoal: 83754,
     rows:
   {
     "2026-Jan": { monthlyGoal: 3273, actual: 3039.13, actVarDollar: -233.87, actDaysNeeded: 2.1436, actVarPct: 0.9285, actBookingsToGoal: 0.0715, gpGroupPipe: null, gpExistingPipe: null, totalPipe: null, actPlusPipe: 3039.13, expVarDollar: -233.87, expVarPct: 0.9285, remainPipeNeed: 233.87, expDaysNeeded: 2.1436, expBookings: 0.0715, commEarned: 151.9565, commForecast: null, totalCommPred: 151.9565 },
