@@ -42,7 +42,7 @@ export const revenueForGp = (b: BDR, gp: number | null | undefined) => {
 
 export const BDRS: BDR[] = [
   {
-    id: "hallie", name: "Bellack, Hallie", market: "Georgia",
+    id: "hallie", name: "Bellack, Hallie", market: "Georgia", annualRevenueGoal: 340000, annualGpGoal: 85000,
     rows:
   {
     "2025-Jan": { monthlyGoal: 0, actual: 0, actVarDollar: 0, actDaysNeeded: 0, actVarPct: null, actBookingsToGoal: 0, gpGroupPipe: 0, gpExistingPipe: null, totalPipe: null, actPlusPipe: 0, expVarDollar: 0, expVarPct: 1, remainPipeNeed: 0, expDaysNeeded: 0, expBookings: 0, commEarned: 0, commForecast: 0, totalCommPred: 0 },
