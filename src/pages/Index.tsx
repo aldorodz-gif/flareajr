@@ -3,7 +3,7 @@ import Header from '../components/guide/Header';
 import WelcomeModal from '../components/guide/WelcomeModal';
 import TabBar from '../components/guide/TabBar';
 import ProgressBar from '../components/guide/ProgressBar';
-import OverviewTab from '../components/guide/OverviewTab';
+
 import MindsetTab from '../components/guide/MindsetTab';
 
 import TrackerTab from '../components/guide/TrackerTab';
@@ -40,7 +40,7 @@ const Index = () => {
     const props = { onNavigate: handleTabChange };
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
-      case 'workflow': return <OverviewTab {...props} />;
+      
       case 'mindset': return <MindsetTab {...props} />;
       
       case 'tracker': return <TrackerTab {...props} />;
