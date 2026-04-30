@@ -128,6 +128,8 @@ const DashboardTab = () => {
         </AiToolCard>
       </div>
 
+      <BdrScoreboard />
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
         <GoalsVsPace
           outreach={{ current: actuals.outreach, goal: goals.outreach }}
