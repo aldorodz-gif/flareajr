@@ -88,8 +88,28 @@ const BdrScoreboard = () => {
         <>
           <div className="mb-3 inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
                style={{ background: `${accent}1A`, color: accent }}>
-            <span>{onTrack ? '✓ Hitting Goal' : '⚠ Behind Goal'}</span>
+            <span>{onTrack ? '✓ Hitting GP Goal' : '⚠ Behind GP Goal'}</span>
           </div>
+
+          {/* Top Line Revenue strip — derived from GP figures using each BDR's GP margin */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+            <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#fbbf24' }}>Top Line Revenue Goal · Annual</div>
+              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(bdr.annualRevenueGoal, 'currency')}</div>
+              <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>Annual GP Goal {fmt(bdr.annualGpGoal, 'currency')}</div>
+            </div>
+            <div className="p-3 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#64748b' }}>Revenue Needed to Hit GP Goal · {period}</div>
+              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(revenueForGp(bdr, row.monthlyGoal), 'currency')}</div>
+              <div className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>From GP goal {fmt(row.monthlyGoal, 'currency')}</div>
+            </div>
+            <div className="p-3 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#64748b' }}>Revenue Booked (implied) · {period}</div>
+              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(revenueForGp(bdr, row.actual), 'currency')}</div>
+              <div className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>From actual GP {fmt(row.actual, 'currency')}</div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {KPI_LABELS.map(({ key: k, label, format }) => {
               const v = row[k];
