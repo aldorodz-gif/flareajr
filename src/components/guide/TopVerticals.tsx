@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import Eyebrow from './Eyebrow';
 
 export interface VerticalShare {
@@ -10,16 +11,19 @@ interface TopVerticalsProps {
   data: VerticalShare[];
   city: string;
   loading: boolean;
+  selector?: ReactNode;
 }
 
-const TopVerticals = ({ data, city, loading }: TopVerticalsProps) => {
+const TopVerticals = ({ data, city, loading, selector }: TopVerticalsProps) => {
   return (
     <div className="p-5 rounded-xl h-full" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.08)' }}>
       <Eyebrow gradient="linear-gradient(90deg, #8B8FE8, #D97FAA)">Market Heat</Eyebrow>
       <h3 className="text-[16px] font-extrabold tracking-tight mb-1" style={{ color: '#0e1e3a' }}>
         Top Verticals {city ? `in ${city}` : ''}
       </h3>
-      <p className="text-[11px] mb-4" style={{ color: '#64748b' }}>Where the heat is right now.</p>
+      <p className="text-[11px] mb-4" style={{ color: '#64748b' }}>Pick a market and scan to see where the heat is right now.</p>
+
+      {selector && <div className="mb-4">{selector}</div>}
 
       {loading && <div className="text-[12px]" style={{ color: '#94a3b8' }}>Scanning…</div>}
 

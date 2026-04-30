@@ -115,20 +115,15 @@ const DashboardTab = () => {
 
   return (
     <section className="px-6 md:px-12 py-8 max-w-[1400px] mx-auto">
-      <div className="mb-6">
+      <div className="mb-5">
         <AiToolCard
           icon="🏠"
           title="Your Market Dashboard"
-          subtitle={`${city && state ? `${city}, ${state}` : 'Pick a market to begin'} · ${lastScanLabel}`}
+          subtitle={`${city && state ? `${city}, ${state}` : 'Pick a market in Market Heat to begin'} · ${lastScanLabel}`}
         >
-          <MarketSelector
-            state={state}
-            city={city}
-            vertical={vertical}
-            loading={loading}
-            onChange={handleSelectorChange}
-            onScan={handleScan}
-          />
+          <p className="text-[13px] leading-relaxed" style={{ color: '#475569' }}>
+            Live snapshot of your territory. Use the <strong style={{ color: '#0e1e3a' }}>Market Heat</strong> panel below to choose a market and refresh the scan — leads, verticals, and inventory will update automatically.
+          </p>
         </AiToolCard>
       </div>
 
@@ -138,7 +133,21 @@ const DashboardTab = () => {
           meetings={{ current: actuals.meetings, goal: goals.meetings }}
           pipeline={{ current: actuals.pipeline, goal: goals.pipeline }}
         />
-        <TopVerticals data={topVerticals} city={city} loading={loading} />
+        <TopVerticals
+          data={topVerticals}
+          city={city}
+          loading={loading}
+          selector={
+            <MarketSelector
+              state={state}
+              city={city}
+              vertical={vertical}
+              loading={loading}
+              onChange={handleSelectorChange}
+              onScan={handleScan}
+            />
+          }
+        />
       </div>
 
       <div className="mb-5">
