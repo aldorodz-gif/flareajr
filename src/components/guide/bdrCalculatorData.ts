@@ -21,11 +21,28 @@ export interface CalcRow {
   totalCommPred: number | null;
 }
 
-export interface BDR { id: string; name: string; market: string; rows: Record<string, CalcRow>; }
+export interface BDR {
+  id: string;
+  name: string;
+  market: string;
+  annualRevenueGoal: number;
+  annualGpGoal: number;
+  rows: Record<string, CalcRow>;
+}
+
+// GP Margin (derived from Top Line Rev Goal / GP Goal). Used to convert any GP figure to the
+// Top Line Revenue required to produce it (Revenue Needed = GP / margin).
+export const gpMargin = (b: BDR) => b.annualGpGoal / b.annualRevenueGoal;
+export const revenueForGp = (b: BDR, gp: number | null | undefined) => {
+  if (gp === null || gp === undefined || Number.isNaN(gp)) return null;
+  const m = gpMargin(b);
+  if (!m) return null;
+  return gp / m;
+};
 
 export const BDRS: BDR[] = [
   {
-    id: "hallie", name: "Bellack, Hallie", market: "Georgia",
+    id: "hallie", name: "Bellack, Hallie", market: "Georgia", annualRevenueGoal: 340000, annualGpGoal: 85000,
     rows:
   {
     "2025-Jan": { monthlyGoal: 0, actual: 0, actVarDollar: 0, actDaysNeeded: 0, actVarPct: null, actBookingsToGoal: 0, gpGroupPipe: 0, gpExistingPipe: null, totalPipe: null, actPlusPipe: 0, expVarDollar: 0, expVarPct: 1, remainPipeNeed: 0, expDaysNeeded: 0, expBookings: 0, commEarned: 0, commForecast: 0, totalCommPred: 0 },
@@ -65,7 +82,7 @@ export const BDRS: BDR[] = [
   },
   },
   {
-    id: "matt", name: "Griffith, Matthew", market: "Nashville",
+    id: "matt", name: "Griffith, Matthew", market: "Nashville", annualRevenueGoal: 335016, annualGpGoal: 83754,
     rows:
   {
     "2026-Jan": { monthlyGoal: 3273, actual: 3039.13, actVarDollar: -233.87, actDaysNeeded: 2.1436, actVarPct: 0.9285, actBookingsToGoal: 0.0715, gpGroupPipe: null, gpExistingPipe: null, totalPipe: null, actPlusPipe: 3039.13, expVarDollar: -233.87, expVarPct: 0.9285, remainPipeNeed: 233.87, expDaysNeeded: 2.1436, expBookings: 0.0715, commEarned: 151.9565, commForecast: null, totalCommPred: 151.9565 },
@@ -99,13 +116,6 @@ export const KPI_LABELS: Array<{ key: keyof CalcRow; label: string; format: "cur
   { key: "actVarPct", label: "Act Variance % to Goal", format: "percent" },
   { key: "actDaysNeeded", label: "Act # Days Needed to Goal", format: "number" },
   { key: "actBookingsToGoal", label: "Act # Full Month Bookings to Goal", format: "number" },
-  { key: "gpGroupPipe", label: "GP in Group Pipeline", format: "currency" },
-  { key: "totalPipe", label: "Total Pipeline", format: "currency" },
-  { key: "actPlusPipe", label: "Actual + Pipeline GP", format: "currency" },
-  { key: "expVarDollar", label: "Exp Variance $ to Goal", format: "currency" },
-  { key: "expVarPct", label: "Exp Variance % to Goal", format: "percent" },
-  { key: "remainPipeNeed", label: "Remaining Pipeline Need", format: "currency" },
   { key: "commEarned", label: "Commission Earned", format: "currency" },
-  { key: "commForecast", label: "Commission Forecast – Pipeline", format: "currency" },
   { key: "totalCommPred", label: "Total Monthly Commission Prediction", format: "currency" },
 ];
