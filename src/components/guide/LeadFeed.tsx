@@ -32,7 +32,7 @@ const SIGNAL_COLORS: Record<string, string> = {
 
 const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
   const [pipelineIds, setPipelineIds] = useState<Set<string>>(new Set());
-
+  const [askLead, setAskLead] = useState<ScanLead | null>(null);
   const addToPipeline = async (lead: ScanLead) => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
