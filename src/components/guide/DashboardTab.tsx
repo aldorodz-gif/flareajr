@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import AiToolCard from './AiToolCard';
+import BdrScoreboard from './BdrScoreboard';
 import MarketSelector from './MarketSelector';
 import GoalsVsPace from './GoalsVsPace';
 import TopVerticals, { VerticalShare } from './TopVerticals';
