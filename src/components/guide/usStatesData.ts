@@ -36,7 +36,7 @@ export const US_STATES: StateData[] = [
   { abbreviation: 'NH', name: 'New Hampshire', cities: ['Manchester', 'Nashua', 'Concord'] },
   { abbreviation: 'NJ', name: 'New Jersey', cities: ['Newark', 'Jersey City', 'Trenton', 'Princeton', 'Atlantic City'] },
   { abbreviation: 'NM', name: 'New Mexico', cities: ['Albuquerque', 'Santa Fe', 'Las Cruces', 'Rio Rancho'] },
-  { abbreviation: 'NY', name: 'New York', cities: ['New York City', 'Buffalo', 'Rochester', 'Albany', 'Syracuse'] },
+  { abbreviation: 'NY', name: 'New York', cities: ['New York', 'Brooklyn', 'New York City', 'Buffalo', 'Rochester', 'Albany', 'Syracuse'] },
   { abbreviation: 'NC', name: 'North Carolina', cities: ['Charlotte', 'Raleigh', 'Durham', 'Greensboro', 'Wilmington', 'Asheville'] },
   { abbreviation: 'ND', name: 'North Dakota', cities: ['Fargo', 'Bismarck', 'Grand Forks', 'Minot'] },
   { abbreviation: 'OH', name: 'Ohio', cities: ['Columbus', 'Cleveland', 'Cincinnati', 'Toledo', 'Akron', 'Dayton'] },
