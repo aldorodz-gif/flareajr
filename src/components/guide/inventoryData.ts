@@ -106,6 +106,23 @@ export const INVENTORY_PROPERTIES: InventoryProperty[] = [
   { id: 'the-laney', name: 'The Laney', address: '2795 Springdale Rd SW', city: 'Atlanta', state: 'GA', zip: '30315', lat: 33.70618, lng: -84.38413 },
   { id: 'riverworks-at-eastern-wharf', name: 'Riverworks at Eastern Wharf', address: '1105 E President St', city: 'Savannah', state: 'GA', zip: '31404', lat: 32.05430, lng: -81.04920 },
   { id: '20-midtown', name: '20 Midtown', address: '20 10th St NW', city: 'Atlanta', state: 'GA', zip: '30309', lat: 33.79840, lng: -84.39180 },
+  // ===== NY Metro Core Inventory =====
+  { id: 'ny-1600-broadway', name: '1600 Broadway', address: '1600 Broadway', city: 'New York', state: 'NY', zip: '10019', lat: 40.76130, lng: -73.98430 },
+  { id: 'ny-21-chelsea', name: '21 Chelsea', address: '120 West 21st Street', city: 'New York', state: 'NY', zip: '10011', lat: 40.74137, lng: -73.99440 },
+  { id: 'ny-777-6th-ave', name: '777 6th Ave', address: '777 6th Ave', city: 'New York', state: 'NY', zip: '10001', lat: 40.74410, lng: -73.99230 },
+  { id: 'ny-95-wall', name: '95 Wall', address: '95 Wall St', city: 'New York', state: 'NY', zip: '10005', lat: 40.70520, lng: -74.00770 },
+  { id: 'nj-avalon-cove', name: 'Avalon Cove', address: '444 Washington Blvd', city: 'Jersey City', state: 'NJ', zip: '07310', lat: 40.72710, lng: -74.03390 },
+  { id: 'nj-barclay-square', name: 'Barclay Square', address: '1900 Barclay Blvd', city: 'Princeton', state: 'NJ', zip: '08540', lat: 40.34870, lng: -74.65900 },
+  { id: 'ny-cameo', name: 'Cameo', address: '311 W 50th St', city: 'New York', state: 'NY', zip: '10019', lat: 40.76270, lng: -73.98810 },
+  { id: 'ny-capitol', name: 'Capitol', address: '776 Sixth Avenue', city: 'New York', state: 'NY', zip: '10001', lat: 40.74390, lng: -73.99250 },
+  { id: 'ny-centria', name: 'Centria', address: '18 W 48th St', city: 'New York', state: 'NY', zip: '10036', lat: 40.75780, lng: -73.98050 },
+  { id: 'ny-dylan', name: 'Dylan', address: '309 5th Ave', city: 'New York', state: 'NY', zip: '10016', lat: 40.74700, lng: -73.98430 },
+  { id: 'ny-eugene', name: 'Eugene', address: '435 W 31st St', city: 'New York', state: 'NY', zip: '10001', lat: 40.75260, lng: -74.00050 },
+  { id: 'ny-executive-plaza', name: 'Executive Plaza', address: '150 West 51st Street', city: 'New York', state: 'NY', zip: '10020', lat: 40.76160, lng: -73.98180 },
+  { id: 'ny-leonard-pointe', name: 'Leonard Pointe', address: '395 Leonard St', city: 'Brooklyn', state: 'NY', zip: '11211', lat: 40.71770, lng: -73.94700 },
+  { id: 'ny-national-888-6th', name: 'National at 888 6th Avenue', address: '888 6th Ave', city: 'New York', state: 'NY', zip: '10001', lat: 40.74860, lng: -73.98870 },
+  { id: 'ny-oriana', name: 'Oriana', address: '420 E 54th St', city: 'New York', state: 'NY', zip: '10022', lat: 40.75690, lng: -73.96320 },
+  { id: 'ny-york', name: 'York', address: '488 Seventh Avenue', city: 'New York', state: 'NY', zip: '10018', lat: 40.75300, lng: -73.98990 },
 ];
 
 /** City centers for map default centering. */
