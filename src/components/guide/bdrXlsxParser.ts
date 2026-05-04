@@ -106,8 +106,8 @@ const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
     const name = r[1];
     if (typeof name !== 'string' || !name.includes(',')) continue;
     const trimmed = name.trim();
-    const region = regionByName[trimmed] ?? '';
-    const market = marketByName[trimmed] ?? '';
+    const region = regionByName[trimmed] || REGION_FALLBACK[trimmed]?.region || '';
+    const market = marketByName[trimmed] || REGION_FALLBACK[trimmed]?.market || '';
 
     const memberRows: Record<string, CalcRow> = {};
     let hasAny = false;
