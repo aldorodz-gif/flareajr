@@ -36,21 +36,32 @@ const BdrScoreboard = () => {
   const [refreshing, setRefreshing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Load latest snapshots for all BDRs
+  const STORAGE_KEY = 'bdr_snapshot_v1';
+
+  // Hydrate from localStorage immediately, then overlay backend rows if signed in
   useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const cached = JSON.parse(raw) as { overrides: Record<string, Record<string, CalcRow>>; meta: Record<string, SnapshotMeta> };
+        if (cached.overrides) setOverrides(cached.overrides);
+        if (cached.meta) setMeta(cached.meta);
+      }
+    } catch { /* ignore */ }
+
     (async () => {
       const { data, error } = await supabase
         .from('bdr_snapshots')
         .select('bdr_id, data, source_filename, refreshed_at');
-      if (error || !data) return;
+      if (error || !data || data.length === 0) return;
       const o: Record<string, Record<string, CalcRow>> = {};
       const m: Record<string, SnapshotMeta> = {};
       for (const row of data) {
         o[row.bdr_id] = row.data as unknown as Record<string, CalcRow>;
         m[row.bdr_id] = { refreshedAt: row.refreshed_at, sourceFilename: row.source_filename };
       }
-      setOverrides(o);
-      setMeta(m);
+      setOverrides(prev => ({ ...prev, ...o }));
+      setMeta(prev => ({ ...prev, ...m }));
     })();
   }, []);
 
@@ -129,12 +140,16 @@ const BdrScoreboard = () => {
       }
       setOverrides(newOv);
       setMeta(newMeta);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ overrides: newOv, meta: newMeta })); } catch { /* ignore */ }
+
+      const memberCount = parsed.diagnostics.memberCount;
+      const summary = `${memberCount} BDR${memberCount === 1 ? '' : 's'} parsed from ${file.name}`;
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
           title: 'Numbers refreshed',
-          description: `Loaded ${updates.map(u => `${u.bdr_id} (${u.rows} rows)`).join(', ')} locally. Sign in if you want the snapshot saved for later.`,
+          description: `${summary}. Saved to this browser. Sign in to sync across devices.`,
         });
         return;
       }
@@ -350,8 +365,19 @@ const BdrScoreboard = () => {
         list.sort((a, b) => (b.rows[rollupKey]?.actual ?? 0) - (a.rows[rollupKey]?.actual ?? 0));
         if (list.length === 0) {
           return (
-            <div className="mt-4 pt-4 border-t text-[12px]" style={{ borderColor: 'rgba(14,30,58,.08)', color: '#94a3b8' }}>
-              No per-BDR breakdown yet — click Refresh to load the latest workbook.
+            <div className="mt-4 pt-4 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-2" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
+              <div className="text-[12px]" style={{ color: '#94a3b8' }}>
+                No per-BDR breakdown yet — upload the latest Sales Forecasting workbook to populate this section.
+              </div>
+              <button
+                onClick={handleRefreshClick}
+                disabled={refreshing}
+                className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5"
+                style={{ background: '#fb923c', color: '#fff', border: '1px solid #fb923c' }}
+              >
+                <span>{refreshing ? '⏳' : '↻'}</span>
+                <span>{refreshing ? 'Loading…' : 'Upload workbook'}</span>
+              </button>
             </div>
           );
         }
