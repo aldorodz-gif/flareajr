@@ -24,12 +24,6 @@ interface SnapshotMeta {
 
 type View = 'bdr' | 'team' | 'southeast' | 'nyc';
 
-const VIEWS: Array<{ id: View; label: string; sub: string }> = [
-  { id: 'bdr', label: 'Individual BDR', sub: 'Hallie or Matt' },
-  { id: 'team', label: 'Full Team', sub: 'All BDRs' },
-  { id: 'southeast', label: 'Southeast', sub: 'Hallie + Matt + region' },
-  { id: 'nyc', label: 'NYC / Northeast', sub: 'Northeast region' },
-];
 
 const BdrScoreboard = () => {
   const [view, setView] = useState<View>('bdr');
