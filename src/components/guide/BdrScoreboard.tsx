@@ -337,6 +337,67 @@ const BdrScoreboard = () => {
         </>
       )}
 
+      {view !== 'bdr' && (() => {
+        const members = (overrides['__members'] as unknown as Record<string, { name: string; market: string; region: string; rows: Record<string, CalcRow> }>) || {};
+        const list = Object.values(members).filter(m => {
+          if (view === 'team') return true;
+          if (view === 'southeast') return m.region === 'Southeast';
+          if (view === 'nyc') return m.region === 'Northeast';
+          return false;
+        });
+        list.sort((a, b) => (b.rows[rollupKey]?.actual ?? 0) - (a.rows[rollupKey]?.actual ?? 0));
+        if (list.length === 0) {
+          return (
+            <div className="mt-4 pt-4 border-t text-[12px]" style={{ borderColor: 'rgba(14,30,58,.08)', color: '#94a3b8' }}>
+              No per-BDR breakdown yet — click Refresh to load the latest workbook.
+            </div>
+          );
+        }
+        return (
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
+            <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#64748b' }}>
+              {bdr.name} · {period} breakdown ({list.length} BDR{list.length === 1 ? '' : 's'})
+            </div>
+            <div className="overflow-hidden rounded-lg" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
+              <table className="w-full text-[12px]">
+                <thead style={{ background: '#fff' }}>
+                  <tr style={{ color: '#64748b' }}>
+                    <th className="text-left px-3 py-2 font-bold uppercase tracking-wider text-[10px]">BDR</th>
+                    <th className="text-left px-3 py-2 font-bold uppercase tracking-wider text-[10px]">Market</th>
+                    <th className="text-left px-3 py-2 font-bold uppercase tracking-wider text-[10px]">Region</th>
+                    <th className="text-right px-3 py-2 font-bold uppercase tracking-wider text-[10px]">Goal</th>
+                    <th className="text-right px-3 py-2 font-bold uppercase tracking-wider text-[10px]">Actual</th>
+                    <th className="text-right px-3 py-2 font-bold uppercase tracking-wider text-[10px]">Var $</th>
+                    <th className="text-right px-3 py-2 font-bold uppercase tracking-wider text-[10px]">% Goal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {list.map((m, i) => {
+                    const r = m.rows[rollupKey];
+                    const pct = r && r.monthlyGoal && r.actual != null ? r.actual / r.monthlyGoal : null;
+                    const hit = pct != null && pct >= 1;
+                    const varNeg = r?.actVarDollar != null && r.actVarDollar < 0;
+                    return (
+                      <tr key={m.name} style={{ background: i % 2 ? '#FAF7F2' : '#fff', borderTop: '1px solid rgba(14,30,58,.06)' }}>
+                        <td className="px-3 py-2 font-bold" style={{ color: '#0e1e3a' }}>{m.name}</td>
+                        <td className="px-3 py-2" style={{ color: '#64748b' }}>{m.market}</td>
+                        <td className="px-3 py-2" style={{ color: '#64748b' }}>{m.region}</td>
+                        <td className="px-3 py-2 text-right tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(r?.monthlyGoal ?? null, 'currency')}</td>
+                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: '#0e1e3a' }}>{fmt(r?.actual ?? null, 'currency')}</td>
+                        <td className="px-3 py-2 text-right tabular-nums" style={{ color: varNeg ? '#dc2626' : '#10B981' }}>{fmt(r?.actVarDollar ?? null, 'currency')}</td>
+                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: hit ? '#10B981' : '#fb923c' }}>
+                          {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      })()}
+
       <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
         <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#64748b' }}>{year} Quarter Rollup</div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
@@ -357,6 +418,7 @@ const BdrScoreboard = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };
