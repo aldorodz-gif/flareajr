@@ -22,7 +22,17 @@ interface SnapshotMeta {
   sourceFilename: string | null;
 }
 
+type View = 'bdr' | 'team' | 'southeast' | 'nyc';
+
+const VIEWS: Array<{ id: View; label: string; sub: string }> = [
+  { id: 'bdr', label: 'Individual BDR', sub: 'Hallie or Matt' },
+  { id: 'team', label: 'Full Team', sub: 'All BDRs' },
+  { id: 'southeast', label: 'Southeast', sub: 'Hallie + Matt + region' },
+  { id: 'nyc', label: 'NYC / Northeast', sub: 'Northeast region' },
+];
+
 const BdrScoreboard = () => {
+  const [view, setView] = useState<View>('bdr');
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
   const [year, setYear] = useState<number>(2026);
@@ -50,12 +60,26 @@ const BdrScoreboard = () => {
     })();
   }, []);
 
-  const bdr: BDR = useMemo(() => {
+  const baseBdr: BDR = useMemo(() => {
     const base = BDRS.find(b => b.id === bdrId)!;
     const ov = overrides[bdrId];
     if (!ov) return base;
     return { ...base, rows: { ...base.rows, ...ov } };
   }, [bdrId, overrides]);
+
+  // Synthetic "BDR" for region/team views built from aggregated rollups
+  const regionBdr: BDR | null = useMemo(() => {
+    if (view === 'bdr') return null;
+    const ovKey = view === 'team' ? '__team' : view === 'southeast' ? '__southeast' : '__nyc';
+    const rows = overrides[ovKey] ?? {};
+    const annualGp = rows['2026-All']?.monthlyGoal ?? 0;
+    // Approximate annual revenue with team-wide GP margin (~25%) so the revenue card stays sensible.
+    const annualRev = annualGp ? Math.round(annualGp / 0.25) : 0;
+    const label = view === 'team' ? 'Full Team' : view === 'southeast' ? 'Southeast' : 'NYC / Northeast';
+    return { id: ovKey, name: label, market: 'Rollup', annualRevenueGoal: annualRev, annualGpGoal: annualGp, rows };
+  }, [view, overrides]);
+
+  const bdr: BDR = regionBdr ?? baseBdr;
 
   const key = `${year}-${period}`;
   const row: CalcRow | undefined = bdr.rows[key];
@@ -68,6 +92,7 @@ const BdrScoreboard = () => {
 
   const onTrack = row && row.monthlyGoal != null && row.actual != null && row.actual >= row.monthlyGoal;
   const accent = onTrack ? '#10B981' : '#fb923c';
+
 
   const handleRefreshClick = () => fileRef.current?.click();
 
