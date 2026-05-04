@@ -42,7 +42,7 @@ const BdrScoreboard = () => {
       const o: Record<string, Record<string, CalcRow>> = {};
       const m: Record<string, SnapshotMeta> = {};
       for (const row of data) {
-        o[row.bdr_id] = row.data as Record<string, CalcRow>;
+        o[row.bdr_id] = row.data as unknown as Record<string, CalcRow>;
         m[row.bdr_id] = { refreshedAt: row.refreshed_at, sourceFilename: row.source_filename };
       }
       setOverrides(o);
