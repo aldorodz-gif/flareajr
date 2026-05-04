@@ -96,11 +96,6 @@ const BdrScoreboard = () => {
     if (!file) return;
     setRefreshing(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({ title: 'Sign in required', description: 'Log in to save the snapshot.', variant: 'destructive' });
-        return;
-      }
       const parsed = await parseWorkbook(file);
       const updates: Array<{ bdr_id: string; data: Record<string, CalcRow>; rows: number }> = [];
       const push = (id: string, data: Record<string, CalcRow>) => {
@@ -125,33 +120,40 @@ const BdrScoreboard = () => {
         return;
       }
 
+      const newOv = { ...overrides };
+      const newMeta = { ...meta };
+      const refreshedAt = new Date().toISOString();
+      for (const u of updates) {
+        newOv[u.bdr_id] = u.data;
+        newMeta[u.bdr_id] = { refreshedAt, sourceFilename: file.name };
+      }
+      setOverrides(newOv);
+      setMeta(newMeta);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: 'Numbers refreshed',
+          description: `Loaded ${updates.map(u => `${u.bdr_id} (${u.rows} rows)`).join(', ')} locally. Sign in if you want the snapshot saved for later.`,
+        });
+        return;
+      }
 
       const payload = updates.map(u => ({
         bdr_id: u.bdr_id,
         data: u.data as unknown as Record<string, unknown>,
         source_filename: file.name,
         refreshed_by: user.id,
-        refreshed_at: new Date().toISOString(),
+        refreshed_at: refreshedAt,
       }));
 
       const { error } = await supabase.from('bdr_snapshots').upsert(payload as never, { onConflict: 'bdr_id' });
-      if (error) {
-        toast({ title: 'Save failed', description: error.message, variant: 'destructive' });
-        return;
-      }
-
-      const newOv = { ...overrides };
-      const newMeta = { ...meta };
-      for (const u of updates) {
-        newOv[u.bdr_id] = u.data;
-        newMeta[u.bdr_id] = { refreshedAt: new Date().toISOString(), sourceFilename: file.name };
-      }
-      setOverrides(newOv);
-      setMeta(newMeta);
-
       toast({
-        title: 'Numbers refreshed',
-        description: `Updated ${updates.map(u => `${u.bdr_id} (${u.rows} rows)`).join(', ')}.`,
+        title: error ? 'Loaded locally only' : 'Numbers refreshed',
+        description: error
+          ? `The workbook loaded into this session, but couldn't be saved to the backend: ${error.message}`
+          : `Updated ${updates.map(u => `${u.bdr_id} (${u.rows} rows)`).join(', ')}.`,
+        variant: error ? 'destructive' : 'default',
       });
     } catch (err) {
       toast({
