@@ -31,7 +31,10 @@ const findSheet = (wb: XLSX.WorkBook, ...needles: string[]): XLSX.WorkSheet | nu
 const sheetToGrid = (ws: XLSX.WorkSheet): unknown[][] =>
   XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: true, defval: null }) as unknown[][];
 
-interface RegionRollup {
+export interface BdrMember {
+  name: string;
+  market: string;
+  region: string;
   rows: Record<string, CalcRow>;
 }
 
@@ -41,18 +44,21 @@ export interface ParsedSnapshot {
   team: Record<string, CalcRow>;
   southeast: Record<string, CalcRow>;
   nyc: Record<string, CalcRow>;
-  diagnostics: { hallieKeys: number; mattKeys: number; sheetNames: string[] };
+  members: Record<string, BdrMember>;
+  diagnostics: { hallieKeys: number; mattKeys: number; sheetNames: string[]; memberCount: number };
 }
 
 const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
-  // Pull region map from "2026 Standings"
+  // Pull region + market from "2026 Standings"
   const standings = findSheet(wb, '2026', 'standings');
   const regionByName: Record<string, string> = {};
+  const marketByName: Record<string, string> = {};
   if (standings) {
     const grid = sheetToGrid(standings);
     for (const row of grid.slice(1)) {
       const name = row[0];
       if (typeof name === 'string' && name.includes(',')) {
+        marketByName[name.trim()] = String(row[2] ?? '').trim();
         regionByName[name.trim()] = String(row[3] ?? '').trim();
       }
     }
@@ -65,6 +71,7 @@ const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
     team: {} as Record<string, CalcRow>,
     southeast: {} as Record<string, CalcRow>,
     nyc: {} as Record<string, CalcRow>,
+    members: {} as Record<string, BdrMember>,
   };
   if (!ws) return out;
 
@@ -75,60 +82,64 @@ const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
     if (typeof v === 'string' && LABEL_TO_KEY[v]) periods.push({ col: j, key: `2026-${LABEL_TO_KEY[v]}` });
   });
 
-  const initRollup = (r: RegionRollup) => {
+  const initRollup = () => {
+    const o: Record<string, CalcRow> = {};
     for (const { key } of periods) {
       const row = empty();
       row.monthlyGoal = 0;
       row.actual = 0;
-      r.rows[key] = row;
+      o[key] = row;
     }
+    return o;
   };
-  const team: RegionRollup = { rows: {} };
-  const se: RegionRollup = { rows: {} };
-  const nyc: RegionRollup = { rows: {} };
-  initRollup(team); initRollup(se); initRollup(nyc);
+  const team = initRollup();
+  const se = initRollup();
+  const nyc = initRollup();
 
   for (const r of grid.slice(2)) {
     const name = r[1];
     if (typeof name !== 'string' || !name.includes(',')) continue;
     const trimmed = name.trim();
     const region = regionByName[trimmed] ?? '';
+    const market = marketByName[trimmed] ?? '';
 
-    const target = trimmed === 'Bellack, Hallie' ? 'hallie'
-      : trimmed === 'Griffith, Matthew' ? 'matt'
-      : null;
+    const memberRows: Record<string, CalcRow> = {};
+    let hasAny = false;
 
     for (const { col, key } of periods) {
       const g = num(r[col - 3]);
       const a = num(r[col - 2]);
 
-      if (target) {
-        const row = empty();
-        row.monthlyGoal = g;
-        row.actual = a;
-        if (g !== null && a !== null) {
-          row.actVarDollar = +(a - g).toFixed(2);
-          row.actVarPct = g !== 0 ? +(a / g).toFixed(4) : null;
-        }
-        out[target][key] = row;
+      const row = empty();
+      row.monthlyGoal = g;
+      row.actual = a;
+      if (g !== null && a !== null) {
+        row.actVarDollar = +(a - g).toFixed(2);
+        row.actVarPct = g !== 0 ? +(a / g).toFixed(4) : null;
       }
+      memberRows[key] = row;
+      if (g !== null || a !== null) hasAny = true;
 
-      if (g !== null) team.rows[key].monthlyGoal = (team.rows[key].monthlyGoal ?? 0) + g;
-      if (a !== null) team.rows[key].actual = (team.rows[key].actual ?? 0) + a;
+      if (g !== null) team[key].monthlyGoal = (team[key].monthlyGoal ?? 0) + g;
+      if (a !== null) team[key].actual = (team[key].actual ?? 0) + a;
       if (region === 'Southeast') {
-        if (g !== null) se.rows[key].monthlyGoal = (se.rows[key].monthlyGoal ?? 0) + g;
-        if (a !== null) se.rows[key].actual = (se.rows[key].actual ?? 0) + a;
+        if (g !== null) se[key].monthlyGoal = (se[key].monthlyGoal ?? 0) + g;
+        if (a !== null) se[key].actual = (se[key].actual ?? 0) + a;
       }
       if (region === 'Northeast') {
-        if (g !== null) nyc.rows[key].monthlyGoal = (nyc.rows[key].monthlyGoal ?? 0) + g;
-        if (a !== null) nyc.rows[key].actual = (nyc.rows[key].actual ?? 0) + a;
+        if (g !== null) nyc[key].monthlyGoal = (nyc[key].monthlyGoal ?? 0) + g;
+        if (a !== null) nyc[key].actual = (nyc[key].actual ?? 0) + a;
       }
     }
+
+    if (hasAny) out.members[trimmed] = { name: trimmed, market, region, rows: memberRows };
+    if (trimmed === 'Bellack, Hallie') out.hallie = memberRows;
+    if (trimmed === 'Griffith, Matthew') out.matt = memberRows;
   }
 
   for (const r of [team, se, nyc]) {
-    for (const key of Object.keys(r.rows)) {
-      const row = r.rows[key];
+    for (const key of Object.keys(r)) {
+      const row = r[key];
       const g = row.monthlyGoal, a = row.actual;
       if (g !== null && a !== null) {
         row.actVarDollar = +(a - g).toFixed(2);
@@ -136,9 +147,9 @@ const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
       }
     }
   }
-  out.team = team.rows;
-  out.southeast = se.rows;
-  out.nyc = nyc.rows;
+  out.team = team;
+  out.southeast = se;
+  out.nyc = nyc;
   return out;
 };
 
@@ -152,6 +163,7 @@ export const parseWorkbook = async (file: File): Promise<ParsedSnapshot> => {
       hallieKeys: Object.keys(parsed.hallie).length,
       mattKeys: Object.keys(parsed.matt).length,
       sheetNames: wb.SheetNames,
+      memberCount: Object.keys(parsed.members).length,
     },
   };
 };
