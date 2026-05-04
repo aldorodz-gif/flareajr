@@ -111,6 +111,10 @@ const BdrScoreboard = () => {
       push('__team', parsed.team);
       push('__southeast', parsed.southeast);
       push('__nyc', parsed.nyc);
+      // Stash full per-member breakdown under one row so region views can list each contributor.
+      if (Object.keys(parsed.members).length > 0) {
+        updates.push({ bdr_id: '__members', data: parsed.members as unknown as Record<string, CalcRow>, rows: Object.keys(parsed.members).length });
+      }
 
       if (updates.length === 0) {
         toast({
