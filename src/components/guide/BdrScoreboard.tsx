@@ -36,21 +36,32 @@ const BdrScoreboard = () => {
   const [refreshing, setRefreshing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Load latest snapshots for all BDRs
+  const STORAGE_KEY = 'bdr_snapshot_v1';
+
+  // Hydrate from localStorage immediately, then overlay backend rows if signed in
   useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const cached = JSON.parse(raw) as { overrides: Record<string, Record<string, CalcRow>>; meta: Record<string, SnapshotMeta> };
+        if (cached.overrides) setOverrides(cached.overrides);
+        if (cached.meta) setMeta(cached.meta);
+      }
+    } catch { /* ignore */ }
+
     (async () => {
       const { data, error } = await supabase
         .from('bdr_snapshots')
         .select('bdr_id, data, source_filename, refreshed_at');
-      if (error || !data) return;
+      if (error || !data || data.length === 0) return;
       const o: Record<string, Record<string, CalcRow>> = {};
       const m: Record<string, SnapshotMeta> = {};
       for (const row of data) {
         o[row.bdr_id] = row.data as unknown as Record<string, CalcRow>;
         m[row.bdr_id] = { refreshedAt: row.refreshed_at, sourceFilename: row.source_filename };
       }
-      setOverrides(o);
-      setMeta(m);
+      setOverrides(prev => ({ ...prev, ...o }));
+      setMeta(prev => ({ ...prev, ...m }));
     })();
   }, []);
 
