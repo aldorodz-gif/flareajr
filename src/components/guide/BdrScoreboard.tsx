@@ -1,6 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Eyebrow from './Eyebrow';
-import { BDRS, KPI_LABELS, MONTHS, QUARTERS, revenueForGp, type CalcRow } from './bdrCalculatorData';
+import { BDRS, KPI_LABELS, MONTHS, QUARTERS, revenueForGp, type CalcRow, type BDR } from './bdrCalculatorData';
+import { parseWorkbook } from './bdrXlsxParser';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 const fmt = (v: number | null, kind: 'currency' | 'percent' | 'number') => {
   if (v === null || v === undefined || Number.isNaN(v)) return '—';
@@ -14,35 +17,157 @@ const fmt = (v: number | null, kind: 'currency' | 'percent' | 'number') => {
 
 const YEARS = [2026, 2025] as const;
 
+interface SnapshotMeta {
+  refreshedAt: string;
+  sourceFilename: string | null;
+}
+
 const BdrScoreboard = () => {
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
   const [year, setYear] = useState<number>(2026);
   const [period, setPeriod] = useState<string>(MONTHS[Math.min(now.getMonth(), 11)]);
+  const [overrides, setOverrides] = useState<Record<string, Record<string, CalcRow>>>({});
+  const [meta, setMeta] = useState<Record<string, SnapshotMeta>>({});
+  const [refreshing, setRefreshing] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const bdr = useMemo(() => BDRS.find(b => b.id === bdrId)!, [bdrId]);
+  // Load latest snapshots for all BDRs
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase
+        .from('bdr_snapshots')
+        .select('bdr_id, data, source_filename, refreshed_at');
+      if (error || !data) return;
+      const o: Record<string, Record<string, CalcRow>> = {};
+      const m: Record<string, SnapshotMeta> = {};
+      for (const row of data) {
+        o[row.bdr_id] = row.data as unknown as Record<string, CalcRow>;
+        m[row.bdr_id] = { refreshedAt: row.refreshed_at, sourceFilename: row.source_filename };
+      }
+      setOverrides(o);
+      setMeta(m);
+    })();
+  }, []);
+
+  const bdr: BDR = useMemo(() => {
+    const base = BDRS.find(b => b.id === bdrId)!;
+    const ov = overrides[bdrId];
+    if (!ov) return base;
+    return { ...base, rows: { ...base.rows, ...ov } };
+  }, [bdrId, overrides]);
+
   const key = `${year}-${period}`;
   const row: CalcRow | undefined = bdr.rows[key];
 
-  const quarterTotals = useMemo(() => {
-    return QUARTERS.map(q => bdr.rows[`${year}-${q}`]);
-  }, [bdr, year]);
+  const quarterTotals = useMemo(
+    () => QUARTERS.map(q => bdr.rows[`${year}-${q}`]),
+    [bdr, year]
+  );
   const yearTotal = bdr.rows[`${year}-All`];
 
   const onTrack = row && row.monthlyGoal != null && row.actual != null && row.actual >= row.monthlyGoal;
   const accent = onTrack ? '#10B981' : '#fb923c';
 
+  const handleRefreshClick = () => fileRef.current?.click();
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setRefreshing(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({ title: 'Sign in required', description: 'Log in to save the snapshot.', variant: 'destructive' });
+        return;
+      }
+      const parsed = await parseWorkbook(file);
+      const updates: Array<{ bdr_id: string; data: Record<string, CalcRow>; rows: number }> = [];
+      if (Object.keys(parsed.hallie).length > 0) updates.push({ bdr_id: 'hallie', data: parsed.hallie, rows: Object.keys(parsed.hallie).length });
+      if (Object.keys(parsed.matt).length > 0) updates.push({ bdr_id: 'matt', data: parsed.matt, rows: Object.keys(parsed.matt).length });
+
+      if (updates.length === 0) {
+        toast({
+          title: 'Could not read the file',
+          description: `No matching rows found. Sheets seen: ${parsed.diagnostics.sheetNames.join(', ')}`,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const payload = updates.map(u => ({
+        bdr_id: u.bdr_id,
+        data: u.data as unknown as Record<string, unknown>,
+        source_filename: file.name,
+        refreshed_by: user.id,
+        refreshed_at: new Date().toISOString(),
+      }));
+
+      const { error } = await supabase.from('bdr_snapshots').upsert(payload as never, { onConflict: 'bdr_id' });
+      if (error) {
+        toast({ title: 'Save failed', description: error.message, variant: 'destructive' });
+        return;
+      }
+
+      const newOv = { ...overrides };
+      const newMeta = { ...meta };
+      for (const u of updates) {
+        newOv[u.bdr_id] = u.data;
+        newMeta[u.bdr_id] = { refreshedAt: new Date().toISOString(), sourceFilename: file.name };
+      }
+      setOverrides(newOv);
+      setMeta(newMeta);
+
+      toast({
+        title: 'Numbers refreshed',
+        description: `Updated ${updates.map(u => `${u.bdr_id} (${u.rows} rows)`).join(', ')}.`,
+      });
+    } catch (err) {
+      toast({
+        title: 'Parse error',
+        description: err instanceof Error ? err.message : 'Could not read the file.',
+        variant: 'destructive',
+      });
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const lastRefresh = meta[bdrId];
+  const lastRefreshLabel = lastRefresh
+    ? `Refreshed ${new Date(lastRefresh.refreshedAt).toLocaleString()} · ${lastRefresh.sourceFilename ?? 'uploaded file'}`
+    : 'Using baked-in snapshot · click Refresh to upload latest';
+
   return (
     <div className="p-5 rounded-xl mb-5" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)' }}>
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        className="hidden"
+        onChange={handleFile}
+      />
+
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>
           <Eyebrow gradient="linear-gradient(90deg, #fb923c, #fbbf24)">BDR Scoreboard</Eyebrow>
           <h3 className="text-[18px] font-extrabold tracking-tight mt-1" style={{ color: '#0e1e3a' }}>
             {bdr.name} <span className="font-medium" style={{ color: '#64748b' }}>· {bdr.market}</span>
           </h3>
-          <p className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>From the Calculator sheet · {key}</p>
+          <p className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>{lastRefreshLabel}</p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <button
+            onClick={handleRefreshClick}
+            disabled={refreshing}
+            className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5 transition-opacity disabled:opacity-60"
+            style={{ background: '#fb923c', color: '#fff', border: '1px solid #fb923c' }}
+            title="Upload the latest Sales Forecasting .xlsx to refresh Hallie + Matt"
+          >
+            <span>{refreshing ? '⏳' : '↻'}</span>
+            <span>{refreshing ? 'Refreshing…' : 'Refresh'}</span>
+          </button>
           <select
             value={bdrId}
             onChange={(e) => setBdrId(e.target.value)}
@@ -91,7 +216,6 @@ const BdrScoreboard = () => {
             <span>{onTrack ? '✓ Hitting GP Goal' : '⚠ Behind GP Goal'}</span>
           </div>
 
-          {/* Top Line Revenue strip — derived from GP figures using each BDR's GP margin */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
             <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
               <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#fbbf24' }}>Top Line Revenue Goal · Annual</div>

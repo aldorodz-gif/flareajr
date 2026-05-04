@@ -65,6 +65,36 @@ export type Database = {
           },
         ]
       }
+      bdr_snapshots: {
+        Row: {
+          bdr_id: string
+          created_at: string
+          data: Json
+          id: string
+          refreshed_at: string
+          refreshed_by: string | null
+          source_filename: string | null
+        }
+        Insert: {
+          bdr_id: string
+          created_at?: string
+          data: Json
+          id?: string
+          refreshed_at?: string
+          refreshed_by?: string | null
+          source_filename?: string | null
+        }
+        Update: {
+          bdr_id?: string
+          created_at?: string
+          data?: Json
+          id?: string
+          refreshed_at?: string
+          refreshed_by?: string | null
+          source_filename?: string | null
+        }
+        Relationships: []
+      }
       pipeline_items: {
         Row: {
           company_name: string
