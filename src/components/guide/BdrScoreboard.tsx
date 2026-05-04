@@ -84,8 +84,14 @@ const BdrScoreboard = () => {
       }
       const parsed = await parseWorkbook(file);
       const updates: Array<{ bdr_id: string; data: Record<string, CalcRow>; rows: number }> = [];
-      if (Object.keys(parsed.hallie).length > 0) updates.push({ bdr_id: 'hallie', data: parsed.hallie, rows: Object.keys(parsed.hallie).length });
-      if (Object.keys(parsed.matt).length > 0) updates.push({ bdr_id: 'matt', data: parsed.matt, rows: Object.keys(parsed.matt).length });
+      const push = (id: string, data: Record<string, CalcRow>) => {
+        if (Object.keys(data).length > 0) updates.push({ bdr_id: id, data, rows: Object.keys(data).length });
+      };
+      push('hallie', parsed.hallie);
+      push('matt', parsed.matt);
+      push('__team', parsed.team);
+      push('__southeast', parsed.southeast);
+      push('__nyc', parsed.nyc);
 
       if (updates.length === 0) {
         toast({
@@ -95,6 +101,7 @@ const BdrScoreboard = () => {
         });
         return;
       }
+
 
       const payload = updates.map(u => ({
         bdr_id: u.bdr_id,
