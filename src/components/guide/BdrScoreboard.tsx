@@ -98,13 +98,13 @@ const BdrScoreboard = () => {
 
       const payload = updates.map(u => ({
         bdr_id: u.bdr_id,
-        data: u.data,
+        data: u.data as unknown as Record<string, unknown>,
         source_filename: file.name,
         refreshed_by: user.id,
         refreshed_at: new Date().toISOString(),
       }));
 
-      const { error } = await supabase.from('bdr_snapshots').upsert(payload, { onConflict: 'bdr_id' });
+      const { error } = await supabase.from('bdr_snapshots').upsert(payload as never, { onConflict: 'bdr_id' });
       if (error) {
         toast({ title: 'Save failed', description: error.message, variant: 'destructive' });
         return;
