@@ -365,8 +365,19 @@ const BdrScoreboard = () => {
         list.sort((a, b) => (b.rows[rollupKey]?.actual ?? 0) - (a.rows[rollupKey]?.actual ?? 0));
         if (list.length === 0) {
           return (
-            <div className="mt-4 pt-4 border-t text-[12px]" style={{ borderColor: 'rgba(14,30,58,.08)', color: '#94a3b8' }}>
-              No per-BDR breakdown yet — click Refresh to load the latest workbook.
+            <div className="mt-4 pt-4 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-2" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
+              <div className="text-[12px]" style={{ color: '#94a3b8' }}>
+                No per-BDR breakdown yet — upload the latest Sales Forecasting workbook to populate this section.
+              </div>
+              <button
+                onClick={handleRefreshClick}
+                disabled={refreshing}
+                className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5"
+                style={{ background: '#fb923c', color: '#fff', border: '1px solid #fb923c' }}
+              >
+                <span>{refreshing ? '⏳' : '↻'}</span>
+                <span>{refreshing ? 'Loading…' : 'Upload workbook'}</span>
+              </button>
             </div>
           );
         }
