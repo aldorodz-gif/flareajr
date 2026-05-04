@@ -84,8 +84,14 @@ const BdrScoreboard = () => {
       }
       const parsed = await parseWorkbook(file);
       const updates: Array<{ bdr_id: string; data: Record<string, CalcRow>; rows: number }> = [];
-      if (Object.keys(parsed.hallie).length > 0) updates.push({ bdr_id: 'hallie', data: parsed.hallie, rows: Object.keys(parsed.hallie).length });
-      if (Object.keys(parsed.matt).length > 0) updates.push({ bdr_id: 'matt', data: parsed.matt, rows: Object.keys(parsed.matt).length });
+      const push = (id: string, data: Record<string, CalcRow>) => {
+        if (Object.keys(data).length > 0) updates.push({ bdr_id: id, data, rows: Object.keys(data).length });
+      };
+      push('hallie', parsed.hallie);
+      push('matt', parsed.matt);
+      push('__team', parsed.team);
+      push('__southeast', parsed.southeast);
+      push('__nyc', parsed.nyc);
 
       if (updates.length === 0) {
         toast({
@@ -95,6 +101,7 @@ const BdrScoreboard = () => {
         });
         return;
       }
+
 
       const payload = updates.map(u => ({
         bdr_id: u.bdr_id,
@@ -139,6 +146,26 @@ const BdrScoreboard = () => {
     ? `Refreshed ${new Date(lastRefresh.refreshedAt).toLocaleString()} · ${lastRefresh.sourceFilename ?? 'uploaded file'}`
     : 'Using baked-in snapshot · click Refresh to upload latest';
 
+  const rollupKey = `${year}-${period}`;
+  const teamRow = overrides['__team']?.[rollupKey];
+  const seRow = overrides['__southeast']?.[rollupKey];
+  const nycRow = overrides['__nyc']?.[rollupKey];
+  const RollupCard = ({ label, r, dark }: { label: string; r?: CalcRow; dark?: boolean }) => {
+    const pct = r && r.monthlyGoal && r.actual != null ? r.actual / r.monthlyGoal : null;
+    const hit = pct != null && pct >= 1;
+    return (
+      <div className="p-3 rounded-lg" style={{ background: dark ? '#0e1e3a' : '#fff', border: `1px solid ${dark ? '#0e1e3a' : 'rgba(14,30,58,.06)'}` }}>
+        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#fbbf24' : '#64748b' }}>{label} · {period}</div>
+        <div className="text-[18px] font-extrabold tabular-nums" style={{ color: dark ? '#fff' : '#0e1e3a' }}>
+          {fmt(r?.actual ?? null, 'currency')}
+        </div>
+        <div className="text-[10px] mt-0.5 tabular-nums" style={{ color: dark ? 'rgba(255,255,255,.7)' : '#94a3b8' }}>
+          goal {fmt(r?.monthlyGoal ?? null, 'currency')} · {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="p-5 rounded-xl mb-5" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)' }}>
       <input
@@ -148,6 +175,17 @@ const BdrScoreboard = () => {
         className="hidden"
         onChange={handleFile}
       />
+
+      {(teamRow || seRow || nycRow) && (
+        <div className="mb-4">
+          <Eyebrow gradient="linear-gradient(90deg, #fb923c, #fbbf24)">Team Rollup</Eyebrow>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1">
+            <RollupCard label="Full Team GP" r={teamRow} dark />
+            <RollupCard label="Southeast GP" r={seRow} />
+            <RollupCard label="NYC / Northeast GP" r={nycRow} />
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>

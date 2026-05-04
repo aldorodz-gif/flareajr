@@ -1,23 +1,24 @@
 import * as XLSX from 'xlsx';
 import type { CalcRow } from './bdrCalculatorData';
-import { MONTHS, QUARTERS } from './bdrCalculatorData';
 
-// Parses Hallie's "Calculator" sheet and Matt's GP rows from "2026 Goals Firm" + "% of BDRs to Goal".
-// Returns one CalcRow record keyed like "2026-Mar", "2026-Q1", "2026-All".
-
-const FIELD_ORDER: (keyof CalcRow)[] = [
-  'monthlyGoal','actual','actVarDollar','actDaysNeeded','actVarPct','actBookingsToGoal',
-  'gpGroupPipe','gpExistingPipe','totalPipe','actPlusPipe','expVarDollar','expVarPct',
-  'remainPipeNeed','expDaysNeeded','expBookings','commEarned','commForecast','totalCommPred',
-];
+const LABEL_TO_KEY: Record<string, string> = {
+  January: 'Jan', February: 'Feb', March: 'Mar', April: 'Apr', May: 'May', June: 'Jun',
+  July: 'Jul', August: 'Aug', September: 'Sep', October: 'Oct', November: 'Nov', December: 'Dec',
+  'Q1 Total': 'Q1', 'Q2 Total': 'Q2', 'Q3 Total': 'Q3', 'Q4 Total': 'Q4', '2026 Total': 'All',
+};
 
 const num = (v: unknown): number | null => {
-  if (v === null || v === undefined || v === '') return null;
+  if (v === null || v === undefined || v === '' || v === '\u00a0') return null;
   const n = typeof v === 'number' ? v : Number(v);
   return Number.isFinite(n) ? n : null;
 };
 
-const emptyRow = (): CalcRow => Object.fromEntries(FIELD_ORDER.map(k => [k, null])) as CalcRow;
+const empty = (): CalcRow => ({
+  monthlyGoal: null, actual: null, actVarDollar: null, actDaysNeeded: null, actVarPct: null,
+  actBookingsToGoal: null, gpGroupPipe: null, gpExistingPipe: null, totalPipe: null,
+  actPlusPipe: null, expVarDollar: null, expVarPct: null, remainPipeNeed: null,
+  expDaysNeeded: null, expBookings: null, commEarned: null, commForecast: null, totalCommPred: null,
+});
 
 const findSheet = (wb: XLSX.WorkBook, ...needles: string[]): XLSX.WorkSheet | null => {
   for (const name of wb.SheetNames) {
@@ -30,141 +31,126 @@ const findSheet = (wb: XLSX.WorkBook, ...needles: string[]): XLSX.WorkSheet | nu
 const sheetToGrid = (ws: XLSX.WorkSheet): unknown[][] =>
   XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: true, defval: null }) as unknown[][];
 
-const labelMatches = (cell: unknown, label: string): boolean => {
-  if (typeof cell !== 'string') return false;
-  return cell.trim().toLowerCase().startsWith(label.toLowerCase());
-};
-
-// Parse Hallie from "Calculator" sheet.
-// Layout: column A holds month/quarter labels; columns B..S hold the 18 KPI fields in FIELD_ORDER.
-const parseHallie = (wb: XLSX.WorkBook): Record<string, CalcRow> => {
-  const ws = findSheet(wb, 'calculator');
-  if (!ws) return {};
-  const grid = sheetToGrid(ws);
-  const out: Record<string, CalcRow> = {};
-
-  for (const row of grid) {
-    if (!row || row.length === 0) continue;
-    const label = typeof row[0] === 'string' ? row[0].trim() : '';
-    if (!label) continue;
-
-    let key: string | null = null;
-    // Match "Jan 2025", "January 2026", "2026 Jan", "Mar-26", etc.
-    for (const yr of [2025, 2026]) {
-      for (const m of MONTHS) {
-        const re = new RegExp(`(${m}|${monthLong(m)})[\\s\\-,]*${yr}|${yr}[\\s\\-,]*(${m}|${monthLong(m)})`, 'i');
-        if (re.test(label)) { key = `${yr}-${m}`; break; }
-      }
-      if (key) break;
-      for (const q of QUARTERS) {
-        const re = new RegExp(`${q}[\\s\\-,]*${yr}|${yr}[\\s\\-,]*${q}`, 'i');
-        if (re.test(label)) { key = `${yr}-${q}`; break; }
-      }
-      if (key) break;
-      if (new RegExp(`^${yr}\\b.*\\b(all|total|year)\\b`, 'i').test(label) ||
-          new RegExp(`\\b(all|total|year)\\b.*\\b${yr}\\b`, 'i').test(label)) {
-        key = `${yr}-All`; break;
-      }
-    }
-    if (!key) continue;
-
-    const r = emptyRow();
-    FIELD_ORDER.forEach((field, i) => {
-      r[field] = num(row[i + 1]);
-    });
-    out[key] = r;
-  }
-
-  return out;
-};
-
-const monthLong = (m: string): string => ({
-  Jan:'January',Feb:'February',Mar:'March',Apr:'April',May:'May',Jun:'June',
-  Jul:'July',Aug:'August',Sep:'September',Oct:'October',Nov:'November',Dec:'December',
-}[m] ?? m);
-
-// Parse Matt from "2026 Goals Firm" (GP goal) + "% of BDRs to Goal" or "BDR Standings" (actual).
-const parseMatt = (wb: XLSX.WorkBook): Record<string, CalcRow> => {
-  const out: Record<string, CalcRow> = {};
-  const goalsSheet = findSheet(wb, 'goals') ?? findSheet(wb, '2026', 'goal');
-  const standingsSheet =
-    findSheet(wb, 'standings') ??
-    findSheet(wb, '%', 'goal') ??
-    findSheet(wb, 'bdr', 'goal');
-
-  const goalsRow = goalsSheet ? findRowFor(goalsSheet, 'griffith') ?? findRowFor(goalsSheet, 'matt') : null;
-  const standingsRow = standingsSheet ? findRowFor(standingsSheet, 'griffith') ?? findRowFor(standingsSheet, 'matt') : null;
-
-  // Find the column index for each month/quarter on each sheet by reading the header rows.
-  const goalsCols = goalsSheet ? findPeriodCols(goalsSheet, 2026) : {};
-  const standingsCols = standingsSheet ? findPeriodCols(standingsSheet, 2026) : {};
-
-  const periods = [...MONTHS.map(m => `2026-${m}`), ...QUARTERS.map(q => `2026-${q}`), '2026-All'];
-  for (const p of periods) {
-    const r = emptyRow();
-    if (goalsRow && goalsCols[p] !== undefined) r.monthlyGoal = num(goalsRow[goalsCols[p]]);
-    if (standingsRow && standingsCols[p] !== undefined) r.actual = num(standingsRow[standingsCols[p]]);
-    if (r.monthlyGoal !== null && r.actual !== null) {
-      r.actVarDollar = +(r.actual - r.monthlyGoal).toFixed(2);
-      r.actVarPct = r.monthlyGoal !== 0 ? +(r.actual / r.monthlyGoal).toFixed(4) : null;
-    }
-    if (r.monthlyGoal !== null || r.actual !== null) out[p] = r;
-  }
-  return out;
-};
-
-const findRowFor = (ws: XLSX.WorkSheet, needle: string): unknown[] | null => {
-  const grid = sheetToGrid(ws);
-  for (const row of grid) {
-    if (!row) continue;
-    for (const cell of row.slice(0, 4)) {
-      if (typeof cell === 'string' && cell.toLowerCase().includes(needle.toLowerCase())) return row;
-    }
-  }
-  return null;
-};
-
-// Walk top rows looking for headers like "Jan", "Q1", "2026 All", returning column indexes.
-const findPeriodCols = (ws: XLSX.WorkSheet, year: number): Record<string, number> => {
-  const grid = sheetToGrid(ws);
-  const cols: Record<string, number> = {};
-  const headerRows = grid.slice(0, 6);
-  for (const row of headerRows) {
-    if (!row) continue;
-    row.forEach((cell, idx) => {
-      if (typeof cell !== 'string' && typeof cell !== 'number') return;
-      const s = String(cell).trim();
-      for (const m of MONTHS) {
-        if (new RegExp(`^${m}|^${monthLong(m)}`, 'i').test(s)) {
-          cols[`${year}-${m}`] = idx;
-        }
-      }
-      for (const q of QUARTERS) {
-        if (new RegExp(`^${q}\\b`, 'i').test(s)) cols[`${year}-${q}`] = idx;
-      }
-      if (/^(year|total|all|annual|fy)/i.test(s)) cols[`${year}-All`] = idx;
-    });
-  }
-  return cols;
-};
+interface RegionRollup {
+  rows: Record<string, CalcRow>;
+}
 
 export interface ParsedSnapshot {
   hallie: Record<string, CalcRow>;
   matt: Record<string, CalcRow>;
+  team: Record<string, CalcRow>;
+  southeast: Record<string, CalcRow>;
+  nyc: Record<string, CalcRow>;
   diagnostics: { hallieKeys: number; mattKeys: number; sheetNames: string[] };
 }
+
+const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
+  // Pull region map from "2026 Standings"
+  const standings = findSheet(wb, '2026', 'standings');
+  const regionByName: Record<string, string> = {};
+  if (standings) {
+    const grid = sheetToGrid(standings);
+    for (const row of grid.slice(1)) {
+      const name = row[0];
+      if (typeof name === 'string' && name.includes(',')) {
+        regionByName[name.trim()] = String(row[3] ?? '').trim();
+      }
+    }
+  }
+
+  const ws = findSheet(wb, '%', 'goal') ?? findSheet(wb, 'bdr', 'goal');
+  const out = {
+    hallie: {} as Record<string, CalcRow>,
+    matt: {} as Record<string, CalcRow>,
+    team: {} as Record<string, CalcRow>,
+    southeast: {} as Record<string, CalcRow>,
+    nyc: {} as Record<string, CalcRow>,
+  };
+  if (!ws) return out;
+
+  const grid = sheetToGrid(ws);
+  const hdr = grid[0] ?? [];
+  const periods: Array<{ col: number; key: string }> = [];
+  hdr.forEach((v, j) => {
+    if (typeof v === 'string' && LABEL_TO_KEY[v]) periods.push({ col: j, key: `2026-${LABEL_TO_KEY[v]}` });
+  });
+
+  const initRollup = (r: RegionRollup) => {
+    for (const { key } of periods) {
+      const row = empty();
+      row.monthlyGoal = 0;
+      row.actual = 0;
+      r.rows[key] = row;
+    }
+  };
+  const team: RegionRollup = { rows: {} };
+  const se: RegionRollup = { rows: {} };
+  const nyc: RegionRollup = { rows: {} };
+  initRollup(team); initRollup(se); initRollup(nyc);
+
+  for (const r of grid.slice(2)) {
+    const name = r[1];
+    if (typeof name !== 'string' || !name.includes(',')) continue;
+    const trimmed = name.trim();
+    const region = regionByName[trimmed] ?? '';
+
+    const target = trimmed === 'Bellack, Hallie' ? 'hallie'
+      : trimmed === 'Griffith, Matthew' ? 'matt'
+      : null;
+
+    for (const { col, key } of periods) {
+      const g = num(r[col - 3]);
+      const a = num(r[col - 2]);
+
+      if (target) {
+        const row = empty();
+        row.monthlyGoal = g;
+        row.actual = a;
+        if (g !== null && a !== null) {
+          row.actVarDollar = +(a - g).toFixed(2);
+          row.actVarPct = g !== 0 ? +(a / g).toFixed(4) : null;
+        }
+        out[target][key] = row;
+      }
+
+      if (g !== null) team.rows[key].monthlyGoal = (team.rows[key].monthlyGoal ?? 0) + g;
+      if (a !== null) team.rows[key].actual = (team.rows[key].actual ?? 0) + a;
+      if (region === 'Southeast') {
+        if (g !== null) se.rows[key].monthlyGoal = (se.rows[key].monthlyGoal ?? 0) + g;
+        if (a !== null) se.rows[key].actual = (se.rows[key].actual ?? 0) + a;
+      }
+      if (region === 'Northeast') {
+        if (g !== null) nyc.rows[key].monthlyGoal = (nyc.rows[key].monthlyGoal ?? 0) + g;
+        if (a !== null) nyc.rows[key].actual = (nyc.rows[key].actual ?? 0) + a;
+      }
+    }
+  }
+
+  for (const r of [team, se, nyc]) {
+    for (const key of Object.keys(r.rows)) {
+      const row = r.rows[key];
+      const g = row.monthlyGoal, a = row.actual;
+      if (g !== null && a !== null) {
+        row.actVarDollar = +(a - g).toFixed(2);
+        row.actVarPct = g !== 0 ? +(a / g).toFixed(4) : null;
+      }
+    }
+  }
+  out.team = team.rows;
+  out.southeast = se.rows;
+  out.nyc = nyc.rows;
+  return out;
+};
 
 export const parseWorkbook = async (file: File): Promise<ParsedSnapshot> => {
   const buf = await file.arrayBuffer();
   const wb = XLSX.read(buf, { type: 'array' });
-  const hallie = parseHallie(wb);
-  const matt = parseMatt(wb);
+  const parsed = parseFromBdrSheet(wb);
   return {
-    hallie,
-    matt,
+    ...parsed,
     diagnostics: {
-      hallieKeys: Object.keys(hallie).length,
-      mattKeys: Object.keys(matt).length,
+      hallieKeys: Object.keys(parsed.hallie).length,
+      mattKeys: Object.keys(parsed.matt).length,
       sheetNames: wb.SheetNames,
     },
   };
