@@ -64,6 +64,12 @@ const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
     }
   }
 
+  // Hardcoded region fallback for known BDRs when 2026 Standings doesn't list them
+  const REGION_FALLBACK: Record<string, { region: string; market: string }> = {
+    'Bellack, Hallie': { region: 'Southeast', market: 'Charlotte' },
+    'Griffith, Matthew': { region: 'Northeast', market: 'NYC' },
+  };
+
   const ws = findSheet(wb, '%', 'goal') ?? findSheet(wb, 'bdr', 'goal');
   const out = {
     hallie: {} as Record<string, CalcRow>,
