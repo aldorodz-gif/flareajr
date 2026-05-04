@@ -140,12 +140,16 @@ const BdrScoreboard = () => {
       }
       setOverrides(newOv);
       setMeta(newMeta);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ overrides: newOv, meta: newMeta })); } catch { /* ignore */ }
+
+      const memberCount = parsed.diagnostics.memberCount;
+      const summary = `${memberCount} BDR${memberCount === 1 ? '' : 's'} parsed from ${file.name}`;
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
           title: 'Numbers refreshed',
-          description: `Loaded ${updates.map(u => `${u.bdr_id} (${u.rows} rows)`).join(', ')} locally. Sign in if you want the snapshot saved for later.`,
+          description: `${summary}. Saved to this browser. Sign in to sync across devices.`,
         });
         return;
       }
