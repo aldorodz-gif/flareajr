@@ -22,7 +22,11 @@ interface SnapshotMeta {
   sourceFilename: string | null;
 }
 
+type View = 'bdr' | 'team' | 'southeast' | 'nyc';
+
+
 const BdrScoreboard = () => {
+  const [view, setView] = useState<View>('bdr');
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
   const [year, setYear] = useState<number>(2026);
@@ -50,12 +54,26 @@ const BdrScoreboard = () => {
     })();
   }, []);
 
-  const bdr: BDR = useMemo(() => {
+  const baseBdr: BDR = useMemo(() => {
     const base = BDRS.find(b => b.id === bdrId)!;
     const ov = overrides[bdrId];
     if (!ov) return base;
     return { ...base, rows: { ...base.rows, ...ov } };
   }, [bdrId, overrides]);
+
+  // Synthetic "BDR" for region/team views built from aggregated rollups
+  const regionBdr: BDR | null = useMemo(() => {
+    if (view === 'bdr') return null;
+    const ovKey = view === 'team' ? '__team' : view === 'southeast' ? '__southeast' : '__nyc';
+    const rows = overrides[ovKey] ?? {};
+    const annualGp = rows['2026-All']?.monthlyGoal ?? 0;
+    // Approximate annual revenue with team-wide GP margin (~25%) so the revenue card stays sensible.
+    const annualRev = annualGp ? Math.round(annualGp / 0.25) : 0;
+    const label = view === 'team' ? 'Full Team' : view === 'southeast' ? 'Southeast' : 'NYC / Northeast';
+    return { id: ovKey, name: label, market: 'Rollup', annualRevenueGoal: annualRev, annualGpGoal: annualGp, rows };
+  }, [view, overrides]);
+
+  const bdr: BDR = regionBdr ?? baseBdr;
 
   const key = `${year}-${period}`;
   const row: CalcRow | undefined = bdr.rows[key];
@@ -68,6 +86,7 @@ const BdrScoreboard = () => {
 
   const onTrack = row && row.monthlyGoal != null && row.actual != null && row.actual >= row.monthlyGoal;
   const accent = onTrack ? '#10B981' : '#fb923c';
+
 
   const handleRefreshClick = () => fileRef.current?.click();
 
@@ -141,7 +160,7 @@ const BdrScoreboard = () => {
     }
   };
 
-  const lastRefresh = meta[bdrId];
+  const lastRefresh = view === 'bdr' ? meta[bdrId] : (meta['__team'] ?? meta['__southeast'] ?? meta['__nyc']);
   const lastRefreshLabel = lastRefresh
     ? `Refreshed ${new Date(lastRefresh.refreshedAt).toLocaleString()} · ${lastRefresh.sourceFilename ?? 'uploaded file'}`
     : 'Using baked-in snapshot · click Refresh to upload latest';
@@ -150,19 +169,40 @@ const BdrScoreboard = () => {
   const teamRow = overrides['__team']?.[rollupKey];
   const seRow = overrides['__southeast']?.[rollupKey];
   const nycRow = overrides['__nyc']?.[rollupKey];
-  const RollupCard = ({ label, r, dark }: { label: string; r?: CalcRow; dark?: boolean }) => {
+
+  const FilterTab = ({ id, label, sub, r, dark }: { id: View; label: string; sub: string; r?: CalcRow; dark?: boolean }) => {
+    const active = view === id;
     const pct = r && r.monthlyGoal && r.actual != null ? r.actual / r.monthlyGoal : null;
     const hit = pct != null && pct >= 1;
+    const onClick = () => setView(id);
     return (
-      <div className="p-3 rounded-lg" style={{ background: dark ? '#0e1e3a' : '#fff', border: `1px solid ${dark ? '#0e1e3a' : 'rgba(14,30,58,.06)'}` }}>
-        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#fbbf24' : '#64748b' }}>{label} · {period}</div>
-        <div className="text-[18px] font-extrabold tabular-nums" style={{ color: dark ? '#fff' : '#0e1e3a' }}>
-          {fmt(r?.actual ?? null, 'currency')}
+      <button
+        onClick={onClick}
+        type="button"
+        className="text-left p-3 rounded-lg transition-all"
+        style={{
+          background: dark ? '#0e1e3a' : '#fff',
+          border: `2px solid ${active ? '#fb923c' : (dark ? '#0e1e3a' : 'rgba(14,30,58,.06)')}`,
+          boxShadow: active ? '0 4px 12px rgba(251,146,60,.25)' : 'none',
+          cursor: 'pointer',
+        }}
+      >
+        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#fbbf24' : (active ? '#fb923c' : '#64748b') }}>
+          {label}
         </div>
-        <div className="text-[10px] mt-0.5 tabular-nums" style={{ color: dark ? 'rgba(255,255,255,.7)' : '#94a3b8' }}>
-          goal {fmt(r?.monthlyGoal ?? null, 'currency')} · {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
-        </div>
-      </div>
+        {r ? (
+          <>
+            <div className="text-[18px] font-extrabold tabular-nums" style={{ color: dark ? '#fff' : '#0e1e3a' }}>
+              {fmt(r.actual ?? null, 'currency')}
+            </div>
+            <div className="text-[10px] mt-0.5 tabular-nums" style={{ color: dark ? 'rgba(255,255,255,.7)' : '#94a3b8' }}>
+              goal {fmt(r.monthlyGoal ?? null, 'currency')} · {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
+            </div>
+          </>
+        ) : (
+          <div className="text-[11px]" style={{ color: dark ? 'rgba(255,255,255,.6)' : '#94a3b8' }}>{sub}</div>
+        )}
+      </button>
     );
   };
 
@@ -176,16 +216,16 @@ const BdrScoreboard = () => {
         onChange={handleFile}
       />
 
-      {(teamRow || seRow || nycRow) && (
-        <div className="mb-4">
-          <Eyebrow gradient="linear-gradient(90deg, #fb923c, #fbbf24)">Team Rollup</Eyebrow>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1">
-            <RollupCard label="Full Team GP" r={teamRow} dark />
-            <RollupCard label="Southeast GP" r={seRow} />
-            <RollupCard label="NYC / Northeast GP" r={nycRow} />
-          </div>
+      <div className="mb-4">
+        <Eyebrow gradient="linear-gradient(90deg, #fb923c, #fbbf24)">View · click to filter</Eyebrow>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1">
+          <FilterTab id="bdr" label="Individual BDR" sub={`${baseBdr.name}`} r={view === 'bdr' ? baseBdr.rows[rollupKey] : undefined} />
+          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
+          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
+          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
         </div>
-      )}
+      </div>
+
 
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>
@@ -206,14 +246,16 @@ const BdrScoreboard = () => {
             <span>{refreshing ? '⏳' : '↻'}</span>
             <span>{refreshing ? 'Refreshing…' : 'Refresh'}</span>
           </button>
-          <select
-            value={bdrId}
-            onChange={(e) => setBdrId(e.target.value)}
-            className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
-            style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
-          >
-            {BDRS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-          </select>
+          {view === 'bdr' && (
+            <select
+              value={bdrId}
+              onChange={(e) => setBdrId(e.target.value)}
+              className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
+              style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
+            >
+              {BDRS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+            </select>
+          )}
           <select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
