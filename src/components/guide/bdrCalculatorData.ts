@@ -123,6 +123,11 @@ export const KPI_LABELS: Array<{ key: keyof CalcRow; label: string; format: "cur
   { key: "actVarPct", label: "Act Variance % to Goal", format: "percent" },
   { key: "actDaysNeeded", label: "Act # Days Needed to Goal", format: "number" },
   { key: "actBookingsToGoal", label: "Act # Full Month Bookings to Goal", format: "number" },
-  { key: "commEarned", label: "Commission Earned", format: "currency" },
-  { key: "totalCommPred", label: "Total Monthly Commission Prediction", format: "currency" },
 ];
+
+// Region grouping for team rollup header.
+export const BDR_REGION: Record<string, 'Southeast' | 'NYC'> = {
+  hallie: 'Southeast',
+  matt: 'Southeast',
+};
+
