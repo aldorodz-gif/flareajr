@@ -38,16 +38,10 @@ const Index = () => {
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
       case 'market': return <MarketHeatTab />;
-      
-      case 'mindset': return <MindsetTab {...props} />;
-      
       case 'tracker': return <TrackerTab {...props} />;
-      
-      case 'contact': return <ContactTab {...props} />;
       case 'outreach': return <OutreachTab {...props} />;
       case 'signals': return <SignalsTab {...props} />;
       case 'events': return <EventsTab {...props} />;
-      case 'linkedin': return <LinkedInTab {...props} />;
       default: return null;
     }
   };
