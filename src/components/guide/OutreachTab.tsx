@@ -115,16 +115,10 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
       <Eyebrow gradient="linear-gradient(90deg, #5BBFA0, #8B8FE8)">Step 07: Make Contact</Eyebrow>
       <h2 className="text-[26px] font-bold mb-2 leading-tight text-foreground">Write Outreach</h2>
       <p className="text-[14px] max-w-[720px] mb-6 text-muted-foreground leading-relaxed">
-        Two channels, one goal — start a real conversation. Pick your mode below.
+        Generate a short, personal first email ready to send.
       </p>
 
-      {/* Email-only mode */}
-      {channel === 'email' && null}
-
-      {/* ══════════════════════════════════════════════ */}
-      {/* CHAPTER: EMAILING                              */}
-      {/* ══════════════════════════════════════════════ */}
-      {channel === 'email' && (
+      {(
         <div className="space-y-8 animate-fade-in">
           {/* ── AI Email Generator (Hero) ── */}
           <AiToolCard
