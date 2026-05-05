@@ -146,19 +146,11 @@ const BdrScoreboard = () => {
       const summary = `${memberCount} BDR${memberCount === 1 ? '' : 's'} parsed from ${file.name}`;
 
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: 'Numbers refreshed',
-          description: `${summary}. Saved to this browser. Sign in to sync across devices.`,
-        });
-        return;
-      }
-
       const payload = updates.map(u => ({
         bdr_id: u.bdr_id,
         data: u.data as unknown as Record<string, unknown>,
         source_filename: file.name,
-        refreshed_by: user.id,
+        refreshed_by: user?.id ?? null,
         refreshed_at: refreshedAt,
       }));
 
@@ -166,8 +158,8 @@ const BdrScoreboard = () => {
       toast({
         title: error ? 'Loaded locally only' : 'Numbers refreshed',
         description: error
-          ? `The workbook loaded into this session, but couldn't be saved to the backend: ${error.message}`
-          : `Updated ${updates.map(u => `${u.bdr_id} (${u.rows} rows)`).join(', ')}.`,
+          ? `${summary}. Saved to this browser, but couldn't be saved to the shared backend: ${error.message}`
+          : `${summary}. Saved to the shared backend — everyone will see this until a new file is uploaded.`,
         variant: error ? 'destructive' : 'default',
       });
     } catch (err) {
