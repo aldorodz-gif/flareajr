@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import AiToolCard from './AiToolCard';
 import BdrScoreboard from './BdrScoreboard';
 
 const DashboardTab = () => {
-
   return (
     <section className="px-6 md:px-12 py-8 max-w-[1400px] mx-auto">
       <div className="mb-5">
@@ -20,12 +17,6 @@ const DashboardTab = () => {
       </div>
 
       <BdrScoreboard />
-
-      <GoalsVsPace
-        outreach={{ current: actuals.outreach, goal: goals.outreach }}
-        meetings={{ current: actuals.meetings, goal: goals.meetings }}
-        pipeline={{ current: actuals.pipeline, goal: goals.pipeline }}
-      />
     </section>
   );
 };
