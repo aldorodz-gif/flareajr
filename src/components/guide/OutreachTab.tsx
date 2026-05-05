@@ -22,40 +22,6 @@ interface EmailResult {
   article_insight?: string;
 }
 
-/* ───── Micro-close data ───── */
-const MICRO_CLOSES = [
-  {
-    num: '01',
-    title: 'Confirm the pain is real',
-    phrase: '"What happens to your team when housing isn\'t locked in before people arrive?"',
-    why: 'You\'re not pitching yet. You\'re getting them to say the problem out loud. Once they articulate it, they own it — and the rest of the call builds on that.',
-  },
-  {
-    num: '02',
-    title: 'Confirm the value clicks',
-    phrase: '"If someone handled all of that — the sourcing, the lease terms, the move-ins — would that free up bandwidth your team needs right now?"',
-    why: 'Don\'t explain value. Ask if they see it. When they say yes, that\'s a commitment — not a feature dump they\'ll forget.',
-  },
-  {
-    num: '03',
-    title: 'Confirm there\'s a reason to act now',
-    phrase: '"If this doesn\'t get addressed before Q3, what does that look like for your team?"',
-    why: 'Urgency isn\'t pressure you create — it\'s a consequence they already feel. Help them connect the timeline to the cost of doing nothing.',
-  },
-  {
-    num: '04',
-    title: 'Confirm the next move',
-    phrase: '"It sounds like this is already costing your team time. Would it make sense to map out what a solution looks like for your specific setup?"',
-    why: 'If you\'ve confirmed the pain, value, and urgency — this isn\'t a hard ask. It\'s the obvious next step.',
-  },
-];
-
-const BANT = [
-  { letter: 'B', label: 'Budget', wrong: '"What\'s your budget?"', right: 'Surfaces when you talk about what the current problem is costing them. Let the number come from their side.' },
-  { letter: 'A', label: 'Authority', wrong: '"Are you the decision-maker?"', right: 'Ask how decisions like this typically get made. Map the process — don\'t put them on the spot.' },
-  { letter: 'N', label: 'Need', wrong: '"Do you need this?"', right: 'The need should come from them, not you. If you have to convince them there\'s a problem, you\'re too early.' },
-  { letter: 'T', label: 'Timing', wrong: '"When do you want to start?"', right: 'Anchor timing to their business events — a mobilization date, a lease ending, a cohort arriving.' },
-];
 
 const EMAIL_PARTS = [
   { num: 1, title: 'One specific observation', subtitle: 'proof you actually looked', good: '"Saw [Company] just [landed the contract / kicked off the expansion], congrats, that\'s a big one."', goodLabel: '✓ PERSONAL', bad: '"I came across your company and was impressed by what you do."', badLabel: '✗ GENERIC' },
