@@ -31,8 +31,6 @@ const EMAIL_PARTS = [
 ];
 
 const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
-  const [channel] = useState<'email'>('email');
-  void channel;
 
   // Email generator state
   const [company, setCompany] = useState('');
