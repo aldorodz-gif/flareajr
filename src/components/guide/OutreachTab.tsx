@@ -22,40 +22,6 @@ interface EmailResult {
   article_insight?: string;
 }
 
-/* ───── Micro-close data ───── */
-const MICRO_CLOSES = [
-  {
-    num: '01',
-    title: 'Confirm the pain is real',
-    phrase: '"What happens to your team when housing isn\'t locked in before people arrive?"',
-    why: 'You\'re not pitching yet. You\'re getting them to say the problem out loud. Once they articulate it, they own it — and the rest of the call builds on that.',
-  },
-  {
-    num: '02',
-    title: 'Confirm the value clicks',
-    phrase: '"If someone handled all of that — the sourcing, the lease terms, the move-ins — would that free up bandwidth your team needs right now?"',
-    why: 'Don\'t explain value. Ask if they see it. When they say yes, that\'s a commitment — not a feature dump they\'ll forget.',
-  },
-  {
-    num: '03',
-    title: 'Confirm there\'s a reason to act now',
-    phrase: '"If this doesn\'t get addressed before Q3, what does that look like for your team?"',
-    why: 'Urgency isn\'t pressure you create — it\'s a consequence they already feel. Help them connect the timeline to the cost of doing nothing.',
-  },
-  {
-    num: '04',
-    title: 'Confirm the next move',
-    phrase: '"It sounds like this is already costing your team time. Would it make sense to map out what a solution looks like for your specific setup?"',
-    why: 'If you\'ve confirmed the pain, value, and urgency — this isn\'t a hard ask. It\'s the obvious next step.',
-  },
-];
-
-const BANT = [
-  { letter: 'B', label: 'Budget', wrong: '"What\'s your budget?"', right: 'Surfaces when you talk about what the current problem is costing them. Let the number come from their side.' },
-  { letter: 'A', label: 'Authority', wrong: '"Are you the decision-maker?"', right: 'Ask how decisions like this typically get made. Map the process — don\'t put them on the spot.' },
-  { letter: 'N', label: 'Need', wrong: '"Do you need this?"', right: 'The need should come from them, not you. If you have to convince them there\'s a problem, you\'re too early.' },
-  { letter: 'T', label: 'Timing', wrong: '"When do you want to start?"', right: 'Anchor timing to their business events — a mobilization date, a lease ending, a cohort arriving.' },
-];
 
 const EMAIL_PARTS = [
   { num: 1, title: 'One specific observation', subtitle: 'proof you actually looked', good: '"Saw [Company] just [landed the contract / kicked off the expansion], congrats, that\'s a big one."', goodLabel: '✓ PERSONAL', bad: '"I came across your company and was impressed by what you do."', badLabel: '✗ GENERIC' },
@@ -65,8 +31,6 @@ const EMAIL_PARTS = [
 ];
 
 const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
-  const [channel, setChannel] = useState<'call' | 'email'>('call');
-  const [expandedClose, setExpandedClose] = useState<number | null>(null);
 
   // Email generator state
   const [company, setCompany] = useState('');
@@ -149,138 +113,10 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
       <Eyebrow gradient="linear-gradient(90deg, #5BBFA0, #8B8FE8)">Step 07: Make Contact</Eyebrow>
       <h2 className="text-[26px] font-bold mb-2 leading-tight text-foreground">Write Outreach</h2>
       <p className="text-[14px] max-w-[720px] mb-6 text-muted-foreground leading-relaxed">
-        Two channels, one goal — start a real conversation. Pick your mode below.
+        Generate a short, personal first email ready to send.
       </p>
 
-      {/* ══════════ Channel Toggle ══════════ */}
-      <div className="flex rounded-xl overflow-hidden mb-8 border border-border" style={{ background: 'hsl(var(--card))' }}>
-        {[
-          { id: 'call' as const, icon: '📞', label: 'When You\'re Calling', desc: 'Live conversation frameworks' },
-          { id: 'email' as const, icon: '✉️', label: 'When You\'re Emailing', desc: 'AI generator + writing rules' },
-        ].map(ch => (
-          <button
-            key={ch.id}
-            onClick={() => setChannel(ch.id)}
-            className="flex-1 flex items-center gap-3 px-5 py-4 transition-all duration-200"
-            style={{
-              background: channel === ch.id ? '#2F4858' : 'transparent',
-              color: channel === ch.id ? '#FAF7F2' : 'hsl(var(--foreground))',
-            }}
-          >
-            <span className="text-[22px]">{ch.icon}</span>
-            <div className="text-left">
-              <p className="text-[14px] font-semibold">{ch.label}</p>
-              <p className="text-[11px] opacity-60">{ch.desc}</p>
-            </div>
-          </button>
-        ))}
-      </div>
-
-      {/* ══════════════════════════════════════════════ */}
-      {/* CHAPTER: CALLING                               */}
-      {/* ══════════════════════════════════════════════ */}
-      {channel === 'call' && (
-        <div className="space-y-8 animate-fade-in">
-          {/* Intro */}
-          <div className="rounded-xl p-5" style={{ background: '#FAF7F2', border: '1px solid hsl(var(--border))' }}>
-            <p className="text-[14px] leading-relaxed text-foreground">
-              <strong>These aren't scripts.</strong> They're frameworks — flexible structures that help you build real agreement during a conversation. 
-              The goal isn't to "close" — it's to confirm alignment step by step so the next move feels obvious.
-            </p>
-          </div>
-
-          {/* ── Micro-Closes Accordion ── */}
-          <section>
-            <h3 className="text-[18px] font-bold mb-1 text-foreground">Build Agreement as You Go</h3>
-            <p className="text-[13px] text-muted-foreground mb-4">
-              Most deals don't die at the close. They die in the middle. Get small confirmations throughout the call.
-            </p>
-
-            <div className="flex flex-col gap-2">
-              {MICRO_CLOSES.map((mc, i) => {
-                const isOpen = expandedClose === i;
-                return (
-                  <div
-                    key={mc.num}
-                    className="rounded-lg overflow-hidden transition-all duration-200 border"
-                    style={{
-                      borderColor: isOpen ? '#fb923c' : 'hsl(var(--border))',
-                      background: isOpen ? '#FAF7F2' : 'hsl(var(--card))',
-                      boxShadow: isOpen ? '0 2px 12px rgba(251,146,60,.15)' : 'none',
-                    }}
-                  >
-                    <button
-                      onClick={() => setExpandedClose(isOpen ? null : i)}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors"
-                    >
-                      <span
-                        className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0"
-                        style={{ background: '#2F4858', color: '#FAF7F2' }}
-                      >
-                        {mc.num}
-                      </span>
-                      <span className="text-[14px] font-semibold text-foreground flex-1">{mc.title}</span>
-                      <span
-                        className="text-[16px] transition-transform duration-200 text-muted-foreground"
-                        style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }}
-                      >
-                        ▾
-                      </span>
-                    </button>
-                    {isOpen && (
-                      <div className="px-4 pb-4 pt-1 ml-10 border-l-2 animate-fade-in" style={{ borderColor: '#fb923c' }}>
-                        <p className="text-[14px] font-semibold italic mb-2 text-foreground leading-relaxed">{mc.phrase}</p>
-                        <p className="text-[13px] leading-[1.7] text-muted-foreground">{mc.why}</p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex gap-3 items-start p-3.5 mt-3 rounded-lg" style={{ background: 'rgba(91,187,160,.08)', border: '1px solid rgba(91,187,160,.2)' }}>
-              <span className="text-[15px] flex-shrink-0 mt-0.5">💡</span>
-              <p className="text-[13px] leading-[1.65] text-foreground">
-                <strong>Yes/No questions aren't always bad.</strong> If you've built real agreement through the first three steps, a direct "Does that make sense?" isn't risky — it's earned.
-              </p>
-            </div>
-          </section>
-
-          {/* ── BANT Reframed ── */}
-          <section>
-            <h3 className="text-[18px] font-bold mb-1 text-foreground">Qualify Smarter — BANT Reframed</h3>
-            <p className="text-[13px] text-muted-foreground mb-4">Each element should emerge naturally from the conversation — not from a scripted question.</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {BANT.map(b => (
-                <div key={b.letter} className="rounded-lg p-4 border" style={{ background: '#FAF7F2', borderColor: 'hsl(var(--border))' }}>
-                  <div className="flex items-center gap-2.5 mb-2.5">
-                    <span className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-bold" style={{ background: '#2F4858', color: '#fb923c' }}>
-                      {b.letter}
-                    </span>
-                    <span className="text-[14px] font-semibold text-foreground">{b.label}</span>
-                  </div>
-                  <p className="text-[12px] line-through mb-1.5 text-muted-foreground opacity-60">{b.wrong}</p>
-                  <p className="text-[13px] leading-[1.6] text-muted-foreground">{b.right}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Bottom line */}
-          <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: '#2F4858' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#fb923c' }}>Bottom line</span>
-            <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.85)' }}>
-              Good prospecting starts with a real signal. Good closing starts with alignment you built along the way. When both are working, you don't need to "close hard."
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* ══════════════════════════════════════════════ */}
-      {/* CHAPTER: EMAILING                              */}
-      {/* ══════════════════════════════════════════════ */}
-      {channel === 'email' && (
+      {(
         <div className="space-y-8 animate-fade-in">
           {/* ── AI Email Generator (Hero) ── */}
           <AiToolCard

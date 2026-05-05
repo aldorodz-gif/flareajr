@@ -4,17 +4,13 @@ import WelcomeModal from '../components/guide/WelcomeModal';
 import TabBar from '../components/guide/TabBar';
 import ProgressBar from '../components/guide/ProgressBar';
 
-import MindsetTab from '../components/guide/MindsetTab';
-
 import TrackerTab from '../components/guide/TrackerTab';
 import DashboardTab from '../components/guide/DashboardTab';
 import MarketHeatTab from '../components/guide/MarketHeatTab';
 
-import ContactTab from '../components/guide/ContactTab';
 import OutreachTab from '../components/guide/OutreachTab';
 import SignalsTab from '../components/guide/SignalsTab';
 import EventsTab from '../components/guide/EventsTab';
-import LinkedInTab from '../components/guide/LinkedInTab';
 import { TAB_ORDER } from '../components/guide/types';
 
 const Index = () => {
@@ -42,16 +38,10 @@ const Index = () => {
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
       case 'market': return <MarketHeatTab />;
-      
-      case 'mindset': return <MindsetTab {...props} />;
-      
       case 'tracker': return <TrackerTab {...props} />;
-      
-      case 'contact': return <ContactTab {...props} />;
       case 'outreach': return <OutreachTab {...props} />;
       case 'signals': return <SignalsTab {...props} />;
       case 'events': return <EventsTab {...props} />;
-      case 'linkedin': return <LinkedInTab {...props} />;
       default: return null;
     }
   };
