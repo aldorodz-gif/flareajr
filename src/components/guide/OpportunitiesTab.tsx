@@ -118,8 +118,10 @@ export default function OpportunitiesTab() {
           <button
             key={k}
             onClick={() => setFilter(k)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              filter === k ? 'bg-orange-500 text-white' : 'bg-muted text-muted-foreground hover:bg-muted/70'
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border ${
+              filter === k
+                ? 'bg-orange-500 text-white border-orange-500'
+                : 'bg-card text-foreground border-border hover:bg-muted'
             }`}
           >
             {label}
