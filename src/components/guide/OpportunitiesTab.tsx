@@ -153,12 +153,12 @@ export default function OpportunitiesTab() {
                       </span>
                     )}
                     {o.confidence_label && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full border border-border bg-card text-foreground font-medium">
                         Confidence: {o.confidence_label}
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-300">📍 Near {o.nearest_inventory}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 border border-green-500/30">📍 Near {o.nearest_inventory}</span>
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">
