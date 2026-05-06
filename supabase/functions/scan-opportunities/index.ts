@@ -99,9 +99,10 @@ serve(async (req) => {
       headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
+        temperature: 1.0,
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Scan opportunities for ${markets.join(", ")}.` },
+          { role: "user", content: `Scan opportunities for ${markets.join(", ")}. Today is ${today}. Return 12+ NEW companies not in the exclusion list.` },
         ],
         tools: [{
           type: "function",
