@@ -160,7 +160,7 @@ export default function OpportunitiesTab() {
                     )}
                     {o.confidence_label && (
                       <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-card text-foreground border-border'}`}>
-                        Confidence: {o.confidence_label}
+                        Source: {o.confidence_label}
                       </span>
                     )}
                     {o.near_core_inventory && (
