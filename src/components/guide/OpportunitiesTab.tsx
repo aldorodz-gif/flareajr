@@ -27,9 +27,15 @@ interface Opportunity {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  'Top Priority': 'bg-orange-500/20 text-orange-300 border-orange-500/40',
-  'Strong Opportunity': 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-  'Early Signal': 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+  'Top Priority': 'bg-orange-500/25 text-orange-100 border-orange-400/60 dark:bg-orange-500/30 dark:text-orange-50 dark:border-orange-300/70',
+  'Strong Opportunity': 'bg-amber-500/25 text-amber-100 border-amber-400/60 dark:bg-amber-500/30 dark:text-amber-50 dark:border-amber-300/70',
+  'Early Signal': 'bg-blue-500/25 text-blue-100 border-blue-400/60 dark:bg-blue-500/30 dark:text-blue-50 dark:border-blue-300/70',
+};
+
+const CONFIDENCE_COLORS: Record<string, string> = {
+  High: 'bg-emerald-500/25 text-emerald-50 border-emerald-300/60 dark:bg-emerald-500/30 dark:text-emerald-50 dark:border-emerald-300/70',
+  Medium: 'bg-sky-500/25 text-sky-50 border-sky-300/60 dark:bg-sky-500/30 dark:text-sky-50 dark:border-sky-300/70',
+  Low: 'bg-zinc-500/30 text-zinc-50 border-zinc-300/50 dark:bg-zinc-400/30 dark:text-zinc-50 dark:border-zinc-200/60',
 };
 
 export default function OpportunitiesTab() {
