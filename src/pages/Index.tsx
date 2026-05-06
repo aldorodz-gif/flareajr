@@ -14,6 +14,7 @@ import EventsTab from '../components/guide/EventsTab';
 import OpportunitiesTab from '../components/guide/OpportunitiesTab';
 import BdrSelector from '../components/guide/BdrSelector';
 import { BdrProvider } from '../components/guide/BdrContext';
+import DailySummaryToast from '../components/guide/DailySummaryToast';
 import { TAB_ORDER } from '../components/guide/types';
 
 const Index = () => {
