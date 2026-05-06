@@ -45,6 +45,28 @@ serve(async (req) => {
     const markets = (bdr.markets as string[]) || [];
     const inv = (bdr.inventory_locations as Array<{name:string;city:string;state:string}>) || [];
 
+    // Pull companies we've already surfaced for this BDR so we don't return them again
+    const { data: existingRows } = await supabase
+      .from("opportunities")
+      .select("company")
+      .eq("assigned_bdr", bdr_id)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    const excludeCompanies = Array.from(new Set((existingRows || []).map(r => r.company))).slice(0, 150);
+
+    // Rotate signal focus + source emphasis each scan to force variety
+    const focusRotations = [
+      "Focus this scan on CONTRACT AWARDS and government/defense subcontractors.",
+      "Focus this scan on CONSTRUCTION & PHASED PROJECTS — prioritize subs, MEP contractors, commissioning firms.",
+      "Focus this scan on CORPORATE EXPANSIONS, RELOCATIONS, and new facility openings.",
+      "Focus this scan on TRAINING COHORTS, intern programs, and rotational workforce moves.",
+      "Focus this scan on TECH IMPLEMENTATIONS, SaaS rollouts, and consulting deployments.",
+      "Focus this scan on HEALTHCARE projects — equipment installs, hospital expansions, traveling clinical staff.",
+      "Focus this scan on ENERGY, INFRASTRUCTURE, and utility project mobilizations.",
+    ];
+    const focus = focusRotations[Math.floor(Math.random() * focusRotations.length)];
+    const variety = `Variety seed: ${Date.now()}-${Math.floor(Math.random() * 100000)}.`;
+
     const systemPrompt = [
       "You are a sales intelligence analyst for a corporate housing BDR at National Corporate Housing.",
       `Today is ${today}.`,
@@ -52,28 +74,35 @@ serve(async (req) => {
       `BDR target verticals: ${verticals.join(", ") || "all 7 verticals"}.`,
       `BDR inventory near: ${inv.map(i => `${i.city}, ${i.state}`).join("; ") || "n/a"}.`,
       "MISSION: Search for new business movements that could create 30+ day corporate housing demand. Leave no stone unturned — use every public source you can reason about: news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, LinkedIn job posts, career pages, hiring surges, regional business journals, university/hospital expansion news, defense and DOE contract awards, construction trade press, etc.",
+      focus,
       "PRIORITIZE these signal types: expansions, relocations, contract awards, phased construction, project mobilizations, training cohorts, temporary workforce movements, large group activity likely to require extended stays.",
       "IGNORE: generic hiring news, short hotel-only event traffic, conference attendees, day visitors, single-person business travel.",
-      "TARGET PROFILE: SMB companies (10-1000 employees). Two acceptable types: (1) SMBs with a direct 30+ day signal of their own (expanding, relocating, mobilizing crews, sending training cohorts), AND (2) SMB contractors / subcontractors / vendors / implementation partners / staffing firms / consulting firms executing work for a larger prime. Both are valid — surface both kinds.",
-      "When the signal traces back to a large prime (Boeing, hospital system, federal agency, Fortune 500), name the SMB executing the work and reference the prime in 'why_it_matters'. Do NOT return the prime itself as the prospect.",
+      "TARGET PROFILE: SMB companies (10-1000 employees). Two acceptable types: (1) SMBs with a direct 30+ day signal of their own, AND (2) SMB contractors / subs / vendors / staffing / consulting firms executing work for a larger prime. Both valid.",
+      "When the signal traces back to a large prime (Boeing, hospital system, federal agency, Fortune 500), name the SMB executing the work and reference the prime in 'why_it_matters'. Do NOT return the prime itself.",
       "NEVER include other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder, etc.).",
-      "OUTPUT FORMAT — keep each opportunity tight and scannable: company name, city, signal, likely housing use case, estimated stay type (e.g. '60-90 days', '6 month rotation'), priority High/Medium/Low.",
+      excludeCompanies.length > 0
+        ? `CRITICAL: DO NOT return any of these companies — they have already been surfaced. Find DIFFERENT companies: ${excludeCompanies.join(", ")}.`
+        : "",
+      "Surface FRESH, less-obvious SMBs — go beyond the top 10 most-known firms in each market. Dig into specialty subs, regional staffing firms, niche engineering shops, mid-tier consultancies.",
+      "OUTPUT — tight and scannable: company name, city, signal, housing use case, estimated stay (e.g. '60-90 days', '6 month rotation'), priority High/Medium/Low.",
       "Summarize WHY each suggests a 30+ day need in one short sentence in 'why_it_matters'. No fluff.",
-      "RETURN AT LEAST 12 OPPORTUNITIES per scan. The BDR needs a minimum of 10 NEW companies per day.",
-      "Score each 0-100 on: discovery_score (signal strength), housing_fit_score (likelihood of 30+ day stay), confidence_score (data freshness/validation).",
-      "Set priority High / Medium / Low based on housing-need likelihood.",
-      "Suggest 3-5 contact titles (Project Manager, Field Ops, Travel Coordinator, HR/Talent, Program Manager — avoid C-suite).",
+      "RETURN AT LEAST 12 OPPORTUNITIES per scan, all DIFFERENT from the exclusion list above.",
+      "Score each 0-100: discovery_score, housing_fit_score, confidence_score.",
+      "Set priority High/Medium/Low based on housing-need likelihood.",
+      "Suggest 3-5 contact titles (PM, Field Ops, Travel Coordinator, HR/Talent, Program Manager — avoid C-suite).",
+      variety,
       "Return ONLY via the tool call.",
-    ].join(" ");
+    ].filter(Boolean).join(" ");
 
     const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
+        temperature: 1.0,
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Scan opportunities for ${markets.join(", ")}.` },
+          { role: "user", content: `Scan opportunities for ${markets.join(", ")}. Today is ${today}. Return 12+ NEW companies not in the exclusion list.` },
         ],
         tools: [{
           type: "function",
