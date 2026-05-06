@@ -65,6 +65,42 @@ export type Database = {
           },
         ]
       }
+      bdr_profiles: {
+        Row: {
+          created_at: string
+          excluded_markets: string[]
+          id: string
+          inventory_locations: Json
+          markets: string[]
+          name: string
+          region: string | null
+          target_verticals: string[]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          excluded_markets?: string[]
+          id?: string
+          inventory_locations?: Json
+          markets?: string[]
+          name: string
+          region?: string | null
+          target_verticals?: string[]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          excluded_markets?: string[]
+          id?: string
+          inventory_locations?: Json
+          markets?: string[]
+          name?: string
+          region?: string | null
+          target_verticals?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bdr_snapshots: {
         Row: {
           bdr_id: string
@@ -94,6 +130,123 @@ export type Database = {
           source_filename?: string | null
         }
         Relationships: []
+      }
+      opportunities: {
+        Row: {
+          assigned_bdr: string | null
+          company: string
+          confidence_label: string | null
+          confidence_score: number
+          created_at: string
+          date_found: string
+          description: string | null
+          discovery_score: number
+          distance_to_inventory: number | null
+          estimated_stay: string | null
+          housing_fit_score: number
+          id: string
+          key_talking_points: string[] | null
+          last_verified: string
+          market: string | null
+          near_core_inventory: boolean | null
+          nearest_inventory: string | null
+          notes: string | null
+          pitch_angle: string | null
+          priority: string | null
+          project: string | null
+          review_status: string | null
+          saved_by_bdr: string | null
+          signal_type: string | null
+          source_type: string | null
+          source_url: string | null
+          status: string
+          suggested_contacts: string[] | null
+          updated_at: string
+          vertical: string | null
+          why_it_matters: string | null
+        }
+        Insert: {
+          assigned_bdr?: string | null
+          company: string
+          confidence_label?: string | null
+          confidence_score?: number
+          created_at?: string
+          date_found?: string
+          description?: string | null
+          discovery_score?: number
+          distance_to_inventory?: number | null
+          estimated_stay?: string | null
+          housing_fit_score?: number
+          id?: string
+          key_talking_points?: string[] | null
+          last_verified?: string
+          market?: string | null
+          near_core_inventory?: boolean | null
+          nearest_inventory?: string | null
+          notes?: string | null
+          pitch_angle?: string | null
+          priority?: string | null
+          project?: string | null
+          review_status?: string | null
+          saved_by_bdr?: string | null
+          signal_type?: string | null
+          source_type?: string | null
+          source_url?: string | null
+          status?: string
+          suggested_contacts?: string[] | null
+          updated_at?: string
+          vertical?: string | null
+          why_it_matters?: string | null
+        }
+        Update: {
+          assigned_bdr?: string | null
+          company?: string
+          confidence_label?: string | null
+          confidence_score?: number
+          created_at?: string
+          date_found?: string
+          description?: string | null
+          discovery_score?: number
+          distance_to_inventory?: number | null
+          estimated_stay?: string | null
+          housing_fit_score?: number
+          id?: string
+          key_talking_points?: string[] | null
+          last_verified?: string
+          market?: string | null
+          near_core_inventory?: boolean | null
+          nearest_inventory?: string | null
+          notes?: string | null
+          pitch_angle?: string | null
+          priority?: string | null
+          project?: string | null
+          review_status?: string | null
+          saved_by_bdr?: string | null
+          signal_type?: string | null
+          source_type?: string | null
+          source_url?: string | null
+          status?: string
+          suggested_contacts?: string[] | null
+          updated_at?: string
+          vertical?: string | null
+          why_it_matters?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunities_assigned_bdr_fkey"
+            columns: ["assigned_bdr"]
+            isOneToOne: false
+            referencedRelation: "bdr_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "opportunities_saved_by_bdr_fkey"
+            columns: ["saved_by_bdr"]
+            isOneToOne: false
+            referencedRelation: "bdr_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pipeline_items: {
         Row: {
