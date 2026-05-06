@@ -51,11 +51,15 @@ serve(async (req) => {
       `BDR markets: ${markets.join(", ")}.`,
       `BDR target verticals: ${verticals.join(", ") || "all 7 verticals"}.`,
       `BDR inventory near: ${inv.map(i => `${i.city}, ${i.state}`).join("; ") || "n/a"}.`,
-      "Return 8 fresh, plausible SMB (10-1000 employees) corporate housing opportunities in these markets.",
-      "Each must have a real housing-need signal (project, contract, hiring surge, expansion, intern program, field crew, etc.).",
+      "CRITICAL TARGETING: The buyer is the SMB CONTRACTOR, SUBCONTRACTOR, VENDOR, IMPLEMENTATION PARTNER, STAFFING FIRM, or CONSULTING FIRM that is actually executing the work — NOT the prime owner, government agency, hospital system, university, or Fortune 500 client.",
+      "Example: if Boeing wins a $500M Air Force contract in Huntsville, do NOT return Boeing or the Air Force. Return the SMB engineering firms, subcontractors, IT integrators, construction subs, and consulting groups (10-1000 employees) that Boeing will hire to execute the work and need to fly people in for 30+ days.",
+      "Example: if a hospital builds a new wing, do NOT return the hospital. Return the mechanical contractor, electrical sub, medical equipment installer, or commissioning firm.",
+      "Example: if a city wins a federal grant, do NOT return the city. Return the engineering consultancy, environmental firm, or construction manager doing the work.",
+      "Always name the SMB executing the work and explain in 'why_it_matters' which larger project/client is driving their travel/housing need.",
+      "Each opportunity must be a real SMB (10-1000 employees) sending people on-site for 30+ days.",
       "NEVER include other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder, etc.).",
       "Score each on three 0-100 dimensions: discovery_score (signal strength), housing_fit_score (likelihood of 30+ day stay need), confidence_score (data freshness/validation).",
-      "Suggest 3-5 contact titles (avoid C-suite by default; favor PMs, ops, HR, talent).",
+      "Suggest 3-5 contact titles at the SMB (Project Manager, Field Ops Manager, Travel Coordinator, HR/Talent, Program Manager — avoid C-suite).",
       "Return ONLY via the tool call.",
     ].join(" ");
 
