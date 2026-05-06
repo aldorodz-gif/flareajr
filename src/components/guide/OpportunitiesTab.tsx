@@ -160,7 +160,7 @@ export default function OpportunitiesTab() {
                     )}
                     {o.confidence_label && (
                       <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-card text-foreground border-border'}`}>
-                        Confidence: {o.confidence_label}
+                        Source: {o.confidence_label}
                       </span>
                     )}
                     {o.near_core_inventory && (
@@ -180,12 +180,12 @@ export default function OpportunitiesTab() {
                 <div className="flex flex-col items-end gap-2 min-w-[180px]">
                   <div className="text-right">
                     <div className="text-2xl font-bold text-orange-400">{composite}</div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Composite</div>
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall Score</div>
                   </div>
-                  <div className="flex gap-1 text-[10px] text-muted-foreground">
-                    <span>D:{o.discovery_score}</span>
-                    <span>H:{o.housing_fit_score}</span>
-                    <span>C:{o.confidence_score}</span>
+                  <div className="flex gap-2 text-[10px] text-muted-foreground">
+                    <span title="How strong the news/signal is">Signal:{o.discovery_score}</span>
+                    <span title="How well it fits 30+ day housing">Housing:{o.housing_fit_score}</span>
+                    <span title="How trustworthy the source is">Source:{o.confidence_score}</span>
                   </div>
                   <div className="flex gap-2 mt-2">
                     {o.saved_by_bdr === selected.id ? (
