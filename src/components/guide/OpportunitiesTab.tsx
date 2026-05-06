@@ -164,7 +164,7 @@ export default function OpportunitiesTab() {
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/25 text-emerald-50 border border-emerald-300/60 font-medium">📍 Near {o.nearest_inventory}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-600 text-white border border-emerald-700 font-medium">📍 Near {o.nearest_inventory}</span>
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">
