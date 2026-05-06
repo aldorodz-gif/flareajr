@@ -54,6 +54,7 @@ const Index = () => {
   return (
     <BdrProvider>
       <div className="min-h-screen bg-background">
+        <DailySummaryToast />
         <WelcomeModal onNavigateToTab={handleTabChange} forceOpen={tourOpen} onClose={() => setTourOpen(false)} />
         <Header onReplayTour={() => setTourOpen(true)} />
         <div ref={tabBarRef}>
