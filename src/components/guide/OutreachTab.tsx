@@ -108,6 +108,34 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     }
   }, [company, signal, buyerTitle, serviceLine, tone, articleContent, scrapedTitle, canGenerate]);
 
+  const [regenLoading, setRegenLoading] = useState(false);
+  const regenerateSubjects = useCallback(async () => {
+    if (!result) return;
+    setRegenLoading(true);
+    try {
+      const signalText = articleContent
+        ? `Article: "${scrapedTitle}". Content: ${articleContent}`
+        : signal.trim();
+      const { data, error: fnError } = await supabase.functions.invoke('subject-alternatives', {
+        body: {
+          company: company.trim(),
+          signal: signalText,
+          buyer_title: buyerTitle.trim(),
+          service_line: serviceLine,
+          current_subject: result.subject,
+          exclude: result.subject_alternatives || [],
+        },
+      });
+      if (fnError) throw fnError;
+      if (data.error) throw new Error(data.error);
+      setResult(r => r ? { ...r, subject_alternatives: data.subject_alternatives } : r);
+    } catch {
+      setError('Could not refresh subjects. Try again.');
+    } finally {
+      setRegenLoading(false);
+    }
+  }, [result, company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle]);
+
   const wordCount = result ? result.body.split(/\s+/).filter(Boolean).length : 0;
 
   const handleCopy = useCallback(() => {
@@ -283,7 +311,19 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       <p className="text-[17px] font-bold text-foreground">{result.subject}</p>
                       {result.subject_alternatives && result.subject_alternatives.length > 0 && (
                         <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(251,146,60,.2)' }}>
-                          <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2 text-muted-foreground">Alternatives</p>
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-[11px] font-bold uppercase tracking-[.12em] text-muted-foreground">Alternatives</p>
+                            <button
+                              onClick={regenerateSubjects}
+                              disabled={regenLoading}
+                              className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 hover:opacity-80 disabled:opacity-50 flex items-center gap-1.5"
+                              style={{ background: 'rgba(45,212,191,.15)', color: '#2F4858', border: '1px solid rgba(45,212,191,.3)' }}
+                            >
+                              {regenLoading ? (
+                                <><span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" /> Refreshing</>
+                              ) : '↻ Regenerate'}
+                            </button>
+                          </div>
                           <ul className="space-y-1.5">
                             {result.subject_alternatives.map((alt, i) => (
                               <li key={i} className="flex items-center justify-between gap-2 text-[14px] text-foreground">
