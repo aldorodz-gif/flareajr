@@ -317,8 +317,20 @@ const BdrScoreboard = () => {
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>
           <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">BDR Scoreboard</Eyebrow>
-          <h3 className="text-[18px] font-extrabold tracking-tight mt-1" style={{ color: '#0e1e3a' }}>
-            {bdr.name} <span className="font-medium" style={{ color: '#64748b' }}>· {bdr.market}</span>
+          <h3 className="text-[22px] font-black tracking-tight mt-1" style={{ color: '#0e1e3a' }}>
+            <span
+              style={{
+                backgroundImage: 'linear-gradient(90deg, #ec4899, #a855f7 55%, #2dd4bf)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+                textShadow: '0 0 18px rgba(236,72,153,.35)',
+                filter: 'drop-shadow(0 1px 0 rgba(168,85,247,.25))',
+              }}
+            >
+              {bdr.name}
+            </span>{' '}
+            <span className="font-medium text-[16px]" style={{ color: '#64748b' }}>· {bdr.market}</span>
           </h3>
           <p className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>{lastRefreshLabel}</p>
         </div>
