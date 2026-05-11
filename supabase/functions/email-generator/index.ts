@@ -58,6 +58,26 @@ Key patterns to replicate: lead with a credibility anchor (partnership, existing
     const playbookKey = Object.keys(verticalPlaybooks).find(k => service_line && (service_line === k || service_line.toLowerCase().includes(k.toLowerCase().split(' ')[0])));
     const playbook = (playbookKey && verticalPlaybooks[playbookKey]) || "Anchor on the buyer's operational reality. Lead with their problem, not your product.";
 
+    // SIGNAL → HOUSING DEMAND mapping (deterministic shortlist; the AI picks/refines)
+    const triggerMap: Array<{ match: RegExp; trigger: string; demand: string }> = [
+      { match: /\b(award|won|contract|bid|rfp|task order)\b/i, trigger: "Project staffing housing", demand: "incoming crews/contractors need 30+ night housing as the project ramps" },
+      { match: /\b(hir|headcount|recruit|staff up|expanding team|growing team|adding \d+)\b/i, trigger: "Relocation & workforce mobility housing", demand: "new hires and transferees need temporary housing during onboarding/relocation" },
+      { match: /\b(open(ing)? (a |an )?(new )?office|new (office|location|hq|branch)|expand(ing)? (to|into)|launch(ing)? in)\b/i, trigger: "Geographic expansion / extended stay", demand: "leadership and launch teams will rotate in/out and need extended stay housing" },
+      { match: /\b(intern|fellowship|cohort|summer program|residency)\b/i, trigger: "Intern / cohort housing", demand: "cohort housing for interns/fellows arriving on a fixed schedule" },
+      { match: /\b(travel nurs|locum|per diem nurse|allied health)\b/i, trigger: "Travel nurse / clinician housing", demand: "13-week assignments need furnished housing near the facility" },
+      { match: /\b(consult|engagement|deploy|deployment|rotational|on-?site team)\b/i, trigger: "Consultant / project team housing", demand: "rotating consultants need consistent housing across cities" },
+      { match: /\b(disaster|hurricane|wildfire|tornado|flood|insurance claim|catastrophe|cat team)\b/i, trigger: "Disaster response / insurance housing", demand: "displaced policyholders or response crews need immediate temporary housing" },
+      { match: /\b(government|federal|defense|dod|gsa|cleared|clearance|contractor)\b/i, trigger: "Government contractor housing", demand: "cleared personnel staging for contract execution need compliant housing" },
+      { match: /\b(executive|c-?suite|ceo|cfo|coo|president|chief)\b/i, trigger: "Executive relocation", demand: "incoming executive needs premium temporary housing during transition" },
+      { match: /\b(funding|series [a-d]|raised|round|valuation|ipo)\b/i, trigger: "Headcount surge & relocation", demand: "post-funding hiring will drive relocation and mobility volume" },
+      { match: /\b(film|production|tour|theater|theatre|cast|crew|shoot)\b/i, trigger: "Production / cast & crew housing", demand: "cast and crew need furnished housing for the run of the production" },
+      { match: /\b(construction|build|site|crew|mobiliz|groundbreak|jobsite)\b/i, trigger: "Project staffing housing", demand: "field crews mobilizing to the site need housing booked before day one" },
+    ];
+    const matched = triggerMap.find(t => t.match.test(signal));
+    const housingDemand = matched
+      ? `PRIMARY HOUSING TRIGGER (auto-mapped from signal): ${matched.trigger} — ${matched.demand}. The email MUST connect the signal to this specific housing demand and use language native to it.`
+      : `PRIMARY HOUSING TRIGGER: infer the most likely corporate housing trigger from the signal (project staffing, relocation, mobility, extended stay, executive relocation, intern/cohort, travel nurse, government contractor, disaster/insurance, production crew, etc.) and anchor the email on that trigger.`;
+
     const salesMindset = `
 SALES OPERATING MINDSET — internalize before writing a single word:
 
@@ -154,6 +174,8 @@ ${salesMindset}
 
 ${housingFramework}
 
+${housingDemand}
+
 ${toneGuide}
 
 HARD CONSTRAINTS: 50–125 words. Max 4 short sentences/paragraphs. Mobile-first — CTA visible without scrolling on a 4-inch screen. Subject line: 3–7 natural words referencing the specific signal (never generic like "partnership" or "growth"). One clear low-friction CTA. Goal is to START a conversation, not close.${varyInstruction}
@@ -172,8 +194,9 @@ ${referenceEmail}`;
         maxItems: 3,
       },
       body: { type: "string", description: "Email body, 50-125 words, max 4 short sentences. Must reference specific details from the signal." },
+      housing_trigger: { type: "string", description: "The single most likely corporate housing trigger this email targets (e.g. 'Project staffing housing', 'Relocation & workforce mobility housing', 'Intern / cohort housing', 'Executive relocation', 'Travel nurse / clinician housing'). Pick exactly one, in 2-6 words." },
     };
-    const required = ["subject", "subject_alternatives", "body"];
+    const required = ["subject", "subject_alternatives", "body", "housing_trigger"];
 
     if (isArticle) {
       emailProperties.suggested_targets = {
