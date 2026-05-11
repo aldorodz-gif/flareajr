@@ -21,6 +21,7 @@ interface Opportunity {
   review_status: string | null;
   nearest_inventory: string | null;
   near_core_inventory: boolean;
+  distance_to_inventory: number | null;
   last_verified: string;
   status: string;
   saved_by_bdr: string | null;
@@ -201,7 +202,7 @@ export default function OpportunitiesTab() {
                     )}
                     {o.near_core_inventory && (
                       <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full border" style={{ background: '#ccfbf1', color: '#115e59', borderColor: '#99f6e4' }}>
-                        📍 Near {o.nearest_inventory || 'inventory'}
+                        📍 Near {o.nearest_inventory || 'inventory'}{typeof o.distance_to_inventory === 'number' && !/mi\b/.test(o.nearest_inventory || '') ? ` — ~${Math.round(o.distance_to_inventory)} mi` : ''}
                       </span>
                     )}
                   </div>
@@ -219,11 +220,6 @@ export default function OpportunitiesTab() {
                   <div className="text-right">
                     <div className="text-2xl font-bold text-pink-400">{composite}</div>
                     <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall Score</div>
-                  </div>
-                  <div className="flex gap-2 text-[10px] text-muted-foreground">
-                    <span title="How strong the news/signal is">Signal:{o.discovery_score}</span>
-                    <span title="How well it fits 30+ day housing">Housing:{o.housing_fit_score}</span>
-                    <span title="How trustworthy the source is">Source:{o.confidence_score}</span>
                   </div>
                   <div className="flex gap-2 mt-2">
                     {o.saved_by_bdr === selected.id ? (
