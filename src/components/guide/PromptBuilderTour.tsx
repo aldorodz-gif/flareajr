@@ -306,32 +306,59 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
   const progress = ((step + 1) / STEPS.length) * 100;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(15,15,26,.7)', backdropFilter: 'blur(4px)' }}>
-      <div className="w-full max-w-[520px] rounded-lg overflow-hidden shadow-2xl" style={{ background: 'hsl(var(--card))' }}>
-        <div className="h-[3px] w-full" style={{ background: 'rgba(251,146,60,.15)' }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200" style={{ background: 'rgba(8,8,16,.82)', backdropFilter: 'blur(8px)' }}>
+      <div
+        className="w-full max-w-[540px] rounded-xl overflow-hidden relative"
+        style={{
+          background: 'linear-gradient(180deg, #0F0F1A 0%, #14141f 100%)',
+          border: '1px solid rgba(251,146,60,.18)',
+          boxShadow: '0 30px 80px -20px rgba(251,146,60,.25), 0 0 0 1px rgba(251,146,60,.08), inset 0 1px 0 rgba(255,255,255,.04)',
+        }}
+      >
+        {/* Persistent Skip / Close */}
+        <button
+          onClick={onClose}
+          aria-label="Skip tour"
+          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center text-[14px] font-bold transition-all duration-200 hover:scale-110"
+          style={{
+            background: 'rgba(255,255,255,.06)',
+            color: 'rgba(255,255,255,.6)',
+            border: '1px solid rgba(255,255,255,.08)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          ✕
+        </button>
+
+        {/* Progress bar */}
+        <div className="h-[2px] w-full" style={{ background: 'rgba(251,146,60,.08)' }}>
           <div
             className="h-full transition-all duration-500 ease-out"
             style={{
               width: `${progress}%`,
               background: 'linear-gradient(90deg, #fb923c, #f97316)',
-              boxShadow: '0 0 10px rgba(251,146,60,.4)',
+              boxShadow: '0 0 12px rgba(251,146,60,.6)',
             }}
           />
         </div>
 
-        <div className="px-6 py-5 transition-all duration-300" style={{ background: current.gradient }}>
-          <div className={`transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
-            <div className="flex items-center gap-3 mb-1">
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4 relative overflow-hidden">
+          <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full opacity-30" style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)' }} />
+          <div className={`relative transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded" style={{ background: 'rgba(251,146,60,.12)', color: '#fb923c', border: '1px solid rgba(251,146,60,.25)' }}>
+                Step {step + 1} / {STEPS.length}
+              </div>
+              <div className="text-[10px] uppercase tracking-wider text-white/30">Prompt Builder Tour</div>
+            </div>
+            <div className="flex items-center gap-3">
               <span className="text-[28px]">{current.icon}</span>
               <div>
-                <h2 className="text-[18px] font-semibold leading-tight" style={{
-                  background: 'linear-gradient(135deg, #ffffff 0%, #ffedd5 60%, #fb923c 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}>
+                <h2 className="text-[18px] font-bold leading-tight tracking-tight text-white">
                   {current.title}
                 </h2>
-                <p className="text-[12px] font-medium mt-0.5" style={{ color: 'rgba(255,255,255,.55)' }}>
+                <p className="text-[12px] font-medium mt-0.5" style={{ color: '#fb923c' }}>
                   {current.subtitle}
                 </p>
               </div>
@@ -339,39 +366,43 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
           </div>
         </div>
 
-        <div className="px-6 py-5">
+        {/* Body */}
+        <div className="px-6 pb-5">
           <div className={`transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
             <div className="mb-4">
               <Sim simId={current.simId} />
-              <div className="text-[10px] text-muted-foreground/70 mt-1.5 text-center uppercase tracking-wider">Live preview</div>
+              <div className="text-[9px] text-white/30 mt-1.5 text-center uppercase tracking-[0.2em]">— Live preview —</div>
             </div>
-            <p className="text-[14px] leading-[1.7] text-foreground mb-3">
+            <p className="text-[13px] leading-[1.7] text-white/85 mb-3">
               {current.description}
             </p>
-            <div className="flex gap-3 items-start p-3.5 rounded" style={{ background: 'rgba(251,146,60,.06)', border: '1px solid rgba(251,146,60,.18)' }}>
-              <span className="text-[14px] flex-shrink-0 mt-0.5">💡</span>
-              <p className="text-[12px] leading-[1.6] text-muted-foreground">{current.detail}</p>
+            <div className="flex gap-3 items-start p-3 rounded-md" style={{ background: 'rgba(251,146,60,.06)', border: '1px solid rgba(251,146,60,.18)' }}>
+              <span className="text-[13px] flex-shrink-0 mt-0.5">💡</span>
+              <p className="text-[12px] leading-[1.6] text-white/70">{current.detail}</p>
             </div>
           </div>
         </div>
 
-        <div className="px-6 pb-5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {!isFirst ? (
-              <button
-                onClick={handleBack}
-                className="px-4 py-2 text-[12px] font-semibold text-muted-foreground hover:text-foreground transition-colors"
-              >
-                ← Back
-              </button>
-            ) : (
-              <button
-                onClick={onClose}
-                className="px-4 py-2 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Skip
-              </button>
-            )}
+        {/* Footer */}
+        <div className="px-6 py-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,.05)', background: 'rgba(0,0,0,.2)' }}>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleBack}
+              disabled={isFirst}
+              className="px-3 py-1.5 text-[12px] font-semibold transition-all duration-200"
+              style={{
+                color: isFirst ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.6)',
+                cursor: isFirst ? 'not-allowed' : 'pointer',
+              }}
+            >
+              ← Back
+            </button>
+            <button
+              onClick={onClose}
+              className="px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white/40 hover:text-white/70 transition-colors"
+            >
+              Skip tour
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
@@ -380,23 +411,28 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
                 <button
                   key={i}
                   onClick={() => goTo(i)}
-                  className="w-[7px] h-[7px] rounded-full transition-all duration-300"
+                  aria-label={`Go to step ${i + 1}`}
+                  className="rounded-full transition-all duration-300"
                   style={{
+                    width: i === step ? '18px' : '6px',
+                    height: '6px',
                     background: i === step
-                      ? 'linear-gradient(135deg, #fb923c, #f97316)'
+                      ? 'linear-gradient(90deg, #fb923c, #f97316)'
                       : i < step
-                        ? 'rgba(251,146,60,.4)'
-                        : 'rgba(251,146,60,.15)',
-                    transform: i === step ? 'scale(1.3)' : 'scale(1)',
-                    boxShadow: i === step ? '0 0 6px rgba(251,146,60,.5)' : 'none',
+                        ? 'rgba(251,146,60,.5)'
+                        : 'rgba(255,255,255,.12)',
+                    boxShadow: i === step ? '0 0 8px rgba(251,146,60,.6)' : 'none',
                   }}
                 />
               ))}
             </div>
             <button
               onClick={handleNext}
-              className="px-5 py-2.5 rounded text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)' }}
+              className="px-5 py-2 rounded-md text-[12px] font-bold tracking-wide text-white transition-all duration-200 hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #fb923c, #f97316)',
+                boxShadow: '0 4px 14px rgba(251,146,60,.4), inset 0 1px 0 rgba(255,255,255,.2)',
+              }}
             >
               {isLast ? 'Got it 🔥' : 'Next →'}
             </button>
@@ -408,3 +444,4 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
 };
 
 export default PromptBuilderTour;
+
