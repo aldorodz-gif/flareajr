@@ -1,14 +1,49 @@
+import { useState, useEffect } from 'react';
 import { useBdr } from './BdrContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export default function BdrSelector() {
-  const { bdrs, selected, setSelectedId, loading } = useBdr();
+  const { bdrs, selected, setSelectedId, loading, refresh } = useBdr();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setDraft((selected?.markets || []).join(', '));
+    setEditing(false);
+  }, [selected?.id]);
 
   if (loading) {
     return <div className="px-6 md:px-12 py-3 text-xs text-muted-foreground">Loading BDRs…</div>;
   }
 
+  const save = async () => {
+    if (!selected) return;
+    const markets = draft
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+    setSaving(true);
+    const { error } = await supabase
+      .from('bdr_profiles')
+      .update({ markets })
+      .eq('id', selected.id);
+    setSaving(false);
+    if (error) {
+      toast.error('Could not save coverage');
+      return;
+    }
+    toast.success(`Coverage updated for ${selected.name}`);
+    await refresh();
+    setEditing(false);
+  };
+
   return (
-    <div className="px-6 md:px-12 py-3 flex items-center gap-3 flex-wrap" style={{ background: '#0F172A', borderBottom: '1px solid rgba(251,146,60,.15)' }}>
+    <div
+      className="px-6 md:px-12 py-3 flex items-center gap-3 flex-wrap"
+      style={{ background: '#0F172A', borderBottom: '1px solid rgba(251,146,60,.15)' }}
+    >
       <span className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: 'rgba(251,146,60,.85)' }}>
         Active BDR
       </span>
@@ -21,19 +56,59 @@ export default function BdrSelector() {
           <option key={b.id} value={b.id}>{b.name}</option>
         ))}
       </select>
-      {selected && (
+
+      {selected && !editing && (
         <>
           <span className="text-xs text-muted-foreground">
             {selected.region} • {selected.markets.length} markets
           </span>
           <div className="flex gap-1 flex-wrap">
-            {selected.markets.slice(0, 4).map(m => (
-              <span key={m} className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(251,146,60,.15)', color: '#fb923c' }}>
+            {selected.markets.slice(0, 6).map(m => (
+              <span
+                key={m}
+                className="text-[10px] px-2 py-0.5 rounded-full"
+                style={{ background: 'rgba(251,146,60,.15)', color: '#fb923c' }}
+              >
                 {m}
               </span>
             ))}
           </div>
+          <button
+            onClick={() => setEditing(true)}
+            className="text-[11px] font-semibold px-2.5 py-1 rounded-md ml-1"
+            style={{ background: 'rgba(251,146,60,.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,.3)' }}
+          >
+            ✎ Edit coverage
+          </button>
         </>
+      )}
+
+      {selected && editing && (
+        <div className="flex items-center gap-2 flex-wrap w-full md:w-auto md:flex-1">
+          <input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="City, ST, City, ST…"
+            className="flex-1 min-w-[260px] px-3 py-1.5 rounded-md text-sm bg-background border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <button
+            onClick={save}
+            disabled={saving}
+            className="text-[11px] font-bold px-3 py-1.5 rounded-md text-white"
+            style={{ background: '#fb923c' }}
+          >
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+          <button
+            onClick={() => { setDraft((selected.markets || []).join(', ')); setEditing(false); }}
+            className="text-[11px] font-semibold px-2.5 py-1 rounded-md text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </button>
+          <span className="text-[10px] text-muted-foreground basis-full">
+            Comma-separated, format: <code>City, ST</code>
+          </span>
+        </div>
       )}
     </div>
   );
