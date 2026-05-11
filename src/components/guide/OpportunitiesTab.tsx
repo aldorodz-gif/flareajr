@@ -200,7 +200,7 @@ export default function OpportunitiesTab() {
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal text-white border border-teal">
+                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full border" style={{ background: '#ccfbf1', color: '#115e59', borderColor: '#99f6e4' }}>
                         📍 Near {o.nearest_inventory || 'inventory'}
                       </span>
                     )}
