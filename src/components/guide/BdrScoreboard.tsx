@@ -404,11 +404,6 @@ const BdrScoreboard = () => {
                   </div>
                 );
               })()}
-              <div className="p-2.5 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
-                <div className="text-[10px] font-bold" style={{ color: '#f9a8d4' }}>Year</div>
-                <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
-                <div className="text-[10px] tabular-nums" style={{ color: 'rgba(255,255,255,.6)' }}>goal {fmt(yearTotal?.monthlyGoal ?? null, 'currency')}</div>
-              </div>
             </div>
           </div>
         </>
