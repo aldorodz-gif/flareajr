@@ -246,7 +246,7 @@ export default function OpportunitiesTab() {
 
       {!loading && filtered.length === 0 && (
         <div className="py-16 text-center border border-dashed rounded-lg">
-          {filter !== 'all' && items.filter(o => inTerritory(o.market)).length > 0 ? (
+          {filter !== 'all' && territoryFiltered.length > 0 ? (
             <>
               <p className="text-muted-foreground mb-3">
                 No leads match the <span className="font-semibold text-pink-500">
