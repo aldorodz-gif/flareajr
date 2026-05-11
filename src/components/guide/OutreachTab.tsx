@@ -394,8 +394,76 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                         </div>
                       )}
                     </div>
-                    <div className="relative px-5 py-5" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
-                      <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1" style={{ background: wordCount > 100 ? 'rgba(201,91,106,.1)' : 'rgba(251,146,60,.15)', color: wordCount > 100 ? '#C95B6A' : '#2F4858', border: `1px solid ${wordCount > 100 ? 'rgba(201,91,106,.25)' : 'rgba(251,146,60,.25)'}` }}>
+                    {result.housing_trigger && (
+                      <div className="mt-4 mb-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(168,85,247,.1)', border: '1px solid rgba(168,85,247,.3)' }}>
+                        <span className="text-[11px]">🏠</span>
+                        <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#7c3aed' }}>Auto-mapped trigger:</span>
+                        <span className="text-[12px] font-semibold" style={{ color: '#0e1e3a' }}>{result.housing_trigger}</span>
+                      </div>
+                    )}
+
+                    {(() => {
+                      const { wordCount: wc, checks, score } = analyzeEmail(result.subject, result.body);
+                      const dot = (s: 'pass'|'warn'|'fail') => s === 'pass' ? '#10b981' : s === 'warn' ? '#f59e0b' : '#ef4444';
+                      return (
+                        <div className="grid md:grid-cols-[280px_1fr] gap-4 mt-2">
+                          {/* Mobile-frame preview */}
+                          <div className="mx-auto" style={{ width: 280 }}>
+                            <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5 text-muted-foreground text-center">Mobile preview (4-inch screen)</p>
+                            <div className="rounded-[28px] p-2.5 shadow-lg" style={{ background: '#0e1e3a' }}>
+                              <div className="rounded-[20px] overflow-hidden" style={{ background: '#fff', height: 420 }}>
+                                <div className="px-3 py-2 border-b" style={{ background: '#f1f5f9', borderColor: 'rgba(0,0,0,.06)' }}>
+                                  <p className="text-[10px] text-slate-500">Inbox</p>
+                                  <p className="text-[12px] font-bold text-slate-900 truncate">{result.subject}</p>
+                                  <p className="text-[10px] text-slate-500 truncate">to {buyerTitle || 'prospect'}</p>
+                                </div>
+                                <div className="px-3 py-3 overflow-hidden relative" style={{ height: 360 }}>
+                                  <p className="text-[11px] leading-[1.55] whitespace-pre-line text-slate-800">{result.body}</p>
+                                  {/* Fold line at ~scrollable area */}
+                                  <div className="absolute left-0 right-0 border-t border-dashed pointer-events-none" style={{ top: 280, borderColor: 'rgba(239,68,68,.4)' }}>
+                                    <span className="absolute right-1 -top-2 text-[8px] font-bold px-1" style={{ color: '#ef4444', background: '#fff' }}>FOLD</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Readability checks */}
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Readability checks</p>
+                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full" style={{ background: score === 4 ? 'rgba(16,185,129,.12)' : score >= 2 ? 'rgba(245,158,11,.12)' : 'rgba(239,68,68,.12)', color: score === 4 ? '#059669' : score >= 2 ? '#b45309' : '#b91c1c' }}>
+                                {score}/4 passing
+                              </span>
+                            </div>
+                            <ul className="space-y-1.5">
+                              {checks.map(c => (
+                                <li key={c.label} className="flex items-start gap-2 px-3 py-2 rounded-md" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
+                                  <span className="mt-1 w-2 h-2 rounded-full flex-shrink-0" style={{ background: dot(c.status) }} />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-[12px] font-bold text-foreground">{c.label}</p>
+                                    <p className="text-[11px] text-muted-foreground">{c.detail}</p>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                            {score < 4 && (
+                              <button
+                                onClick={() => callApi(true)}
+                                disabled={loading}
+                                className="mt-3 w-full text-[12px] font-bold uppercase tracking-wider px-3 py-2 rounded-md hover:opacity-90 disabled:opacity-50"
+                                style={{ background: 'linear-gradient(90deg, #ec4899, #a855f7)', color: '#fff' }}
+                              >
+                                {loading ? 'Regenerating…' : '↻ Regenerate to fix issues'}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    <div className="relative px-5 py-5 mt-4" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
+                      <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1" style={{ background: wordCount > 125 ? 'rgba(201,91,106,.1)' : 'rgba(251,146,60,.15)', color: wordCount > 125 ? '#C95B6A' : '#2F4858', border: `1px solid ${wordCount > 125 ? 'rgba(201,91,106,.25)' : 'rgba(251,146,60,.25)'}` }}>
                         {wordCount} words
                       </span>
                       <p className="text-[14px] leading-[1.8] whitespace-pre-line pr-16 text-foreground">{result.body}</p>
