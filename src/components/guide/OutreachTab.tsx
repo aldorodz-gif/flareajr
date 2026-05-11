@@ -45,6 +45,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
   const [signal, setSignal] = useState('');
   const [buyerTitle, setBuyerTitle] = useState('');
   const [serviceLine, setServiceLine] = useState('');
+  const [tone, setTone] = useState<string>('direct');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<EmailResult | null>(null);
   const [error, setError] = useState('');
