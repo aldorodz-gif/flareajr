@@ -129,9 +129,11 @@ TONE: consultative, operational, confident, concise, helpful, non-pushy. Avoid h
 
 ${salesMindset}
 
+${housingFramework}
+
 ${toneGuide}
 
-HARD CONSTRAINTS: Under 100 words. Max 4 sentences. Mobile-first — every sentence scannable in 2 seconds on a 4-inch screen. Subject line: 2-4 words, references the specific signal (never generic like "partnership" or "growth").${varyInstruction}
+HARD CONSTRAINTS: 50–125 words. Max 4 short sentences/paragraphs. Mobile-first — CTA visible without scrolling on a 4-inch screen. Subject line: 3–7 natural words referencing the specific signal (never generic like "partnership" or "growth"). One clear low-friction CTA. Goal is to START a conversation, not close.${varyInstruction}
 ${articleInstructions}
 
 ${referenceEmail}`;
