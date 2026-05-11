@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Header from '../components/guide/Header';
 import WelcomeModal from '../components/guide/WelcomeModal';
 import TabBar from '../components/guide/TabBar';
@@ -37,6 +37,15 @@ const Index = () => {
       tabBarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 50);
   }, [activeTab]);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const tabId = (e as CustomEvent<string>).detail;
+      if (tabId) handleTabChange(tabId);
+    };
+    window.addEventListener('flare:navigate-tab', handler);
+    return () => window.removeEventListener('flare:navigate-tab', handler);
+  }, [handleTabChange]);
 
   const renderTab = () => {
     const props = { onNavigate: handleTabChange };
