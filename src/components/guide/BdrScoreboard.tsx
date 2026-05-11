@@ -95,7 +95,9 @@ const BdrScoreboard = () => {
     return { id: ovKey, name: label, market: 'Rollup', annualRevenueGoal: annualRev, annualGpGoal: annualGp, rows };
   }, [view, overrides]);
 
-  const bdr: BDR = regionBdr ?? baseBdr;
+  // Main scoreboard KPIs always reflect the selected individual BDR.
+  // The View filter cards at the bottom are comparison-only.
+  const bdr: BDR = baseBdr;
 
   const key = `${year}-${period}`;
   const row: CalcRow | undefined = bdr.rows[key];
