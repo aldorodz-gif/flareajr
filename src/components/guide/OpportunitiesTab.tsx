@@ -26,17 +26,26 @@ interface Opportunity {
   saved_by_bdr: string | null;
 }
 
-const PRIORITY_COLORS: Record<string, string> = {
-  'Top Priority': 'bg-pink-500 text-white border-pink-600',
-  'Strong Opportunity': 'bg-purple-500 text-white border-purple-600',
-  'Early Signal': 'bg-teal-600 text-white border-teal-700',
+// Pill color helpers — normalize on lowercase keys so casing/whitespace
+// from the DB never causes a fallback-to-invisible style.
+const PILL_FALLBACK = 'bg-slate-700 text-white border-slate-800';
+
+const priorityPill = (raw: string | null): string => {
+  const key = (raw || '').trim().toLowerCase();
+  if (key.includes('top')) return 'bg-pink-500 text-white border-pink-600';
+  if (key.includes('strong')) return 'bg-purple-500 text-white border-purple-600';
+  if (key.includes('early')) return 'bg-teal-600 text-white border-teal-700';
+  return PILL_FALLBACK;
 };
 
-const CONFIDENCE_COLORS: Record<string, string> = {
-  High: 'bg-teal-500 text-white border-teal-600',
-  Medium: 'bg-purple-500 text-white border-purple-600',
-  Low: 'bg-zinc-600 text-white border-zinc-700',
+const confidencePill = (raw: string | null): string => {
+  const key = (raw || '').trim().toLowerCase();
+  if (key.startsWith('h')) return 'bg-teal-500 text-white border-teal-600';
+  if (key.startsWith('m')) return 'bg-purple-500 text-white border-purple-600';
+  if (key.startsWith('l')) return 'bg-zinc-600 text-white border-zinc-700';
+  return PILL_FALLBACK;
 };
+
 
 export default function OpportunitiesTab() {
   const { selected } = useBdr();
