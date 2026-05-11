@@ -8,6 +8,8 @@ import LeadFeed, { ScanLead } from './LeadFeed';
 import InventoryMap from './InventoryMap';
 import { useBdr } from './BdrContext';
 
+const MARKET_HEAT_ROUTE_KEY = 'flare.marketHeatRoute';
+
 const MarketHeatTab = () => {
   const { selected } = useBdr();
   const [state, setState] = useState('');
@@ -18,6 +20,7 @@ const MarketHeatTab = () => {
   const [topVerticals, setTopVerticals] = useState<VerticalShare[]>([]);
   const [lastScanAt, setLastScanAt] = useState<Date | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [focusInventory, setFocusInventory] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -47,6 +50,24 @@ const MarketHeatTab = () => {
     if (st) setState(st);
   }, [selected?.id]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const raw = sessionStorage.getItem(MARKET_HEAT_ROUTE_KEY);
+    if (!raw) return;
+
+    try {
+      const parsed = JSON.parse(raw) as { city?: string; state?: string; inventory?: string | null };
+      if (parsed.city) setCity(parsed.city);
+      if (parsed.state) setState(parsed.state);
+      setFocusInventory(parsed.inventory ?? null);
+    } catch {
+      sessionStorage.removeItem(MARKET_HEAT_ROUTE_KEY);
+      return;
+    }
+
+    sessionStorage.removeItem(MARKET_HEAT_ROUTE_KEY);
+  }, []);
+
   const handleSelectorChange = (next: { state?: string; city?: string; vertical?: string }) => {
     if (next.state !== undefined) setState(next.state);
     if (next.city !== undefined) setCity(next.city);
@@ -63,6 +84,11 @@ const MarketHeatTab = () => {
       last_scan_at: new Date().toISOString(),
     }, { onConflict: 'user_id' });
   }, [userId, state, city, vertical]);
+
+  useEffect(() => {
+    if (!focusInventory || !state || !city || loading) return;
+    void handleScan();
+  }, [focusInventory, state, city]);
 
   const handleScan = async () => {
     if (!state || !city) {
@@ -130,7 +156,7 @@ const MarketHeatTab = () => {
       </div>
 
       <div>
-        <InventoryMap city={city} state={state} />
+        <InventoryMap city={city} state={state} focusInventory={focusInventory} />
       </div>
     </section>
   );
