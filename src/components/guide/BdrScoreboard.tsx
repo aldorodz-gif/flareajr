@@ -55,6 +55,8 @@ const BdrScoreboard = () => {
 
   const [year, setYear] = useState<number>(2026);
   const [period, setPeriod] = useState<string>(MONTHS[Math.min(now.getMonth(), 11)]);
+  const goalType: 'month' | 'quarter' | 'annual' =
+    period === 'All' ? 'annual' : (QUARTERS as readonly string[]).includes(period) ? 'quarter' : 'month';
   const [overrides, setOverrides] = useState<Record<string, Record<string, CalcRow>>>({});
   const [meta, setMeta] = useState<Record<string, SnapshotMeta>>({});
   const [refreshing, setRefreshing] = useState(false);
@@ -89,11 +91,24 @@ const BdrScoreboard = () => {
     })();
   }, []);
 
+  // Build a unified BDR list: baked-in BDRS plus any member from the uploaded snapshot.
+  // Member ids are prefixed with `member:` so they don't collide with baked-in ids.
   const baseBdr: BDR = useMemo(() => {
-    const base = BDRS.find(b => b.id === bdrId)!;
-    const ov = overrides[bdrId];
-    if (!ov) return base;
-    return { ...base, rows: { ...base.rows, ...ov } };
+    const baked = BDRS.find(b => b.id === bdrId);
+    if (baked) {
+      const ov = overrides[bdrId];
+      return ov ? { ...baked, rows: { ...baked.rows, ...ov } } : baked;
+    }
+    if (bdrId.startsWith('member:')) {
+      const name = bdrId.slice('member:'.length);
+      const m = (overrides['__members'] as unknown as Record<string, MemberSnapshot> | undefined)?.[name];
+      if (m) {
+        const annualGp = m.rows['2026-All']?.monthlyGoal ?? 0;
+        const annualRev = annualGp ? Math.round(annualGp / 0.25) : 0;
+        return { id: bdrId, name: m.name, market: m.market || m.region || '—', annualRevenueGoal: annualRev, annualGpGoal: annualGp, rows: m.rows };
+      }
+    }
+    return BDRS[0];
   }, [bdrId, overrides]);
 
   const memberMap = useMemo(
@@ -309,11 +324,32 @@ const BdrScoreboard = () => {
             disabled={refreshing}
             className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5 transition-opacity disabled:opacity-60"
             style={{ background: '#ec4899', color: '#fff', border: '1px solid #ec4899' }}
-            title="Upload the latest Sales Forecasting .xlsx to refresh Hallie + Matt"
+            title="Upload the latest Sales Forecasting .xlsx to refresh the scoreboard"
           >
             <span>{refreshing ? '⏳' : '↻'}</span>
             <span>{refreshing ? 'Refreshing…' : 'Refresh'}</span>
           </button>
+          <select
+            value={bdrId}
+            onChange={(e) => setBdrId(e.target.value)}
+            className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none max-w-[200px]"
+            style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
+            title="Pick which BDR's scoreboard to show"
+          >
+            <optgroup label="Baked-in">
+              {BDRS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+            </optgroup>
+            {Object.keys(memberMap).length > 0 && (
+              <optgroup label="From workbook">
+                {Object.values(memberMap)
+                  .filter(m => !BDRS.some(b => b.name === m.name))
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map(m => (
+                    <option key={`member:${m.name}`} value={`member:${m.name}`}>{m.name}</option>
+                  ))}
+              </optgroup>
+            )}
+          </select>
           <select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
@@ -323,21 +359,33 @@ const BdrScoreboard = () => {
             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
           <select
-            value={period}
-            onChange={(e) => setPeriod(e.target.value)}
+            value={goalType}
+            onChange={(e) => {
+              const t = e.target.value as 'month' | 'quarter' | 'annual';
+              if (t === 'month') setPeriod(MONTHS[Math.min(now.getMonth(), 11)]);
+              else if (t === 'quarter') setPeriod(QUARTERS[Math.min(Math.floor(now.getMonth() / 3), 3)]);
+              else setPeriod('All');
+            }}
             className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
             style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
+            title="Switch between monthly, quarterly, or annual goal view"
           >
-            <optgroup label="Months">
-              {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-            </optgroup>
-            <optgroup label="Quarters">
-              {QUARTERS.map(q => <option key={q} value={q}>{q}</option>)}
-            </optgroup>
-            <optgroup label="Year">
-              <option value="All">Full Year</option>
-            </optgroup>
+            <option value="month">Monthly Goal</option>
+            <option value="quarter">Quarterly Goal</option>
+            <option value="annual">Annual Goal</option>
           </select>
+          {goalType !== 'annual' && (
+            <select
+              value={period}
+              onChange={(e) => setPeriod(e.target.value)}
+              className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
+              style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
+            >
+              {(goalType === 'month' ? MONTHS : QUARTERS).map(p => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
