@@ -91,7 +91,20 @@ export default function OpportunitiesTab() {
     load();
   };
 
+  const allowedStates = new Set(
+    (selected?.markets || [])
+      .map(m => m.split(',').pop()?.trim().toUpperCase())
+      .filter(Boolean) as string[]
+  );
+
+  const inTerritory = (market: string | null) => {
+    if (!market || allowedStates.size === 0) return allowedStates.size === 0;
+    const st = market.split(',').pop()?.trim().toUpperCase();
+    return st ? allowedStates.has(st) : false;
+  };
+
   const filtered = items.filter(o => {
+    if (!inTerritory(o.market)) return false;
     if (filter === 'top') return o.priority === 'Top Priority';
     if (filter === 'near') return o.near_core_inventory;
     if (filter === 'saved') return o.saved_by_bdr === selected?.id;
@@ -116,7 +129,7 @@ export default function OpportunitiesTab() {
 
       <div className="flex gap-2 mb-4 flex-wrap">
         {([
-          ['all', `All (${items.length})`],
+          ['all', `All (${items.filter(o => inTerritory(o.market)).length})`],
           ['top', `🔥 Top Priority`],
           ['near', `📍 Near Inventory`],
           ['saved', `⭐ My Saved`],
