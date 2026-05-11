@@ -51,6 +51,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
   const [result, setResult] = useState<EmailResult | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [copiedAlt, setCopiedAlt] = useState<number | null>(null);
   const [rulesOpen, setRulesOpen] = useState(false);
 
   // Article scraping state
