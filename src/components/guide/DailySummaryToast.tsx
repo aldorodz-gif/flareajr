@@ -1,32 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useBdr } from './BdrContext';
 
-const SHOWN_KEY = 'flare:lastSummaryDate';
-const SNOOZE_KEY = 'flare:summarySnoozeUntil';
-
 export default function DailySummaryToast() {
   const { selected } = useBdr();
+  const lastShownIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!selected) return;
+    // Avoid double-firing for the same id (e.g., StrictMode remount)
+    if (lastShownIdRef.current === selected.id) return;
+    lastShownIdRef.current = selected.id;
 
-    const today = new Date().toISOString().slice(0, 10);
-    const shownToken = `${selected.id}:${today}`;
-    if (localStorage.getItem(SHOWN_KEY) === shownToken) return;
-
-    // Respect an active snooze
-    const snoozeUntil = Number(localStorage.getItem(SNOOZE_KEY) || 0);
-    if (snoozeUntil && Date.now() < snoozeUntil) {
-      const delay = snoozeUntil - Date.now();
-      const t = setTimeout(() => show(), delay);
-      return () => clearTimeout(t);
-    }
-
-    show();
-
-    async function show() {
+    (async () => {
       const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
       const { data, error } = await supabase
         .from('opportunities')
@@ -40,51 +27,24 @@ export default function DailySummaryToast() {
       const highPriority = data.filter(d => d.priority === 'Top Priority');
       const top = highPriority.slice(0, 3).map(d => d.company);
 
-      const markShown = () => {
-        localStorage.setItem(SHOWN_KEY, shownToken);
-        localStorage.removeItem(SNOOZE_KEY);
-      };
-
-      const snooze = (hours: number) => {
-        const until = Date.now() + hours * 60 * 60 * 1000;
-        localStorage.setItem(SNOOZE_KEY, String(until));
-        // Don't mark as shown — it'll re-fire after snooze
-        toast.dismiss(toastId);
-        toast.info(`Snoozed for ${hours}h`, { duration: 3000 });
-        setTimeout(() => show(), hours * 60 * 60 * 1000);
-      };
-
       const description =
         total === 0
-          ? 'No new opportunities in the last 24 hours. Next auto-scan is on schedule.'
+          ? `No new opportunities for ${selected.name} in the last 24 hours.`
           : highPriority.length > 0
             ? `${highPriority.length} high-priority${top.length ? `: ${top.join(', ')}` : ''}.`
-            : 'No high-priority hits — review the new list in Opportunities.';
+            : `No high-priority hits — review the new list in Opportunities.`;
 
       const title =
-        total === 0 ? 'Morning briefing' : `Morning briefing — ${total} new opportunities`;
+        total === 0
+          ? `${selected.name} — morning briefing`
+          : `${selected.name} — ${total} new opportunities`;
 
-      const toastId = toast(title, {
+      toast(title, {
         description,
-        duration: Infinity,
-        action: {
-          label: 'Got it',
-          onClick: () => markShown(),
-        },
-        cancel: {
-          label: 'Remind me in 1h',
-          onClick: () => snooze(1),
-        },
-        onDismiss: () => markShown(),
-        onAutoClose: () => markShown(),
+        duration: 8000,
       });
-
-      // Offer a longer snooze via a follow-up toast trigger
-      setTimeout(() => {
-        // no-op; primary actions handle it
-      }, 0);
-    }
-  }, [selected]);
+    })();
+  }, [selected?.id]);
 
   return null;
 }
