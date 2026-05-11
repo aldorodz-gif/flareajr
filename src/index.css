@@ -266,9 +266,16 @@ html.theme-switching::after {
   background: linear-gradient(90deg, #FFFBF5, #FFF1E0) !important;
   border-bottom-color: rgba(251,146,60,.25) !important;
 }
-[data-theme="warm"] [data-shell="tab-bar"] > div[class*="absolute"] {
-  background: linear-gradient(90deg, #fbbf24, #f97316) !important;
-  box-shadow: 0 0 14px rgba(251,146,60,.5) !important;
+/* Warm-theme tab labels: dark warm text for contrast */
+[data-theme="warm"] [data-shell="tab-bar"] button[data-tab] {
+  color: #5c2d10 !important;
+}
+[data-theme="warm"] [data-shell="tab-bar"] button[data-tab][data-active="true"] {
+  color: #7c2d12 !important;
+  background: rgba(251,146,60,.18) !important;
+}
+[data-theme="warm"] [data-shell="tab-bar"] button[data-tab]:hover {
+  color: #7c2d12 !important;
 }
 
 [data-theme="warm"] [data-shell="footer"] {
@@ -281,4 +288,18 @@ html.theme-switching::after {
 [data-theme="warm"] [data-shell="footer"] span {
   background: rgba(251,146,60,.18) !important;
   color: #7c3a14 !important;
+}
+
+/* ---------- Dark theme contrast tweaks ---------- */
+/* Lift the "Built by" credit so it's actually readable */
+[data-shell="header"] p:last-of-type {
+  color: rgba(255,255,255,.55) !important;
+}
+[data-theme="warm"] [data-shell="header"] p:last-of-type {
+  color: #7c3a14 !important;
+  opacity: .8;
+}
+/* Footer brand text in dark theme */
+[data-shell="footer"] p {
+  color: rgba(255,255,255,.7) !important;
 }

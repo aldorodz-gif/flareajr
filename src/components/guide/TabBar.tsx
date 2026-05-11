@@ -81,8 +81,9 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
     >
       <div
         ref={sliderRef}
+        data-shell="tab-slider"
         className="absolute bottom-0 h-[3px] rounded-t-sm pointer-events-none z-10 transition-all duration-300"
-        style={{ background: 'linear-gradient(90deg, #8B8FE8, #D97FAA)', boxShadow: '0 0 14px rgba(155,120,200,.5)' }}
+        style={{ background: 'linear-gradient(90deg, #fbbf24, #f97316)', boxShadow: '0 0 14px rgba(251,146,60,.5)' }}
       />
       {TAB_ORDER.map((tab) => {
         const isActive = activeTab === tab.id;
@@ -91,22 +92,23 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
           <button
             key={tab.id}
             data-tab={tab.id}
+            data-active={isActive ? 'true' : 'false'}
             onClick={() => handleClick(tab.id)}
             className={`group relative inline-flex flex-col items-center gap-1 px-3.5 py-2.5 whitespace-nowrap transition-all duration-200 flex-shrink-0 hover:-translate-y-1 hover:scale-110 hover:text-white`}
             style={{
-              color: isActive ? '#fff' : 'rgba(255,255,255,.5)',
-              background: isActive ? 'rgba(155,120,200,.15)' : 'transparent',
+              color: isActive ? '#fff' : 'rgba(255,255,255,.78)',
+              background: isActive ? 'rgba(251,146,60,.15)' : 'transparent',
               borderRadius: isActive ? '6px 6px 0 0' : '0',
             }}
           >
             <span
               ref={isActive ? activeIconRef : undefined}
-              className={`text-[17px] leading-none transition-all duration-200 ${isActive ? '' : 'grayscale-[0.5] opacity-65 group-hover:opacity-100 group-hover:grayscale-0'} ${isActive ? 'animate-icon-pop' : ''}`}
+              className={`text-[17px] leading-none transition-all duration-200 ${isActive ? '' : 'opacity-90 group-hover:opacity-100'} ${isActive ? 'animate-icon-pop' : ''}`}
               key={`${tab.id}-${isActive}`}
             >
               {tab.icon}
             </span>
-            <span className="text-[10px] leading-none tracking-wide transition-colors duration-200 group-hover:text-white">{tab.label}</span>
+            <span className="text-[11px] leading-none tracking-wide font-medium transition-colors duration-200 group-hover:text-white">{tab.label}</span>
           </button>
         );
       })}
