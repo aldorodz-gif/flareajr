@@ -191,3 +191,64 @@
 /* Scrollbar hide for tab bar */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---------- Warm theme overrides ---------- */
+[data-theme="warm"] body {
+  background: #FAF7F2 !important;
+}
+
+[data-theme="warm"] [data-shell="header"] {
+  background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 35%, #FED7AA 70%, #FDBA74 100%) !important;
+}
+[data-theme="warm"] [data-shell="header"] h1 {
+  filter: drop-shadow(0 2px 12px rgba(251,146,60,.35)) !important;
+}
+[data-theme="warm"] [data-shell="header"] p,
+[data-theme="warm"] [data-shell="header"] span {
+  color: #5c3a1a !important;
+}
+[data-theme="warm"] [data-shell="header"] [title*="Replay"],
+[data-theme="warm"] [data-shell="header"] button[title*="theme"] {
+  background: rgba(255,255,255,.55) !important;
+  border-color: rgba(251,146,60,.35) !important;
+  color: #7c3a14 !important;
+}
+[data-theme="warm"] [data-shell="glow-1"],
+[data-theme="warm"] [data-shell="glow-3"] {
+  background: radial-gradient(circle, rgba(253,186,116,.45) 0%, transparent 65%) !important;
+}
+[data-theme="warm"] [data-shell="glow-2"] {
+  background: radial-gradient(circle, rgba(251,191,36,.35) 0%, transparent 65%) !important;
+}
+/* Tool badge pills in header */
+[data-theme="warm"] [data-shell="header"] .flex.flex-wrap > span {
+  background: rgba(255,255,255,.55) !important;
+  border-color: rgba(251,146,60,.3) !important;
+  color: #7c3a14 !important;
+}
+
+[data-theme="warm"] [data-shell="bdr-bar"] {
+  background: linear-gradient(90deg, #FFF1E0, #FFE4C4) !important;
+  border-bottom-color: rgba(251,146,60,.25) !important;
+}
+
+[data-theme="warm"] [data-shell="tab-bar"] {
+  background: linear-gradient(90deg, #FFFBF5, #FFF1E0) !important;
+  border-bottom-color: rgba(251,146,60,.25) !important;
+}
+[data-theme="warm"] [data-shell="tab-bar"] > div[class*="absolute"] {
+  background: linear-gradient(90deg, #fbbf24, #f97316) !important;
+  box-shadow: 0 0 14px rgba(251,146,60,.5) !important;
+}
+
+[data-theme="warm"] [data-shell="footer"] {
+  background: linear-gradient(90deg, #FFF1E0, #FFE4C4) !important;
+  border-top-color: rgba(251,146,60,.25) !important;
+}
+[data-theme="warm"] [data-shell="footer"] p {
+  color: #7c3a14 !important;
+}
+[data-theme="warm"] [data-shell="footer"] span {
+  background: rgba(251,146,60,.18) !important;
+  color: #7c3a14 !important;
+}
