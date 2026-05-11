@@ -307,11 +307,28 @@ const BdrScoreboard = () => {
               <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(bdr.annualRevenueGoal, 'currency')}</div>
               <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>Annual GP Goal {fmt(bdr.annualGpGoal, 'currency')}</div>
             </div>
-            <div className="p-3 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
-              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#64748b' }}>Revenue Needed to Hit GP Goal · {period}</div>
-              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(revenueForGp(bdr, row.monthlyGoal), 'currency')}</div>
-              <div className="text-[10px] mt-0.5" style={{ color: '#94a3b8' }}>From GP goal {fmt(row.monthlyGoal, 'currency')}</div>
-            </div>
+            {(() => {
+              const gpRemaining = row.monthlyGoal != null && row.actual != null
+                ? Math.max(0, row.monthlyGoal - row.actual)
+                : row.monthlyGoal;
+              const revNeeded = revenueForGp(bdr, gpRemaining);
+              const goalHit = row.monthlyGoal != null && row.actual != null && row.actual >= row.monthlyGoal;
+              return (
+                <div className="p-3 rounded-lg" style={{ background: goalHit ? '#ecfdf5' : '#fff', border: `1px solid ${goalHit ? 'rgba(20,184,166,.35)' : 'rgba(14,30,58,.06)'}` }}>
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: goalHit ? '#0d9488' : '#64748b' }}>
+                    {goalHit ? `GP Goal Hit · ${period}` : `Revenue Needed to Hit GP Goal · ${period}`}
+                  </div>
+                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: goalHit ? '#0d9488' : '#0e1e3a' }}>
+                    {goalHit ? '$0 needed ✓' : fmt(revNeeded, 'currency')}
+                  </div>
+                  <div className="text-[10px] mt-0.5" style={{ color: goalHit ? '#0d9488' : '#94a3b8' }}>
+                    {goalHit
+                      ? `Over by ${fmt((row.actual ?? 0) - (row.monthlyGoal ?? 0), 'currency')} GP`
+                      : `GP remaining ${fmt(gpRemaining, 'currency')} of ${fmt(row.monthlyGoal, 'currency')}`}
+                  </div>
+                </div>
+              );
+            })()}
             <div className="p-3 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
               <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#64748b' }}>Revenue Booked (implied) · {period}</div>
               <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(revenueForGp(bdr, row.actual), 'currency')}</div>
