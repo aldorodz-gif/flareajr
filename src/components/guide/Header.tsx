@@ -72,24 +72,24 @@ const Header = ({ onReplayTour }: HeaderProps) => {
             className="text-[56px] md:text-[72px] font-black tracking-[-0.03em] leading-none"
             style={{
               fontFamily: "'Inter', sans-serif",
-              background: 'linear-gradient(135deg, #ffffff 0%, #fbbf24 30%, #fb923c 60%, #f97316 100%)',
+              background: 'linear-gradient(135deg, #ffffff 0%, #2dd4bf 28%, #ec4899 62%, #a855f7 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 0 30px rgba(251,146,60,.3))',
+              filter: 'drop-shadow(0 0 30px rgba(236,72,153,.35))',
             }}
           >
             FLARE
           </h1>
           <div
             className="h-[3px] w-[80px] mt-2 rounded-full"
-            style={{ background: 'linear-gradient(90deg, #fb923c, rgba(251,146,60,0))' }}
+            style={{ background: 'linear-gradient(90deg, #ec4899, #a855f7 60%, rgba(168,85,247,0))' }}
           />
         </div>
 
         {/* Subtitle */}
         <p
           className="text-[13px] md:text-[14px] font-semibold uppercase tracking-widest animate-hero-rise"
-          style={{ color: 'rgba(251,146,60,.85)', animationDelay: '0.1s' }}
+          style={{ color: 'rgba(45,212,191,.9)', animationDelay: '0.1s' }}
         >
           The NCH BDR Prospecting Toolkit
         </p>
