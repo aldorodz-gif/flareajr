@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import StepSimulation from './StepSimulation';
 
 const DISMISSED_KEY = 'flare-welcome-dismissed';
 
@@ -10,6 +11,7 @@ interface TourStep {
   detail: string;
   tabId?: string;
   gradient: string;
+  simId: string;
 }
 
 const TOUR_STEPS: TourStep[] = [
