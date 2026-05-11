@@ -28,7 +28,7 @@ type View = 'bdr' | 'team' | 'southeast' | 'nyc';
 
 const BdrScoreboard = () => {
   const { selected: globalBdr } = useBdr();
-  const [view, setView] = useState<View>('bdr');
+  const [view, setView] = useState<View>('team');
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
 
@@ -240,17 +240,6 @@ const BdrScoreboard = () => {
         onChange={handleFile}
       />
 
-      <div className="mb-4">
-        <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">View · click to filter</Eyebrow>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1">
-          <FilterTab id="bdr" label="Individual BDR" sub={`${baseBdr.name}`} r={view === 'bdr' ? baseBdr.rows[rollupKey] : undefined} />
-          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
-          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
-          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
-        </div>
-      </div>
-
-
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>
           <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">BDR Scoreboard</Eyebrow>
@@ -344,6 +333,27 @@ const BdrScoreboard = () => {
               );
             })}
           </div>
+
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
+            <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#64748b' }}>{year} Quarter Rollup</div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {QUARTERS.map((q, i) => {
+                const qr = quarterTotals[i];
+                return (
+                  <div key={q} className="p-2.5 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
+                    <div className="text-[10px] font-bold" style={{ color: '#64748b' }}>{q}</div>
+                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(qr?.actual ?? null, 'currency')}</div>
+                    <div className="text-[10px] tabular-nums" style={{ color: '#94a3b8' }}>goal {fmt(qr?.monthlyGoal ?? null, 'currency')}</div>
+                  </div>
+                );
+              })}
+              <div className="p-2.5 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
+                <div className="text-[10px] font-bold" style={{ color: '#f9a8d4' }}>Year</div>
+                <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
+                <div className="text-[10px] tabular-nums" style={{ color: 'rgba(255,255,255,.6)' }}>goal {fmt(yearTotal?.monthlyGoal ?? null, 'currency')}</div>
+              </div>
+            </div>
+          </div>
         </>
       )}
 
@@ -420,23 +430,11 @@ const BdrScoreboard = () => {
       })()}
 
       <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
-        <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#64748b' }}>{year} Quarter Rollup</div>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-          {QUARTERS.map((q, i) => {
-            const qr = quarterTotals[i];
-            return (
-              <div key={q} className="p-2.5 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
-                <div className="text-[10px] font-bold" style={{ color: '#64748b' }}>{q}</div>
-                <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(qr?.actual ?? null, 'currency')}</div>
-                <div className="text-[10px] tabular-nums" style={{ color: '#94a3b8' }}>goal {fmt(qr?.monthlyGoal ?? null, 'currency')}</div>
-              </div>
-            );
-          })}
-          <div className="p-2.5 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
-            <div className="text-[10px] font-bold" style={{ color: '#f9a8d4' }}>Year</div>
-            <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
-            <div className="text-[10px] tabular-nums" style={{ color: 'rgba(255,255,255,.6)' }}>goal {fmt(yearTotal?.monthlyGoal ?? null, 'currency')}</div>
-          </div>
+        <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">View · click to filter</Eyebrow>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1">
+          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
+          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
+          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
         </div>
       </div>
 
