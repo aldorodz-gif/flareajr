@@ -98,6 +98,8 @@ ${playbook}
 
 ${salesMindset}
 
+${toneGuide}
+
 HARD CONSTRAINTS: Under 100 words. Max 4 sentences. Mobile-first — every sentence scannable in 2 seconds on a 4-inch screen. Subject line: 2-4 words, references the specific signal (never generic like "partnership" or "growth").${varyInstruction}
 ${articleInstructions}
 
