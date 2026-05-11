@@ -22,8 +22,16 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem(KEY, theme);
   }, [theme]);
 
-  const setTheme = useCallback((t: Theme) => setThemeState(t), []);
-  const toggle = useCallback(() => setThemeState((t) => (t === 'dark' ? 'warm' : 'dark')), []);
+  const setTheme = useCallback((t: Theme) => {
+    document.documentElement.classList.add('theme-switching');
+    setThemeState(t);
+    window.setTimeout(() => document.documentElement.classList.remove('theme-switching'), 650);
+  }, []);
+  const toggle = useCallback(() => {
+    document.documentElement.classList.add('theme-switching');
+    setThemeState((t) => (t === 'dark' ? 'warm' : 'dark'));
+    window.setTimeout(() => document.documentElement.classList.remove('theme-switching'), 650);
+  }, []);
 
   return <ThemeCtx.Provider value={{ theme, toggle, setTheme }}>{children}</ThemeCtx.Provider>;
 };

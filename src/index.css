@@ -192,6 +192,36 @@
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* ---------- Theme transition ---------- */
+body,
+[data-shell],
+[data-shell] * {
+  transition:
+    background 450ms ease,
+    background-color 450ms ease,
+    background-image 450ms ease,
+    border-color 450ms ease,
+    color 350ms ease,
+    box-shadow 450ms ease,
+    filter 450ms ease !important;
+}
+
+@keyframes themeFlash {
+  0% { opacity: 0; transform: translateY(-6px); }
+  40% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(0); }
+}
+
+html.theme-switching::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(251,146,60,.12), transparent 60%);
+  pointer-events: none;
+  z-index: 9999;
+  animation: themeFlash 600ms ease forwards;
+}
+
 /* ---------- Warm theme overrides ---------- */
 [data-theme="warm"] body {
   background: #FAF7F2 !important;
