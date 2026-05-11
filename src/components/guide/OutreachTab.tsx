@@ -222,6 +222,37 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                           {SERVICE_LINES.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                       </div>
+
+                      {/* Tone selector */}
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-[.12em] text-muted-foreground mb-2 mt-1">Tone style</p>
+                        <div className="flex flex-wrap gap-2">
+                          {TONES.map(t => {
+                            const active = tone === t.id;
+                            return (
+                              <button
+                                key={t.id}
+                                type="button"
+                                onClick={() => setTone(t.id)}
+                                disabled={loading}
+                                title={t.hint}
+                                className="px-3 py-2 text-[12px] font-semibold transition-all rounded-md border"
+                                style={{
+                                  background: active ? 'linear-gradient(135deg, #fb923c, #f97316)' : '#FAF7F2',
+                                  color: active ? '#fff' : '#2F4858',
+                                  borderColor: active ? 'transparent' : 'rgba(155,120,200,.2)',
+                                  boxShadow: active ? '0 2px 8px rgba(251,146,60,.3)' : 'none',
+                                }}
+                              >
+                                <span className="mr-1.5">{t.emoji}</span>{t.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-1.5 italic">
+                          {TONES.find(t => t.id === tone)?.hint}
+                        </p>
+                      </div>
                     </div>
 
                     <button
