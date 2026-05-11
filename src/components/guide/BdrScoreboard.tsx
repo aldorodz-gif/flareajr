@@ -16,6 +16,17 @@ const fmt = (v: number | null, kind: 'currency' | 'percent' | 'number') => {
   return v.toFixed(1);
 };
 
+// Goal-hit semantics shared across all GP tiles.
+// Hit when: goal is known and either non-positive, or actual has met/exceeded it.
+// Returns null `hit` when there is not enough data to judge (goal missing).
+const gpStatus = (goal: number | null | undefined, actual: number | null | undefined) => {
+  if (goal == null || Number.isNaN(goal)) return { hit: null as boolean | null, remaining: null as number | null, over: null as number | null };
+  if (goal <= 0) return { hit: true, remaining: 0, over: Math.max(0, (actual ?? 0)) };
+  if (actual == null || Number.isNaN(actual)) return { hit: false, remaining: goal, over: 0 };
+  const diff = actual - goal;
+  return { hit: diff >= 0, remaining: Math.max(0, -diff), over: Math.max(0, diff) };
+};
+
 const YEARS = [2026, 2025] as const;
 
 interface SnapshotMeta {
