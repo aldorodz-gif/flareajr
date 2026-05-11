@@ -234,65 +234,65 @@ html.theme-switching::after {
 }
 
 [data-theme="warm"] [data-shell="header"] {
-  background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 35%, #FED7AA 70%, #FDBA74 100%) !important;
+  background: linear-gradient(135deg, #FFFBF5 0%, #FFF4E6 40%, #FFE9D2 75%, #FFDDB8 100%) !important;
 }
 [data-theme="warm"] [data-shell="header"] h1 {
-  filter: drop-shadow(0 2px 12px rgba(251,146,60,.35)) !important;
+  filter: drop-shadow(0 2px 12px rgba(251,146,60,.25)) !important;
 }
 [data-theme="warm"] [data-shell="header"] p,
 [data-theme="warm"] [data-shell="header"] span {
-  color: #5c3a1a !important;
+  color: #6b4524 !important;
 }
 [data-theme="warm"] [data-shell="header"] [title*="Replay"],
 [data-theme="warm"] [data-shell="header"] button[title*="theme"] {
-  background: rgba(255,255,255,.55) !important;
-  border-color: rgba(251,146,60,.35) !important;
-  color: #7c3a14 !important;
+  background: rgba(255,255,255,.6) !important;
+  border-color: rgba(251,146,60,.25) !important;
+  color: #8a4a1c !important;
 }
 [data-theme="warm"] [data-shell="glow-1"],
 [data-theme="warm"] [data-shell="glow-3"] {
-  background: radial-gradient(circle, rgba(253,186,116,.45) 0%, transparent 65%) !important;
+  background: radial-gradient(circle, rgba(253,186,116,.28) 0%, transparent 65%) !important;
 }
 [data-theme="warm"] [data-shell="glow-2"] {
-  background: radial-gradient(circle, rgba(251,191,36,.35) 0%, transparent 65%) !important;
+  background: radial-gradient(circle, rgba(251,191,36,.22) 0%, transparent 65%) !important;
 }
 /* Tool badge pills in header */
 [data-theme="warm"] [data-shell="header"] .flex.flex-wrap > span {
-  background: rgba(255,255,255,.55) !important;
-  border-color: rgba(251,146,60,.3) !important;
-  color: #7c3a14 !important;
+  background: rgba(255,255,255,.65) !important;
+  border-color: rgba(251,146,60,.22) !important;
+  color: #8a4a1c !important;
 }
 
 [data-theme="warm"] [data-shell="bdr-bar"] {
-  background: linear-gradient(90deg, #FFF1E0, #FFE4C4) !important;
-  border-bottom-color: rgba(251,146,60,.25) !important;
+  background: linear-gradient(90deg, #FFF6EC, #FFEAD4) !important;
+  border-bottom-color: rgba(251,146,60,.18) !important;
 }
 
 [data-theme="warm"] [data-shell="tab-bar"] {
-  background: linear-gradient(90deg, #FFFBF5, #FFF1E0) !important;
-  border-bottom-color: rgba(251,146,60,.25) !important;
+  background: linear-gradient(90deg, #FFFCF7, #FFF4E6) !important;
+  border-bottom-color: rgba(251,146,60,.18) !important;
 }
-/* Warm-theme tab labels: dark warm text for contrast */
+/* Warm-theme tab labels: soft warm text for contrast */
 [data-theme="warm"] [data-shell="tab-bar"] button[data-tab] {
-  color: #5c2d10 !important;
+  color: #7a4a22 !important;
 }
 [data-theme="warm"] [data-shell="tab-bar"] button[data-tab][data-active="true"] {
-  color: #7c2d12 !important;
-  background: rgba(251,146,60,.18) !important;
+  color: #8a3d10 !important;
+  background: rgba(251,146,60,.14) !important;
 }
 [data-theme="warm"] [data-shell="tab-bar"] button[data-tab]:hover {
-  color: #7c2d12 !important;
+  color: #8a3d10 !important;
 }
 
 [data-theme="warm"] [data-shell="footer"] {
-  background: linear-gradient(90deg, #FFF1E0, #FFE4C4) !important;
-  border-top-color: rgba(251,146,60,.25) !important;
+  background: linear-gradient(90deg, #FFF6EC, #FFEAD4) !important;
+  border-top-color: rgba(251,146,60,.18) !important;
 }
 [data-theme="warm"] [data-shell="footer"] p {
-  color: #7c3a14 !important;
+  color: #8a4a1c !important;
 }
 [data-theme="warm"] [data-shell="footer"] span {
-  background: rgba(251,146,60,.18) !important;
+  background: rgba(251,146,60,.14) !important;
   color: #7c3a14 !important;
 }
 
