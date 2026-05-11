@@ -387,8 +387,7 @@ const BdrScoreboard = () => {
           );
         }
         return (
-          <div className="mt-5 p-4 rounded-xl" style={{ background: '#E8DFD0' }}>
-            <div className="overflow-hidden rounded-lg">
+          <div className="mt-5 overflow-hidden rounded-xl" style={{ background: '#E8DFD0' }}>
               <table className="w-full text-[12px]">
                 <thead style={{ background: '#fff' }}>
                   <tr style={{ color: '#64748b' }}>
@@ -423,7 +422,6 @@ const BdrScoreboard = () => {
                   })}
                 </tbody>
               </table>
-            </div>
           </div>
         );
       })()}
