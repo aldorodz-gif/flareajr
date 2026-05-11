@@ -270,16 +270,6 @@ const BdrScoreboard = () => {
             <span>{refreshing ? '⏳' : '↻'}</span>
             <span>{refreshing ? 'Refreshing…' : 'Refresh'}</span>
           </button>
-          {view === 'bdr' && (
-            <select
-              value={bdrId}
-              onChange={(e) => setBdrId(e.target.value)}
-              className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
-              style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
-            >
-              {BDRS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-            </select>
-          )}
           <select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
