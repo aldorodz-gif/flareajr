@@ -108,6 +108,34 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     }
   }, [company, signal, buyerTitle, serviceLine, tone, articleContent, scrapedTitle, canGenerate]);
 
+  const [regenLoading, setRegenLoading] = useState(false);
+  const regenerateSubjects = useCallback(async () => {
+    if (!result) return;
+    setRegenLoading(true);
+    try {
+      const signalText = articleContent
+        ? `Article: "${scrapedTitle}". Content: ${articleContent}`
+        : signal.trim();
+      const { data, error: fnError } = await supabase.functions.invoke('subject-alternatives', {
+        body: {
+          company: company.trim(),
+          signal: signalText,
+          buyer_title: buyerTitle.trim(),
+          service_line: serviceLine,
+          current_subject: result.subject,
+          exclude: result.subject_alternatives || [],
+        },
+      });
+      if (fnError) throw fnError;
+      if (data.error) throw new Error(data.error);
+      setResult(r => r ? { ...r, subject_alternatives: data.subject_alternatives } : r);
+    } catch {
+      setError('Could not refresh subjects. Try again.');
+    } finally {
+      setRegenLoading(false);
+    }
+  }, [result, company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle]);
+
   const wordCount = result ? result.body.split(/\s+/).filter(Boolean).length : 0;
 
   const handleCopy = useCallback(() => {
