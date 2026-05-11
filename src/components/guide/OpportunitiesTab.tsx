@@ -220,11 +220,6 @@ export default function OpportunitiesTab() {
                     <div className="text-2xl font-bold text-pink-400">{composite}</div>
                     <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall Score</div>
                   </div>
-                  <div className="flex gap-2 text-[10px] text-muted-foreground">
-                    <span title="How strong the news/signal is">Signal:{o.discovery_score}</span>
-                    <span title="How well it fits 30+ day housing">Housing:{o.housing_fit_score}</span>
-                    <span title="How trustworthy the source is">Source:{o.confidence_score}</span>
-                  </div>
                   <div className="flex gap-2 mt-2">
                     {o.saved_by_bdr === selected.id ? (
                       <span className="text-xs text-teal-400">⭐ Saved</span>
