@@ -9,6 +9,7 @@ import InventoryMap from './InventoryMap';
 import { useBdr } from './BdrContext';
 
 const MarketHeatTab = () => {
+  const { selected } = useBdr();
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [vertical, setVertical] = useState('all');
@@ -36,6 +37,15 @@ const MarketHeatTab = () => {
       }
     })();
   }, []);
+
+  // When the active BDR changes, snap filters to that BDR's first market.
+  useEffect(() => {
+    if (!selected || !selected.markets?.length) return;
+    const first = selected.markets[0]; // "City, ST"
+    const [c, st] = first.split(',').map(s => s.trim());
+    if (c) setCity(c);
+    if (st) setState(st);
+  }, [selected?.id]);
 
   const handleSelectorChange = (next: { state?: string; city?: string; vertical?: string }) => {
     if (next.state !== undefined) setState(next.state);
