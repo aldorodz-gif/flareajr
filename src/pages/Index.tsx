@@ -57,6 +57,7 @@ const Index = () => {
         <DailySummaryToast />
         <WelcomeModal onNavigateToTab={handleTabChange} forceOpen={tourOpen} onClose={() => setTourOpen(false)} />
         <Header onReplayTour={() => setTourOpen(true)} />
+        <BdrSelector />
         <div ref={tabBarRef}>
           <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />
         </div>
