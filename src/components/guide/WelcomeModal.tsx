@@ -22,6 +22,7 @@ const TOUR_STEPS: TourStep[] = [
     description: 'Flare helps NCH BDRs find companies with active housing needs, identify the right buyer, and send signal-specific outreach — without spending hours researching.',
     detail: 'This 30-second walkthrough shows you each tool and how they connect into a daily routine.',
     gradient: 'linear-gradient(135deg, #0F0F1A 0%, #1a1145 30%, #2d1b69 60%, #4a1942 100%)',
+    simId: 'intro',
   },
   {
     icon: '📡',
@@ -31,6 +32,7 @@ const TOUR_STEPS: TourStep[] = [
     detail: 'Set it up once, schedule it to run every weekday morning, and wake up to fresh leads.',
     tabId: 'tracker',
     gradient: 'linear-gradient(135deg, #1a3a5c, #1a1145)',
+    simId: 'tracker',
   },
   {
     icon: '⚡',
@@ -40,6 +42,7 @@ const TOUR_STEPS: TourStep[] = [
     detail: 'Pull HIGH priority first. Log it. Research the company. Then move to outreach.',
     tabId: 'results',
     gradient: 'linear-gradient(135deg, #2d1b69, #4a1942)',
+    simId: 'results',
   },
   {
     icon: '🎯',
@@ -49,6 +52,7 @@ const TOUR_STEPS: TourStep[] = [
     detail: 'Every vertical has primary and non-traditional titles mapped out for you.',
     tabId: 'contact',
     gradient: 'linear-gradient(135deg, #4a1942, #6b2150)',
+    simId: 'contact',
   },
   {
     icon: '✉️',
@@ -58,6 +62,7 @@ const TOUR_STEPS: TourStep[] = [
     detail: 'Pro tip: Send it to yourself first and read it on your phone. If it looks like a wall of text, rewrite it.',
     tabId: 'outreach',
     gradient: 'linear-gradient(135deg, #1a1145, #0F0F1A)',
+    simId: 'outreach',
   },
   {
     icon: '📋',
@@ -66,6 +71,7 @@ const TOUR_STEPS: TourStep[] = [
     description: 'Score Signals instantly rates any headline HIGH / MEDIUM / LOW with the likely service line. Mindset keeps you sharp on the approach.',
     detail: 'Use Score Signals when you\'re not sure if a lead is worth pursuing. Check Mindset when you need a reset.',
     gradient: 'linear-gradient(135deg, #2d1b69, #1a1145)',
+    simId: 'bonus',
   },
 ];
 
