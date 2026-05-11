@@ -333,27 +333,7 @@ const BdrScoreboard = () => {
             <span>{refreshing ? '⏳' : '↻'}</span>
             <span>{refreshing ? 'Refreshing…' : 'Refresh'}</span>
           </button>
-          <select
-            value={bdrId}
-            onChange={(e) => setBdrId(e.target.value)}
-            className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none max-w-[200px]"
-            style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
-            title="Pick which BDR's scoreboard to show"
-          >
-            <optgroup label="Baked-in">
-              {BDRS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-            </optgroup>
-            {Object.keys(memberMap).length > 0 && (
-              <optgroup label="From workbook">
-                {Object.values(memberMap)
-                  .filter(m => !BDRS.some(b => b.name === m.name))
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map(m => (
-                    <option key={`member:${m.name}`} value={`member:${m.name}`}>{m.name}</option>
-                  ))}
-              </optgroup>
-            )}
-          </select>
+          {/* BDR picker removed — driven by the global Active BDR selector at the top of the page */}
           <select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
