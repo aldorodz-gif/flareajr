@@ -37,9 +37,9 @@ const Header = ({ onReplayTour }: HeaderProps) => {
           onClick={toggle}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:scale-105"
           style={{
-            background: theme === 'warm' ? 'rgba(251,146,60,.15)' : 'rgba(255,255,255,.08)',
-            border: theme === 'warm' ? '1px solid rgba(251,146,60,.4)' : '1px solid rgba(255,255,255,.12)',
-            color: theme === 'warm' ? '#7c3a14' : 'rgba(255,255,255,.6)',
+            background: theme === 'warm' ? 'rgba(236,72,153,.14)' : 'rgba(255,255,255,.08)',
+            border: theme === 'warm' ? '1px solid rgba(236,72,153,.4)' : '1px solid rgba(255,255,255,.12)',
+            color: theme === 'warm' ? '#9d174d' : 'rgba(255,255,255,.6)',
           }}
           title={theme === 'dark' ? 'Switch to warm theme' : 'Switch to dark theme'}
         >
