@@ -9,7 +9,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { company, signal, buyer_title, service_line, vary } = await req.json();
+    const { company, signal, buyer_title, service_line, tone, vary } = await req.json();
     if (!company || !signal || !buyer_title || !service_line) {
       return new Response(JSON.stringify({ error: "All fields are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -85,9 +85,20 @@ VERTICAL PLAYBOOK — ${service_line}:
 ${playbook}
 `;
 
+    const TONE_GUIDES: Record<string, string> = {
+      direct: "TONE: DIRECT. Sharp and confident. No throat-clearing. Every sentence cuts. Short words, strong verbs. Sound like a senior rep who respects the buyer's time.",
+      warm: "TONE: WARM. Human, conversational, like writing to a colleague you respect. Use contractions. A touch of empathy or acknowledgment of their workload. Never saccharine — warm, not cheesy.",
+      analytical: "TONE: ANALYTICAL. Lead with a specific number, metric, or operational detail from the signal. Sound measured and informed. Imply you've done math on their situation. No hype words.",
+      consultative: "TONE: CONSULTATIVE. Curious and advisory. Ask one sharp question that reframes the problem. Sound like a peer with pattern recognition across similar accounts, not a vendor pitching.",
+      bold: "TONE: BOLD. Pattern-interrupt. Open with a contrarian observation or sharp prediction. Confident but never arrogant. Earn the read in the first 6 words.",
+    };
+    const toneGuide = TONE_GUIDES[tone as string] || TONE_GUIDES.direct;
+
     const systemPrompt = `You are an elite BDR writing first-touch outreach for National Corporate Housing (temporary housing, travel management, hotel programs, destination services). Target: ${buyer_title} at ${company}. Signal: ${signal}. Service line: ${service_line}.
 
 ${salesMindset}
+
+${toneGuide}
 
 HARD CONSTRAINTS: Under 100 words. Max 4 sentences. Mobile-first — every sentence scannable in 2 seconds on a 4-inch screen. Subject line: 2-4 words, references the specific signal (never generic like "partnership" or "growth").${varyInstruction}
 ${articleInstructions}
