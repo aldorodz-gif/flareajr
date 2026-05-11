@@ -192,6 +192,12 @@
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+@keyframes tabFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-tab-fade { animation: tabFade 180ms ease-out both; }
+
 /* ---------- Theme transition ---------- */
 body,
 [data-shell],

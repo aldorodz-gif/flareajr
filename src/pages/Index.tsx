@@ -64,10 +64,7 @@ const Index = () => {
             <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />
           </div>
           <ProgressBar activeTab={activeTab} />
-          <div
-            key={animKey}
-            className={slideDir === 'right' ? 'animate-slide-right' : 'animate-slide-left'}
-          >
+          <div key={animKey} className="animate-tab-fade">
             {renderTab()}
           </div>
           <footer data-shell="footer" className="flex flex-col md:flex-row justify-between items-center px-6 md:px-12 py-5 gap-2.5" style={{ background: '#1E293B', borderTop: '1px solid rgba(99,102,241,.15)' }}>
