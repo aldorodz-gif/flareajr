@@ -302,11 +302,28 @@ const BdrScoreboard = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
-              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#f9a8d4' }}>Top Line Revenue Goal · Annual</div>
-              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(bdr.annualRevenueGoal, 'currency')}</div>
-              <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>Annual GP Goal {fmt(bdr.annualGpGoal, 'currency')}</div>
-            </div>
+            {(() => {
+              const annualRow = bdr.rows[`${year}-All`];
+              const annualActual = annualRow?.actual ?? 0;
+              const annualGpRemaining = Math.max(0, bdr.annualGpGoal - annualActual);
+              const annualRevRemaining = revenueForGp(bdr, annualGpRemaining) ?? 0;
+              const annualHit = annualActual >= bdr.annualGpGoal && bdr.annualGpGoal > 0;
+              return (
+                <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: annualHit ? '#5eead4' : '#f9a8d4' }}>
+                    {annualHit ? `Annual GP Goal Hit · ${year}` : `Top Line Revenue Still Needed · ${year}`}
+                  </div>
+                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>
+                    {annualHit ? '$0 needed ✓' : fmt(annualRevRemaining, 'currency')}
+                  </div>
+                  <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>
+                    {annualHit
+                      ? `Over by ${fmt(annualActual - bdr.annualGpGoal, 'currency')} GP · Goal ${fmt(bdr.annualRevenueGoal, 'currency')}`
+                      : `GP remaining ${fmt(annualGpRemaining, 'currency')} of ${fmt(bdr.annualGpGoal, 'currency')}`}
+                  </div>
+                </div>
+              );
+            })()}
             {(() => {
               const gpRemaining = row.monthlyGoal != null && row.actual != null
                 ? Math.max(0, row.monthlyGoal - row.actual)
