@@ -35,7 +35,9 @@ Industry-specific guidance:
 - Energy: Planned outages, turnarounds, storm response are HIGH. New exploration or development partnerships are MEDIUM.
 - Healthcare: Travel nurse cohorts, physician relocations are MEDIUM-HIGH.
 - Sports: Player housing, fellowship programs, seasonal roster moves are HIGH.
-- Aerospace & Aviation: Manufacturing facility buildouts, flight test programs, and new aircraft development partnerships are MEDIUM — they typically lead to engineer and contractor relocations.`;
+- Aerospace & Aviation: Manufacturing facility buildouts, flight test programs, and new aircraft development partnerships are MEDIUM — they typically lead to engineer and contractor relocations.
+
+TARGET SEGMENT BIAS: This team only sells to SMB and SME companies (roughly 10-1500 employees, under ~$500M revenue). If the company in the signal is clearly Fortune 500 / large enterprise, drop the score by one tier (HIGH→MEDIUM, MEDIUM→LOW) and note in the rationale that the BDR should pivot to SMB/SME subs, vendors, or staffing firms attached to that prime instead.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
