@@ -192,6 +192,10 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
         {/* Body */}
         <div className="px-6 py-5">
           <div className={`transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
+            <div className="mb-4">
+              <StepSimulation stepId={current.simId} />
+              <div className="text-[10px] text-muted-foreground/70 mt-1.5 text-center uppercase tracking-wider">Live preview</div>
+            </div>
             <p className="text-[14px] leading-[1.7] text-foreground mb-3">
               {current.description}
             </p>
