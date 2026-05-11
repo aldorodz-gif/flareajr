@@ -27,8 +27,31 @@ interface EmailResult {
   subject: string;
   subject_alternatives?: string[];
   body: string;
+  housing_trigger?: string;
   suggested_targets?: SuggestedTarget[];
   article_insight?: string;
+}
+
+interface ReadabilityCheck { label: string; status: 'pass' | 'warn' | 'fail'; detail: string; }
+function analyzeEmail(subject: string, body: string): { wordCount: number; checks: ReadabilityCheck[]; score: number } {
+  const wordCount = body.split(/\s+/).filter(Boolean).length;
+  const paragraphs = body.split(/\n\s*\n|\n/).map(p => p.trim()).filter(Boolean);
+  const longestPara = paragraphs.reduce((m, p) => Math.max(m, p.split(/[.!?]+/).filter(s => s.trim()).length), 0);
+  const sentences = body.split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(Boolean);
+  const lastSentence = sentences[sentences.length - 1] || '';
+  const hasCta = /\?$/.test(lastSentence) || /\b(open to|would it|should i|worth a|who handles|are you the right)\b/i.test(lastSentence);
+  const ctaIndex = body.lastIndexOf(lastSentence);
+  const ctaVisible = hasCta && ctaIndex <= 520;
+  const subjectWords = subject.trim().split(/\s+/).filter(Boolean).length;
+
+  const checks: ReadabilityCheck[] = [
+    { label: 'Word count', status: wordCount >= 50 && wordCount <= 125 ? 'pass' : wordCount < 50 ? 'warn' : 'fail', detail: `${wordCount} words (target 50–125)` },
+    { label: 'Paragraph length', status: longestPara <= 2 ? 'pass' : longestPara === 3 ? 'warn' : 'fail', detail: `Longest block: ${longestPara} sentence${longestPara === 1 ? '' : 's'} (target ≤2)` },
+    { label: 'CTA visibility', status: ctaVisible ? 'pass' : hasCta ? 'warn' : 'fail', detail: hasCta ? (ctaVisible ? 'Visible on a 4-inch screen' : 'CTA may require scrolling — tighten body') : 'No clear question/ask detected' },
+    { label: 'Subject length', status: subjectWords >= 3 && subjectWords <= 7 ? 'pass' : 'warn', detail: `${subjectWords} words (target 3–7)` },
+  ];
+  const score = checks.filter(c => c.status === 'pass').length;
+  return { wordCount, checks, score };
 }
 
 
