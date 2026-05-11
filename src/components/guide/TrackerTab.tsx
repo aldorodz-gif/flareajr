@@ -30,6 +30,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
 
   // When the active BDR changes, prefill the city from their first market.
   useEffect(() => {
