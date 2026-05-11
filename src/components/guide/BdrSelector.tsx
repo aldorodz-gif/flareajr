@@ -59,7 +59,7 @@ export default function BdrSelector() {
 
       {selected && !editing && (
         <>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-slate-600">
             {selected.region} • {selected.markets.length} markets
           </span>
           <button
