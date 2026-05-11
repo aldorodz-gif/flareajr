@@ -27,14 +27,14 @@ interface Opportunity {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  'Top Priority': 'bg-orange-500 text-white border-orange-600',
-  'Strong Opportunity': 'bg-amber-500 text-white border-amber-600',
-  'Early Signal': 'bg-blue-600 text-white border-blue-700',
+  'Top Priority': 'bg-pink-500 text-white border-pink-600',
+  'Strong Opportunity': 'bg-purple-500 text-white border-purple-600',
+  'Early Signal': 'bg-teal-600 text-white border-teal-700',
 };
 
 const CONFIDENCE_COLORS: Record<string, string> = {
-  High: 'bg-emerald-600 text-white border-emerald-700',
-  Medium: 'bg-sky-600 text-white border-sky-700',
+  High: 'bg-teal-500 text-white border-teal-600',
+  Medium: 'bg-purple-500 text-white border-purple-600',
   Low: 'bg-zinc-600 text-white border-zinc-700',
 };
 
