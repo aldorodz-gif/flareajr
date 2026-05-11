@@ -126,13 +126,6 @@ const Header = ({ onReplayTour }: HeaderProps) => {
           ))}
         </div>
 
-        {/* Credit */}
-        <p
-          className="text-[11px] mt-4 animate-hero-rise tracking-wide uppercase"
-          style={{ color: 'rgba(255,255,255,.25)', animationDelay: '0.26s' }}
-        >
-          Built by Aldo Rodriguez
-        </p>
       </div>
     </header>
   );
