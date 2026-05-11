@@ -27,9 +27,19 @@ type View = 'bdr' | 'team' | 'southeast' | 'nyc';
 
 
 const BdrScoreboard = () => {
+  const { selected: globalBdr } = useBdr();
   const [view, setView] = useState<View>('bdr');
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
+
+  // Sync local bdrId with the global Active BDR by matching on first name (e.g., "Bellack, Hallie" → "hallie").
+  useEffect(() => {
+    if (!globalBdr?.name) return;
+    const lname = globalBdr.name.toLowerCase();
+    const match = BDRS.find(b => lname.includes(b.name.split(',')[0].trim().toLowerCase()) || lname.includes(b.id));
+    if (match) setBdrId(match.id);
+  }, [globalBdr?.id, globalBdr?.name]);
+
   const [year, setYear] = useState<number>(2026);
   const [period, setPeriod] = useState<string>(MONTHS[Math.min(now.getMonth(), 11)]);
   const [overrides, setOverrides] = useState<Record<string, Record<string, CalcRow>>>({});
