@@ -166,13 +166,13 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
   const progress = ((step + 1) / TOUR_STEPS.length) * 100;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200" style={{ background: 'rgba(8,8,16,.82)', backdropFilter: 'blur(8px)' }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200" style={{ background: 'rgba(30,20,10,.45)', backdropFilter: 'blur(6px)' }}>
       <div
-        className="w-full max-w-[540px] rounded-xl overflow-hidden relative"
+        className="w-full max-w-[540px] rounded-2xl overflow-hidden relative"
         style={{
-          background: 'linear-gradient(180deg, #0F0F1A 0%, #14141f 100%)',
-          border: '1px solid rgba(251,146,60,.18)',
-          boxShadow: '0 30px 80px -20px rgba(251,146,60,.25), 0 0 0 1px rgba(251,146,60,.08), inset 0 1px 0 rgba(255,255,255,.04)',
+          background: 'linear-gradient(180deg, #FFFBF5 0%, #FFF1E0 100%)',
+          border: '1px solid rgba(251,146,60,.25)',
+          boxShadow: '0 30px 80px -20px rgba(251,146,60,.35), 0 0 0 1px rgba(255,255,255,.6) inset, 0 1px 0 rgba(255,255,255,.9) inset',
         }}
       >
         {/* Persistent Skip / Close */}
@@ -181,44 +181,46 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
           aria-label="Skip tour"
           className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center text-[14px] font-bold transition-all duration-200 hover:scale-110"
           style={{
-            background: 'rgba(255,255,255,.06)',
-            color: 'rgba(255,255,255,.6)',
-            border: '1px solid rgba(255,255,255,.08)',
+            background: 'rgba(255,255,255,.7)',
+            color: '#7c3a14',
+            border: '1px solid rgba(251,146,60,.3)',
             backdropFilter: 'blur(8px)',
+            boxShadow: '0 2px 8px rgba(251,146,60,.15)',
           }}
         >
           ✕
         </button>
 
         {/* Progress bar */}
-        <div className="h-[2px] w-full" style={{ background: 'rgba(251,146,60,.08)' }}>
+        <div className="h-[3px] w-full" style={{ background: 'rgba(251,146,60,.12)' }}>
           <div
             className="h-full transition-all duration-500 ease-out"
             style={{
               width: `${progress}%`,
-              background: 'linear-gradient(90deg, #fb923c, #f97316)',
-              boxShadow: '0 0 12px rgba(251,146,60,.6)',
+              background: 'linear-gradient(90deg, #fbbf24, #fb923c, #f97316)',
+              boxShadow: '0 0 14px rgba(251,146,60,.7)',
             }}
           />
         </div>
 
         {/* Header */}
         <div className="px-6 pt-6 pb-4 relative overflow-hidden">
-          <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full opacity-30" style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)' }} />
+          <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full opacity-50" style={{ background: 'radial-gradient(circle, #fde68a, transparent 70%)' }} />
+          <div className="absolute -top-8 right-12 w-24 h-24 rounded-full opacity-40" style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)' }} />
           <div className={`relative transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
             <div className="flex items-center gap-2 mb-3">
-              <div className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded" style={{ background: 'rgba(251,146,60,.12)', color: '#fb923c', border: '1px solid rgba(251,146,60,.25)' }}>
+              <div className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded-full" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff', boxShadow: '0 2px 6px rgba(251,146,60,.4)' }}>
                 Step {step + 1} / {TOUR_STEPS.length}
               </div>
-              <div className="text-[10px] uppercase tracking-wider text-white/30">Welcome Tour</div>
+              <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#9a6b3a' }}>Welcome Tour</div>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-[28px]">{current.icon}</span>
               <div>
-                <h2 className="text-[18px] font-bold leading-tight tracking-tight text-white">
+                <h2 className="text-[18px] font-bold leading-tight tracking-tight" style={{ color: '#1E293B' }}>
                   {current.title}
                 </h2>
-                <p className="text-[12px] font-medium mt-0.5" style={{ color: '#fb923c' }}>
+                <p className="text-[12px] font-semibold mt-0.5" style={{ color: '#ea580c' }}>
                   {current.subtitle}
                 </p>
               </div>
@@ -231,14 +233,14 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
           <div className={`transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
             <div className="mb-4">
               <StepSimulation stepId={current.simId} />
-              <div className="text-[9px] text-white/30 mt-1.5 text-center uppercase tracking-[0.2em]">— Live preview —</div>
+              <div className="text-[9px] mt-1.5 text-center uppercase tracking-[0.2em] font-semibold" style={{ color: '#b07c4d' }}>— Live preview —</div>
             </div>
-            <p className="text-[13px] leading-[1.7] text-white/85 mb-3">
+            <p className="text-[13px] leading-[1.7] mb-3" style={{ color: '#1E293B' }}>
               {current.description}
             </p>
-            <div className="flex gap-3 items-start p-3 rounded-md" style={{ background: 'rgba(251,146,60,.06)', border: '1px solid rgba(251,146,60,.18)' }}>
-              <span className="text-[13px] flex-shrink-0 mt-0.5">💡</span>
-              <p className="text-[12px] leading-[1.6] text-white/70">
+            <div className="flex gap-3 items-start p-3 rounded-lg" style={{ background: 'linear-gradient(135deg, #FFF7ED, #FEF3C7)', border: '1px solid rgba(251,146,60,.25)' }}>
+              <span className="text-[14px] flex-shrink-0 mt-0.5">💡</span>
+              <p className="text-[12px] leading-[1.6]" style={{ color: '#5c3a1a' }}>
                 {current.detail}
               </p>
             </div>
@@ -247,7 +249,7 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
               <button
                 onClick={handleJumpToTab}
                 className="mt-3 text-[11px] font-bold uppercase tracking-wider transition-opacity hover:opacity-80"
-                style={{ color: '#fb923c' }}
+                style={{ color: '#ea580c' }}
               >
                 Jump to this tab →
               </button>
@@ -256,14 +258,14 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,.05)', background: 'rgba(0,0,0,.2)' }}>
+        <div className="px-6 py-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(251,146,60,.15)', background: 'rgba(255,255,255,.4)' }}>
           <div className="flex items-center gap-1">
             <button
               onClick={handleBack}
               disabled={isFirst}
               className="px-3 py-1.5 text-[12px] font-semibold transition-all duration-200"
               style={{
-                color: isFirst ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.6)',
+                color: isFirst ? 'rgba(30,41,59,.25)' : '#475569',
                 cursor: isFirst ? 'not-allowed' : 'pointer',
               }}
             >
@@ -271,14 +273,17 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
             </button>
             <button
               onClick={handleSkip}
-              className="px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-white/40 hover:text-white/70 transition-colors"
+              className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider transition-colors"
+              style={{ color: '#94a3b8' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#ea580c')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
             >
               Skip tour
             </button>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex gap-1.5">
+            <div className="flex gap-1.5 items-center">
               {TOUR_STEPS.map((_, i) => (
                 <button
                   key={i}
@@ -286,13 +291,13 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
                   aria-label={`Go to step ${i + 1}`}
                   className="rounded-full transition-all duration-300"
                   style={{
-                    width: i === step ? '18px' : '6px',
+                    width: i === step ? '20px' : '6px',
                     height: '6px',
                     background: i === step
-                      ? 'linear-gradient(90deg, #fb923c, #f97316)'
+                      ? 'linear-gradient(90deg, #fbbf24, #f97316)'
                       : i < step
                         ? 'rgba(251,146,60,.5)'
-                        : 'rgba(255,255,255,.12)',
+                        : 'rgba(251,146,60,.18)',
                     boxShadow: i === step ? '0 0 8px rgba(251,146,60,.6)' : 'none',
                   }}
                 />
@@ -301,10 +306,10 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
 
             <button
               onClick={handleNext}
-              className="px-5 py-2 rounded-md text-[12px] font-bold tracking-wide text-white transition-all duration-200 hover:scale-105"
+              className="px-5 py-2 rounded-lg text-[12px] font-bold tracking-wide text-white transition-all duration-200 hover:scale-105"
               style={{
-                background: 'linear-gradient(135deg, #fb923c, #f97316)',
-                boxShadow: '0 4px 14px rgba(251,146,60,.4), inset 0 1px 0 rgba(255,255,255,.2)',
+                background: 'linear-gradient(135deg, #fbbf24, #fb923c, #f97316)',
+                boxShadow: '0 4px 14px rgba(251,146,60,.5), inset 0 1px 0 rgba(255,255,255,.3)',
               }}
             >
               {isLast ? 'Let\'s go 🔥' : 'Next →'}
@@ -317,3 +322,4 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
 };
 
 export default WelcomeModal;
+
