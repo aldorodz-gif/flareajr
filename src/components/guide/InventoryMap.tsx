@@ -23,6 +23,7 @@ const selectedIcon = L.divIcon({
 interface InventoryMapProps {
   city: string;
   state: string;
+  focusInventory?: string | null;
 }
 
 const Recenter = ({ center, zoom }: { center: [number, number]; zoom: number }) => {
@@ -49,7 +50,9 @@ interface VerticalsPayload {
   nearby_targets: NearbyTarget[];
 }
 
-const InventoryMap = ({ city, state }: InventoryMapProps) => {
+const normalizeInventoryName = (value: string) => value.replace(/\s*\([^)]*\)\s*$/, '').trim().toLowerCase();
+
+const InventoryMap = ({ city, state, focusInventory = null }: InventoryMapProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [subFilter, setSubFilter] = useState<string>('all'); // city sub-chip
   const [verticals, setVerticals] = useState<VerticalsPayload | null>(null);
@@ -85,6 +88,15 @@ const InventoryMap = ({ city, state }: InventoryMapProps) => {
 
   // Reset sub-filter when state changes
   useEffect(() => { setSubFilter('all'); setSelectedId(null); setVerticals(null); }, [state, city]);
+
+  useEffect(() => {
+    if (!focusInventory || visible.length === 0) return;
+    const target = normalizeInventoryName(focusInventory);
+    const match = visible.find((p) => normalizeInventoryName(p.name) === target);
+    if (match && match.id !== selectedId) {
+      void loadVerticals(match);
+    }
+  }, [focusInventory, visible, selectedId]);
 
   const selected = visible.find((p) => p.id === selectedId) ?? null;
 

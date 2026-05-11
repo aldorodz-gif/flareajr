@@ -31,6 +31,7 @@ interface Opportunity {
 // NOTE: tailwind.config.ts overrides `teal` as a single token (no shades),
 // so teal pills use a custom inline style instead of bg-teal-100.
 const PILL_FALLBACK = 'bg-slate-100 text-slate-700 border-slate-200';
+const MARKET_HEAT_ROUTE_KEY = 'flare.marketHeatRoute';
 
 const priorityPill = (raw: string | null): string => {
   const key = (raw || '').trim().toLowerCase();
@@ -46,6 +47,32 @@ const confidencePill = (raw: string | null): string => {
   if (key.startsWith('m')) return 'bg-purple-100 text-purple-800 border-purple-200';
   if (key.startsWith('l')) return 'bg-slate-100 text-slate-700 border-slate-200';
   return PILL_FALLBACK;
+};
+
+const DISTANCE_SUFFIX_RE = /\s+[—-]\s*~?\d+(?:\.\d+)?\s*(?:mi|km)\b/i;
+
+const stripDistanceSuffix = (value: string | null) =>
+  (value || '').replace(DISTANCE_SUFFIX_RE, '').trim();
+
+const formatNearInventoryLabel = (inventory: string | null, distance: number | null) => {
+  const embeddedDistance = (inventory || '').match(DISTANCE_SUFFIX_RE)?.[0]?.trim();
+  const baseLabel = stripDistanceSuffix(inventory) || 'inventory';
+  if (typeof distance === 'number' && Number.isFinite(distance)) {
+    return `${baseLabel} · ~${Math.round(distance)} mi`;
+  }
+  if (embeddedDistance) {
+    return `${baseLabel} · ${embeddedDistance.replace(/^[—-]\s*/, '')}`;
+  }
+  return baseLabel;
+};
+
+const parseMarketTarget = (market: string | null) => {
+  if (!market) return null;
+  const [cityPart = '', remainder = ''] = market.split(',', 2);
+  const city = cityPart.trim();
+  const state = remainder.match(/\b[A-Z]{2}\b/)?.[0] ?? remainder.trim();
+  if (!city || !state) return null;
+  return { city, state };
 };
 
 
@@ -100,6 +127,24 @@ export default function OpportunitiesTab() {
   const archiveOpp = async (id: string) => {
     await supabase.from('opportunities').update({ status: 'archived' }).eq('id', id);
     load();
+  };
+
+  const openInventoryContext = (opportunity: Opportunity) => {
+    if (typeof window === 'undefined') return;
+    const target = parseMarketTarget(opportunity.market);
+
+    if (target) {
+      sessionStorage.setItem(
+        MARKET_HEAT_ROUTE_KEY,
+        JSON.stringify({
+          city: target.city,
+          state: target.state,
+          inventory: stripDistanceSuffix(opportunity.nearest_inventory) || null,
+        })
+      );
+    }
+
+    window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'market' }));
   };
 
   const allowedStates = new Set(
@@ -201,9 +246,15 @@ export default function OpportunitiesTab() {
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full border" style={{ background: '#ccfbf1', color: '#115e59', borderColor: '#99f6e4' }}>
-                        📍 Near {o.nearest_inventory || 'inventory'}{typeof o.distance_to_inventory === 'number' && !/mi\b/.test(o.nearest_inventory || '') ? ` — ~${Math.round(o.distance_to_inventory)} mi` : ''}
-                      </span>
+                      <button
+                        type="button"
+                        onClick={() => openInventoryContext(o)}
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-opacity hover:opacity-85"
+                        style={{ background: '#ccfbf1', color: '#115e59', borderColor: '#99f6e4' }}
+                        title="Open this market in Market Heat"
+                      >
+                        📍 Near {formatNearInventoryLabel(o.nearest_inventory, o.distance_to_inventory)}
+                      </button>
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">
