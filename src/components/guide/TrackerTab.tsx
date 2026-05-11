@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import PromptBox from './PromptBox';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import { useBdr } from './BdrContext';
 
 interface TrackerTabProps {
   onNavigate: (tabId: string) => void;
