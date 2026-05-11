@@ -328,11 +328,22 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                             {result.subject_alternatives.map((alt, i) => (
                               <li key={i} className="flex items-center justify-between gap-2 text-[14px] text-foreground">
                                 <span>{alt}</span>
-                                <button
-                                  onClick={() => setResult(r => r ? { ...r, subject: alt, subject_alternatives: [result.subject, ...(r.subject_alternatives || []).filter(x => x !== alt)] } : r)}
-                                  className="text-[11px] font-bold uppercase tracking-wider px-2 py-1 hover:opacity-80"
-                                  style={{ background: 'rgba(251,146,60,.15)', color: '#2F4858' }}
-                                >Use</button>
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(alt);
+                                      setCopiedAlt(i);
+                                      setTimeout(() => setCopiedAlt(c => c === i ? null : c), 1500);
+                                    }}
+                                    className="text-[11px] font-bold uppercase tracking-wider px-2 py-1 hover:opacity-80"
+                                    style={{ background: 'rgba(45,212,191,.15)', color: '#2F4858', border: '1px solid rgba(45,212,191,.3)' }}
+                                  >{copiedAlt === i ? '✓ Copied' : 'Copy'}</button>
+                                  <button
+                                    onClick={() => setResult(r => r ? { ...r, subject: alt, subject_alternatives: [result.subject, ...(r.subject_alternatives || []).filter(x => x !== alt)] } : r)}
+                                    className="text-[11px] font-bold uppercase tracking-wider px-2 py-1 hover:opacity-80"
+                                    style={{ background: 'rgba(251,146,60,.15)', color: '#2F4858' }}
+                                  >Use</button>
+                                </div>
                               </li>
                             ))}
                           </ul>
