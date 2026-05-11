@@ -10,6 +10,14 @@ interface OutreachTabProps {
 
 const SERVICE_LINES = ['Temporary Housing', 'Travel', 'Hotels', 'Destination Services'];
 
+const TONES: { id: string; label: string; emoji: string; hint: string }[] = [
+  { id: 'direct', label: 'Direct', emoji: '🎯', hint: 'Sharp, no fluff. Gets to the point fast.' },
+  { id: 'warm', label: 'Warm', emoji: '🤝', hint: 'Human, conversational, relationship-first.' },
+  { id: 'analytical', label: 'Analytical', emoji: '📊', hint: 'Data-led, specific numbers and operational logic.' },
+  { id: 'consultative', label: 'Consultative', emoji: '💡', hint: 'Curious, question-driven, advisory.' },
+  { id: 'bold', label: 'Bold', emoji: '⚡', hint: 'Confident, contrarian, pattern-interrupt.' },
+];
+
 interface SuggestedTarget {
   title: string;
   reason: string;
