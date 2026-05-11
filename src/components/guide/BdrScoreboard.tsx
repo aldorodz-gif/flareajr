@@ -359,6 +359,22 @@ const BdrScoreboard = () => {
         </>
       )}
 
+      <div className="mt-8 -mx-5 px-5 pt-6 pb-2 border-t-4" style={{ borderColor: '#a855f7', background: 'linear-gradient(180deg, rgba(168,85,247,.08), transparent)' }}>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] px-2 py-1 rounded" style={{ background: '#a855f7', color: '#fff' }}>
+            Team Comparison
+          </span>
+          <span className="text-[11px]" style={{ color: '#64748b' }}>
+            Separate from your individual numbers above — click a card to see how the team or a region is tracking.
+          </span>
+        </div>
+        <Eyebrow gradient="linear-gradient(90deg, #a855f7, #ec4899)">View · click to filter</Eyebrow>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1 mb-4">
+          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
+          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
+          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
+        </div>
+
       {view !== 'bdr' && (() => {
         const members = (overrides['__members'] as unknown as Record<string, { name: string; market: string; region: string; rows: Record<string, CalcRow> }>) || {};
         const list = Object.values(members).filter(m => {
@@ -425,23 +441,8 @@ const BdrScoreboard = () => {
           </div>
         );
       })()}
-
-      <div className="mt-8 -mx-5 px-5 pt-6 pb-2 border-t-4" style={{ borderColor: '#a855f7', background: 'linear-gradient(180deg, rgba(168,85,247,.08), transparent)' }}>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] px-2 py-1 rounded" style={{ background: '#a855f7', color: '#fff' }}>
-            Team Comparison
-          </span>
-          <span className="text-[11px]" style={{ color: '#64748b' }}>
-            Separate from your individual numbers above — click a card to see how the team or a region is tracking.
-          </span>
-        </div>
-        <Eyebrow gradient="linear-gradient(90deg, #a855f7, #ec4899)">View · click to filter</Eyebrow>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1">
-          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
-          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
-          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
-        </div>
       </div>
+
 
     </div>
   );
