@@ -18,17 +18,17 @@ const Header = ({ onReplayTour }: HeaderProps) => {
       <div
         data-shell="glow-1"
         className="absolute -top-32 -right-20 w-[500px] h-[500px] rounded-full pointer-events-none blur-[100px]"
-        style={{ background: 'radial-gradient(circle, rgba(251,146,60,.15) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(236,72,153,.20) 0%, transparent 65%)' }}
       />
       <div
         data-shell="glow-2"
         className="absolute -bottom-24 -left-16 w-[400px] h-[400px] rounded-full pointer-events-none blur-[80px]"
-        style={{ background: 'radial-gradient(circle, rgba(168,85,247,.12) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(45,212,191,.18) 0%, transparent 65%)' }}
       />
       <div
         data-shell="glow-3"
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] rounded-full pointer-events-none blur-[120px] opacity-30"
-        style={{ background: 'radial-gradient(ellipse, rgba(251,146,60,.2) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse, rgba(168,85,247,.25) 0%, transparent 70%)' }}
       />
 
       {/* Theme toggle + Replay tour buttons */}
