@@ -25,6 +25,7 @@ interface SuggestedTarget {
 
 interface EmailResult {
   subject: string;
+  subject_alternatives?: string[];
   body: string;
   suggested_targets?: SuggestedTarget[];
   article_insight?: string;
