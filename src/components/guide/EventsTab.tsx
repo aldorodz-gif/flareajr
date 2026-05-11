@@ -36,10 +36,19 @@ const PRIORITY_COLORS: Record<string, { bg: string; text: string }> = {
 };
 
 const EventsTab = ({ onNavigate }: EventsTabProps) => {
+  const { selected } = useBdr();
   const [selectedState, setSelectedState] = useState('');
   const [city, setCity] = useState('');
   const [vertical, setVertical] = useState('');
   const [subVertical, setSubVertical] = useState('');
+
+  // Snap to active BDR's first market when it changes.
+  useEffect(() => {
+    if (!selected || !selected.markets?.length) return;
+    const [c, st] = selected.markets[0].split(',').map(s => s.trim());
+    if (st) setSelectedState(st);
+    if (c) setCity(c);
+  }, [selected?.id]);
 
   const subVerticals = useMemo(() => {
     if (!vertical) return [];
