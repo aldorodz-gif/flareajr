@@ -97,9 +97,9 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
   };
 
   const scoreConfig = (score: string) => {
-    if (score === 'HIGH') return { bg: 'linear-gradient(135deg, #10B981, #059669)', glow: '0 0 40px rgba(16,185,129,.3)', label: 'Call today.', icon: '🎯', action: 'This is a real signal. Pick up the phone.' };
+    if (score === 'HIGH') return { bg: 'linear-gradient(135deg, #14b8a6, #0d9488)', glow: '0 0 40px rgba(16,185,129,.3)', label: 'Call today.', icon: '🎯', action: 'This is a real signal. Pick up the phone.' };
     if (score === 'LOW') return { bg: 'linear-gradient(135deg, #64748B, #475569)', glow: '0 0 40px rgba(100,116,139,.2)', label: 'Move on.', icon: '→', action: 'No physical movement here. Skip it.' };
-    return { bg: 'linear-gradient(135deg, #F59E0B, #D97706)', glow: '0 0 40px rgba(245,158,11,.25)', label: 'Track it.', icon: '👁', action: 'Not ready yet, but worth watching.' };
+    return { bg: 'linear-gradient(135deg, #ec4899, #D97706)', glow: '0 0 40px rgba(245,158,11,.25)', label: 'Track it.', icon: '👁', action: 'Not ready yet, but worth watching.' };
   };
 
   return (
@@ -121,10 +121,10 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
               {/* Demo typing preview */}
               {!hasInteracted && !signalText && (
                 <div className="mb-5 px-5 py-4 rounded-xl" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.12)' }}>
-                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: '#f97316' }}>Example input</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: '#db2777' }}>Example input</p>
                   <p className="text-[14px] leading-[1.6]" style={{ color: '#1a1145' }}>
                     {typingDemo}
-                    <span style={{ opacity: showCursor ? 1 : 0, color: '#fb923c', transition: 'opacity 0.1s' }}>|</span>
+                    <span style={{ opacity: showCursor ? 1 : 0, color: '#ec4899', transition: 'opacity 0.1s' }}>|</span>
                   </p>
                 </div>
               )}
@@ -146,7 +146,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                     onMouseEnter={e => {
                       (e.target as HTMLElement).style.background = 'rgba(251,146,60,.15)';
                       (e.target as HTMLElement).style.borderColor = 'rgba(251,146,60,.3)';
-                      (e.target as HTMLElement).style.color = '#f97316';
+                      (e.target as HTMLElement).style.color = '#db2777';
                     }}
                     onMouseLeave={e => {
                       (e.target as HTMLElement).style.background = 'rgba(251,146,60,.06)';
@@ -170,7 +170,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   style={{
                     background: '#FAF7F2',
                     border: '2px solid',
-                    borderColor: signalText.trim() ? '#fb923c' : 'rgba(251,146,60,.15)',
+                    borderColor: signalText.trim() ? '#ec4899' : 'rgba(251,146,60,.15)',
                     borderRadius: '12px',
                     color: '#1a1145',
                     boxShadow: signalText.trim()
@@ -181,8 +181,8 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                 />
                 {signalText.trim() && (
                   <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.1)' }}>
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#fb923c' }} />
-                    <span className="text-[11px] font-semibold" style={{ color: '#f97316' }}>Ready</span>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#ec4899' }} />
+                    <span className="text-[11px] font-semibold" style={{ color: '#db2777' }}>Ready</span>
                   </div>
                 )}
               </div>
@@ -195,7 +195,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                 style={{
                   background: !signalText.trim() || loading
                     ? '#f1f0ee'
-                    : 'linear-gradient(135deg, #fb923c, #f97316)',
+                    : 'linear-gradient(135deg, #ec4899, #db2777)',
                   color: !signalText.trim() || loading ? '#c4c0b8' : '#fff',
                   cursor: !signalText.trim() || loading ? 'not-allowed' : 'pointer',
                   boxShadow: signalText.trim() && !loading
@@ -208,7 +208,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   <span className="flex items-center justify-center gap-3">
                     <span
                       className="w-5 h-5 rounded-full animate-spin"
-                      style={{ border: '2.5px solid rgba(251,146,60,.2)', borderTopColor: '#fb923c' }}
+                      style={{ border: '2.5px solid rgba(251,146,60,.2)', borderTopColor: '#ec4899' }}
                     />
                     Analyzing signal...
                   </span>
@@ -247,7 +247,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                       <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#94A3B8' }}>Service</span>
                       <span
                         className="px-3 py-1 rounded-full text-[12px] font-bold"
-                        style={{ background: '#0a0a14', color: '#fb923c' }}
+                        style={{ background: '#0a0a14', color: '#ec4899' }}
                       >
                         {result.service_line}
                       </span>
@@ -266,7 +266,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                 style={{
                   background: 'rgba(251,146,60,.06)',
                   border: '1px solid rgba(251,146,60,.2)',
-                  color: '#f97316',
+                  color: '#db2777',
                   cursor: 'pointer',
                 }}
                 onMouseEnter={e => {
@@ -288,8 +288,8 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
       {/* ─── Score Legend ─── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10">
         {[
-          { color: '#10B981', bg: 'rgba(16,185,129,.08)', label: 'HIGH', action: 'Call today', desc: 'Real people movement, defined timeline, identifiable buyer.' },
-          { color: '#F59E0B', bg: 'rgba(245,158,11,.08)', label: 'MEDIUM', action: 'Track it', desc: 'Real change happening or early-stage signal with future potential.' },
+          { color: '#14b8a6', bg: 'rgba(16,185,129,.08)', label: 'HIGH', action: 'Call today', desc: 'Real people movement, defined timeline, identifiable buyer.' },
+          { color: '#ec4899', bg: 'rgba(245,158,11,.08)', label: 'MEDIUM', action: 'Track it', desc: 'Real change happening or early-stage signal with future potential.' },
           { color: '#EF4444', bg: 'rgba(239,68,68,.08)', label: 'LOW', action: 'Move on', desc: 'No plausible path to physical movement. Skip for now.' },
         ].map((tier) => (
           <div key={tier.label} className="rounded-xl p-4 relative overflow-hidden" style={{ background: tier.bg, border: `1px solid ${tier.color}22` }}>
@@ -312,8 +312,8 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
       <div className="rounded-xl overflow-hidden mb-4 shadow-sm" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
         <div className="grid grid-cols-[30%_22%_1fr] md:grid-cols-[28%_22%_1fr]" style={{ background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 40%, #2d1b69 100%)' }}>
           <div className="px-4 py-3.5 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ background: '#10B981' }} />
-            <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: '#10B981' }}>Pursue</span>
+            <span className="w-2 h-2 rounded-full" style={{ background: '#14b8a6' }} />
+            <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: '#14b8a6' }}>Pursue</span>
           </div>
           <div className="px-4 py-3.5 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full" style={{ background: '#EF4444' }} />
@@ -330,7 +330,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
             style={{ borderColor: 'rgba(14,30,58,.06)', background: i % 2 === 0 ? '#fff' : '#FAFAF8' }}
           >
             <div className="px-4 py-3.5 text-[13px] font-semibold text-foreground flex items-start gap-2">
-              <span className="inline-block w-[6px] h-[6px] rounded-full flex-shrink-0 mt-[7px]" style={{ background: '#10B981' }} />
+              <span className="inline-block w-[6px] h-[6px] rounded-full flex-shrink-0 mt-[7px]" style={{ background: '#14b8a6' }} />
               {row.pursue}
             </div>
             <div className="px-4 py-3.5 text-[13px] font-medium flex items-start gap-2" style={{ color: row.skip === '—' ? '#CBD5E1' : '#EF4444' }}>
@@ -348,7 +348,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
           🔑
         </div>
         <div>
-          <p className="text-[12px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: '#fb923c' }}>The one question that matters</p>
+          <p className="text-[12px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: '#ec4899' }}>The one question that matters</p>
           <p className="text-[14px] leading-[1.65]" style={{ color: 'rgba(255,255,255,.82)' }}>
             <strong style={{ color: '#fff' }}>Are real people physically going somewhere because of this?</strong> If yes, pursue. If the movement is virtual, speculative, or one day long, move on.
           </p>

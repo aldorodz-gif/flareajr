@@ -31,7 +31,7 @@ interface EventItem {
 
 const PRIORITY_COLORS: Record<string, { bg: string; text: string }> = {
   High: { bg: 'rgba(239,68,68,.15)', text: '#ef4444' },
-  Medium: { bg: 'rgba(251,146,60,.15)', text: '#fb923c' },
+  Medium: { bg: 'rgba(251,146,60,.15)', text: '#ec4899' },
   Low: { bg: 'rgba(148,163,184,.15)', text: '#94a3b8' },
 };
 
@@ -100,7 +100,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
 
   return (
     <main className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
-      <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 08 · Find Events</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #ec4899, #db2777)">Step 08 · Find Events</Eyebrow>
       <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Networking Event Finder</h2>
       <p className="text-muted-foreground text-sm max-w-2xl">
         Discover conferences, trade shows, and networking events where your target buyers gather — so you can show up where decisions are made.
@@ -205,7 +205,7 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
             disabled={!city || !vertical || loading}
             className="w-full py-3 rounded-xl text-sm font-bold transition-all disabled:opacity-40"
             style={{
-              background: 'linear-gradient(135deg,#fb923c,#f97316)',
+              background: 'linear-gradient(135deg,#ec4899,#db2777)',
               color: '#fff',
             }}
           >
@@ -274,11 +274,11 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
                   <p className="text-xs text-muted-foreground">{ev.why}</p>
                   <div className="flex flex-col md:flex-row gap-3 pt-1">
                     <div className="flex-1 rounded-lg p-2.5" style={{ background: 'rgba(251,146,60,.06)' }}>
-                      <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#fb923c' }}>WHO'S THERE</span>
+                      <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#ec4899' }}>WHO'S THERE</span>
                       <p className="text-xs text-muted-foreground">{ev.attendees}</p>
                     </div>
                     <div className="flex-1 rounded-lg p-2.5" style={{ background: 'rgba(99,102,241,.06)' }}>
-                      <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#6366f1' }}>YOUR ANGLE</span>
+                      <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#a855f7' }}>YOUR ANGLE</span>
                       <p className="text-xs text-muted-foreground">{ev.angle}</p>
                     </div>
                   </div>

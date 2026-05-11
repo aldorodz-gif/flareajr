@@ -96,7 +96,7 @@ const BdrScoreboard = () => {
   const yearTotal = bdr.rows[`${year}-All`];
 
   const onTrack = row && row.monthlyGoal != null && row.actual != null && row.actual >= row.monthlyGoal;
-  const accent = onTrack ? '#10B981' : '#fb923c';
+  const accent = onTrack ? '#14b8a6' : '#ec4899';
 
 
   const handleRefreshClick = () => fileRef.current?.click();
@@ -195,12 +195,12 @@ const BdrScoreboard = () => {
         className="text-left p-3 rounded-lg transition-all"
         style={{
           background: dark ? '#0e1e3a' : '#fff',
-          border: `2px solid ${active ? '#fb923c' : (dark ? '#0e1e3a' : 'rgba(14,30,58,.06)')}`,
+          border: `2px solid ${active ? '#ec4899' : (dark ? '#0e1e3a' : 'rgba(14,30,58,.06)')}`,
           boxShadow: active ? '0 4px 12px rgba(251,146,60,.25)' : 'none',
           cursor: 'pointer',
         }}
       >
-        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#fbbf24' : (active ? '#fb923c' : '#64748b') }}>
+        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#f9a8d4' : (active ? '#ec4899' : '#64748b') }}>
           {label}
         </div>
         {r ? (
@@ -230,7 +230,7 @@ const BdrScoreboard = () => {
       />
 
       <div className="mb-4">
-        <Eyebrow gradient="linear-gradient(90deg, #fb923c, #fbbf24)">View · click to filter</Eyebrow>
+        <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">View · click to filter</Eyebrow>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1">
           <FilterTab id="bdr" label="Individual BDR" sub={`${baseBdr.name}`} r={view === 'bdr' ? baseBdr.rows[rollupKey] : undefined} />
           <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
@@ -242,7 +242,7 @@ const BdrScoreboard = () => {
 
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>
-          <Eyebrow gradient="linear-gradient(90deg, #fb923c, #fbbf24)">BDR Scoreboard</Eyebrow>
+          <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">BDR Scoreboard</Eyebrow>
           <h3 className="text-[18px] font-extrabold tracking-tight mt-1" style={{ color: '#0e1e3a' }}>
             {bdr.name} <span className="font-medium" style={{ color: '#64748b' }}>· {bdr.market}</span>
           </h3>
@@ -253,7 +253,7 @@ const BdrScoreboard = () => {
             onClick={handleRefreshClick}
             disabled={refreshing}
             className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5 transition-opacity disabled:opacity-60"
-            style={{ background: '#fb923c', color: '#fff', border: '1px solid #fb923c' }}
+            style={{ background: '#ec4899', color: '#fff', border: '1px solid #ec4899' }}
             title="Upload the latest Sales Forecasting .xlsx to refresh Hallie + Matt"
           >
             <span>{refreshing ? '⏳' : '↻'}</span>
@@ -311,7 +311,7 @@ const BdrScoreboard = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
             <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
-              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#fbbf24' }}>Top Line Revenue Goal · Annual</div>
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#f9a8d4' }}>Top Line Revenue Goal · Annual</div>
               <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(bdr.annualRevenueGoal, 'currency')}</div>
               <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>Annual GP Goal {fmt(bdr.annualGpGoal, 'currency')}</div>
             </div>
@@ -365,7 +365,7 @@ const BdrScoreboard = () => {
                 onClick={handleRefreshClick}
                 disabled={refreshing}
                 className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5"
-                style={{ background: '#fb923c', color: '#fff', border: '1px solid #fb923c' }}
+                style={{ background: '#ec4899', color: '#fff', border: '1px solid #ec4899' }}
               >
                 <span>{refreshing ? '⏳' : '↻'}</span>
                 <span>{refreshing ? 'Loading…' : 'Upload workbook'}</span>
@@ -404,8 +404,8 @@ const BdrScoreboard = () => {
                         <td className="px-3 py-2" style={{ color: '#64748b' }}>{m.region}</td>
                         <td className="px-3 py-2 text-right tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(r?.monthlyGoal ?? null, 'currency')}</td>
                         <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: '#0e1e3a' }}>{fmt(r?.actual ?? null, 'currency')}</td>
-                        <td className="px-3 py-2 text-right tabular-nums" style={{ color: varNeg ? '#dc2626' : '#10B981' }}>{fmt(r?.actVarDollar ?? null, 'currency')}</td>
-                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: hit ? '#10B981' : '#fb923c' }}>
+                        <td className="px-3 py-2 text-right tabular-nums" style={{ color: varNeg ? '#dc2626' : '#14b8a6' }}>{fmt(r?.actVarDollar ?? null, 'currency')}</td>
+                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: hit ? '#14b8a6' : '#ec4899' }}>
                           {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
                         </td>
                       </tr>
@@ -432,7 +432,7 @@ const BdrScoreboard = () => {
             );
           })}
           <div className="p-2.5 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
-            <div className="text-[10px] font-bold" style={{ color: '#fbbf24' }}>Year</div>
+            <div className="text-[10px] font-bold" style={{ color: '#f9a8d4' }}>Year</div>
             <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
             <div className="text-[10px] tabular-nums" style={{ color: 'rgba(255,255,255,.6)' }}>goal {fmt(yearTotal?.monthlyGoal ?? null, 'currency')}</div>
           </div>

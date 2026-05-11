@@ -176,7 +176,7 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10 space-y-8">
       {/* ── Header ── */}
       <div>
-        <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 05: Find the Right Person</Eyebrow>
+        <Eyebrow gradient="linear-gradient(90deg, #ec4899, #db2777)">Step 05: Find the Right Person</Eyebrow>
         <h2 className="text-2xl font-semibold mb-1.5 leading-tight text-foreground">Who to Call</h2>
         <p className="text-sm text-muted-foreground max-w-[760px] pb-4 border-b border-border">
           The right message to the wrong person still fails. Match the buyer to the signal.

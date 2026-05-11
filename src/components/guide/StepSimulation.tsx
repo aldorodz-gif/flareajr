@@ -28,7 +28,7 @@ const StepSimulation = ({ stepId }: Props) => {
               key={i}
               className="w-10 h-10 rounded-lg flex items-center justify-center text-xl transition-all duration-500"
               style={{
-                background: frame === i ? 'linear-gradient(135deg, #fb923c, #f59e0b)' : 'rgba(255,255,255,.05)',
+                background: frame === i ? 'linear-gradient(135deg, #ec4899, #ec4899)' : 'rgba(255,255,255,.05)',
                 transform: frame === i ? 'translateY(-6px) scale(1.15)' : 'scale(1)',
                 boxShadow: frame === i ? '0 8px 20px rgba(251,146,60,.4)' : 'none',
               }}
@@ -59,12 +59,12 @@ const StepSimulation = ({ stepId }: Props) => {
             key={i}
             className="leading-[1.6]"
             style={{
-              color: l.startsWith('✓') ? '#fb923c' : 'rgba(255,255,255,.7)',
+              color: l.startsWith('✓') ? '#ec4899' : 'rgba(255,255,255,.7)',
               animation: 'fade-in 0.3s ease-out',
             }}
           >
             {l}
-            {i === Math.min(frame, lines.length - 1) && <span className="inline-block w-2 h-3 ml-0.5 bg-orange-400 animate-pulse" />}
+            {i === Math.min(frame, lines.length - 1) && <span className="inline-block w-2 h-3 ml-0.5 bg-pink-400 animate-pulse" />}
           </div>
         ))}
       </div>
@@ -75,7 +75,7 @@ const StepSimulation = ({ stepId }: Props) => {
     const rows = [
       { co: 'Apex Builders', sig: 'HIGH', color: '#ef4444' },
       { co: 'Northside Health', sig: 'HIGH', color: '#ef4444' },
-      { co: 'Cobb County PD', sig: 'MED', color: '#f59e0b' },
+      { co: 'Cobb County PD', sig: 'MED', color: '#ec4899' },
     ];
     return (
       <div className="h-[140px] rounded-md p-3 space-y-1.5 overflow-hidden" style={{ background: 'rgba(0,0,0,.25)', border: '1px solid rgba(251,146,60,.2)' }}>
@@ -138,12 +138,12 @@ const StepSimulation = ({ stepId }: Props) => {
           {draft.slice(0, Math.min(frame + 1, draft.length)).map((line, i) => (
             <div key={i} className="text-[11px] text-white/85 leading-[1.5]" style={{ animation: 'fade-in 0.4s ease-out' }}>
               {line}
-              {i === Math.min(frame, draft.length - 1) && i < draft.length - 1 && <span className="inline-block w-1.5 h-3 ml-0.5 bg-orange-400 animate-pulse" />}
+              {i === Math.min(frame, draft.length - 1) && i < draft.length - 1 && <span className="inline-block w-1.5 h-3 ml-0.5 bg-pink-400 animate-pulse" />}
             </div>
           ))}
         </div>
         {frame >= draft.length && (
-          <div className="text-[10px] text-orange-400 mt-1.5 font-semibold">✓ Under 100 words · ready to send</div>
+          <div className="text-[10px] text-pink-400 mt-1.5 font-semibold">✓ Under 100 words · ready to send</div>
         )}
       </div>
     );
@@ -167,7 +167,7 @@ const StepSimulation = ({ stepId }: Props) => {
             {frame >= 2 ? 'HIGH' : '...'}
           </span>
           {frame >= 3 && (
-            <span className="text-[10px] text-orange-400" style={{ animation: 'fade-in 0.3s' }}>→ Healthcare · Project Teams</span>
+            <span className="text-[10px] text-pink-400" style={{ animation: 'fade-in 0.3s' }}>→ Healthcare · Project Teams</span>
           )}
         </div>
       </div>
@@ -176,7 +176,7 @@ const StepSimulation = ({ stepId }: Props) => {
 
   if (stepId === 'dashboard') {
     const stats = [
-      { label: 'New today', val: 12, color: '#fb923c' },
+      { label: 'New today', val: 12, color: '#ec4899' },
       { label: 'HIGH priority', val: 4, color: '#ef4444' },
       { label: 'Markets', val: 7, color: '#86efac' },
     ];
@@ -199,7 +199,7 @@ const StepSimulation = ({ stepId }: Props) => {
             </div>
           ))}
         </div>
-        <div className="text-[10px] text-orange-400 mt-2 text-center">→ Start with HIGH priority</div>
+        <div className="text-[10px] text-pink-400 mt-2 text-center">→ Start with HIGH priority</div>
       </div>
     );
   }
@@ -215,14 +215,14 @@ const StepSimulation = ({ stepId }: Props) => {
               key={i}
               className="aspect-square rounded transition-all duration-700"
               style={{
-                background: v > 70 ? '#ef4444' : v > 45 ? '#fb923c' : v > 25 ? 'rgba(245,158,11,.4)' : 'rgba(255,255,255,.06)',
+                background: v > 70 ? '#ef4444' : v > 45 ? '#ec4899' : v > 25 ? 'rgba(245,158,11,.4)' : 'rgba(255,255,255,.06)',
               }}
             />
           ))}
         </div>
         <div className="text-[10px] text-white/50 mt-2 flex gap-3">
           <span style={{ color: '#ef4444' }}>■ Hot</span>
-          <span style={{ color: '#fb923c' }}>■ Warm</span>
+          <span style={{ color: '#ec4899' }}>■ Warm</span>
           <span className="text-white/30">■ Quiet</span>
         </div>
       </div>

@@ -66,7 +66,7 @@ export default function BdrSelector() {
           <button
             onClick={() => setEditing(true)}
             className="text-[11px] font-semibold px-2.5 py-1 rounded-md ml-1"
-            style={{ background: 'rgba(251,146,60,.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,.3)' }}
+            style={{ background: 'rgba(251,146,60,.15)', color: '#ec4899', border: '1px solid rgba(251,146,60,.3)' }}
           >
             ✎ Edit coverage
           </button>
@@ -85,7 +85,7 @@ export default function BdrSelector() {
             onClick={save}
             disabled={saving}
             className="text-[11px] font-bold px-3 py-1.5 rounded-md text-white"
-            style={{ background: '#fb923c' }}
+            style={{ background: '#ec4899' }}
           >
             {saving ? 'Saving…' : 'Save'}
           </button>

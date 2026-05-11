@@ -197,7 +197,7 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
             className="h-full transition-all duration-500 ease-out"
             style={{
               width: `${progress}%`,
-              background: 'linear-gradient(90deg, #fbbf24, #fb923c, #f97316)',
+              background: 'linear-gradient(90deg, #f9a8d4, #ec4899, #db2777)',
               boxShadow: '0 0 14px rgba(251,146,60,.7)',
             }}
           />
@@ -206,10 +206,10 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
         {/* Header */}
         <div className="px-6 pt-6 pb-4 relative overflow-hidden">
           <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full opacity-50" style={{ background: 'radial-gradient(circle, #fde68a, transparent 70%)' }} />
-          <div className="absolute -top-8 right-12 w-24 h-24 rounded-full opacity-40" style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)' }} />
+          <div className="absolute -top-8 right-12 w-24 h-24 rounded-full opacity-40" style={{ background: 'radial-gradient(circle, #ec4899, transparent 70%)' }} />
           <div className={`relative transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
             <div className="flex items-center gap-2 mb-3">
-              <div className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded-full" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff', boxShadow: '0 2px 6px rgba(251,146,60,.4)' }}>
+              <div className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded-full" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)', color: '#fff', boxShadow: '0 2px 6px rgba(251,146,60,.4)' }}>
                 Step {step + 1} / {TOUR_STEPS.length}
               </div>
               <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#9a6b3a' }}>Welcome Tour</div>
@@ -294,7 +294,7 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
                     width: i === step ? '20px' : '6px',
                     height: '6px',
                     background: i === step
-                      ? 'linear-gradient(90deg, #fbbf24, #f97316)'
+                      ? 'linear-gradient(90deg, #f9a8d4, #db2777)'
                       : i < step
                         ? 'rgba(251,146,60,.5)'
                         : 'rgba(251,146,60,.18)',
@@ -308,7 +308,7 @@ const WelcomeModal = ({ onNavigateToTab, forceOpen, onClose }: WelcomeModalProps
               onClick={handleNext}
               className="px-5 py-2 rounded-lg text-[12px] font-bold tracking-wide text-white transition-all duration-200 hover:scale-105"
               style={{
-                background: 'linear-gradient(135deg, #fbbf24, #fb923c, #f97316)',
+                background: 'linear-gradient(135deg, #f9a8d4, #ec4899, #db2777)',
                 boxShadow: '0 4px 14px rgba(251,146,60,.5), inset 0 1px 0 rgba(255,255,255,.3)',
               }}
             >

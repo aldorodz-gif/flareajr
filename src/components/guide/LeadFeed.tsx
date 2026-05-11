@@ -22,10 +22,10 @@ interface LeadFeedProps {
 }
 
 const SIGNAL_COLORS: Record<string, string> = {
-  Expansion: '#fb923c',
-  'Contract Win': '#10B981',
+  Expansion: '#ec4899',
+  'Contract Win': '#14b8a6',
   'Hiring Surge': '#8B8FE8',
-  'Project Award': '#fbbf24',
+  'Project Award': '#f9a8d4',
   Merger: '#D97FAA',
   Default: '#9B78C8',
 };
@@ -61,12 +61,12 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
     <div className="p-5 rounded-xl" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.08)' }}>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <Eyebrow gradient="linear-gradient(90deg, #10B981, #fbbf24)">Live Scan</Eyebrow>
+          <Eyebrow gradient="linear-gradient(90deg, #14b8a6, #f9a8d4)">Live Scan</Eyebrow>
           <h3 className="text-[16px] font-extrabold tracking-tight" style={{ color: '#0e1e3a' }}>
             Leads {city && state ? `in ${city}, ${state}` : ''}
           </h3>
         </div>
-        <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.12)', color: '#fb923c' }}>
+        <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899' }}>
           {leads.length} found
         </span>
       </div>
@@ -79,7 +79,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
 
       {!loading && leads.length === 0 && (
         <div className="py-12 text-center text-[13px]" style={{ color: '#94a3b8' }}>
-          Pick a state, city, and vertical, then hit <span className="font-bold" style={{ color: '#fb923c' }}>Refresh Scan</span> to surface fresh leads.
+          Pick a state, city, and vertical, then hit <span className="font-bold" style={{ color: '#ec4899' }}>Refresh Scan</span> to surface fresh leads.
         </div>
       )}
 
@@ -106,7 +106,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   </div>
                   <p className="text-[13px] leading-snug mb-1.5" style={{ color: '#1e293b' }}>{lead.signal_detail}</p>
                   <p className="text-[12px] italic mb-2" style={{ color: '#64748b' }}>
-                    <span className="font-bold not-italic" style={{ color: '#10B981' }}>Why housing:</span> {lead.why_housing}
+                    <span className="font-bold not-italic" style={{ color: '#14b8a6' }}>Why housing:</span> {lead.why_housing}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {lead.recommended_titles.slice(0, 5).map((t) => (
@@ -124,7 +124,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                     className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-default"
                     style={{
                       background: inPipeline ? 'rgba(16,185,129,.15)' : '#0e1e3a',
-                      color: inPipeline ? '#10B981' : '#fff',
+                      color: inPipeline ? '#14b8a6' : '#fff',
                     }}
                   >
                     {inPipeline ? '✓ In pipeline' : '+ Pipeline'}
@@ -134,7 +134,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                     className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
                     style={{
                       background: 'rgba(251,146,60,.12)',
-                      color: '#fb923c',
+                      color: '#ec4899',
                       border: '1px solid rgba(251,146,60,.35)',
                     }}
                   >
@@ -157,7 +157,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span
                       className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded"
-                      style={{ background: 'rgba(251,146,60,.12)', color: '#fb923c' }}
+                      style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899' }}
                     >
                       {askLead.vertical}
                     </span>
@@ -205,14 +205,14 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   className="p-3 rounded-lg text-[12px] leading-relaxed"
                   style={{ background: 'rgba(16,185,129,.08)', border: '1px solid rgba(16,185,129,.25)', color: '#0e1e3a' }}
                 >
-                  <span className="font-bold" style={{ color: '#10B981' }}>👂 Listen for:</span> {pb.listenFor}
+                  <span className="font-bold" style={{ color: '#14b8a6' }}>👂 Listen for:</span> {pb.listenFor}
                 </div>
 
                 <div
                   className="p-3 rounded-lg text-[12px] leading-relaxed"
                   style={{ background: 'rgba(251,146,60,.08)', border: '1px solid rgba(251,146,60,.25)', color: '#0e1e3a' }}
                 >
-                  <span className="font-bold" style={{ color: '#fb923c' }}>🔥 Cross-sell:</span> {pb.crossSell}
+                  <span className="font-bold" style={{ color: '#ec4899' }}>🔥 Cross-sell:</span> {pb.crossSell}
                 </div>
 
                 <div className="text-[11px] italic pt-1" style={{ color: '#64748b' }}>
