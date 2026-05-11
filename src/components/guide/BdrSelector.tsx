@@ -15,7 +15,7 @@ export default function BdrSelector() {
   }, [selected?.id]);
 
   if (loading) {
-    return <div className="px-6 md:px-12 py-3 text-xs text-muted-foreground">Loading BDRs…</div>;
+    return <div className="py-2 text-xs text-muted-foreground">Loading BDRs…</div>;
   }
 
   const save = async () => {
