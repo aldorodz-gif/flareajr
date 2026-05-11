@@ -140,10 +140,17 @@ ${referenceEmail}`;
 
     // Build tool schema — include suggested_targets when article is provided
     const emailProperties: Record<string, unknown> = {
-      subject: { type: "string", description: "2-4 word subject line referencing the specific signal from the article" },
-      body: { type: "string", description: "Email body, under 100 words, max 4 sentences. Must reference specific details from the article." },
+      subject: { type: "string", description: "Primary 3-7 word subject line referencing the specific signal" },
+      subject_alternatives: {
+        type: "array",
+        description: "Exactly 3 ALTERNATIVE subject lines (different from primary), each 3-7 natural words, each tailored to the specific signal. No generic words like 'partnership' or 'growth'. No FREE/caps/punctuation gimmicks.",
+        items: { type: "string" },
+        minItems: 3,
+        maxItems: 3,
+      },
+      body: { type: "string", description: "Email body, 50-125 words, max 4 short sentences. Must reference specific details from the signal." },
     };
-    const required = ["subject", "body"];
+    const required = ["subject", "subject_alternatives", "body"];
 
     if (isArticle) {
       emailProperties.suggested_targets = {
