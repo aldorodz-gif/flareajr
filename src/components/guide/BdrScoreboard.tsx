@@ -333,6 +333,27 @@ const BdrScoreboard = () => {
               );
             })}
           </div>
+
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
+            <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#64748b' }}>{year} Quarter Rollup</div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {QUARTERS.map((q, i) => {
+                const qr = quarterTotals[i];
+                return (
+                  <div key={q} className="p-2.5 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
+                    <div className="text-[10px] font-bold" style={{ color: '#64748b' }}>{q}</div>
+                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(qr?.actual ?? null, 'currency')}</div>
+                    <div className="text-[10px] tabular-nums" style={{ color: '#94a3b8' }}>goal {fmt(qr?.monthlyGoal ?? null, 'currency')}</div>
+                  </div>
+                );
+              })}
+              <div className="p-2.5 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
+                <div className="text-[10px] font-bold" style={{ color: '#f9a8d4' }}>Year</div>
+                <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
+                <div className="text-[10px] tabular-nums" style={{ color: 'rgba(255,255,255,.6)' }}>goal {fmt(yearTotal?.monthlyGoal ?? null, 'currency')}</div>
+              </div>
+            </div>
+          </div>
         </>
       )}
 
