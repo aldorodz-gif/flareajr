@@ -41,6 +41,7 @@ export default function BdrSelector() {
 
   return (
     <div
+      data-shell="bdr-bar"
       className="px-6 md:px-12 py-3 flex items-center gap-3 flex-wrap"
       style={{ background: '#0F172A', borderBottom: '1px solid rgba(251,146,60,.15)' }}
     >
