@@ -238,7 +238,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                                 title={t.hint}
                                 className="px-3 py-2 text-[12px] font-semibold transition-all rounded-md border"
                                 style={{
-                                  background: active ? 'linear-gradient(135deg, #fb923c, #f97316)' : '#FAF7F2',
+                                  background: active ? 'linear-gradient(135deg, #ec4899, #db2777)' : '#FAF7F2',
                                   color: active ? '#fff' : '#2F4858',
                                   borderColor: active ? 'transparent' : 'rgba(155,120,200,.2)',
                                   boxShadow: active ? '0 2px 8px rgba(251,146,60,.3)' : 'none',
@@ -260,7 +260,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       disabled={!canGenerate || loading}
                       className="w-full py-4 text-[15px] font-bold tracking-wide transition-all"
                       style={{
-                        background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #fb923c, #f97316)',
+                        background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #ec4899, #db2777)',
                         color: !canGenerate || loading ? '#94A3B8' : '#fff',
                         cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
                         boxShadow: canGenerate && !loading ? '0 4px 15px rgba(251,146,60,.35)' : 'none',
@@ -304,12 +304,12 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       <div className="mt-4 rounded-lg border overflow-hidden" style={{ borderColor: 'rgba(251,146,60,.25)', background: '#FAF7F2' }}>
                         <div className="px-4 py-3 flex items-center gap-2" style={{ background: '#2F4858' }}>
                           <span className="text-[14px]">👥</span>
-                          <p className="text-[13px] font-bold" style={{ color: '#fb923c' }}>Suggested Targets at {company}</p>
+                          <p className="text-[13px] font-bold" style={{ color: '#ec4899' }}>Suggested Targets at {company}</p>
                         </div>
                         <div className="divide-y" style={{ borderColor: 'rgba(251,146,60,.12)' }}>
                           {result.suggested_targets.map((t, i) => (
                             <div key={i} className="flex items-start gap-3 px-4 py-3">
-                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style={{ background: '#2F4858', color: '#fb923c' }}>
+                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style={{ background: '#2F4858', color: '#ec4899' }}>
                                 {i + 1}
                               </span>
                               <div>
@@ -319,7 +319,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                               <button
                                 onClick={() => { setBuyerTitle(t.title); setResult(null); }}
                                 className="ml-auto text-[11px] font-bold px-3 py-1.5 rounded-md flex-shrink-0 transition-colors hover:opacity-80"
-                                style={{ background: 'rgba(251,146,60,.12)', color: '#f97316', border: '1px solid rgba(251,146,60,.25)' }}
+                                style={{ background: 'rgba(251,146,60,.12)', color: '#db2777', border: '1px solid rgba(251,146,60,.25)' }}
                               >
                                 Use this title
                               </button>
@@ -330,7 +330,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     )}
 
                     <div className="flex gap-3 mt-5">
-                      <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#10B981' : 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff', boxShadow: '0 2px 8px rgba(251,146,60,.3)' }}>
+                      <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#14b8a6' : 'linear-gradient(135deg, #ec4899, #db2777)', color: '#fff', boxShadow: '0 2px 8px rgba(251,146,60,.3)' }}>
                         {copied ? '✓ COPIED' : '📋 COPY'}
                       </button>
                       <button onClick={() => callApi(true)} disabled={loading} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.3)', color: '#2F4858' }}>
@@ -375,7 +375,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                 {/* Tone rule */}
                 <div className="rounded-lg p-4" style={{ background: '#2F4858' }}>
-                  <p className="text-[12px] font-bold tracking-wide mb-2" style={{ color: '#fb923c' }}>THE PERSONAL TONE RULE</p>
+                  <p className="text-[12px] font-bold tracking-wide mb-2" style={{ color: '#ec4899' }}>THE PERSONAL TONE RULE</p>
                   <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.88)' }}>
                     Write it like you're texting a colleague about someone you both know. No "I wanted to reach out." No "I hope this finds you well." Just one person talking to another.
                   </p>
@@ -404,7 +404,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
             <div className="relative pl-8">
               {/* Timeline line */}
-              <div className="absolute left-[14px] top-3 bottom-3 w-[2px]" style={{ background: 'linear-gradient(to bottom, #fb923c, #2F4858)' }} />
+              <div className="absolute left-[14px] top-3 bottom-3 w-[2px]" style={{ background: 'linear-gradient(to bottom, #ec4899, #2F4858)' }} />
 
               <div className="flex flex-col gap-4">
                 {EMAIL_PARTS.map(s => (
@@ -412,11 +412,11 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     {/* Dot */}
                     <div
                       className="absolute -left-8 top-4 w-[10px] h-[10px] rounded-full border-2"
-                      style={{ borderColor: '#fb923c', background: 'hsl(var(--background))' }}
+                      style={{ borderColor: '#ec4899', background: 'hsl(var(--background))' }}
                     />
                     <div className="rounded-lg border overflow-hidden" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--card))' }}>
                       <div className="px-4 py-3 flex items-center gap-2.5" style={{ borderBottom: '1px solid hsl(var(--border))' }}>
-                        <span className="w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold" style={{ background: '#2F4858', color: '#fb923c' }}>{s.num}</span>
+                        <span className="w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold" style={{ background: '#2F4858', color: '#ec4899' }}>{s.num}</span>
                         <div>
                           <span className="text-[14px] font-semibold text-foreground">{s.title}</span>
                           <span className="text-[12px] text-muted-foreground ml-1.5">— {s.subtitle}</span>
@@ -441,7 +441,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
           {/* Bottom line */}
           <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: '#2F4858' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#fb923c' }}>Bottom line</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#ec4899' }}>Bottom line</span>
             <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.85)' }}>
               Good prospecting emails aren't about you. They're about one signal, one problem, and one small ask. If you nail those three, the reply rate takes care of itself.
             </p>

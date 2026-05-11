@@ -39,12 +39,12 @@ const TopVerticals = ({ data, city, loading, selector }: TopVerticalsProps) => {
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-bold" style={{ background: 'rgba(155,120,200,.15)', color: '#9B78C8' }}>{i + 1}</span>
                 {row.vertical}
               </span>
-              <span className="text-[12px] font-bold tabular-nums" style={{ color: '#fb923c' }}>{row.share_pct}%</span>
+              <span className="text-[12px] font-bold tabular-nums" style={{ color: '#ec4899' }}>{row.share_pct}%</span>
             </div>
             <div className="h-1.5 rounded-full overflow-hidden mb-1" style={{ background: 'rgba(14,30,58,.06)' }}>
               <div
                 className="h-full rounded-full"
-                style={{ width: `${row.share_pct}%`, background: 'linear-gradient(90deg, #fb923c, #fbbf24)' }}
+                style={{ width: `${row.share_pct}%`, background: 'linear-gradient(90deg, #ec4899, #f9a8d4)' }}
               />
             </div>
             <p className="text-[11px] leading-snug" style={{ color: '#64748b' }}>{row.driver}</p>

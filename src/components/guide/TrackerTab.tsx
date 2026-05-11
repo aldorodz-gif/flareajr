@@ -75,7 +75,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
           onClick={() => setTourOpen(true)}
           className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 hover:scale-105"
           style={{
-            background: 'linear-gradient(135deg, #fb923c, #f97316)',
+            background: 'linear-gradient(135deg, #ec4899, #db2777)',
             color: '#fff',
             boxShadow: '0 2px 8px rgba(251,146,60,.35)',
           }}
@@ -103,7 +103,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
           { num: '3', icon: '⏰', title: 'Automate', desc: 'Tell ChatGPT to run it every weekday at 7 AM. Wake up to fresh leads daily.' },
         ].map(step => (
           <div key={step.num} className="p-4 text-center" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-            <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center text-[14px] font-bold" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff' }}>
+            <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center text-[14px] font-bold" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)', color: '#fff' }}>
               {step.num}
             </div>
             <span className="text-[16px]">{step.icon}</span>
@@ -133,9 +133,9 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                     disabled={loading}
                     className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium transition-all duration-200"
                     style={{
-                      background: city === preset.value ? 'linear-gradient(135deg, #fb923c, #f97316)' : '#F1F5F9',
+                      background: city === preset.value ? 'linear-gradient(135deg, #ec4899, #db2777)' : '#F1F5F9',
                       color: city === preset.value ? '#fff' : '#475569',
-                      border: `1px solid ${city === preset.value ? '#fb923c' : '#E2E8F0'}`,
+                      border: `1px solid ${city === preset.value ? '#ec4899' : '#E2E8F0'}`,
                       boxShadow: city === preset.value ? '0 2px 8px rgba(251,146,60,.3)' : 'none',
                     }}
                   >
@@ -204,12 +204,12 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
               {[city.trim(), vertical, signalType].map((val, i) => (
                 <div key={i} className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-full flex items-center justify-center text-[8px] transition-all duration-300" style={{
-                    background: val ? '#10B981' : 'rgba(148,163,184,.3)',
+                    background: val ? '#14b8a6' : 'rgba(148,163,184,.3)',
                     color: '#fff',
                   }}>
                     {val ? '✓' : ''}
                   </div>
-                  <span className="text-[11px]" style={{ color: val ? '#10B981' : '#94A3B8' }}>
+                  <span className="text-[11px]" style={{ color: val ? '#14b8a6' : '#94A3B8' }}>
                     {['Market', 'Vertical', 'Signal'][i]}
                   </span>
                   {i < 2 && <span className="text-[10px] mx-1" style={{ color: '#CBD5E1' }}>→</span>}
@@ -222,7 +222,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
               disabled={!canBuild || loading}
               className="px-7 py-3.5 text-[14px] font-bold tracking-wide transition-all duration-200"
               style={{
-                background: !canBuild || loading ? '#94A3B8' : 'linear-gradient(135deg, #fb923c, #f97316)',
+                background: !canBuild || loading ? '#94A3B8' : 'linear-gradient(135deg, #ec4899, #db2777)',
                 color: '#fff',
                 cursor: !canBuild || loading ? 'not-allowed' : 'pointer',
                 boxShadow: canBuild && !loading ? '0 4px 15px rgba(251,146,60,.35)' : 'none',
@@ -242,12 +242,12 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   <li>Review your results, then schedule it (see below)</li>
                 </ol>
                 <div className="relative p-5" style={{ background: 'linear-gradient(135deg, #0E1E3A, #1a1145)' }}>
-                  <div className="absolute top-0 right-0 w-24 h-24 opacity-10" style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)' }} />
+                  <div className="absolute top-0 right-0 w-24 h-24 opacity-10" style={{ background: 'radial-gradient(circle, #ec4899, transparent 70%)' }} />
                   <button
                     onClick={handleCopyPrompt}
                     className="absolute top-3 right-3 text-[11px] font-bold px-4 py-2 tracking-wider z-10 transition-all duration-200"
                     style={{
-                      background: copied ? 'linear-gradient(135deg, #10B981, #059669)' : 'linear-gradient(135deg, #fb923c, #f97316)',
+                      background: copied ? 'linear-gradient(135deg, #14b8a6, #0d9488)' : 'linear-gradient(135deg, #ec4899, #db2777)',
                       color: copied ? '#fff' : '#0E1E3A',
                       boxShadow: '0 2px 8px rgba(0,0,0,.2)',
                     }}

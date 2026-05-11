@@ -167,17 +167,17 @@ export default function OpportunitiesTab() {
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <h3 className="text-lg font-semibold">{o.company}</h3>
                     {o.priority && (
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${PRIORITY_COLORS[o.priority] || 'bg-muted text-muted-foreground'}`}>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${PRIORITY_COLORS[o.priority] || 'bg-muted text-muted-foreground'}`}>
                         {o.priority}
                       </span>
                     )}
                     {o.confidence_label && (
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-card text-foreground border-border'}`}>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border font-semibold ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-card text-foreground border-border'}`}>
                         Source: {o.confidence_label}
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal-600 text-white border border-teal-700 font-medium">📍 Near {o.nearest_inventory}</span>
+                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal-600 text-white border border-teal-700 font-medium">📍 Near {o.nearest_inventory}</span>
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">

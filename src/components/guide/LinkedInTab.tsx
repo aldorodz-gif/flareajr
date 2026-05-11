@@ -67,7 +67,7 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
 
   return (
     <main className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
-      <Eyebrow gradient="linear-gradient(90deg, #fb923c, #f97316)">Step 09 · LinkedIn Strategy</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #ec4899, #db2777)">Step 09 · LinkedIn Strategy</Eyebrow>
       <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">LinkedIn Post Strategy</h2>
       <p className="text-muted-foreground text-sm max-w-2xl">
         Build a 5-post LinkedIn content arc that positions you as an industry insider — not a cold caller. Each post is designed to warm up your target vertical before you ever pick up the phone.
@@ -82,7 +82,7 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
         <div className="space-y-4">
           {/* Vertical */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>Target Vertical</label>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#ec4899' }}>Target Vertical</label>
             <div className="flex flex-wrap gap-2">
               {VERTICALS.map(v => (
                 <button
@@ -90,9 +90,9 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
                   onClick={() => setVertical(v)}
                   className="px-3 py-1 rounded-full text-xs font-medium transition-all"
                   style={{
-                    background: vertical === v ? 'linear-gradient(135deg,#fb923c,#f97316)' : 'rgba(0,0,0,.05)',
+                    background: vertical === v ? 'linear-gradient(135deg,#ec4899,#db2777)' : 'rgba(0,0,0,.05)',
                     color: vertical === v ? '#fff' : '#475569',
-                    border: `1px solid ${vertical === v ? '#fb923c' : 'rgba(0,0,0,.12)'}`,
+                    border: `1px solid ${vertical === v ? '#ec4899' : 'rgba(0,0,0,.12)'}`,
                   }}
                 >
                   {v}
@@ -103,23 +103,23 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
 
           {/* Signal */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>Signal You've Spotted</label>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#ec4899' }}>Signal You've Spotted</label>
             <input
               value={signal}
               onChange={e => setSignal(e.target.value)}
               placeholder="e.g. MLS expansion team announced in Nashville"
-              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-orange-400/50"
+              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-pink-400/50"
             />
           </div>
 
           {/* Goal (optional) */}
           <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#fb923c' }}>Goal <span className="text-gray-400">(optional)</span></label>
+            <label className="block text-xs font-semibold mb-1.5" style={{ color: '#ec4899' }}>Goal <span className="text-gray-400">(optional)</span></label>
             <input
               value={goal}
               onChange={e => setGoal(e.target.value)}
               placeholder="e.g. get inbound DMs from facility managers"
-              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-orange-400/50"
+              className="w-full px-3 py-2 rounded-lg text-sm bg-black/5 border border-black/10 text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-pink-400/50"
             />
           </div>
 
@@ -129,7 +129,7 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
             disabled={!vertical || !signal || loading}
             className="w-full py-3 rounded-xl text-sm font-bold transition-all disabled:opacity-40"
             style={{
-              background: 'linear-gradient(135deg,#fb923c,#f97316)',
+              background: 'linear-gradient(135deg,#ec4899,#db2777)',
               color: '#fff',
             }}
           >
@@ -159,10 +159,10 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
                   <div className="px-4 py-3 flex items-center justify-between" style={{ background: 'linear-gradient(135deg,#1E293B,#1a1f3d)', borderBottom: '1px solid rgba(251,146,60,.15)' }}>
                     <div className="flex items-center gap-2">
                       <span className="text-base">{icon}</span>
-                      <span className="text-xs font-bold" style={{ color: '#fb923c' }}>POST {post.number}</span>
+                      <span className="text-xs font-bold" style={{ color: '#ec4899' }}>POST {post.number}</span>
                       <span className="text-xs font-medium text-white/60">— {post.type}</span>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(251,146,60,.15)', color: '#fb923c' }}>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(251,146,60,.15)', color: '#ec4899' }}>
                       🕐 {post.best_time}
                     </span>
                   </div>
@@ -170,7 +170,7 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
                   {/* Body */}
                   <div className="p-4 space-y-3">
                     <div className="rounded-lg p-3" style={{ background: 'rgba(251,146,60,.06)' }}>
-                      <span className="text-[10px] font-bold block mb-1" style={{ color: '#f97316' }}>HOOK</span>
+                      <span className="text-[10px] font-bold block mb-1" style={{ color: '#db2777' }}>HOOK</span>
                       <p className="text-sm font-semibold" style={{ color: '#1E293B' }}>{post.hook}</p>
                     </div>
 
@@ -178,14 +178,14 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
 
                     <div className="flex flex-wrap gap-1.5">
                       {post.hashtags.map((h, hi) => (
-                        <span key={hi} className="text-[11px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(99,102,241,.1)', color: '#6366f1' }}>
+                        <span key={hi} className="text-[11px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(99,102,241,.1)', color: '#a855f7' }}>
                           {h.startsWith('#') ? h : `#${h}`}
                         </span>
                       ))}
                     </div>
 
                     <div className="rounded-lg p-2.5" style={{ background: 'rgba(99,102,241,.05)' }}>
-                      <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#6366f1' }}>STRATEGIC INTENT</span>
+                      <span className="text-[10px] font-bold block mb-0.5" style={{ color: '#a855f7' }}>STRATEGIC INTENT</span>
                       <p className="text-xs" style={{ color: '#475569' }}>{post.intent}</p>
                     </div>
 
@@ -194,7 +194,7 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
                       className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all"
                       style={{
                         background: copiedIdx === i ? 'rgba(34,197,94,.15)' : 'rgba(251,146,60,.1)',
-                        color: copiedIdx === i ? '#22c55e' : '#fb923c',
+                        color: copiedIdx === i ? '#22c55e' : '#ec4899',
                       }}
                     >
                       {copiedIdx === i ? '✓ Copied!' : '📋 Copy Post'}

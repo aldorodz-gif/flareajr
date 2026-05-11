@@ -9,13 +9,13 @@ import { toast } from '@/hooks/use-toast';
 
 const flareIcon = L.divIcon({
   className: 'flare-marker',
-  html: '<div style="width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#fb923c,#fbbf24);border:2px solid #fff;box-shadow:0 2px 6px rgba(251,146,60,.5)"></div>',
+  html: '<div style="width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f9a8d4);border:2px solid #fff;box-shadow:0 2px 6px rgba(251,146,60,.5)"></div>',
   iconSize: [16, 16],
   iconAnchor: [8, 8],
 });
 const selectedIcon = L.divIcon({
   className: 'flare-marker-selected',
-  html: '<div style="width:22px;height:22px;border-radius:50%;background:#0e1e3a;border:3px solid #fb923c;box-shadow:0 0 0 4px rgba(251,146,60,.25)"></div>',
+  html: '<div style="width:22px;height:22px;border-radius:50%;background:#0e1e3a;border:3px solid #ec4899;box-shadow:0 0 0 4px rgba(251,146,60,.25)"></div>',
   iconSize: [22, 22],
   iconAnchor: [11, 11],
 });
@@ -111,7 +111,7 @@ const InventoryMap = ({ city, state }: InventoryMapProps) => {
     <div className="p-5 rounded-xl" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.08)' }}>
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
-          <Eyebrow gradient="linear-gradient(90deg, #D97FAA, #fb923c)">Core Inventory</Eyebrow>
+          <Eyebrow gradient="linear-gradient(90deg, #D97FAA, #ec4899)">Core Inventory</Eyebrow>
           <h3 className="text-[16px] font-extrabold tracking-tight" style={{ color: '#0e1e3a' }}>
             Properties {state ? `· ${state}` : '— US-wide'}{city ? ` · ${city}` : ''}
           </h3>
@@ -207,7 +207,7 @@ const InventoryMap = ({ city, state }: InventoryMapProps) => {
         <div className="mt-5 p-4 rounded-lg" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)' }}>
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <div>
-              <Eyebrow gradient="linear-gradient(90deg, #fb923c, #fbbf24)">Local Verticals — Who to Prospect Nearby</Eyebrow>
+              <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">Local Verticals — Who to Prospect Nearby</Eyebrow>
               <div className="mt-1 text-[14px] font-extrabold" style={{ color: '#0e1e3a' }}>{selected.name}</div>
               <div className="text-[11px]" style={{ color: '#64748b' }}>{selected.address} · {selected.city}, {selected.state} {selected.zip}</div>
             </div>
@@ -217,8 +217,8 @@ const InventoryMap = ({ city, state }: InventoryMapProps) => {
 
           {!vLoading && verticals && (
             <>
-              <div className="mb-4 p-3 rounded" style={{ background: 'rgba(251,146,60,.08)', borderLeft: '3px solid #fb923c' }}>
-                <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#fb923c' }}>Angle</div>
+              <div className="mb-4 p-3 rounded" style={{ background: 'rgba(251,146,60,.08)', borderLeft: '3px solid #ec4899' }}>
+                <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#ec4899' }}>Angle</div>
                 <p className="text-[12px] leading-snug" style={{ color: '#0e1e3a' }}>{verticals.angle}</p>
               </div>
 
@@ -244,11 +244,11 @@ const InventoryMap = ({ city, state }: InventoryMapProps) => {
                     <p className="text-[12px] mb-2" style={{ color: '#475569' }}>{t.summary}</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
                       <div>
-                        <span className="font-bold" style={{ color: '#fb923c' }}>Target: </span>
+                        <span className="font-bold" style={{ color: '#ec4899' }}>Target: </span>
                         <span style={{ color: '#0e1e3a' }}>{t.target_titles.join(', ')}</span>
                       </div>
                       <div>
-                        <span className="font-bold" style={{ color: '#fb923c' }}>Signals: </span>
+                        <span className="font-bold" style={{ color: '#ec4899' }}>Signals: </span>
                         <span style={{ color: '#0e1e3a', fontStyle: 'italic' }}>{t.signals.join(', ')}</span>
                       </div>
                     </div>

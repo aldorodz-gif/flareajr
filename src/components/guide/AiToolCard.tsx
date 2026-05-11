@@ -49,9 +49,9 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
 
           {/* Sparkle decorations */}
           <div className="absolute top-4 right-16 pointer-events-none">
-            <span className="absolute w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#fbbf24', boxShadow: '0 0 6px #fbbf24', top: 0, left: 0 }} />
-            <span className="absolute w-1 h-1 rounded-full animate-pulse" style={{ background: '#fb923c', boxShadow: '0 0 4px #fb923c', top: 12, left: 20, animationDelay: '0.5s' }} />
-            <span className="absolute w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10B981', boxShadow: '0 0 6px #10B981', top: -4, left: 40, animationDelay: '1s' }} />
+            <span className="absolute w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#f9a8d4', boxShadow: '0 0 6px #f9a8d4', top: 0, left: 0 }} />
+            <span className="absolute w-1 h-1 rounded-full animate-pulse" style={{ background: '#ec4899', boxShadow: '0 0 4px #ec4899', top: 12, left: 20, animationDelay: '0.5s' }} />
+            <span className="absolute w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#14b8a6', boxShadow: '0 0 6px #14b8a6', top: -4, left: 40, animationDelay: '1s' }} />
           </div>
 
           <div className="relative z-10 flex items-center justify-between">
@@ -61,7 +61,7 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
                 <span
                   className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 animate-shimmer rounded-sm"
                   style={{
-                    background: 'linear-gradient(90deg, #fb923c, #fbbf24, #fb923c)',
+                    background: 'linear-gradient(90deg, #ec4899, #f9a8d4, #ec4899)',
                     backgroundSize: '200% 100%',
                     color: '#0a0a14',
                   }}
@@ -70,19 +70,19 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
                 </span>
               </div>
               <p className="text-[22px] font-extrabold tracking-tight" style={{ color: '#fff' }}>{title}</p>
-              <p className="text-[13px] mt-1 font-medium" style={{ color: '#fbbf24' }}>{subtitle}</p>
+              <p className="text-[13px] mt-1 font-medium" style={{ color: '#f9a8d4' }}>{subtitle}</p>
             </div>
 
             <div className="relative z-10 flex items-center gap-3">
               <div className="flex items-center gap-2 px-3.5 py-2 rounded-full" style={{ background: 'rgba(16,185,129,.12)', border: '1px solid rgba(16,185,129,.3)' }}>
                 <div className="relative">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#10B981' }} />
-                  <div className="absolute inset-0 w-2.5 h-2.5 rounded-full animate-radar-ping" style={{ background: '#10B981' }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#14b8a6' }} />
+                  <div className="absolute inset-0 w-2.5 h-2.5 rounded-full animate-radar-ping" style={{ background: '#14b8a6' }} />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#10B981' }}>Live</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#14b8a6' }}>Live</span>
               </div>
               <div className="hidden md:block px-3.5 py-2 rounded-full" style={{ background: 'rgba(251,146,60,.1)', border: '1px solid rgba(251,146,60,.25)' }}>
-                <p className="text-[11px] font-bold tracking-wide" style={{ color: '#fb923c' }}>Powered by AI</p>
+                <p className="text-[11px] font-bold tracking-wide" style={{ color: '#ec4899' }}>Powered by AI</p>
               </div>
             </div>
           </div>

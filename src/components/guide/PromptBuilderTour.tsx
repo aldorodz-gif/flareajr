@@ -97,7 +97,7 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
               key={p.label}
               className="flex items-center gap-1.5 px-3 py-2 rounded text-[11px] font-medium transition-all duration-300"
               style={{
-                background: i === active ? 'linear-gradient(135deg, #fb923c, #f97316)' : 'rgba(255,255,255,.06)',
+                background: i === active ? 'linear-gradient(135deg, #ec4899, #db2777)' : 'rgba(255,255,255,.06)',
                 color: i === active ? '#fff' : 'rgba(255,255,255,.6)',
                 transform: i === active ? 'scale(1.05)' : 'scale(1)',
                 boxShadow: i === active ? '0 4px 12px rgba(251,146,60,.4)' : 'none',
@@ -124,7 +124,7 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
               key={v}
               className="px-2.5 py-1 rounded text-[11px] transition-all duration-300"
               style={{
-                background: i === active ? 'linear-gradient(135deg, #fb923c, #f59e0b)' : 'rgba(255,255,255,.05)',
+                background: i === active ? 'linear-gradient(135deg, #ec4899, #ec4899)' : 'rgba(255,255,255,.05)',
                 color: i === active ? '#fff' : 'rgba(255,255,255,.55)',
                 transform: i === active ? 'scale(1.08)' : 'scale(1)',
               }}
@@ -155,8 +155,8 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
             className="flex items-center gap-2 px-2 py-1 rounded text-[11px] transition-all duration-300"
             style={{
               background: i === active ? 'rgba(251,146,60,.18)' : 'transparent',
-              color: i === active ? '#fb923c' : 'rgba(255,255,255,.5)',
-              borderLeft: i === active ? '2px solid #fb923c' : '2px solid transparent',
+              color: i === active ? '#ec4899' : 'rgba(255,255,255,.5)',
+              borderLeft: i === active ? '2px solid #ec4899' : '2px solid transparent',
             }}
           >
             <span>{s.icon}</span>
@@ -179,14 +179,14 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
               <div
                 className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold transition-all duration-300"
                 style={{
-                  background: i < filled ? '#10B981' : 'rgba(255,255,255,.1)',
+                  background: i < filled ? '#14b8a6' : 'rgba(255,255,255,.1)',
                   color: '#fff',
                   transform: i < filled ? 'scale(1.1)' : 'scale(1)',
                 }}
               >
                 {i < filled ? '✓' : ''}
               </div>
-              <span className="text-[10px]" style={{ color: i < filled ? '#10B981' : 'rgba(255,255,255,.4)' }}>{f}</span>
+              <span className="text-[10px]" style={{ color: i < filled ? '#14b8a6' : 'rgba(255,255,255,.4)' }}>{f}</span>
               {i < 2 && <span className="text-[10px] text-white/20 mx-0.5">→</span>}
             </div>
           ))}
@@ -195,7 +195,7 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
           <div
             className="px-5 py-2 rounded text-[12px] font-bold transition-all duration-300"
             style={{
-              background: ready ? 'linear-gradient(135deg, #fb923c, #f97316)' : 'rgba(255,255,255,.08)',
+              background: ready ? 'linear-gradient(135deg, #ec4899, #db2777)' : 'rgba(255,255,255,.08)',
               color: ready ? '#fff' : 'rgba(255,255,255,.3)',
               boxShadow: ready ? '0 4px 14px rgba(251,146,60,.5)' : 'none',
               transform: ready ? 'scale(1.05)' : 'scale(1)',
@@ -220,7 +220,7 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
             <div
               className="px-2 py-0.5 rounded text-[8px] font-bold transition-all duration-300"
               style={{
-                background: copied ? 'linear-gradient(135deg, #10B981, #059669)' : 'linear-gradient(135deg, #fb923c, #f97316)',
+                background: copied ? 'linear-gradient(135deg, #14b8a6, #0d9488)' : 'linear-gradient(135deg, #ec4899, #db2777)',
                 color: copied ? '#fff' : '#0E1E3A',
               }}
             >
@@ -251,7 +251,7 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
               key={i}
               className="w-9 h-9 rounded flex flex-col items-center justify-center transition-all duration-300"
               style={{
-                background: i <= active ? 'linear-gradient(135deg, #fb923c, #f97316)' : 'rgba(255,255,255,.05)',
+                background: i <= active ? 'linear-gradient(135deg, #ec4899, #db2777)' : 'rgba(255,255,255,.05)',
                 transform: i === active ? 'scale(1.15)' : 'scale(1)',
                 boxShadow: i === active ? '0 4px 12px rgba(251,146,60,.5)' : 'none',
               }}
@@ -263,7 +263,7 @@ const Sim = ({ simId }: { simId: Step['simId'] }) => {
             </div>
           ))}
         </div>
-        <div className="text-[10px] text-center" style={{ color: '#10B981' }}>
+        <div className="text-[10px] text-center" style={{ color: '#14b8a6' }}>
           {active >= 4 ? '✓ Fresh leads in your inbox every morning' : 'Running...'}
         </div>
       </div>
@@ -335,7 +335,7 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
             className="h-full transition-all duration-500 ease-out"
             style={{
               width: `${progress}%`,
-              background: 'linear-gradient(90deg, #fbbf24, #fb923c, #f97316)',
+              background: 'linear-gradient(90deg, #f9a8d4, #ec4899, #db2777)',
               boxShadow: '0 0 14px rgba(251,146,60,.7)',
             }}
           />
@@ -343,10 +343,10 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
 
         <div className="px-6 pt-6 pb-4 relative overflow-hidden">
           <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full opacity-50" style={{ background: 'radial-gradient(circle, #fde68a, transparent 70%)' }} />
-          <div className="absolute -top-8 right-12 w-24 h-24 rounded-full opacity-40" style={{ background: 'radial-gradient(circle, #fb923c, transparent 70%)' }} />
+          <div className="absolute -top-8 right-12 w-24 h-24 rounded-full opacity-40" style={{ background: 'radial-gradient(circle, #ec4899, transparent 70%)' }} />
           <div className={`relative transition-all duration-200 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
             <div className="flex items-center gap-2 mb-3">
-              <div className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded-full" style={{ background: 'linear-gradient(135deg, #fb923c, #f97316)', color: '#fff', boxShadow: '0 2px 6px rgba(251,146,60,.4)' }}>
+              <div className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] rounded-full" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)', color: '#fff', boxShadow: '0 2px 6px rgba(251,146,60,.4)' }}>
                 Step {step + 1} / {STEPS.length}
               </div>
               <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#9a6b3a' }}>Prompt Builder Tour</div>
@@ -417,7 +417,7 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
                     width: i === step ? '20px' : '6px',
                     height: '6px',
                     background: i === step
-                      ? 'linear-gradient(90deg, #fbbf24, #f97316)'
+                      ? 'linear-gradient(90deg, #f9a8d4, #db2777)'
                       : i < step
                         ? 'rgba(251,146,60,.5)'
                         : 'rgba(251,146,60,.18)',
@@ -430,7 +430,7 @@ const PromptBuilderTour = ({ open, onClose }: PromptBuilderTourProps) => {
               onClick={handleNext}
               className="px-5 py-2 rounded-lg text-[12px] font-bold tracking-wide text-white transition-all duration-200 hover:scale-105"
               style={{
-                background: 'linear-gradient(135deg, #fbbf24, #fb923c, #f97316)',
+                background: 'linear-gradient(135deg, #f9a8d4, #ec4899, #db2777)',
                 boxShadow: '0 4px 14px rgba(251,146,60,.5), inset 0 1px 0 rgba(255,255,255,.3)',
               }}
             >

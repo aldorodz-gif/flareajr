@@ -15,7 +15,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 239 84% 67%;
+    --primary: 327 73% 60%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 215 25% 27%;
@@ -24,35 +24,35 @@
     --muted: 215 16% 47%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 239 84% 67%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 239 84% 67%;
+    --ring: 327 73% 60%;
 
     --radius: 0rem;
 
     /* Custom tokens */
     --navy: 222 47% 11%;
     --navy-hex: #1E293B;
-    --gold: 239 84% 67%;
-    --gold-hex: #6366F1;
-    --gold-light: 234 89% 74%;
-    --gold-light-hex: #818CF8;
+    --gold: 327 73% 60%;
+    --gold-hex: #ec4899;
+    --gold-light: 327 73% 70%;
+    --gold-light-hex: #f472b6;
     --cream: 210 33% 96%;
     --cream2: 214 32% 91%;
-    --green: 160 84% 39%;
-    --teal: 160 84% 39%;
-    --rose: 330 81% 60%;
+    --green: 172 66% 50%;
+    --teal: 172 66% 50%;
+    --rose: 327 73% 60%;
     --red: 0 84% 60%;
 
-    --gradient-primary: linear-gradient(135deg, #8B8FE8, #9B78C8);
-    --gradient-slider: linear-gradient(90deg, #8B8FE8, #D97FAA);
-    --gradient-header: linear-gradient(135deg, #1E293B 0%, #252260 100%);
+    --gradient-primary: linear-gradient(135deg, #ec4899, #a855f7);
+    --gradient-slider: linear-gradient(90deg, #2dd4bf, #ec4899 55%, #a855f7);
+    --gradient-header: linear-gradient(135deg, #1E293B 0%, #2a1450 100%);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -106,8 +106,8 @@
 }
 
 @keyframes priorityPulse {
-  0%, 100% { background: #10B981; }
-  50% { background: #059669; }
+  0%, 100% { background: #14b8a6; }
+  50% { background: #0d9488; }
 }
 
 @keyframes copyBurst {
