@@ -69,6 +69,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
   return (
     <div
       ref={barRef}
+      data-shell="tab-bar"
       className={`sticky top-0 z-20 flex overflow-x-auto hide-scrollbar relative transition-all duration-300 ease-out ${
         isStuck ? 'translate-y-0 opacity-100 shadow-lg' : ''
       }`}
