@@ -41,13 +41,19 @@ const MarketHeatTab = () => {
     })();
   }, []);
 
-  // When the active BDR changes, snap filters to that BDR's first market.
+  // When the active BDR changes, snap filters to that BDR's first market and auto-scan.
   useEffect(() => {
     if (!selected || !selected.markets?.length) return;
     const first = selected.markets[0]; // "City, ST"
     const [c, st] = first.split(',').map(s => s.trim());
     if (c) setCity(c);
     if (st) setState(st);
+    // Trigger a scan once filters are applied so the tab "sets itself up" for that market.
+    if (c && st) {
+      setFocusInventory(null);
+      setTimeout(() => { void handleScan(); }, 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected?.id]);
 
   useEffect(() => {
