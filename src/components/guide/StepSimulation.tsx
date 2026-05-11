@@ -174,6 +174,90 @@ const StepSimulation = ({ stepId }: Props) => {
     );
   }
 
+  if (stepId === 'dashboard') {
+    const stats = [
+      { label: 'New today', val: 12, color: '#fb923c' },
+      { label: 'HIGH priority', val: 4, color: '#ef4444' },
+      { label: 'Markets', val: 7, color: '#86efac' },
+    ];
+    return (
+      <div className="h-[140px] rounded-md p-3" style={{ background: 'rgba(0,0,0,.25)', border: '1px solid rgba(251,146,60,.2)' }}>
+        <div className="text-[10px] text-white/50 mb-2">Good morning 👋</div>
+        <div className="grid grid-cols-3 gap-2">
+          {stats.map((s, i) => (
+            <div
+              key={i}
+              className="rounded p-2 transition-all duration-500"
+              style={{
+                background: 'rgba(255,255,255,.04)',
+                border: `1px solid ${frame % 3 === i ? s.color + '66' : 'transparent'}`,
+                transform: frame % 3 === i ? 'translateY(-2px)' : 'translateY(0)',
+              }}
+            >
+              <div className="text-[18px] font-bold" style={{ color: s.color }}>{s.val}</div>
+              <div className="text-[9px] text-white/60 leading-tight">{s.label}</div>
+            </div>
+          ))}
+        </div>
+        <div className="text-[10px] text-orange-400 mt-2 text-center">→ Start with HIGH priority</div>
+      </div>
+    );
+  }
+
+  if (stepId === 'heat') {
+    const cells = Array.from({ length: 21 }, (_, i) => (i * 37 + frame * 11) % 100);
+    return (
+      <div className="h-[140px] rounded-md p-3" style={{ background: 'rgba(0,0,0,.25)', border: '1px solid rgba(251,146,60,.2)' }}>
+        <div className="text-[10px] text-white/50 mb-2">Atlanta · Construction · this week</div>
+        <div className="grid grid-cols-7 gap-1">
+          {cells.map((v, i) => (
+            <div
+              key={i}
+              className="aspect-square rounded transition-all duration-700"
+              style={{
+                background: v > 70 ? '#ef4444' : v > 45 ? '#fb923c' : v > 25 ? 'rgba(245,158,11,.4)' : 'rgba(255,255,255,.06)',
+              }}
+            />
+          ))}
+        </div>
+        <div className="text-[10px] text-white/50 mt-2 flex gap-3">
+          <span style={{ color: '#ef4444' }}>■ Hot</span>
+          <span style={{ color: '#fb923c' }}>■ Warm</span>
+          <span className="text-white/30">■ Quiet</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (stepId === 'events') {
+    const events = [
+      { name: 'AHCA Summit', city: 'Nashville', when: 'May 14' },
+      { name: 'AGC Build Expo', city: 'Atlanta', when: 'May 21' },
+      { name: 'HIMSS Regional', city: 'Memphis', when: 'Jun 03' },
+    ];
+    return (
+      <div className="h-[140px] rounded-md p-3 space-y-1.5" style={{ background: 'rgba(0,0,0,.25)', border: '1px solid rgba(251,146,60,.2)' }}>
+        {events.map((e, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded text-[11px] transition-all duration-500"
+            style={{
+              background: frame % 3 === i ? 'rgba(251,146,60,.15)' : 'rgba(255,255,255,.04)',
+              border: `1px solid ${frame % 3 === i ? 'rgba(251,146,60,.4)' : 'transparent'}`,
+            }}
+          >
+            <span className="text-[14px]">🎪</span>
+            <div className="flex-1">
+              <div className="text-white/85 font-medium">{e.name}</div>
+              <div className="text-white/40 text-[9px]">{e.city} · {e.when}</div>
+            </div>
+            <span className="text-[9px] text-green-400">✓ verified</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return null;
 };
 
