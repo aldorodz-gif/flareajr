@@ -21,6 +21,7 @@ const CITY_PRESETS = [
 ];
 
 const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
+  const { selected } = useBdr();
   const [city, setCity] = useState('');
   const [vertical, setVertical] = useState('');
   const [signalType, setSignalType] = useState('');
@@ -28,6 +29,12 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  // When the active BDR changes, prefill the city from their first market.
+  useEffect(() => {
+    if (!selected || !selected.markets?.length) return;
+    setCity(selected.markets[0]);
+  }, [selected?.id]);
 
   const canBuild = city.trim() && vertical && signalType;
 
