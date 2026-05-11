@@ -21,6 +21,7 @@ interface Opportunity {
   review_status: string | null;
   nearest_inventory: string | null;
   near_core_inventory: boolean;
+  distance_to_inventory: number | null;
   last_verified: string;
   status: string;
   saved_by_bdr: string | null;
