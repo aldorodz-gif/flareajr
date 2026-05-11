@@ -85,6 +85,37 @@ VERTICAL PLAYBOOK — ${service_line}:
 ${playbook}
 `;
 
+    const housingFramework = `
+CORPORATE HOUSING PROSPECTING INTELLIGENCE FRAMEWORK — apply on top of everything above. The goal of this email is to START a relevant business conversation, NOT close the sale.
+
+PRIORITIZE BUSINESS OUTCOMES over property/feature talk:
+- cost control, relocation speed, workforce flexibility, project continuity, employee comfort, reduced operational friction, hotel cost reduction, simplified relocation, traveling staff support, temporary assignments, workforce deployment, project-based housing, executive relocation, staffing support, insurance housing, government contractor housing, travel nurse housing.
+- NEVER lead with luxury, amenities, "best-in-class," or apartment marketing language.
+
+FIRST EMAIL STRUCTURE (in order):
+1. Personalized opener tied to the signal
+2. Relevant operational problem they're about to feel
+3. Brief solution positioning (one line, outcome-first)
+4. Low-friction CTA
+
+LENGTH & READABILITY:
+- 50–125 words total. Skimmable in under 20 seconds.
+- Short paragraphs (1–2 sentences max). No large blocks. No attachments. No multiple links.
+- Mobile-first: CTA visible without scrolling.
+
+CTA RULES — pick ONE, low-pressure, binary-friendly. Good examples:
+- "Would it make sense to send over options?"
+- "Open to seeing availability?"
+- "Would a backup housing partner be helpful?"
+- "Should I send pricing examples?"
+- "Would it be worth a brief conversation?"
+AVOID: "book a demo," aggressive scheduling, multiple CTAs, long calendar asks.
+
+SUBJECT LINE: 3–7 natural words. Examples: "Temporary housing support," "Project housing options," "Relocation housing," "Traveling employee stays," "Extended stay alternative." Never use FREE, LIMITED TIME, DISCOUNT, GUARANTEED, or excessive caps/punctuation.
+
+TONE: consultative, operational, confident, concise, helpful, non-pushy. Avoid hype, jargon, excessive adjectives, overly formal writing.
+`;
+
     const TONE_GUIDES: Record<string, string> = {
       direct: "TONE: DIRECT. Sharp and confident. No throat-clearing. Every sentence cuts. Short words, strong verbs. Sound like a senior rep who respects the buyer's time.",
       warm: "TONE: WARM. Human, conversational, like writing to a colleague you respect. Use contractions. A touch of empathy or acknowledgment of their workload. Never saccharine — warm, not cheesy.",
@@ -98,9 +129,11 @@ ${playbook}
 
 ${salesMindset}
 
+${housingFramework}
+
 ${toneGuide}
 
-HARD CONSTRAINTS: Under 100 words. Max 4 sentences. Mobile-first — every sentence scannable in 2 seconds on a 4-inch screen. Subject line: 2-4 words, references the specific signal (never generic like "partnership" or "growth").${varyInstruction}
+HARD CONSTRAINTS: 50–125 words. Max 4 short sentences/paragraphs. Mobile-first — CTA visible without scrolling on a 4-inch screen. Subject line: 3–7 natural words referencing the specific signal (never generic like "partnership" or "growth"). One clear low-friction CTA. Goal is to START a conversation, not close.${varyInstruction}
 ${articleInstructions}
 
 ${referenceEmail}`;
