@@ -60,7 +60,33 @@ export function BdrProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => { refresh(); /* eslint-disable-next-line */ }, []);
 
-  const setSelectedId = (id: string) => {
+  const setSelectedId = async (id: string) => {
+    // Synthetic snapshot IDs aren't real bdr_profile uuids — promote to a real
+    // profile row so downstream queries (opportunities.assigned_bdr uuid, scan
+    // edge function) work.
+    if (id.startsWith('snapshot:')) {
+      const synth = bdrs.find(b => b.id === id);
+      if (synth) {
+        const { data, error } = await supabase
+          .from('bdr_profiles')
+          .insert({
+            name: synth.name,
+            region: synth.region,
+            markets: synth.markets,
+            inventory_locations: synth.inventory_locations,
+            target_verticals: synth.target_verticals,
+            excluded_markets: synth.excluded_markets,
+          })
+          .select('id')
+          .single();
+        if (!error && data) {
+          await refresh();
+          setSelId(data.id);
+          localStorage.setItem(STORAGE_KEY, data.id);
+          return;
+        }
+      }
+    }
     setSelId(id);
     localStorage.setItem(STORAGE_KEY, id);
   };
