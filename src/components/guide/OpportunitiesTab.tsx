@@ -129,7 +129,7 @@ export default function OpportunitiesTab() {
 
       <div className="flex gap-2 mb-4 flex-wrap">
         {([
-          ['all', `All (${items.length})`],
+          ['all', `All (${items.filter(o => inTerritory(o.market)).length})`],
           ['top', `🔥 Top Priority`],
           ['near', `📍 Near Inventory`],
           ['saved', `⭐ My Saved`],
