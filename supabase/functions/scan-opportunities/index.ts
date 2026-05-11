@@ -77,8 +77,8 @@ serve(async (req) => {
       focus,
       "PRIORITIZE these signal types: expansions, relocations, contract awards, phased construction, project mobilizations, training cohorts, temporary workforce movements, large group activity likely to require extended stays.",
       "IGNORE: generic hiring news, short hotel-only event traffic, conference attendees, day visitors, single-person business travel.",
-      "TARGET PROFILE: SMB companies (10-1000 employees). Two acceptable types: (1) SMBs with a direct 30+ day signal of their own, AND (2) SMB contractors / subs / vendors / staffing / consulting firms executing work for a larger prime. Both valid.",
-      "When the signal traces back to a large prime (Boeing, hospital system, federal agency, Fortune 500), name the SMB executing the work and reference the prime in 'why_it_matters'. Do NOT return the prime itself.",
+      "TARGET PROFILE: SMB and SME ONLY (roughly 10-1500 employees, under ~$500M revenue). Two acceptable types: (1) SMB/SME companies with a direct 30+ day signal of their own, AND (2) SMB/SME contractors / subs / vendors / staffing / consulting firms executing work for a larger prime. Both valid.",
+      "HARD EXCLUSION: Never return Fortune 500, Fortune 1000, or any large enterprise as the target company — even if they have a clear housing signal. They are too slow to close. When the signal traces back to a large prime (Boeing, hospital system, federal agency, Fortune 500), name the SMB/SME executing the work and reference the prime ONLY in 'why_it_matters'. The 'company' field must always be the SMB/SME.",
       "NEVER include other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder, etc.).",
       excludeCompanies.length > 0
         ? `CRITICAL: DO NOT return any of these companies — they have already been surfaced. Find DIFFERENT companies: ${excludeCompanies.join(", ")}.`
