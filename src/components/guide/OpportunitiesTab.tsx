@@ -149,8 +149,8 @@ export default function OpportunitiesTab() {
             onClick={() => setFilter(k)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border ${
               filter === k
-                ? 'bg-pink-500 text-white border-pink-500'
-                : 'bg-white text-slate-900 border-slate-200 hover:bg-slate-50'
+                ? 'bg-pink-100 text-pink-800 border-pink-200'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
             }`}
           >
             {label}
