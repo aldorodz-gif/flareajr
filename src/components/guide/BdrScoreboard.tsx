@@ -302,11 +302,28 @@ const BdrScoreboard = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
-            <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
-              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#f9a8d4' }}>Top Line Revenue Goal · Annual</div>
-              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(bdr.annualRevenueGoal, 'currency')}</div>
-              <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>Annual GP Goal {fmt(bdr.annualGpGoal, 'currency')}</div>
-            </div>
+            {(() => {
+              const annualRow = bdr.rows[`${year}-All`];
+              const annualActual = annualRow?.actual ?? 0;
+              const annualGpRemaining = Math.max(0, bdr.annualGpGoal - annualActual);
+              const annualRevRemaining = revenueForGp(bdr, annualGpRemaining) ?? 0;
+              const annualHit = annualActual >= bdr.annualGpGoal && bdr.annualGpGoal > 0;
+              return (
+                <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: annualHit ? '#5eead4' : '#f9a8d4' }}>
+                    {annualHit ? `Annual GP Goal Hit · ${year}` : `Top Line Revenue Still Needed · ${year}`}
+                  </div>
+                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>
+                    {annualHit ? '$0 needed ✓' : fmt(annualRevRemaining, 'currency')}
+                  </div>
+                  <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>
+                    {annualHit
+                      ? `Over by ${fmt(annualActual - bdr.annualGpGoal, 'currency')} GP · Goal ${fmt(bdr.annualRevenueGoal, 'currency')}`
+                      : `GP remaining ${fmt(annualGpRemaining, 'currency')} of ${fmt(bdr.annualGpGoal, 'currency')}`}
+                  </div>
+                </div>
+              );
+            })()}
             {(() => {
               const gpRemaining = row.monthlyGoal != null && row.actual != null
                 ? Math.max(0, row.monthlyGoal - row.actual)
@@ -358,19 +375,35 @@ const BdrScoreboard = () => {
             <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
               {QUARTERS.map((q, i) => {
                 const qr = quarterTotals[i];
+                const qHit = qr?.monthlyGoal != null && qr?.actual != null && qr.actual >= qr.monthlyGoal && qr.monthlyGoal > 0;
+                const qRemaining = qr?.monthlyGoal != null && qr?.actual != null
+                  ? Math.max(0, qr.monthlyGoal - qr.actual)
+                  : null;
                 return (
-                  <div key={q} className="p-2.5 rounded-lg" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.06)' }}>
-                    <div className="text-[10px] font-bold" style={{ color: '#64748b' }}>{q}</div>
-                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#0e1e3a' }}>{fmt(qr?.actual ?? null, 'currency')}</div>
-                    <div className="text-[10px] tabular-nums" style={{ color: '#94a3b8' }}>goal {fmt(qr?.monthlyGoal ?? null, 'currency')}</div>
+                  <div key={q} className="p-2.5 rounded-lg" style={{ background: qHit ? '#ecfdf5' : '#fff', border: `1px solid ${qHit ? 'rgba(20,184,166,.35)' : 'rgba(14,30,58,.06)'}` }}>
+                    <div className="text-[10px] font-bold" style={{ color: qHit ? '#0d9488' : '#64748b' }}>{q} {qHit && '✓'}</div>
+                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: qHit ? '#0d9488' : '#0e1e3a' }}>{fmt(qr?.actual ?? null, 'currency')}</div>
+                    <div className="text-[10px] tabular-nums" style={{ color: qHit ? '#0d9488' : '#94a3b8' }}>
+                      {qHit ? '$0 GP needed' : qRemaining != null ? `${fmt(qRemaining, 'currency')} to goal` : `goal ${fmt(qr?.monthlyGoal ?? null, 'currency')}`}
+                    </div>
                   </div>
                 );
               })}
-              <div className="p-2.5 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
-                <div className="text-[10px] font-bold" style={{ color: '#f9a8d4' }}>Year</div>
-                <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
-                <div className="text-[10px] tabular-nums" style={{ color: 'rgba(255,255,255,.6)' }}>goal {fmt(yearTotal?.monthlyGoal ?? null, 'currency')}</div>
-              </div>
+              {(() => {
+                const yHit = yearTotal?.monthlyGoal != null && yearTotal?.actual != null && yearTotal.actual >= yearTotal.monthlyGoal && yearTotal.monthlyGoal > 0;
+                const yRemaining = yearTotal?.monthlyGoal != null && yearTotal?.actual != null
+                  ? Math.max(0, yearTotal.monthlyGoal - yearTotal.actual)
+                  : null;
+                return (
+                  <div className="p-2.5 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
+                    <div className="text-[10px] font-bold" style={{ color: yHit ? '#5eead4' : '#f9a8d4' }}>Year {yHit && '✓'}</div>
+                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
+                    <div className="text-[10px] tabular-nums" style={{ color: 'rgba(255,255,255,.6)' }}>
+                      {yHit ? '$0 GP needed ✓' : yRemaining != null ? `${fmt(yRemaining, 'currency')} to goal` : `goal ${fmt(yearTotal?.monthlyGoal ?? null, 'currency')}`}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </>
