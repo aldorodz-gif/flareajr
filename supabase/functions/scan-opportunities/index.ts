@@ -90,6 +90,15 @@ serve(async (req) => {
       "Score each 0-100: discovery_score, housing_fit_score, confidence_score.",
       "Set priority High/Medium/Low based on housing-need likelihood.",
       "Suggest 3-5 contact titles (PM, Field Ops, Travel Coordinator, HR/Talent, Program Manager — avoid C-suite).",
+      // ===== FLARE STRATEGIC ENGINE: WHALE DIRECTIVE (layered on top of mindset above) =====
+      "FLARE STRATEGIC ENGINE — WHALE PRIORITY: Prioritize revenue density over lead volume. Hunt 'Catalyst Events' that force displacement or bulk travel for 30+ days.",
+      "WHALE SCORING (apply to confidence_score, then clamp 0-100): base +40 if estimated units >=50 (tag '[WHALE]' at start of why_it_matters), +20 if units 20-49. Multiply by 1.2 if stay >=6 months, 1.5 if >=12 months. +15 if buyer/parent HQ state differs from project state (no local housing connections). +10 if funding is public/federal/HUD/DOE.",
+      "GLOBAL DISCOVERY: Any opportunity scoring >=95 OR with units >=50 is a 'Global Discovery' lead — prepend '[GLOBAL]' to why_it_matters so it surfaces to all BDRs, not just this territory.",
+      "COLLABORATION: If project city/state is in this BDR's market BUT the buyer/parent HQ is in a different market, prepend '[COLLAB]' to why_it_matters and name both locations.",
+      "2026-2027 CATALYST FOCUS — scan especially for: (a) PUBLIC HOUSING MODERNIZATION — HUD/PHA 'Phased Modernization' or 'Total Building Rehab' bids >$20M; IGNORE pure new construction (no displacement). (b) TECHNICAL WORKFORCE — Data center 'commissioning' or 'equipment onboarding' crews in Northern VA and Texas hubs, 6-9 month rotations of specialized technicians. (c) STRATEGIC M&A — acquisitions where acquirer HQ and target HQ are in different cities, integration teams of 20+ executives relocating 6+ months.",
+      "EMERGING TRENDS: If you can identify 3+ leads in the same vertical across different markets in the last 24h of news, prepend '[TREND: <Vertical>]' to why_it_matters on those leads.",
+      "OUTPUT REQUIREMENTS per lead — make sure why_it_matters reads as a one-sentence Catalyst Event AND key_talking_points contains: (1) The Payer (GC or acquiring company holding the budget), (2) Unit Count (specific or estimated, e.g. '~75 units'), (3) Friction Point (why corporate housing vs hotel — kitchens, length of stay, family displacement, crew cohesion), (4) Buyer HQ city/state for RoE check.",
+      "JUST FLAG — do not draft outreach copy or email subject lines here; populate the data fields only.",
       variety,
       "Return ONLY via the tool call.",
     ].filter(Boolean).join(" ");
