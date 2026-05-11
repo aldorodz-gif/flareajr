@@ -172,8 +172,21 @@ export default function OpportunitiesTab() {
     return cityLc ? allowedCities.has(cityLc) : false;
   };
 
-  const filtered = items.filter(o => {
-    if (!inTerritory(o.market)) return false;
+  const territoryFiltered = items.filter(o => inTerritory(o.market));
+  const territoryRemovedCount = items.length - territoryFiltered.length;
+
+  const territoryRuleText = (() => {
+    const states = Array.from(allowedStates);
+    const cities = Array.from(allowedCities);
+    if (states.length && cities.length) {
+      return `state: ${states.join(', ')} or city: ${cities.join(', ')}`;
+    }
+    if (states.length) return `state: ${states.join(', ')}`;
+    if (cities.length) return `city: ${cities.join(', ')}`;
+    return 'no territory restrictions';
+  })();
+
+  const filtered = territoryFiltered.filter(o => {
     if (filter === 'top') return o.priority === 'Top Priority';
     if (filter === 'near') return o.near_core_inventory;
     if (filter === 'saved') return o.saved_by_bdr === selected?.id;
