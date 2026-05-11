@@ -83,7 +83,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
         ref={sliderRef}
         data-shell="tab-slider"
         className="absolute bottom-0 h-[3px] rounded-t-sm pointer-events-none z-10 transition-all duration-300"
-        style={{ background: 'linear-gradient(90deg, #fbbf24, #f97316)', boxShadow: '0 0 14px rgba(251,146,60,.5)' }}
+        style={{ background: 'linear-gradient(90deg, #2dd4bf, #ec4899 55%, #a855f7)', boxShadow: '0 0 14px rgba(236,72,153,.55)' }}
       />
       {TAB_ORDER.map((tab) => {
         const isActive = activeTab === tab.id;
