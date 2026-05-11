@@ -40,8 +40,14 @@ export default function DailySummaryToast() {
           : `${selected.name} — ${total} new opportunities`;
 
       toast(title, {
-        description,
+        description: total === 0 ? description : `${description} Click to open the AI Daily Lead Feed →`,
         duration: 8000,
+        className: total > 0 ? 'cursor-pointer' : undefined,
+        onDismiss: () => {},
+        action: total > 0 ? {
+          label: 'Open',
+          onClick: () => window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'opportunities' })),
+        } : undefined,
       });
     })();
   }, [selected?.id]);
