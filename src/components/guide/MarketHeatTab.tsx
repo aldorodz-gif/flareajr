@@ -6,6 +6,7 @@ import MarketSelector from './MarketSelector';
 import TopVerticals, { VerticalShare } from './TopVerticals';
 import LeadFeed, { ScanLead } from './LeadFeed';
 import InventoryMap from './InventoryMap';
+import { useBdr } from './BdrContext';
 
 const MarketHeatTab = () => {
   const [state, setState] = useState('');
