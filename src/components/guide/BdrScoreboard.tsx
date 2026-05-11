@@ -240,6 +240,8 @@ const BdrScoreboard = () => {
       }));
 
       const { error } = await supabase.from('bdr_snapshots').upsert(payload as never, { onConflict: 'bdr_id' });
+      // Refresh the global Active BDR list so newly-parsed members show up in the dropdown immediately.
+      refreshBdrs().catch(() => { /* non-fatal */ });
       toast({
         title: error ? 'Loaded locally only' : 'Numbers refreshed',
         description: error
