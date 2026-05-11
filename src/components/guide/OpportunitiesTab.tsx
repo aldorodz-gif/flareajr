@@ -26,17 +26,26 @@ interface Opportunity {
   saved_by_bdr: string | null;
 }
 
-const PRIORITY_COLORS: Record<string, string> = {
-  'Top Priority': 'bg-pink-500 text-white border-pink-600',
-  'Strong Opportunity': 'bg-purple-500 text-white border-purple-600',
-  'Early Signal': 'bg-teal-600 text-white border-teal-700',
+// Pill color helpers — normalize on lowercase keys so casing/whitespace
+// from the DB never causes a fallback-to-invisible style.
+const PILL_FALLBACK = 'bg-slate-700 text-white border-slate-800';
+
+const priorityPill = (raw: string | null): string => {
+  const key = (raw || '').trim().toLowerCase();
+  if (key.includes('top')) return 'bg-pink-500 text-white border-pink-600';
+  if (key.includes('strong')) return 'bg-purple-500 text-white border-purple-600';
+  if (key.includes('early')) return 'bg-teal-600 text-white border-teal-700';
+  return PILL_FALLBACK;
 };
 
-const CONFIDENCE_COLORS: Record<string, string> = {
-  High: 'bg-teal-500 text-white border-teal-600',
-  Medium: 'bg-purple-500 text-white border-purple-600',
-  Low: 'bg-zinc-600 text-white border-zinc-700',
+const confidencePill = (raw: string | null): string => {
+  const key = (raw || '').trim().toLowerCase();
+  if (key.startsWith('h')) return 'bg-teal-500 text-white border-teal-600';
+  if (key.startsWith('m')) return 'bg-purple-500 text-white border-purple-600';
+  if (key.startsWith('l')) return 'bg-zinc-600 text-white border-zinc-700';
+  return PILL_FALLBACK;
 };
+
 
 export default function OpportunitiesTab() {
   const { selected } = useBdr();
@@ -180,12 +189,12 @@ export default function OpportunitiesTab() {
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <h3 className="text-lg font-semibold">{o.company}</h3>
                     {o.priority && (
-                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${PRIORITY_COLORS[o.priority] || 'bg-muted text-muted-foreground'}`}>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${priorityPill(o.priority)}`}>
                         {o.priority}
                       </span>
                     )}
                     {o.confidence_label && (
-                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-white text-slate-900 border-slate-300'}`}>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${confidencePill(o.confidence_label)}`}>
                         Source: {o.confidence_label}
                       </span>
                     )}
