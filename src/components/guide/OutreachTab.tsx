@@ -25,6 +25,7 @@ interface SuggestedTarget {
 
 interface EmailResult {
   subject: string;
+  subject_alternatives?: string[];
   body: string;
   suggested_targets?: SuggestedTarget[];
   article_insight?: string;
@@ -280,6 +281,23 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     <div className="mb-4 px-5 py-4" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.25)' }}>
                       <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-1 text-muted-foreground">Subject Line</p>
                       <p className="text-[17px] font-bold text-foreground">{result.subject}</p>
+                      {result.subject_alternatives && result.subject_alternatives.length > 0 && (
+                        <div className="mt-3 pt-3 border-t" style={{ borderColor: 'rgba(251,146,60,.2)' }}>
+                          <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2 text-muted-foreground">Alternatives</p>
+                          <ul className="space-y-1.5">
+                            {result.subject_alternatives.map((alt, i) => (
+                              <li key={i} className="flex items-center justify-between gap-2 text-[14px] text-foreground">
+                                <span>{alt}</span>
+                                <button
+                                  onClick={() => setResult(r => r ? { ...r, subject: alt, subject_alternatives: [result.subject, ...(r.subject_alternatives || []).filter(x => x !== alt)] } : r)}
+                                  className="text-[11px] font-bold uppercase tracking-wider px-2 py-1 hover:opacity-80"
+                                  style={{ background: 'rgba(251,146,60,.15)', color: '#2F4858' }}
+                                >Use</button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                     <div className="relative px-5 py-5" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
                       <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1" style={{ background: wordCount > 100 ? 'rgba(201,91,106,.1)' : 'rgba(251,146,60,.15)', color: wordCount > 100 ? '#C95B6A' : '#2F4858', border: `1px solid ${wordCount > 100 ? 'rgba(201,91,106,.25)' : 'rgba(251,146,60,.25)'}` }}>
