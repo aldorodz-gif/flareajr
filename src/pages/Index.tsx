@@ -38,6 +38,15 @@ const Index = () => {
     }, 50);
   }, [activeTab]);
 
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const tabId = (e as CustomEvent<string>).detail;
+      if (tabId) handleTabChange(tabId);
+    };
+    window.addEventListener('flare:navigate-tab', handler);
+    return () => window.removeEventListener('flare:navigate-tab', handler);
+  }, [handleTabChange]);
+
   const renderTab = () => {
     const props = { onNavigate: handleTabChange };
     switch (activeTab) {
