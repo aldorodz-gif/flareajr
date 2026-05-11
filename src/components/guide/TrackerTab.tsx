@@ -4,6 +4,7 @@ import Eyebrow from './Eyebrow';
 import PromptBox from './PromptBox';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import PromptBuilderTour from './PromptBuilderTour';
 import { useBdr } from './BdrContext';
 
 interface TrackerTabProps {
@@ -29,6 +30,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
 
   // When the active BDR changes, prefill the city from their first market.
   useEffect(() => {
@@ -66,7 +68,21 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #5AB8D4, #8B8FE8)">Step 03: Set Once. Runs Every Morning</Eyebrow>
+      <PromptBuilderTour open={tourOpen} onClose={() => setTourOpen(false)} />
+      <div className="flex items-start justify-between gap-4 mb-1.5">
+        <Eyebrow gradient="linear-gradient(90deg, #5AB8D4, #8B8FE8)">Step 03: Set Once. Runs Every Morning</Eyebrow>
+        <button
+          onClick={() => setTourOpen(true)}
+          className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 hover:scale-105"
+          style={{
+            background: 'linear-gradient(135deg, #fb923c, #f97316)',
+            color: '#fff',
+            boxShadow: '0 2px 8px rgba(251,146,60,.35)',
+          }}
+        >
+          ▶ Show me how
+        </button>
+      </div>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Find Companies Showing Demand Signals</h2>
       <p className="text-[13px] max-w-[760px] mb-5 text-muted-foreground">
         Instead of cold-calling from a list, you're going to let AI scan your market every morning for companies that are <strong className="text-foreground">already moving</strong> — hiring, expanding, relocating, or launching projects that create temporary housing and travel demand.
