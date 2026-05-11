@@ -172,8 +172,21 @@ export default function OpportunitiesTab() {
     return cityLc ? allowedCities.has(cityLc) : false;
   };
 
-  const filtered = items.filter(o => {
-    if (!inTerritory(o.market)) return false;
+  const territoryFiltered = items.filter(o => inTerritory(o.market));
+  const territoryRemovedCount = items.length - territoryFiltered.length;
+
+  const territoryRuleText = (() => {
+    const states = Array.from(allowedStates);
+    const cities = Array.from(allowedCities);
+    if (states.length && cities.length) {
+      return `state: ${states.join(', ')} or city: ${cities.join(', ')}`;
+    }
+    if (states.length) return `state: ${states.join(', ')}`;
+    if (cities.length) return `city: ${cities.join(', ')}`;
+    return 'no territory restrictions';
+  })();
+
+  const filtered = territoryFiltered.filter(o => {
     if (filter === 'top') return o.priority === 'Top Priority';
     if (filter === 'near') return o.near_core_inventory;
     if (filter === 'saved') return o.saved_by_bdr === selected?.id;
@@ -198,7 +211,7 @@ export default function OpportunitiesTab() {
 
       <div className="flex gap-2 mb-4 flex-wrap">
         {([
-          ['all', `All (${items.filter(o => inTerritory(o.market)).length})`],
+          ['all', `All (${territoryFiltered.length})`],
           ['top', `🔥 Top Priority`],
           ['near', `📍 Near Inventory`],
           ['saved', `⭐ My Saved`],
@@ -217,11 +230,23 @@ export default function OpportunitiesTab() {
         ))}
       </div>
 
+      {territoryRemovedCount > 0 && (
+        <div className="mb-4 flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-200 text-[10px] font-bold text-amber-900">
+            {territoryRemovedCount}
+          </span>
+          <span>
+            opportunity{territoryRemovedCount > 1 ? 'ies' : 'y'} hidden outside territory
+          </span>
+          <span className="ml-auto font-medium">Rule: {territoryRuleText}</span>
+        </div>
+      )}
+
       {loading && <div className="py-12 text-center text-muted-foreground">Loading…</div>}
 
       {!loading && filtered.length === 0 && (
         <div className="py-16 text-center border border-dashed rounded-lg">
-          {filter !== 'all' && items.filter(o => inTerritory(o.market)).length > 0 ? (
+          {filter !== 'all' && territoryFiltered.length > 0 ? (
             <>
               <p className="text-muted-foreground mb-3">
                 No leads match the <span className="font-semibold text-pink-500">
