@@ -96,6 +96,46 @@ const BdrScoreboard = () => {
     return { ...base, rows: { ...base.rows, ...ov } };
   }, [bdrId, overrides]);
 
+  const memberMap = useMemo(
+    () => (overrides['__members'] as unknown as Record<string, MemberSnapshot>) || {},
+    [overrides]
+  );
+
+  const regions = useMemo(
+    () => Array.from(new Set(Object.values(memberMap).map(m => m.region).filter(Boolean))).sort(),
+    [memberMap]
+  );
+
+  // Aggregate per-region rollups from member snapshots so every region (not just SE/NYC) shows up.
+  const regionRollups = useMemo(() => {
+    const out: Record<string, Record<string, CalcRow>> = {};
+    for (const region of regions) {
+      const agg: Record<string, CalcRow> = {};
+      for (const m of Object.values(memberMap)) {
+        if (m.region !== region) continue;
+        for (const [k, r] of Object.entries(m.rows)) {
+          if (!agg[k]) {
+            agg[k] = { monthlyGoal: 0, actual: 0, actVarDollar: null, actDaysNeeded: null, actVarPct: null,
+              actBookingsToGoal: null, gpGroupPipe: null, gpExistingPipe: null, totalPipe: null, actPlusPipe: null,
+              expVarDollar: null, expVarPct: null, remainPipeNeed: null, expDaysNeeded: null, expBookings: null,
+              commEarned: null, commForecast: null, totalCommPred: null };
+          }
+          agg[k].monthlyGoal = (agg[k].monthlyGoal ?? 0) + (r.monthlyGoal ?? 0);
+          agg[k].actual = (agg[k].actual ?? 0) + (r.actual ?? 0);
+        }
+      }
+      for (const k of Object.keys(agg)) {
+        const g = agg[k].monthlyGoal, a = agg[k].actual;
+        if (g != null && a != null) {
+          agg[k].actVarDollar = +(a - g).toFixed(2);
+          agg[k].actVarPct = g !== 0 ? +(a / g).toFixed(4) : null;
+        }
+      }
+      out[region] = agg;
+    }
+    return out;
+  }, [memberMap, regions]);
+
   // Synthetic "BDR" for region/team views built from aggregated rollups
   const regionBdr: BDR | null = useMemo(() => {
     if (view === 'bdr') return null;
