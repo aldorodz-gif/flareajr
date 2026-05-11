@@ -60,6 +60,14 @@ export function BdrProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => { refresh(); /* eslint-disable-next-line */ }, []);
 
+  // Auto-promote synthetic snapshot IDs to real bdr_profile rows.
+  useEffect(() => {
+    if (!loading && selectedId?.startsWith('snapshot:') && bdrs.some(b => b.id === selectedId)) {
+      setSelectedId(selectedId);
+    }
+    // eslint-disable-next-line
+  }, [loading, selectedId, bdrs.length]);
+
   const setSelectedId = async (id: string) => {
     // Synthetic snapshot IDs aren't real bdr_profile uuids — promote to a real
     // profile row so downstream queries (opportunities.assigned_bdr uuid, scan
