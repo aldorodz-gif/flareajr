@@ -1,5 +1,6 @@
 import AiToolCard from './AiToolCard';
 import BdrScoreboard from './BdrScoreboard';
+import BdrSelector from './BdrSelector';
 
 const DashboardTab = () => {
   return (
@@ -10,9 +11,7 @@ const DashboardTab = () => {
           title="Your Dashboard"
           subtitle="Your numbers at a glance — switch BDR to compare"
         >
-          <p className="text-[13px] leading-relaxed" style={{ color: '#475569' }}>
-            BDR scoreboard pulls straight from the Sales Forecasting Calculator. For territory leads and inventory, head over to the <strong style={{ color: '#0e1e3a' }}>Market Heat</strong> tab.
-          </p>
+          <BdrSelector />
         </AiToolCard>
       </div>
 
