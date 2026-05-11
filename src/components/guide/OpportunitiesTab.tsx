@@ -28,19 +28,21 @@ interface Opportunity {
 
 // Pill color helpers — normalize on lowercase keys so casing/whitespace
 // from the DB never causes a fallback-to-invisible style.
+// NOTE: tailwind.config.ts overrides `teal` as a single token (no shades),
+// so we must use `bg-teal` / `border-teal` — NOT `bg-teal-500` etc.
 const PILL_FALLBACK = 'bg-slate-700 text-white border-slate-800';
 
 const priorityPill = (raw: string | null): string => {
   const key = (raw || '').trim().toLowerCase();
   if (key.includes('top')) return 'bg-pink-500 text-white border-pink-600';
   if (key.includes('strong')) return 'bg-purple-500 text-white border-purple-600';
-  if (key.includes('early')) return 'bg-teal-600 text-white border-teal-700';
+  if (key.includes('early')) return 'bg-teal text-white border-teal';
   return PILL_FALLBACK;
 };
 
 const confidencePill = (raw: string | null): string => {
   const key = (raw || '').trim().toLowerCase();
-  if (key.startsWith('h')) return 'bg-teal-500 text-white border-teal-600';
+  if (key.startsWith('h')) return 'bg-teal text-white border-teal';
   if (key.startsWith('m')) return 'bg-purple-500 text-white border-purple-600';
   if (key.startsWith('l')) return 'bg-zinc-600 text-white border-zinc-700';
   return PILL_FALLBACK;
