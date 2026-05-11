@@ -45,12 +45,14 @@ const BdrScoreboard = () => {
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
 
-  // Sync local bdrId with the global Active BDR by matching on first name (e.g., "Bellack, Hallie" → "hallie").
+  // Sync local bdrId with the global Active BDR. Match a baked-in id first,
+  // then fall back to the workbook member snapshot (`member:<full name>`).
   useEffect(() => {
     if (!globalBdr?.name) return;
     const lname = globalBdr.name.toLowerCase();
-    const match = BDRS.find(b => lname.includes(b.name.split(',')[0].trim().toLowerCase()) || lname.includes(b.id));
-    if (match) setBdrId(match.id);
+    const baked = BDRS.find(b => lname.includes(b.name.split(',')[0].trim().toLowerCase()) || lname.includes(b.id));
+    if (baked) { setBdrId(baked.id); return; }
+    setBdrId(`member:${globalBdr.name}`);
   }, [globalBdr?.id, globalBdr?.name]);
 
   const [year, setYear] = useState<number>(2026);
