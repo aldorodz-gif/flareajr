@@ -138,7 +138,14 @@ const parseFromBdrSheet = (wb: XLSX.WorkBook) => {
       }
     }
 
-    if (hasAny) out.members[trimmed] = { name: trimmed, market, region, rows: memberRows };
+    // Skip "empty" rows: a BDR row counts as real only if their 2026 Total has a goal or actual,
+    // OR they have any non-zero monthly value. Filters out placeholder rows like Powderly's.
+    const annual = memberRows['2026-All'];
+    const annualHas = annual && (annual.monthlyGoal != null || annual.actual != null);
+    const anyNonZero = Object.values(memberRows).some(r =>
+      (r.monthlyGoal != null && r.monthlyGoal !== 0) || (r.actual != null && r.actual !== 0)
+    );
+    if (hasAny && (annualHas || anyNonZero)) out.members[trimmed] = { name: trimmed, market, region, rows: memberRows };
     if (trimmed === 'Bellack, Hallie') out.hallie = memberRows;
     if (trimmed === 'Griffith, Matthew') out.matt = memberRows;
   }
