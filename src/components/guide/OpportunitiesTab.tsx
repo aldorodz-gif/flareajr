@@ -26,25 +26,24 @@ interface Opportunity {
   saved_by_bdr: string | null;
 }
 
-// Pill color helpers — normalize on lowercase keys so casing/whitespace
-// from the DB never causes a fallback-to-invisible style.
+// Pill color helpers — softer/lighter tones with dark text for readability.
 // NOTE: tailwind.config.ts overrides `teal` as a single token (no shades),
-// so we must use `bg-teal` / `border-teal` — NOT `bg-teal-500` etc.
-const PILL_FALLBACK = 'bg-slate-700 text-white border-slate-800';
+// so teal pills use a custom inline style instead of bg-teal-100.
+const PILL_FALLBACK = 'bg-slate-100 text-slate-700 border-slate-200';
 
 const priorityPill = (raw: string | null): string => {
   const key = (raw || '').trim().toLowerCase();
-  if (key.includes('top')) return 'bg-pink-500 text-white border-pink-600';
-  if (key.includes('strong')) return 'bg-purple-500 text-white border-purple-600';
-  if (key.includes('early')) return 'bg-teal text-white border-teal';
+  if (key.includes('top')) return 'bg-pink-100 text-pink-800 border-pink-200';
+  if (key.includes('strong')) return 'bg-purple-100 text-purple-800 border-purple-200';
+  if (key.includes('early')) return 'bg-emerald-100 text-emerald-800 border-emerald-200';
   return PILL_FALLBACK;
 };
 
 const confidencePill = (raw: string | null): string => {
   const key = (raw || '').trim().toLowerCase();
-  if (key.startsWith('h')) return 'bg-teal text-white border-teal';
-  if (key.startsWith('m')) return 'bg-purple-500 text-white border-purple-600';
-  if (key.startsWith('l')) return 'bg-zinc-600 text-white border-zinc-700';
+  if (key.startsWith('h')) return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+  if (key.startsWith('m')) return 'bg-purple-100 text-purple-800 border-purple-200';
+  if (key.startsWith('l')) return 'bg-slate-100 text-slate-700 border-slate-200';
   return PILL_FALLBACK;
 };
 
@@ -150,8 +149,8 @@ export default function OpportunitiesTab() {
             onClick={() => setFilter(k)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border ${
               filter === k
-                ? 'bg-pink-500 text-white border-pink-500'
-                : 'bg-white text-slate-900 border-slate-200 hover:bg-slate-50'
+                ? 'bg-pink-100 text-pink-800 border-pink-200'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
             }`}
           >
             {label}
@@ -201,7 +200,7 @@ export default function OpportunitiesTab() {
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal text-white border border-teal">
+                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full border" style={{ background: '#ccfbf1', color: '#115e59', borderColor: '#99f6e4' }}>
                         📍 Near {o.nearest_inventory || 'inventory'}
                       </span>
                     )}
