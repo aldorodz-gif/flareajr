@@ -55,6 +55,8 @@ const BdrScoreboard = () => {
 
   const [year, setYear] = useState<number>(2026);
   const [period, setPeriod] = useState<string>(MONTHS[Math.min(now.getMonth(), 11)]);
+  const goalType: 'month' | 'quarter' | 'annual' =
+    period === 'All' ? 'annual' : (QUARTERS as readonly string[]).includes(period) ? 'quarter' : 'month';
   const [overrides, setOverrides] = useState<Record<string, Record<string, CalcRow>>>({});
   const [meta, setMeta] = useState<Record<string, SnapshotMeta>>({});
   const [refreshing, setRefreshing] = useState(false);
