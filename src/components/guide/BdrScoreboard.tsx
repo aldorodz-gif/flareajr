@@ -240,17 +240,6 @@ const BdrScoreboard = () => {
         onChange={handleFile}
       />
 
-      <div className="mb-4">
-        <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">View · click to filter</Eyebrow>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1">
-          <FilterTab id="bdr" label="Individual BDR" sub={`${baseBdr.name}`} r={view === 'bdr' ? baseBdr.rows[rollupKey] : undefined} />
-          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
-          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
-          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
-        </div>
-      </div>
-
-
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>
           <Eyebrow gradient="linear-gradient(90deg, #ec4899, #f9a8d4)">BDR Scoreboard</Eyebrow>
