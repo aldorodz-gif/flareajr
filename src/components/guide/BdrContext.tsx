@@ -28,8 +28,28 @@ export function BdrProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refresh = async () => {
-    const { data } = await supabase.from('bdr_profiles').select('*').order('name');
-    const list = (data || []) as unknown as BdrProfile[];
+    const [{ data: profileRows }, { data: snapRows }] = await Promise.all([
+      supabase.from('bdr_profiles').select('*').order('name'),
+      supabase.from('bdr_snapshots').select('bdr_id, data').eq('bdr_id', '__members'),
+    ]);
+    const profiles = (profileRows || []) as unknown as BdrProfile[];
+
+    // Augment with members from the latest uploaded workbook so every BDR shows up
+    // in the Active BDR dropdown without needing a manual profile row.
+    const memberData = (snapRows?.[0]?.data ?? {}) as Record<string, { name: string; market?: string; region?: string }>;
+    const synthetic: BdrProfile[] = Object.values(memberData)
+      .filter(m => m && m.name && !profiles.some(p => p.name.trim().toLowerCase() === m.name.trim().toLowerCase()))
+      .map(m => ({
+        id: `snapshot:${m.name}`,
+        name: m.name,
+        region: m.region ?? null,
+        markets: m.market ? [m.market] : [],
+        inventory_locations: [],
+        target_verticals: [],
+        excluded_markets: [],
+      }));
+
+    const list = [...profiles, ...synthetic].sort((a, b) => a.name.localeCompare(b.name));
     setBdrs(list);
     if (!selectedId && list.length > 0) {
       setSelId(list[0].id);
