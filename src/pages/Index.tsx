@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Header from '../components/guide/Header';
 import WelcomeModal from '../components/guide/WelcomeModal';
 import TabBar from '../components/guide/TabBar';
