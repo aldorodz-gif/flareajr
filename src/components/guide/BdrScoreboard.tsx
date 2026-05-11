@@ -387,10 +387,7 @@ const BdrScoreboard = () => {
           );
         }
         return (
-          <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
-            <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#64748b' }}>
-              {bdr.name} · {period} breakdown ({list.length} BDR{list.length === 1 ? '' : 's'})
-            </div>
+          <div className="mt-4 p-4 rounded-xl" style={{ background: '#EFEAE0', border: '1px solid rgba(14,30,58,.08)' }}>
             <div className="overflow-hidden rounded-lg" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
               <table className="w-full text-[12px]">
                 <thead style={{ background: '#fff' }}>
