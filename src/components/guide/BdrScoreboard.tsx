@@ -4,6 +4,7 @@ import { BDRS, KPI_LABELS, MONTHS, QUARTERS, revenueForGp, type CalcRow, type BD
 import { parseWorkbook } from './bdrXlsxParser';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { useBdr } from './BdrContext';
 
 const fmt = (v: number | null, kind: 'currency' | 'percent' | 'number') => {
   if (v === null || v === undefined || Number.isNaN(v)) return '—';
