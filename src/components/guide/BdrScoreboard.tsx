@@ -89,11 +89,24 @@ const BdrScoreboard = () => {
     })();
   }, []);
 
+  // Build a unified BDR list: baked-in BDRS plus any member from the uploaded snapshot.
+  // Member ids are prefixed with `member:` so they don't collide with baked-in ids.
   const baseBdr: BDR = useMemo(() => {
-    const base = BDRS.find(b => b.id === bdrId)!;
-    const ov = overrides[bdrId];
-    if (!ov) return base;
-    return { ...base, rows: { ...base.rows, ...ov } };
+    const baked = BDRS.find(b => b.id === bdrId);
+    if (baked) {
+      const ov = overrides[bdrId];
+      return ov ? { ...baked, rows: { ...baked.rows, ...ov } } : baked;
+    }
+    if (bdrId.startsWith('member:')) {
+      const name = bdrId.slice('member:'.length);
+      const m = (overrides['__members'] as unknown as Record<string, MemberSnapshot> | undefined)?.[name];
+      if (m) {
+        const annualGp = m.rows['2026-All']?.monthlyGoal ?? 0;
+        const annualRev = annualGp ? Math.round(annualGp / 0.25) : 0;
+        return { id: bdrId, name: m.name, market: m.market || m.region || '—', annualRevenueGoal: annualRev, annualGpGoal: annualGp, rows: m.rows };
+      }
+    }
+    return BDRS[0];
   }, [bdrId, overrides]);
 
   const memberMap = useMemo(
