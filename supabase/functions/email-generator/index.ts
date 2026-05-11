@@ -194,8 +194,9 @@ ${referenceEmail}`;
         maxItems: 3,
       },
       body: { type: "string", description: "Email body, 50-125 words, max 4 short sentences. Must reference specific details from the signal." },
+      housing_trigger: { type: "string", description: "The single most likely corporate housing trigger this email targets (e.g. 'Project staffing housing', 'Relocation & workforce mobility housing', 'Intern / cohort housing', 'Executive relocation', 'Travel nurse / clinician housing'). Pick exactly one, in 2-6 words." },
     };
-    const required = ["subject", "subject_alternatives", "body"];
+    const required = ["subject", "subject_alternatives", "body", "housing_trigger"];
 
     if (isArticle) {
       emailProperties.suggested_targets = {
