@@ -315,10 +315,9 @@ const BdrScoreboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
             {(() => {
               const annualRow = bdr.rows[`${year}-All`];
-              const annualActual = annualRow?.actual ?? 0;
-              const annualGpRemaining = Math.max(0, bdr.annualGpGoal - annualActual);
-              const annualRevRemaining = revenueForGp(bdr, annualGpRemaining) ?? 0;
-              const annualHit = annualActual >= bdr.annualGpGoal && bdr.annualGpGoal > 0;
+              const { hit, remaining, over } = gpStatus(bdr.annualGpGoal, annualRow?.actual);
+              const annualRevRemaining = revenueForGp(bdr, remaining) ?? 0;
+              const annualHit = hit === true;
               return (
                 <div className="p-3 rounded-lg" style={{ background: '#0e1e3a', border: '1px solid #0e1e3a' }}>
                   <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: annualHit ? '#5eead4' : '#f9a8d4' }}>
@@ -329,18 +328,16 @@ const BdrScoreboard = () => {
                   </div>
                   <div className="text-[10px] mt-0.5" style={{ color: 'rgba(255,255,255,.6)' }}>
                     {annualHit
-                      ? `Over by ${fmt(annualActual - bdr.annualGpGoal, 'currency')} GP · Goal ${fmt(bdr.annualRevenueGoal, 'currency')}`
-                      : `GP remaining ${fmt(annualGpRemaining, 'currency')} of ${fmt(bdr.annualGpGoal, 'currency')}`}
+                      ? `Over by ${fmt(over ?? 0, 'currency')} GP · Goal ${fmt(bdr.annualRevenueGoal, 'currency')}`
+                      : `GP remaining ${fmt(remaining, 'currency')} of ${fmt(bdr.annualGpGoal, 'currency')}`}
                   </div>
                 </div>
               );
             })()}
             {(() => {
-              const gpRemaining = row.monthlyGoal != null && row.actual != null
-                ? Math.max(0, row.monthlyGoal - row.actual)
-                : row.monthlyGoal;
-              const revNeeded = revenueForGp(bdr, gpRemaining);
-              const goalHit = row.monthlyGoal != null && row.actual != null && row.actual >= row.monthlyGoal;
+              const { hit, remaining, over } = gpStatus(row.monthlyGoal, row.actual);
+              const goalHit = hit === true;
+              const revNeeded = revenueForGp(bdr, remaining);
               return (
                 <div className="p-3 rounded-lg" style={{ background: goalHit ? '#ecfdf5' : '#fff', border: `1px solid ${goalHit ? 'rgba(20,184,166,.35)' : 'rgba(14,30,58,.06)'}` }}>
                   <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: goalHit ? '#0d9488' : '#64748b' }}>
@@ -351,8 +348,8 @@ const BdrScoreboard = () => {
                   </div>
                   <div className="text-[10px] mt-0.5" style={{ color: goalHit ? '#0d9488' : '#94a3b8' }}>
                     {goalHit
-                      ? `Over by ${fmt((row.actual ?? 0) - (row.monthlyGoal ?? 0), 'currency')} GP`
-                      : `GP remaining ${fmt(gpRemaining, 'currency')} of ${fmt(row.monthlyGoal, 'currency')}`}
+                      ? `Over by ${fmt(over ?? 0, 'currency')} GP`
+                      : `GP remaining ${fmt(remaining, 'currency')} of ${fmt(row.monthlyGoal, 'currency')}`}
                   </div>
                 </div>
               );
