@@ -4,6 +4,7 @@ import Eyebrow from './Eyebrow';
 import PromptBox from './PromptBox';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import PromptBuilderTour from './PromptBuilderTour';
 import { useBdr } from './BdrContext';
 
 interface TrackerTabProps {
