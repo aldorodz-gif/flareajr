@@ -9,7 +9,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { company, signal, buyer_title, service_line, vary } = await req.json();
+    const { company, signal, buyer_title, service_line, tone, vary } = await req.json();
     if (!company || !signal || !buyer_title || !service_line) {
       return new Response(JSON.stringify({ error: "All fields are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
