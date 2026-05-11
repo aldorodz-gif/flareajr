@@ -152,8 +152,21 @@ export default function OpportunitiesTab() {
 
       {!loading && filtered.length === 0 && (
         <div className="py-16 text-center border border-dashed rounded-lg">
-          <p className="text-muted-foreground mb-3">No opportunities yet for this BDR.</p>
-          <Button onClick={refresh} disabled={scanning}>Run first scan</Button>
+          {filter !== 'all' && items.filter(o => inTerritory(o.market)).length > 0 ? (
+            <>
+              <p className="text-muted-foreground mb-3">
+                No leads match the <span className="font-semibold text-pink-500">
+                  {filter === 'top' ? 'Top Priority' : filter === 'near' ? 'Near Inventory' : 'My Saved'}
+                </span> filter.
+              </p>
+              <Button onClick={() => setFilter('all')} variant="outline">Show all leads</Button>
+            </>
+          ) : (
+            <>
+              <p className="text-muted-foreground mb-3">No opportunities yet for this BDR.</p>
+              <Button onClick={refresh} disabled={scanning}>Run first scan</Button>
+            </>
+          )}
         </div>
       )}
 
