@@ -40,7 +40,7 @@ interface MemberSnapshot { name: string; market: string; region: string; rows: R
 
 
 const BdrScoreboard = () => {
-  const { selected: globalBdr } = useBdr();
+  const { selected: globalBdr, refresh: refreshBdrs } = useBdr();
   const [view, setView] = useState<View>('team');
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
