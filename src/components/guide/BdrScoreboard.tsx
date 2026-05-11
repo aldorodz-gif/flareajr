@@ -465,18 +465,27 @@ const BdrScoreboard = () => {
           </span>
         </div>
         <Eyebrow gradient="linear-gradient(90deg, #a855f7, #ec4899)">View · click to filter</Eyebrow>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1 mb-4">
           <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
-          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
-          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
+          {regions.map(region => {
+            const r = regionRollups[region]?.[rollupKey];
+            const memberCount = Object.values(memberMap).filter(m => m.region === region).length;
+            return (
+              <FilterTab
+                key={region}
+                id={`region:${region}` as View}
+                label={region}
+                sub={`${memberCount} BDR${memberCount === 1 ? '' : 's'}`}
+                r={r}
+              />
+            );
+          })}
         </div>
 
       {view !== 'bdr' && (() => {
-        const members = (overrides['__members'] as unknown as Record<string, { name: string; market: string; region: string; rows: Record<string, CalcRow> }>) || {};
-        const list = Object.values(members).filter(m => {
+        const list = Object.values(memberMap).filter(m => {
           if (view === 'team') return true;
-          if (view === 'southeast') return m.region === 'Southeast';
-          if (view === 'nyc') return m.region === 'Northeast';
+          if (view.startsWith('region:')) return m.region === view.slice('region:'.length);
           return false;
         });
         list.sort((a, b) => (b.rows[rollupKey]?.actual ?? 0) - (a.rows[rollupKey]?.actual ?? 0));
