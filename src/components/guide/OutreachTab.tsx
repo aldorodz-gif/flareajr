@@ -110,32 +110,52 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
   }, [company, signal, buyerTitle, serviceLine, tone, articleContent, scrapedTitle, canGenerate]);
 
   const [regenLoading, setRegenLoading] = useState(false);
+  const [seenSubjects, setSeenSubjects] = useState<string[]>([]);
+  const norm = (s: string) => s.trim().toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ');
   const regenerateSubjects = useCallback(async () => {
-    if (!result) return;
+    if (!result || regenLoading) return;
     setRegenLoading(true);
     try {
       const signalText = articleContent
         ? `Article: "${scrapedTitle}". Content: ${articleContent}`
         : signal.trim();
-      const { data, error: fnError } = await supabase.functions.invoke('subject-alternatives', {
-        body: {
-          company: company.trim(),
-          signal: signalText,
-          buyer_title: buyerTitle.trim(),
-          service_line: serviceLine,
-          current_subject: result.subject,
-          exclude: result.subject_alternatives || [],
-        },
-      });
-      if (fnError) throw fnError;
-      if (data.error) throw new Error(data.error);
-      setResult(r => r ? { ...r, subject_alternatives: data.subject_alternatives } : r);
+      const history = Array.from(new Set([
+        ...seenSubjects,
+        result.subject,
+        ...(result.subject_alternatives || []),
+      ].filter(Boolean)));
+      let attempts = 0;
+      let fresh: string[] = [];
+      while (attempts < 3 && fresh.length < 3) {
+        const { data, error: fnError } = await supabase.functions.invoke('subject-alternatives', {
+          body: {
+            company: company.trim(),
+            signal: signalText,
+            buyer_title: buyerTitle.trim(),
+            service_line: serviceLine,
+            current_subject: result.subject,
+            exclude: Array.from(new Set([...history, ...fresh])),
+          },
+        });
+        if (fnError) throw fnError;
+        if (data.error) throw new Error(data.error);
+        const seenNorm = new Set([...history, ...fresh].map(norm));
+        const incoming = (data.subject_alternatives || []).filter((s: string) => !seenNorm.has(norm(s)));
+        fresh = Array.from(new Set([...fresh, ...incoming])).slice(0, 3);
+        attempts++;
+      }
+      if (fresh.length === 0) {
+        setError('No new subject lines available. Try editing the signal for more variety.');
+        return;
+      }
+      setSeenSubjects(prev => Array.from(new Set([...prev, ...history, ...fresh])));
+      setResult(r => r ? { ...r, subject_alternatives: fresh } : r);
     } catch {
       setError('Could not refresh subjects. Try again.');
     } finally {
       setRegenLoading(false);
     }
-  }, [result, company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle]);
+  }, [result, regenLoading, seenSubjects, company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle]);
 
   const wordCount = result ? result.body.split(/\s+/).filter(Boolean).length : 0;
 
