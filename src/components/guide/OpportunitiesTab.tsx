@@ -147,16 +147,29 @@ export default function OpportunitiesTab() {
     window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'market' }));
   };
 
-  const allowedStates = new Set(
-    (selected?.markets || [])
-      .map(m => m.split(',').pop()?.trim().toUpperCase())
-      .filter(Boolean) as string[]
-  );
+  // Build state + city allow-lists. Snapshot-derived BDRs often only have a
+  // city (e.g. "Minneapolis") with no state code — fall back to city matching
+  // so opportunities aren't filtered to zero.
+  const marketParts = (selected?.markets || []).map(m => {
+    const tokens = m.split(',').map(s => s.trim()).filter(Boolean);
+    const stateToken = tokens[tokens.length - 1];
+    const isState = stateToken && /^[A-Z]{2}$/i.test(stateToken);
+    return {
+      state: isState ? stateToken!.toUpperCase() : null,
+      city: (isState ? tokens.slice(0, -1).join(', ') : tokens.join(', ')).toLowerCase(),
+    };
+  });
+  const allowedStates = new Set(marketParts.map(p => p.state).filter(Boolean) as string[]);
+  const allowedCities = new Set(marketParts.map(p => p.city).filter(Boolean));
 
   const inTerritory = (market: string | null) => {
-    if (!market || allowedStates.size === 0) return allowedStates.size === 0;
-    const st = market.split(',').pop()?.trim().toUpperCase();
-    return st ? allowedStates.has(st) : false;
+    if (!market) return allowedStates.size === 0 && allowedCities.size === 0;
+    if (allowedStates.size === 0 && allowedCities.size === 0) return true;
+    const tokens = market.split(',').map(s => s.trim()).filter(Boolean);
+    const st = tokens[tokens.length - 1]?.toUpperCase();
+    if (st && allowedStates.has(st)) return true;
+    const cityLc = (tokens[0] || '').toLowerCase();
+    return cityLc ? allowedCities.has(cityLc) : false;
   };
 
   const filtered = items.filter(o => {
