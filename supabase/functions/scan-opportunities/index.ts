@@ -228,7 +228,9 @@ serve(async (req) => {
       if (priority === "Reject") { skipped++; continue; }
       const review_status = composite >= 75 ? "Ready Now" : composite >= 55 ? "Needs Review" : "Watch List";
       const confidence_label = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
-      const nearest = pickNearestInventory(o.market);
+      const nearestResult = await pickNearestInventory(o.market);
+      const nearest = nearestResult?.label ?? null;
+      const nearestMiles = nearestResult?.miles ?? null;
 
       // Dedupe
       const { data: existing } = await supabase
