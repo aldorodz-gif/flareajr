@@ -49,13 +49,19 @@ const confidencePill = (raw: string | null): string => {
   return PILL_FALLBACK;
 };
 
+const DISTANCE_SUFFIX_RE = /\s+[—-]\s*~?\d+(?:\.\d+)?\s*(?:mi|km)\b/i;
+
 const stripDistanceSuffix = (value: string | null) =>
-  (value || '').replace(/\s+[—-]\s*~?\d+(?:\.\d+)?\s*(?:mi|km)\b/i, '').trim();
+  (value || '').replace(DISTANCE_SUFFIX_RE, '').trim();
 
 const formatNearInventoryLabel = (inventory: string | null, distance: number | null) => {
+  const embeddedDistance = (inventory || '').match(DISTANCE_SUFFIX_RE)?.[0]?.trim();
   const baseLabel = stripDistanceSuffix(inventory) || 'inventory';
   if (typeof distance === 'number' && Number.isFinite(distance)) {
     return `${baseLabel} · ~${Math.round(distance)} mi`;
+  }
+  if (embeddedDistance) {
+    return `${baseLabel} · ${embeddedDistance.replace(/^[—-]\s*/, '')}`;
   }
   return baseLabel;
 };
