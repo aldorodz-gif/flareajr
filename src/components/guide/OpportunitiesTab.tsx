@@ -185,12 +185,14 @@ export default function OpportunitiesTab() {
                       </span>
                     )}
                     {o.confidence_label && (
-                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border font-semibold ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-card text-foreground border-border'}`}>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-white text-slate-900 border-slate-300'}`}>
                         Source: {o.confidence_label}
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal-600 text-white border border-teal-700 font-medium">📍 Near {o.nearest_inventory}</span>
+                      <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal-500 text-white border border-teal-600">
+                        📍 Near {o.nearest_inventory || 'inventory'}
+                      </span>
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">
