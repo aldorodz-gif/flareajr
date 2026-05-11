@@ -12,7 +12,7 @@ import OutreachTab from '../components/guide/OutreachTab';
 import SignalsTab from '../components/guide/SignalsTab';
 import EventsTab from '../components/guide/EventsTab';
 import OpportunitiesTab from '../components/guide/OpportunitiesTab';
-import BdrSelector from '../components/guide/BdrSelector';
+
 import { BdrProvider } from '../components/guide/BdrContext';
 import { ThemeProvider } from '../components/guide/ThemeContext';
 import DailySummaryToast from '../components/guide/DailySummaryToast';
@@ -59,7 +59,6 @@ const Index = () => {
           <DailySummaryToast />
           <WelcomeModal onNavigateToTab={handleTabChange} forceOpen={tourOpen} onClose={() => setTourOpen(false)} />
           <Header onReplayTour={() => setTourOpen(true)} />
-          <BdrSelector />
           <div ref={tabBarRef}>
             <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />
           </div>

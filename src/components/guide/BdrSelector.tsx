@@ -15,7 +15,7 @@ export default function BdrSelector() {
   }, [selected?.id]);
 
   if (loading) {
-    return <div className="px-6 md:px-12 py-3 text-xs text-muted-foreground">Loading BDRs…</div>;
+    return <div className="py-2 text-xs text-muted-foreground">Loading BDRs…</div>;
   }
 
   const save = async () => {
@@ -42,16 +42,15 @@ export default function BdrSelector() {
   return (
     <div
       data-shell="bdr-bar"
-      className="px-6 md:px-12 py-3 flex items-center gap-3 flex-wrap"
-      style={{ background: '#0F172A', borderBottom: '1px solid rgba(251,146,60,.15)' }}
+      className="flex items-center gap-3 flex-wrap"
     >
-      <span className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: 'rgba(251,146,60,.85)' }}>
+      <span className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: '#ec4899' }}>
         Active BDR
       </span>
       <select
         value={selected?.id || ''}
         onChange={(e) => setSelectedId(e.target.value)}
-        className="px-3 py-1.5 rounded-md text-sm font-medium bg-background border border-border focus:outline-none focus:ring-2 focus:ring-primary"
+        className="px-3 py-1.5 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
       >
         {bdrs.map(b => (
           <option key={b.id} value={b.id}>{b.name}</option>
@@ -60,7 +59,7 @@ export default function BdrSelector() {
 
       {selected && !editing && (
         <>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-slate-600">
             {selected.region} • {selected.markets.length} markets
           </span>
           <button

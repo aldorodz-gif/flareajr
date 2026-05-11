@@ -4,6 +4,7 @@ import { BDRS, KPI_LABELS, MONTHS, QUARTERS, revenueForGp, type CalcRow, type BD
 import { parseWorkbook } from './bdrXlsxParser';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { useBdr } from './BdrContext';
 
 const fmt = (v: number | null, kind: 'currency' | 'percent' | 'number') => {
   if (v === null || v === undefined || Number.isNaN(v)) return '—';
@@ -26,9 +27,19 @@ type View = 'bdr' | 'team' | 'southeast' | 'nyc';
 
 
 const BdrScoreboard = () => {
+  const { selected: globalBdr } = useBdr();
   const [view, setView] = useState<View>('bdr');
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
+
+  // Sync local bdrId with the global Active BDR by matching on first name (e.g., "Bellack, Hallie" → "hallie").
+  useEffect(() => {
+    if (!globalBdr?.name) return;
+    const lname = globalBdr.name.toLowerCase();
+    const match = BDRS.find(b => lname.includes(b.name.split(',')[0].trim().toLowerCase()) || lname.includes(b.id));
+    if (match) setBdrId(match.id);
+  }, [globalBdr?.id, globalBdr?.name]);
+
   const [year, setYear] = useState<number>(2026);
   const [period, setPeriod] = useState<string>(MONTHS[Math.min(now.getMonth(), 11)]);
   const [overrides, setOverrides] = useState<Record<string, Record<string, CalcRow>>>({});
@@ -259,16 +270,6 @@ const BdrScoreboard = () => {
             <span>{refreshing ? '⏳' : '↻'}</span>
             <span>{refreshing ? 'Refreshing…' : 'Refresh'}</span>
           </button>
-          {view === 'bdr' && (
-            <select
-              value={bdrId}
-              onChange={(e) => setBdrId(e.target.value)}
-              className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
-              style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff', color: '#0e1e3a' }}
-            >
-              {BDRS.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-            </select>
-          )}
           <select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
