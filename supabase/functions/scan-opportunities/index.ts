@@ -157,6 +157,20 @@ serve(async (req) => {
     if (!tc) throw new Error("No tool call returned");
     const { opportunities } = JSON.parse(tc.function.arguments);
 
+    // Pick the inventory location that actually matches this lead's market.
+    // Match on city first (best), then state, otherwise null (so the pill won't say "Near" falsely).
+    const pickNearestInventory = (market: string | null): string | null => {
+      if (!market || inv.length === 0) return null;
+      const parts = market.split(',').map(s => s.trim());
+      const leadCity = parts[0]?.toLowerCase() ?? '';
+      const leadState = parts[parts.length - 1]?.toLowerCase() ?? '';
+      const cityMatch = inv.find(i => i.city?.toLowerCase() === leadCity);
+      if (cityMatch) return `${cityMatch.name} (${cityMatch.city}, ${cityMatch.state})`;
+      const stateMatch = inv.find(i => i.state?.toLowerCase() === leadState);
+      if (stateMatch) return `${stateMatch.name} (${stateMatch.city}, ${stateMatch.state})`;
+      return null;
+    };
+
     let inserted = 0;
     let skipped = 0;
     for (const o of opportunities) {
@@ -169,7 +183,7 @@ serve(async (req) => {
       if (priority === "Reject") { skipped++; continue; }
       const review_status = composite >= 75 ? "Ready Now" : composite >= 55 ? "Needs Review" : "Watch List";
       const confidence_label = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
-      const nearest = inv[0]?.name ?? null;
+      const nearest = pickNearestInventory(o.market);
 
       // Dedupe
       const { data: existing } = await supabase
