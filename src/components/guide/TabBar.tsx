@@ -83,7 +83,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
         ref={sliderRef}
         data-shell="tab-slider"
         className="absolute bottom-0 h-[3px] rounded-t-sm pointer-events-none z-10 transition-all duration-300"
-        style={{ background: 'linear-gradient(90deg, #fbbf24, #f97316)', boxShadow: '0 0 14px rgba(251,146,60,.5)' }}
+        style={{ background: 'linear-gradient(90deg, #2dd4bf, #ec4899 55%, #a855f7)', boxShadow: '0 0 14px rgba(236,72,153,.55)' }}
       />
       {TAB_ORDER.map((tab) => {
         const isActive = activeTab === tab.id;
@@ -97,7 +97,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
             className={`group relative inline-flex flex-col items-center gap-1 px-3.5 py-2.5 whitespace-nowrap transition-all duration-200 flex-shrink-0 hover:-translate-y-1 hover:scale-110 hover:text-white`}
             style={{
               color: isActive ? '#fff' : 'rgba(255,255,255,.78)',
-              background: isActive ? 'rgba(251,146,60,.15)' : 'transparent',
+              background: isActive ? 'rgba(236,72,153,.16)' : 'transparent',
               borderRadius: isActive ? '6px 6px 0 0' : '0',
             }}
           >

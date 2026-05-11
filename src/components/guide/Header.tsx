@@ -18,17 +18,17 @@ const Header = ({ onReplayTour }: HeaderProps) => {
       <div
         data-shell="glow-1"
         className="absolute -top-32 -right-20 w-[500px] h-[500px] rounded-full pointer-events-none blur-[100px]"
-        style={{ background: 'radial-gradient(circle, rgba(251,146,60,.15) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(236,72,153,.20) 0%, transparent 65%)' }}
       />
       <div
         data-shell="glow-2"
         className="absolute -bottom-24 -left-16 w-[400px] h-[400px] rounded-full pointer-events-none blur-[80px]"
-        style={{ background: 'radial-gradient(circle, rgba(168,85,247,.12) 0%, transparent 65%)' }}
+        style={{ background: 'radial-gradient(circle, rgba(45,212,191,.18) 0%, transparent 65%)' }}
       />
       <div
         data-shell="glow-3"
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] rounded-full pointer-events-none blur-[120px] opacity-30"
-        style={{ background: 'radial-gradient(ellipse, rgba(251,146,60,.2) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse, rgba(168,85,247,.25) 0%, transparent 70%)' }}
       />
 
       {/* Theme toggle + Replay tour buttons */}
@@ -37,9 +37,9 @@ const Header = ({ onReplayTour }: HeaderProps) => {
           onClick={toggle}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:scale-105"
           style={{
-            background: theme === 'warm' ? 'rgba(251,146,60,.15)' : 'rgba(255,255,255,.08)',
-            border: theme === 'warm' ? '1px solid rgba(251,146,60,.4)' : '1px solid rgba(255,255,255,.12)',
-            color: theme === 'warm' ? '#7c3a14' : 'rgba(255,255,255,.6)',
+            background: theme === 'warm' ? 'rgba(236,72,153,.14)' : 'rgba(255,255,255,.08)',
+            border: theme === 'warm' ? '1px solid rgba(236,72,153,.4)' : '1px solid rgba(255,255,255,.12)',
+            color: theme === 'warm' ? '#9d174d' : 'rgba(255,255,255,.6)',
           }}
           title={theme === 'dark' ? 'Switch to warm theme' : 'Switch to dark theme'}
         >
@@ -72,24 +72,24 @@ const Header = ({ onReplayTour }: HeaderProps) => {
             className="text-[56px] md:text-[72px] font-black tracking-[-0.03em] leading-none"
             style={{
               fontFamily: "'Inter', sans-serif",
-              background: 'linear-gradient(135deg, #ffffff 0%, #fbbf24 30%, #fb923c 60%, #f97316 100%)',
+              background: 'linear-gradient(135deg, #ffffff 0%, #2dd4bf 28%, #ec4899 62%, #a855f7 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 0 30px rgba(251,146,60,.3))',
+              filter: 'drop-shadow(0 0 30px rgba(236,72,153,.35))',
             }}
           >
             FLARE
           </h1>
           <div
             className="h-[3px] w-[80px] mt-2 rounded-full"
-            style={{ background: 'linear-gradient(90deg, #fb923c, rgba(251,146,60,0))' }}
+            style={{ background: 'linear-gradient(90deg, #ec4899, #a855f7 60%, rgba(168,85,247,0))' }}
           />
         </div>
 
         {/* Subtitle */}
         <p
           className="text-[13px] md:text-[14px] font-semibold uppercase tracking-widest animate-hero-rise"
-          style={{ color: 'rgba(251,146,60,.85)', animationDelay: '0.1s' }}
+          style={{ color: 'rgba(45,212,191,.9)', animationDelay: '0.1s' }}
         >
           The NCH BDR Prospecting Toolkit
         </p>
