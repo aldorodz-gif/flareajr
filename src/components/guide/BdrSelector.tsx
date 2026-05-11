@@ -63,17 +63,6 @@ export default function BdrSelector() {
           <span className="text-xs text-muted-foreground">
             {selected.region} • {selected.markets.length} markets
           </span>
-          <div className="flex gap-1 flex-wrap">
-            {selected.markets.slice(0, 6).map(m => (
-              <span
-                key={m}
-                className="text-[10px] px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(251,146,60,.15)', color: '#fb923c' }}
-              >
-                {m}
-              </span>
-            ))}
-          </div>
           <button
             onClick={() => setEditing(true)}
             className="text-[11px] font-semibold px-2.5 py-1 rounded-md ml-1"
