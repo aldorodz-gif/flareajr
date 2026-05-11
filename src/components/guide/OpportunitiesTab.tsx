@@ -140,7 +140,7 @@ export default function OpportunitiesTab() {
             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border ${
               filter === k
                 ? 'bg-pink-500 text-white border-pink-500'
-                : 'bg-card text-foreground border-border hover:bg-muted'
+                : 'bg-white text-slate-900 border-slate-200 hover:bg-slate-50'
             }`}
           >
             {label}
