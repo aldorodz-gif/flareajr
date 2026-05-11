@@ -122,7 +122,7 @@ export default function OpportunitiesTab() {
             Auto-scanned signals for {selected.markets.join(', ')}
           </p>
         </div>
-        <Button onClick={refresh} disabled={scanning} size="lg" className="bg-orange-500 hover:bg-orange-600">
+        <Button onClick={refresh} disabled={scanning} size="lg" className="bg-pink-500 hover:bg-pink-600">
           {scanning ? '🔄 Scanning…' : '⚡ Refresh Scan'}
         </Button>
       </div>
@@ -139,7 +139,7 @@ export default function OpportunitiesTab() {
             onClick={() => setFilter(k)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border ${
               filter === k
-                ? 'bg-orange-500 text-white border-orange-500'
+                ? 'bg-pink-500 text-white border-pink-500'
                 : 'bg-card text-foreground border-border hover:bg-muted'
             }`}
           >
@@ -161,7 +161,7 @@ export default function OpportunitiesTab() {
         {filtered.map(o => {
           const composite = Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2);
           return (
-            <div key={o.id} className="border rounded-lg p-4 bg-card hover:border-orange-500/40 transition-colors">
+            <div key={o.id} className="border rounded-lg p-4 bg-card hover:border-pink-500/40 transition-colors">
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div className="flex-1 min-w-[300px]">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -177,7 +177,7 @@ export default function OpportunitiesTab() {
                       </span>
                     )}
                     {o.near_core_inventory && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-600 text-white border border-emerald-700 font-medium">📍 Near {o.nearest_inventory}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal-600 text-white border border-teal-700 font-medium">📍 Near {o.nearest_inventory}</span>
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">
@@ -192,7 +192,7 @@ export default function OpportunitiesTab() {
 
                 <div className="flex flex-col items-end gap-2 min-w-[180px]">
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-orange-400">{composite}</div>
+                    <div className="text-2xl font-bold text-pink-400">{composite}</div>
                     <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall Score</div>
                   </div>
                   <div className="flex gap-2 text-[10px] text-muted-foreground">
@@ -202,7 +202,7 @@ export default function OpportunitiesTab() {
                   </div>
                   <div className="flex gap-2 mt-2">
                     {o.saved_by_bdr === selected.id ? (
-                      <span className="text-xs text-green-400">⭐ Saved</span>
+                      <span className="text-xs text-teal-400">⭐ Saved</span>
                     ) : (
                       <Button size="sm" onClick={() => saveOpp(o.id)}>Save</Button>
                     )}
