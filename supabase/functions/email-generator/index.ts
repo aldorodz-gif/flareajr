@@ -85,6 +85,15 @@ VERTICAL PLAYBOOK — ${service_line}:
 ${playbook}
 `;
 
+    const TONE_GUIDES: Record<string, string> = {
+      direct: "TONE: DIRECT. Sharp and confident. No throat-clearing. Every sentence cuts. Short words, strong verbs. Sound like a senior rep who respects the buyer's time.",
+      warm: "TONE: WARM. Human, conversational, like writing to a colleague you respect. Use contractions. A touch of empathy or acknowledgment of their workload. Never saccharine — warm, not cheesy.",
+      analytical: "TONE: ANALYTICAL. Lead with a specific number, metric, or operational detail from the signal. Sound measured and informed. Imply you've done math on their situation. No hype words.",
+      consultative: "TONE: CONSULTATIVE. Curious and advisory. Ask one sharp question that reframes the problem. Sound like a peer with pattern recognition across similar accounts, not a vendor pitching.",
+      bold: "TONE: BOLD. Pattern-interrupt. Open with a contrarian observation or sharp prediction. Confident but never arrogant. Earn the read in the first 6 words.",
+    };
+    const toneGuide = TONE_GUIDES[tone as string] || TONE_GUIDES.direct;
+
     const systemPrompt = `You are an elite BDR writing first-touch outreach for National Corporate Housing (temporary housing, travel management, hotel programs, destination services). Target: ${buyer_title} at ${company}. Signal: ${signal}. Service line: ${service_line}.
 
 ${salesMindset}
