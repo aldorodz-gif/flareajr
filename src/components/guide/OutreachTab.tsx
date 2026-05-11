@@ -95,7 +95,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
         ? `Article: "${scrapedTitle}". Content: ${articleContent}`
         : signal.trim();
       const { data, error: fnError } = await supabase.functions.invoke('email-generator', {
-        body: { company: company.trim(), signal: signalText, buyer_title: buyerTitle.trim(), service_line: serviceLine, vary },
+        body: { company: company.trim(), signal: signalText, buyer_title: buyerTitle.trim(), service_line: serviceLine, tone, vary },
       });
       if (fnError) throw fnError;
       if (data.error) throw new Error(data.error);
@@ -105,7 +105,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     } finally {
       setLoading(false);
     }
-  }, [company, signal, buyerTitle, serviceLine, articleContent, scrapedTitle, canGenerate]);
+  }, [company, signal, buyerTitle, serviceLine, tone, articleContent, scrapedTitle, canGenerate]);
 
   const wordCount = result ? result.body.split(/\s+/).filter(Boolean).length : 0;
 
