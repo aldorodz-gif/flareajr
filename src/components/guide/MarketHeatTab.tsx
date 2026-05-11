@@ -41,14 +41,26 @@ const MarketHeatTab = () => {
     })();
   }, []);
 
-  // When the active BDR changes, snap filters to that BDR's first market.
+  const [pendingBdrScan, setPendingBdrScan] = useState(false);
+
+  // When the active BDR changes, snap filters to that BDR's first market and queue an auto-scan.
   useEffect(() => {
     if (!selected || !selected.markets?.length) return;
     const first = selected.markets[0]; // "City, ST"
     const [c, st] = first.split(',').map(s => s.trim());
     if (c) setCity(c);
     if (st) setState(st);
+    setFocusInventory(null);
+    setPendingBdrScan(true);
   }, [selected?.id]);
+
+  // Run the queued scan once the new state/city values have been applied.
+  useEffect(() => {
+    if (!pendingBdrScan || !state || !city || loading) return;
+    setPendingBdrScan(false);
+    void handleScan();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingBdrScan, state, city]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
