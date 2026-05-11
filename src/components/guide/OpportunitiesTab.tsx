@@ -189,12 +189,12 @@ export default function OpportunitiesTab() {
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <h3 className="text-lg font-semibold">{o.company}</h3>
                     {o.priority && (
-                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${PRIORITY_COLORS[o.priority] || 'bg-muted text-muted-foreground'}`}>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${priorityPill(o.priority)}`}>
                         {o.priority}
                       </span>
                     )}
                     {o.confidence_label && (
-                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${CONFIDENCE_COLORS[o.confidence_label] || 'bg-white text-slate-900 border-slate-300'}`}>
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${confidencePill(o.confidence_label)}`}>
                         Source: {o.confidence_label}
                       </span>
                     )}
