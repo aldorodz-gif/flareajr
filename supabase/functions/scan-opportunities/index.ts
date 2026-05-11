@@ -157,17 +157,62 @@ serve(async (req) => {
     if (!tc) throw new Error("No tool call returned");
     const { opportunities } = JSON.parse(tc.function.arguments);
 
-    // Pick the inventory location that actually matches this lead's market.
-    // Match on city first (best), then state, otherwise null (so the pill won't say "Near" falsely).
-    const pickNearestInventory = (market: string | null): string | null => {
+    // Geocode helper using OpenStreetMap Nominatim (free, no key). Cached per request.
+    const geoCache = new Map<string, { lat: number; lon: number } | null>();
+    const geocode = async (city: string, state: string): Promise<{ lat: number; lon: number } | null> => {
+      const key = `${city.toLowerCase()},${state.toLowerCase()}`;
+      if (geoCache.has(key)) return geoCache.get(key)!;
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&country=USA&city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}`;
+        const res = await fetch(url, { headers: { "User-Agent": "Flare-BDR-Toolkit/1.0" } });
+        const arr = await res.json();
+        const hit = Array.isArray(arr) && arr[0] ? { lat: parseFloat(arr[0].lat), lon: parseFloat(arr[0].lon) } : null;
+        geoCache.set(key, hit);
+        return hit;
+      } catch {
+        geoCache.set(key, null);
+        return null;
+      }
+    };
+    const haversineMiles = (a: { lat: number; lon: number }, b: { lat: number; lon: number }) => {
+      const toRad = (d: number) => (d * Math.PI) / 180;
+      const R = 3958.8;
+      const dLat = toRad(b.lat - a.lat);
+      const dLon = toRad(b.lon - a.lon);
+      const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+    };
+
+    // Pick the inventory closest to this lead's market. Returns name, city, state, and miles.
+    const pickNearestInventory = async (
+      market: string | null
+    ): Promise<{ label: string; miles: number | null } | null> => {
       if (!market || inv.length === 0) return null;
       const parts = market.split(',').map(s => s.trim());
-      const leadCity = parts[0]?.toLowerCase() ?? '';
-      const leadState = parts[parts.length - 1]?.toLowerCase() ?? '';
-      const cityMatch = inv.find(i => i.city?.toLowerCase() === leadCity);
-      if (cityMatch) return `${cityMatch.name} (${cityMatch.city}, ${cityMatch.state})`;
-      const stateMatch = inv.find(i => i.state?.toLowerCase() === leadState);
-      if (stateMatch) return `${stateMatch.name} (${stateMatch.city}, ${stateMatch.state})`;
+      const leadCity = parts[0] ?? '';
+      const leadState = parts[parts.length - 1] ?? '';
+      const leadGeo = leadCity && leadState ? await geocode(leadCity, leadState) : null;
+
+      if (leadGeo) {
+        let best: { item: typeof inv[number]; miles: number } | null = null;
+        for (const i of inv) {
+          if (!i.city || !i.state) continue;
+          const g = await geocode(i.city, i.state);
+          if (!g) continue;
+          const miles = haversineMiles(leadGeo, g);
+          if (!best || miles < best.miles) best = { item: i, miles };
+        }
+        if (best) {
+          const m = Math.round(best.miles);
+          return { label: `${best.item.name} (${best.item.city}, ${best.item.state}) — ~${m} mi`, miles: m };
+        }
+      }
+
+      // Fallback: city/state name match without distance
+      const cityMatch = inv.find(i => i.city?.toLowerCase() === leadCity.toLowerCase());
+      if (cityMatch) return { label: `${cityMatch.name} (${cityMatch.city}, ${cityMatch.state})`, miles: null };
+      const stateMatch = inv.find(i => i.state?.toLowerCase() === leadState.toLowerCase());
+      if (stateMatch) return { label: `${stateMatch.name} (${stateMatch.city}, ${stateMatch.state})`, miles: null };
       return null;
     };
 
@@ -183,7 +228,9 @@ serve(async (req) => {
       if (priority === "Reject") { skipped++; continue; }
       const review_status = composite >= 75 ? "Ready Now" : composite >= 55 ? "Needs Review" : "Watch List";
       const confidence_label = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
-      const nearest = pickNearestInventory(o.market);
+      const nearestResult = await pickNearestInventory(o.market);
+      const nearest = nearestResult?.label ?? null;
+      const nearestMiles = nearestResult?.miles ?? null;
 
       // Dedupe
       const { data: existing } = await supabase
@@ -214,6 +261,7 @@ serve(async (req) => {
         key_talking_points: o.key_talking_points,
         nearest_inventory: nearest,
         near_core_inventory: !!nearest,
+        distance_to_inventory: nearestMiles,
         source_type: o.source_type,
         assigned_bdr: bdr_id,
         last_verified: new Date().toISOString(),
