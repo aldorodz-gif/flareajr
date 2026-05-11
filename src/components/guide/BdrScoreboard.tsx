@@ -28,7 +28,7 @@ type View = 'bdr' | 'team' | 'southeast' | 'nyc';
 
 const BdrScoreboard = () => {
   const { selected: globalBdr } = useBdr();
-  const [view, setView] = useState<View>('bdr');
+  const [view, setView] = useState<View>('team');
   const [bdrId, setBdrId] = useState(BDRS[0].id);
   const now = new Date();
 
