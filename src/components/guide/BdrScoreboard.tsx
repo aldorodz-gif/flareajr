@@ -34,7 +34,9 @@ interface SnapshotMeta {
   sourceFilename: string | null;
 }
 
-type View = 'bdr' | 'team' | 'southeast' | 'nyc';
+type View = 'bdr' | 'team' | `region:${string}`;
+
+interface MemberSnapshot { name: string; market: string; region: string; rows: Record<string, CalcRow> }
 
 
 const BdrScoreboard = () => {
