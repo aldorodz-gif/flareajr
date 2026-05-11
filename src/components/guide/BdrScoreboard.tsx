@@ -34,7 +34,9 @@ interface SnapshotMeta {
   sourceFilename: string | null;
 }
 
-type View = 'bdr' | 'team' | 'southeast' | 'nyc';
+type View = 'bdr' | 'team' | `region:${string}`;
+
+interface MemberSnapshot { name: string; market: string; region: string; rows: Record<string, CalcRow> }
 
 
 const BdrScoreboard = () => {
@@ -97,12 +99,14 @@ const BdrScoreboard = () => {
   // Synthetic "BDR" for region/team views built from aggregated rollups
   const regionBdr: BDR | null = useMemo(() => {
     if (view === 'bdr') return null;
-    const ovKey = view === 'team' ? '__team' : view === 'southeast' ? '__southeast' : '__nyc';
-    const rows = overrides[ovKey] ?? {};
+    const isRegion = view.startsWith('region:');
+    const regionName = isRegion ? view.slice('region:'.length) : '';
+    const ovKey = view === 'team' ? '__team' : `__region__${regionName}`;
+    const rows = overrides[ovKey] ?? regionRollups[regionName] ?? {};
     const annualGp = rows['2026-All']?.monthlyGoal ?? 0;
     // Approximate annual revenue with team-wide GP margin (~25%) so the revenue card stays sensible.
     const annualRev = annualGp ? Math.round(annualGp / 0.25) : 0;
-    const label = view === 'team' ? 'Full Team' : view === 'southeast' ? 'Southeast' : 'NYC / Northeast';
+    const label = view === 'team' ? 'Full Team' : regionName || 'Region';
     return { id: ovKey, name: label, market: 'Rollup', annualRevenueGoal: annualRev, annualGpGoal: annualGp, rows };
   }, [view, overrides]);
 
@@ -197,6 +201,46 @@ const BdrScoreboard = () => {
     }
   };
 
+  const memberMap = useMemo(
+    () => (overrides['__members'] as unknown as Record<string, MemberSnapshot>) || {},
+    [overrides]
+  );
+
+  const regions = useMemo(
+    () => Array.from(new Set(Object.values(memberMap).map(m => m.region).filter(Boolean))).sort(),
+    [memberMap]
+  );
+
+  // Aggregate per-region rollups from member snapshots so every region (not just SE/NYC) shows up.
+  const regionRollups = useMemo(() => {
+    const out: Record<string, Record<string, CalcRow>> = {};
+    for (const region of regions) {
+      const agg: Record<string, CalcRow> = {};
+      for (const m of Object.values(memberMap)) {
+        if (m.region !== region) continue;
+        for (const [k, r] of Object.entries(m.rows)) {
+          if (!agg[k]) {
+            agg[k] = { monthlyGoal: 0, actual: 0, actVarDollar: null, actDaysNeeded: null, actVarPct: null,
+              actBookingsToGoal: null, gpGroupPipe: null, gpExistingPipe: null, totalPipe: null, actPlusPipe: null,
+              expVarDollar: null, expVarPct: null, remainPipeNeed: null, expDaysNeeded: null, expBookings: null,
+              commEarned: null, commForecast: null, totalCommPred: null };
+          }
+          agg[k].monthlyGoal = (agg[k].monthlyGoal ?? 0) + (r.monthlyGoal ?? 0);
+          agg[k].actual = (agg[k].actual ?? 0) + (r.actual ?? 0);
+        }
+      }
+      for (const k of Object.keys(agg)) {
+        const g = agg[k].monthlyGoal, a = agg[k].actual;
+        if (g != null && a != null) {
+          agg[k].actVarDollar = +(a - g).toFixed(2);
+          agg[k].actVarPct = g !== 0 ? +(a / g).toFixed(4) : null;
+        }
+      }
+      out[region] = agg;
+    }
+    return out;
+  }, [memberMap, regions]);
+
   const lastRefresh = view === 'bdr' ? meta[bdrId] : (meta['__team'] ?? meta['__southeast'] ?? meta['__nyc']);
   const lastRefreshLabel = lastRefresh
     ? `Refreshed ${new Date(lastRefresh.refreshedAt).toLocaleString()} · ${lastRefresh.sourceFilename ?? 'uploaded file'}`
@@ -204,8 +248,6 @@ const BdrScoreboard = () => {
 
   const rollupKey = `${year}-${period}`;
   const teamRow = overrides['__team']?.[rollupKey];
-  const seRow = overrides['__southeast']?.[rollupKey];
-  const nycRow = overrides['__nyc']?.[rollupKey];
 
   const FilterTab = ({ id, label, sub, r, dark }: { id: View; label: string; sub: string; r?: CalcRow; dark?: boolean }) => {
     const active = view === id;
@@ -423,18 +465,27 @@ const BdrScoreboard = () => {
           </span>
         </div>
         <Eyebrow gradient="linear-gradient(90deg, #a855f7, #ec4899)">View · click to filter</Eyebrow>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-1 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1 mb-4">
           <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
-          <FilterTab id="southeast" label="Southeast" sub="Hallie + Matt + region" r={seRow} />
-          <FilterTab id="nyc" label="NYC / Northeast" sub="Northeast region" r={nycRow} />
+          {regions.map(region => {
+            const r = regionRollups[region]?.[rollupKey];
+            const memberCount = Object.values(memberMap).filter(m => m.region === region).length;
+            return (
+              <FilterTab
+                key={region}
+                id={`region:${region}` as View}
+                label={region}
+                sub={`${memberCount} BDR${memberCount === 1 ? '' : 's'}`}
+                r={r}
+              />
+            );
+          })}
         </div>
 
       {view !== 'bdr' && (() => {
-        const members = (overrides['__members'] as unknown as Record<string, { name: string; market: string; region: string; rows: Record<string, CalcRow> }>) || {};
-        const list = Object.values(members).filter(m => {
+        const list = Object.values(memberMap).filter(m => {
           if (view === 'team') return true;
-          if (view === 'southeast') return m.region === 'Southeast';
-          if (view === 'nyc') return m.region === 'Northeast';
+          if (view.startsWith('region:')) return m.region === view.slice('region:'.length);
           return false;
         });
         list.sort((a, b) => (b.rows[rollupKey]?.actual ?? 0) - (a.rows[rollupKey]?.actual ?? 0));
