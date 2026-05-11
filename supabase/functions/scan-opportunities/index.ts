@@ -261,6 +261,7 @@ serve(async (req) => {
         key_talking_points: o.key_talking_points,
         nearest_inventory: nearest,
         near_core_inventory: !!nearest,
+        distance_to_inventory: nearestMiles,
         source_type: o.source_type,
         assigned_bdr: bdr_id,
         last_verified: new Date().toISOString(),
