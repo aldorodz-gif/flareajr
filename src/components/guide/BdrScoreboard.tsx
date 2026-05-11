@@ -99,12 +99,14 @@ const BdrScoreboard = () => {
   // Synthetic "BDR" for region/team views built from aggregated rollups
   const regionBdr: BDR | null = useMemo(() => {
     if (view === 'bdr') return null;
-    const ovKey = view === 'team' ? '__team' : view === 'southeast' ? '__southeast' : '__nyc';
-    const rows = overrides[ovKey] ?? {};
+    const isRegion = view.startsWith('region:');
+    const regionName = isRegion ? view.slice('region:'.length) : '';
+    const ovKey = view === 'team' ? '__team' : `__region__${regionName}`;
+    const rows = overrides[ovKey] ?? regionRollups[regionName] ?? {};
     const annualGp = rows['2026-All']?.monthlyGoal ?? 0;
     // Approximate annual revenue with team-wide GP margin (~25%) so the revenue card stays sensible.
     const annualRev = annualGp ? Math.round(annualGp / 0.25) : 0;
-    const label = view === 'team' ? 'Full Team' : view === 'southeast' ? 'Southeast' : 'NYC / Northeast';
+    const label = view === 'team' ? 'Full Team' : regionName || 'Region';
     return { id: ovKey, name: label, market: 'Rollup', annualRevenueGoal: annualRev, annualGpGoal: annualGp, rows };
   }, [view, overrides]);
 
