@@ -17,6 +17,7 @@ const MarketHeatTab = () => {
   const [vertical, setVertical] = useState('all');
   const [loading, setLoading] = useState(false);
   const [leads, setLeads] = useState<ScanLead[]>([]);
+  const [seenCompanies, setSeenCompanies] = useState<string[]>([]);
   const [topVerticals, setTopVerticals] = useState<VerticalShare[]>([]);
   const [lastScanAt, setLastScanAt] = useState<Date | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -81,9 +82,12 @@ const MarketHeatTab = () => {
   }, []);
 
   const handleSelectorChange = (next: { state?: string; city?: string; vertical?: string }) => {
+    const cityChanged = next.city !== undefined && next.city !== city;
+    const stateChanged = next.state !== undefined && next.state !== state;
     if (next.state !== undefined) setState(next.state);
     if (next.city !== undefined) setCity(next.city);
     if (next.vertical !== undefined) setVertical(next.vertical);
+    if (cityChanged || stateChanged) setSeenCompanies([]);
   };
 
   const persistMarket = useCallback(async () => {
@@ -110,15 +114,26 @@ const MarketHeatTab = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('dashboard-scan', {
-        body: { state, city, vertical },
+        body: {
+          state,
+          city,
+          vertical,
+          // Send recent companies (current + rolling history, scoped to this market) so the AI returns fresh leads.
+          exclude: Array.from(new Set([
+            ...leads.map(l => l.company_name),
+            ...seenCompanies,
+          ])).slice(0, 60),
+        },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      setLeads(data.leads ?? []);
+      const newLeads: ScanLead[] = data.leads ?? [];
+      setLeads(newLeads);
+      setSeenCompanies(prev => Array.from(new Set([...newLeads.map(l => l.company_name), ...prev])).slice(0, 120));
       setTopVerticals((data.top_verticals ?? []).sort((a: VerticalShare, b: VerticalShare) => b.share_pct - a.share_pct));
       setLastScanAt(new Date());
       await persistMarket();
-      toast({ title: 'Scan complete', description: `${data.leads?.length ?? 0} leads in ${city}, ${state}` });
+      toast({ title: 'Scan complete', description: `${newLeads.length} fresh leads in ${city}, ${state}` });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Scan failed';
       toast({ title: 'Scan failed', description: msg, variant: 'destructive' });
