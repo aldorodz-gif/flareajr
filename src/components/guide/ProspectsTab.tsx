@@ -336,7 +336,73 @@ const ProspectsTab = () => {
     setCelebration({ company: item.company_name, type });
   };
 
-  const todayStr = TODAY();
+  const logFollowup = async (item: PipelineItem) => {
+    const nowIso = new Date().toISOString();
+    const nextCount = (item.followup_count ?? 0) + 1;
+    const { error } = await supabase
+      .from('pipeline_items')
+      .update({ last_followup_at: nowIso, followup_count: nextCount })
+      .eq('id', item.id);
+    if (error) { toast.error(error.message); return; }
+    if (userId) {
+      await supabase.from('activity_log').insert({
+        user_id: userId,
+        action_type: 'meeting_followup',
+        company_name: item.company_name,
+        contact_name: item.contact_title,
+        notes: `🔁 Follow-up #${nextCount} after ${item.meeting_type === 'inperson' ? 'in-person meeting' : 'disco call'}`,
+      });
+    }
+    setItems(prev => prev.map(i => i.id === item.id ? { ...i, last_followup_at: nowIso, followup_count: nextCount } : i));
+    toast.success(`🔁 Follow-up #${nextCount} logged`);
+  };
+
+  const addManualLead = async () => {
+    const company = manualForm.company_name.trim();
+    if (!company) { toast.error('Company name is required'); return; }
+    if (!userId) { toast.error('Sign in required'); return; }
+    setManualSaving(true);
+    try {
+      const sourceLine = `Source: ${manualForm.source}`;
+      const noteBody = [sourceLine, manualForm.notes.trim()].filter(Boolean).join('\n\n');
+      const { error: piErr } = await supabase.from('pipeline_items').insert({
+        user_id: userId,
+        company_name: company,
+        contact_name: manualForm.contact_name.trim() || null,
+        contact_title: manualForm.contact_title.trim() || null,
+        connection_type: manualForm.connection_type || null,
+        stage: 'working',
+        notes: noteBody || null,
+      });
+      if (piErr) throw piErr;
+
+      if (manualForm.schedule_sequence) {
+        const taskRows = SEQUENCE_STEPS.map(step => ({
+          user_id: userId,
+          company_name: company,
+          contact_title: manualForm.contact_title.trim() || null,
+          task_type: step.task_type,
+          due_date: dueDateForDay(step.day),
+          status: 'pending',
+          signal: `Manual add — ${manualForm.source}`,
+          reason: step.reason,
+        }));
+        const { error: tErr } = await supabase.from('tasks').insert(taskRows);
+        if (tErr) toast.error(`Lead added; sequence partial: ${tErr.message}`);
+      }
+
+      toast.success(`+ ${company} added to pipeline`);
+      setManualOpen(false);
+      setManualForm({ company_name: '', contact_name: '', contact_title: '', source: 'referral', connection_type: 'referral', notes: '', schedule_sequence: true });
+      window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
+      refresh();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Could not add lead');
+    } finally {
+      setManualSaving(false);
+    }
+  };
+
   const activeItems = useMemo(() => items.filter(i => !i.archived_at), [items]);
   const archivedItems = useMemo(() => items.filter(i => !!i.archived_at), [items]);
 
