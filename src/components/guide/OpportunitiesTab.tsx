@@ -85,6 +85,7 @@ export default function OpportunitiesTab() {
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
+  const [includeOutside, setIncludeOutside] = useState(false);
   const [pipeOpp, setPipeOpp] = useState<Opportunity | null>(null);
 
   const pipelineLead = useMemo<PipelineLead | null>(() => {
