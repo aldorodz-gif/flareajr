@@ -598,7 +598,7 @@ const ProspectsTab = () => {
       {!loading && items.length === 0 && (
         <div className="p-10 text-center rounded-xl" style={{ background: '#FAF7F2', border: '1px dashed rgba(14,30,58,.15)' }}>
           <p className="text-[14px] font-semibold text-foreground mb-1">No prospects yet</p>
-          <p className="text-[12px] text-muted-foreground">Add leads from <strong>Scan a Market</strong> or <strong>Today's Leads</strong> with the <strong>+ Pipeline</strong> button.</p>
+          <p className="text-[12px] text-muted-foreground">Add leads from <strong>Scan a Market</strong> / <strong>Today's Leads</strong> with the <strong>+ Pipeline</strong> button — or use <strong>+ Add Lead Manually</strong> above for referrals and self-sourced leads.</p>
         </div>
       )}
 
