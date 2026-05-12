@@ -17,6 +17,8 @@ interface PipelineItem {
   archived_at: string | null;
   meeting_booked_at: string | null;
   meeting_type: string | null;
+  last_followup_at: string | null;
+  followup_count: number;
 }
 
 interface TaskRow {
