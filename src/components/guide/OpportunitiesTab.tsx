@@ -87,6 +87,13 @@ export default function OpportunitiesTab() {
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
   const [includeOutside, setIncludeOutside] = useState(false);
   const [pipeOpp, setPipeOpp] = useState<Opportunity | null>(null);
+  const [burstId, setBurstId] = useState<string | null>(null);
+
+  const triggerPipeline = (o: Opportunity) => {
+    setBurstId(o.id);
+    window.setTimeout(() => setBurstId(curr => (curr === o.id ? null : curr)), 750);
+    window.setTimeout(() => setPipeOpp(o), 220);
+  };
 
   const pipelineLead = useMemo<PipelineLead | null>(() => {
     if (!pipeOpp) return null;
