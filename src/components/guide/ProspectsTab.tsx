@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import AiToolCard from './AiToolCard';
 import { SEQUENCE_STEPS, dueDateForDay } from './sequenceConfig';
 import DiscoBallCelebration from './DiscoBallCelebration';
+import ExampleProspectDemo from './ExampleProspectDemo';
 
 interface PipelineItem {
   id: string;
@@ -592,6 +593,8 @@ const ProspectsTab = () => {
           )}
         </div>
       )}
+
+      <ExampleProspectDemo />
 
       {loading && <div className="py-12 text-center text-[13px] text-muted-foreground">Loading prospects…</div>}
 
