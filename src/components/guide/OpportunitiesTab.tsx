@@ -257,6 +257,41 @@ export default function OpportunitiesTab() {
         </Button>
       </div>
 
+      {/* Market Pulse — collapsible verticals + inventory map */}
+      <div ref={pulseRef} className="mb-5 rounded-xl border bg-card overflow-hidden">
+        <button
+          type="button"
+          onClick={togglePulse}
+          className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/40 transition-colors"
+          aria-expanded={pulseOpen}
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔥</span>
+            <div>
+              <div className="text-sm font-bold">Market Pulse</div>
+              <div className="text-[11px] text-muted-foreground">
+                {selected.markets.join(' · ')} — vertical mix and inventory footprint
+              </div>
+            </div>
+          </div>
+          <span className="text-xs text-muted-foreground">{pulseOpen ? '▲ Hide' : '▼ Show'}</span>
+        </button>
+        {pulseOpen && (
+          <div className="border-t p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <TopVerticals
+              data={topVerticals}
+              city={primaryMarket.city}
+              loading={loading}
+            />
+            <InventoryMap
+              city={primaryMarket.city}
+              state={primaryMarket.state}
+              focusInventory={focusInventory}
+            />
+          </div>
+        )}
+      </div>
+
       <div className="flex gap-2 mb-4 flex-wrap">
         {([
           ['all', `All (${territoryFiltered.length})`],
