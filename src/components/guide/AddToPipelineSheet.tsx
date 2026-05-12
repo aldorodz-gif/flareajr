@@ -133,7 +133,48 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
   return (
     <Sheet open={!!lead} onOpenChange={(o) => !o && close()}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-        {lead && (
+        {lead && celebrating && (
+          <div className="relative h-full flex flex-col items-center justify-center text-center px-6 animate-fade-in" style={{ minHeight: '60vh' }}>
+            <div className="absolute inset-x-0 top-0 h-full overflow-hidden pointer-events-none" aria-hidden>
+              {Array.from({ length: 22 }).map((_, i) => {
+                const emojis = ['🎉','✨','🎯','⚡','💥','⭐','🚀','🔥'];
+                const left = (i * 4.7) % 100;
+                const dx = (Math.random() - 0.5) * 80;
+                const dy = 200 + Math.random() * 220;
+                const rot = (Math.random() - 0.5) * 720;
+                return (
+                  <span
+                    key={i}
+                    className="flare-confetti"
+                    style={{
+                      left: `${left}%`,
+                      ['--cx' as string]: `${dx}px`,
+                      ['--cy' as string]: `${dy}px`,
+                      ['--cr' as string]: `${rot}deg`,
+                      animationDelay: `${i * 50}ms`,
+                    }}
+                  >
+                    {emojis[i % emojis.length]}
+                  </span>
+                );
+              })}
+            </div>
+            <div className="relative z-10 animate-scale-in">
+              <div className="text-5xl mb-3">🎯</div>
+              <div className="text-xl font-extrabold mb-1" style={{ color: '#0e1e3a' }}>
+                {lead.company_name} is locked & loaded
+              </div>
+              <div className="text-sm text-muted-foreground mb-4">
+                5 touches scheduled over 21 days — Email 1 ready to send today.
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-bold"
+                style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', color: '#fff' }}>
+                ⚡ Pipeline +1
+              </div>
+            </div>
+          </div>
+        )}
+        {lead && !celebrating && (
           <div className="space-y-5">
             <SheetHeader className="text-left">
               <SheetTitle className="text-lg font-extrabold" style={{ color: '#0e1e3a' }}>
