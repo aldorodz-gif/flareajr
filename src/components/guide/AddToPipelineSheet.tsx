@@ -119,7 +119,10 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
       }
       window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
       onSaved?.(lead);
-      onClose();
+      setCelebrating(true);
+      window.setTimeout(() => {
+        onClose();
+      }, 2200);
     } catch (e: unknown) {
       toast({ title: 'Could not save', description: e instanceof Error ? e.message : 'Try again.', variant: 'destructive' });
     } finally {
