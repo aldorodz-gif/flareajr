@@ -84,6 +84,22 @@ export default function OpportunitiesTab() {
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
+  const [pulseOpen, setPulseOpen] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    return window.localStorage.getItem('flare.marketPulseOpen') !== '0';
+  });
+  const [focusInventory, setFocusInventory] = useState<string | null>(null);
+  const pulseRef = useRef<HTMLDivElement>(null);
+
+  const togglePulse = () => {
+    setPulseOpen(prev => {
+      const next = !prev;
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('flare.marketPulseOpen', next ? '1' : '0');
+      }
+      return next;
+    });
+  };
 
   const load = useCallback(async () => {
     if (!selected) return;
@@ -132,21 +148,12 @@ export default function OpportunitiesTab() {
   };
 
   const openInventoryContext = (opportunity: Opportunity) => {
-    if (typeof window === 'undefined') return;
-    const target = parseMarketTarget(opportunity.market);
-
-    if (target) {
-      sessionStorage.setItem(
-        MARKET_HEAT_ROUTE_KEY,
-        JSON.stringify({
-          city: target.city,
-          state: target.state,
-          inventory: stripDistanceSuffix(opportunity.nearest_inventory) || null,
-        })
-      );
-    }
-
-    window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'market' }));
+    const inv = stripDistanceSuffix(opportunity.nearest_inventory) || null;
+    setFocusInventory(inv);
+    if (!pulseOpen) togglePulse();
+    setTimeout(() => {
+      pulseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
   };
 
   // Build state + city allow-lists. Snapshot-derived BDRs often only have a
