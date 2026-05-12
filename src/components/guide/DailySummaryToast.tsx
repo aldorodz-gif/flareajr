@@ -39,16 +39,46 @@ export default function DailySummaryToast() {
           ? `${selected.name} — morning briefing`
           : `${selected.name} — ${total} new opportunities`;
 
-      toast(title, {
-        description: total === 0 ? description : `${description} Click to open the AI Daily Lead Feed →`,
-        duration: 8000,
-        className: total > 0 ? 'cursor-pointer' : undefined,
-        onDismiss: () => {},
-        action: total > 0 ? {
-          label: 'Open',
-          onClick: () => window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'opportunities' })),
-        } : undefined,
-      });
+      toast.custom((id) => (
+        <div
+          onClick={() => {
+            if (total > 0) {
+              window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'opportunities' }));
+              toast.dismiss(id);
+            }
+          }}
+          className={`relative w-[420px] max-w-[92vw] rounded-2xl shadow-2xl ring-1 ring-white/20 p-5 ${total > 0 ? 'cursor-pointer hover:scale-[1.01]' : ''} transition-transform animate-scale-in`}
+          style={{
+            background: total > 0
+              ? 'linear-gradient(135deg, #ec4899 0%, #a855f7 55%, #2dd4bf 110%)'
+              : 'linear-gradient(135deg, #0e1e3a, #1e293b)',
+            color: '#fff',
+            boxShadow: '0 20px 50px -12px rgba(236,72,153,.55)',
+          }}
+        >
+          <div className="flex items-start gap-3">
+            <div className="text-3xl leading-none">{total > 0 ? '🔥' : '☕'}</div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[15px] font-extrabold tracking-tight">{title}</div>
+              <div className="text-[13px] opacity-95 mt-1 leading-snug">
+                {total === 0 ? description : description}
+              </div>
+              {total > 0 && (
+                <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/25 backdrop-blur">
+                  Open AI Daily Lead Feed →
+                </div>
+              )}
+            </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); toast.dismiss(id); }}
+              className="text-white/70 hover:text-white text-lg leading-none"
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      ), { duration: 10000 });
     })();
 
     // Sequenced-emails reminder
