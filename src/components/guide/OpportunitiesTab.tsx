@@ -87,6 +87,13 @@ export default function OpportunitiesTab() {
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
   const [includeOutside, setIncludeOutside] = useState(false);
   const [pipeOpp, setPipeOpp] = useState<Opportunity | null>(null);
+  const [burstId, setBurstId] = useState<string | null>(null);
+
+  const triggerPipeline = (o: Opportunity) => {
+    setBurstId(o.id);
+    window.setTimeout(() => setBurstId(curr => (curr === o.id ? null : curr)), 750);
+    window.setTimeout(() => setPipeOpp(o), 220);
+  };
 
   const pipelineLead = useMemo<PipelineLead | null>(() => {
     if (!pipeOpp) return null;
@@ -362,13 +369,39 @@ export default function OpportunitiesTab() {
                         ✓ In pipeline
                       </span>
                     ) : (
-                      <button
-                        onClick={() => setPipeOpp(o)}
-                        className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
-                        style={{ background: '#0e1e3a', color: '#fff' }}
-                      >
-                        + Pipeline
-                      </button>
+                      <div className="relative w-full">
+                        <button
+                          onClick={() => triggerPipeline(o)}
+                          className="relative w-full text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5 active:scale-95 overflow-visible"
+                          style={{ background: '#0e1e3a', color: '#fff' }}
+                        >
+                          + Pipeline
+                          {burstId === o.id && <span className="flare-pulse-ring" aria-hidden />}
+                        </button>
+                        {burstId === o.id && (
+                          <div className="absolute inset-0 pointer-events-none" aria-hidden>
+                            {['✨','⚡','🎯','💥','✨','⭐'].map((emoji, i) => {
+                              const angle = (i / 6) * Math.PI * 2;
+                              const dist = 38 + (i % 2) * 14;
+                              return (
+                                <span
+                                  key={i}
+                                  className="flare-sparkle"
+                                  style={{
+                                    left: '50%',
+                                    top: '50%',
+                                    ['--fx' as string]: `${Math.cos(angle) * dist}px`,
+                                    ['--fy' as string]: `${Math.sin(angle) * dist}px`,
+                                    animationDelay: `${i * 25}ms`,
+                                  }}
+                                >
+                                  {emoji}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                     )}
                     <button
                       onClick={() => archiveOpp(o.id)}
