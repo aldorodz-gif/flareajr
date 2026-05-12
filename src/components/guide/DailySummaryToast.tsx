@@ -50,6 +50,29 @@ export default function DailySummaryToast() {
         } : undefined,
       });
     })();
+
+    // Sequenced-emails reminder
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const today = new Date().toISOString().slice(0, 10);
+      const { count } = await supabase
+        .from('tasks')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('status', 'pending')
+        .lte('due_date', today);
+      if (count && count > 0) {
+        toast(`📬 ${count} sequenced email${count === 1 ? '' : 's'} to send`, {
+          description: 'Open Prospects to work through today\'s touches.',
+          duration: 9000,
+          action: {
+            label: 'Open',
+            onClick: () => window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'prospects' })),
+          },
+        });
+      }
+    })();
   }, [selected?.id]);
 
   return null;

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { TAB_ORDER } from './types';
+import { useDueTaskCount } from '@/hooks/useDueTaskCount';
 
 interface TabBarProps {
   activeTab: string;
@@ -8,6 +9,7 @@ interface TabBarProps {
 }
 
 const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
+  const dueCount = useDueTaskCount();
   const barRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const activeIconRef = useRef<HTMLSpanElement | null>(null);
@@ -103,10 +105,18 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
           >
             <span
               ref={isActive ? activeIconRef : undefined}
-              className={`text-[17px] leading-none transition-all duration-200 ${isActive ? '' : 'opacity-90 group-hover:opacity-100'} ${isActive ? 'animate-icon-pop' : ''}`}
+              className={`relative text-[17px] leading-none transition-all duration-200 ${isActive ? '' : 'opacity-90 group-hover:opacity-100'} ${isActive ? 'animate-icon-pop' : ''}`}
               key={`${tab.id}-${isActive}`}
             >
               {tab.icon}
+              {tab.id === 'prospects' && dueCount > 0 && (
+                <span
+                  className="absolute -top-1.5 -right-3 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full leading-none"
+                  style={{ background: '#ec4899', color: '#fff', boxShadow: '0 0 8px rgba(236,72,153,.6)' }}
+                >
+                  {dueCount}
+                </span>
+              )}
             </span>
             <span className="text-[11px] leading-none tracking-wide font-medium transition-colors duration-200 group-hover:text-white">{tab.label}</span>
           </button>

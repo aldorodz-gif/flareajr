@@ -12,6 +12,7 @@ import OutreachTab from '../components/guide/OutreachTab';
 import SignalsTab from '../components/guide/SignalsTab';
 import EventsTab from '../components/guide/EventsTab';
 import OpportunitiesTab from '../components/guide/OpportunitiesTab';
+import ProspectsTab from '../components/guide/ProspectsTab';
 
 import { BdrProvider } from '../components/guide/BdrContext';
 import { ThemeProvider } from '../components/guide/ThemeContext';
@@ -53,6 +54,7 @@ const Index = () => {
       case 'dashboard': return <DashboardTab />;
       case 'opportunities': return <OpportunitiesTab />;
       case 'market': return <MarketHeatTab />;
+      case 'prospects': return <ProspectsTab />;
       case 'tracker': return <TrackerTab {...props} />;
       case 'outreach': return <OutreachTab {...props} />;
       case 'signals': return <SignalsTab {...props} />;
