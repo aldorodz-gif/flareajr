@@ -256,6 +256,17 @@ const ProspectsTab = () => {
   const [loading, setLoading] = useState(true);
   const [showArchive, setShowArchive] = useState(false);
   const [celebration, setCelebration] = useState<{ company: string; type: 'disco' | 'inperson' } | null>(null);
+  const [manualOpen, setManualOpen] = useState(false);
+  const [manualSaving, setManualSaving] = useState(false);
+  const [manualForm, setManualForm] = useState({
+    company_name: '',
+    contact_name: '',
+    contact_title: '',
+    source: 'referral',
+    connection_type: 'referral' as string,
+    notes: '',
+    schedule_sequence: true,
+  });
 
   const refresh = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
