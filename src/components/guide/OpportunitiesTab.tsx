@@ -253,16 +253,26 @@ export default function OpportunitiesTab() {
           <button
             type="button"
             onClick={() => setIncludeOutside(v => !v)}
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+            role="switch"
+            aria-checked={includeOutside}
+            aria-label={
               includeOutside
-                ? 'bg-purple-100 text-purple-800 border-purple-200 hover:bg-purple-200'
-                : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
-            }`}
+                ? `Hide ${territoryRemovedCount} off-territory lead${territoryRemovedCount > 1 ? 's' : ''}`
+                : `Reveal ${territoryRemovedCount} off-territory lead${territoryRemovedCount > 1 ? 's' : ''}`
+            }
             title={includeOutside ? 'Hide leads outside your territory' : 'Reveal leads outside your territory'}
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+              includeOutside
+                ? 'bg-purple-100 text-purple-800 border-purple-200 hover:bg-purple-200 hover:border-purple-300 focus-visible:ring-purple-400'
+                : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100 hover:border-amber-300 focus-visible:ring-amber-400'
+            }`}
           >
-            <span className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
-              includeOutside ? 'bg-purple-200 text-purple-900' : 'bg-amber-200 text-amber-900'
-            }`}>
+            <span
+              aria-hidden="true"
+              className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
+                includeOutside ? 'bg-purple-200 text-purple-900' : 'bg-amber-200 text-amber-900'
+              }`}
+            >
               {territoryRemovedCount}
             </span>
             <span>
