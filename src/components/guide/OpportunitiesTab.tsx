@@ -202,6 +202,45 @@ export default function OpportunitiesTab() {
     return true;
   });
 
+  // Derive top verticals locally from territory-filtered opportunities.
+  const topVerticals = useMemo<VerticalShare[]>(() => {
+    if (territoryFiltered.length === 0) return [];
+    const counts = new Map<string, { count: number; signals: Map<string, number> }>();
+    for (const o of territoryFiltered) {
+      const v = o.vertical?.trim();
+      if (!v) continue;
+      const entry = counts.get(v) ?? { count: 0, signals: new Map<string, number>() };
+      entry.count += 1;
+      if (o.signal_type) entry.signals.set(o.signal_type, (entry.signals.get(o.signal_type) ?? 0) + 1);
+      counts.set(v, entry);
+    }
+    const total = Array.from(counts.values()).reduce((s, e) => s + e.count, 0) || 1;
+    return Array.from(counts.entries())
+      .map(([vertical, entry]) => {
+        const topSignal = Array.from(entry.signals.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'mixed signals';
+        return {
+          vertical,
+          share_pct: Math.round((entry.count / total) * 100),
+          driver: `${entry.count} lead${entry.count > 1 ? 's' : ''} · driven by ${topSignal}`,
+        };
+      })
+      .sort((a, b) => b.share_pct - a.share_pct)
+      .slice(0, 5);
+  }, [territoryFiltered]);
+
+  // Pick a primary city/state for the inventory map from the BDR's first market.
+  const primaryMarket = useMemo(() => {
+    const first = selected?.markets?.[0];
+    if (!first) return { city: '', state: '' };
+    const tokens = first.split(',').map(s => s.trim()).filter(Boolean);
+    const last = tokens[tokens.length - 1];
+    const isState = last && /^[A-Z]{2}$/i.test(last);
+    return {
+      state: isState ? last!.toUpperCase() : '',
+      city: isState ? tokens.slice(0, -1).join(', ') : tokens.join(', '),
+    };
+  }, [selected?.id]);
+
   if (!selected) return <div className="p-12 text-center text-muted-foreground">Select a BDR to view opportunities</div>;
 
   return (
