@@ -1,6 +1,7 @@
 import AiToolCard from './AiToolCard';
 import BdrScoreboard from './BdrScoreboard';
 import BdrSelector from './BdrSelector';
+import DailyBrief from './DailyBrief';
 
 const DashboardTab = () => {
   return (
@@ -14,6 +15,8 @@ const DashboardTab = () => {
           <BdrSelector />
         </AiToolCard>
       </div>
+
+      <DailyBrief />
 
       <BdrScoreboard />
     </section>
