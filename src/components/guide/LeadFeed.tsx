@@ -29,115 +29,12 @@ const SIGNAL_COLORS: Record<string, string> = {
   Default: '#9B78C8',
 };
 
-const TONES = ['direct', 'warm', 'analytical', 'consultative', 'bold'] as const;
-type Tone = typeof TONES[number];
-
 const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
   const [pipelineIds, setPipelineIds] = useState<Set<string>>(new Set());
   const [askLead, setAskLead] = useState<ScanLead | null>(null);
   const [pipeLead, setPipeLead] = useState<ScanLead | null>(null);
 
-  // Add-to-pipeline sheet state
-  const [chosenTitle, setChosenTitle] = useState('');
-  const [customTitle, setCustomTitle] = useState('');
-  const [tone, setTone] = useState<Tone>('direct');
-  const [generating, setGenerating] = useState(false);
-  const [emailSubject, setEmailSubject] = useState('');
-  const [emailBody, setEmailBody] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  const openPipeline = (lead: ScanLead) => {
-    setPipeLead(lead);
-    setChosenTitle(lead.recommended_titles[0] ?? '');
-    setCustomTitle('');
-    setTone('direct');
-    setEmailSubject('');
-    setEmailBody('');
-  };
-
-  const closePipeline = () => {
-    if (saving || generating) return;
-    setPipeLead(null);
-  };
-
-  const effectiveTitle = (customTitle.trim() || chosenTitle).trim();
-
-  const handleGenerate = async () => {
-    if (!pipeLead || !effectiveTitle) return;
-    setGenerating(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('email-generator', {
-        body: {
-          company: pipeLead.company_name,
-          signal: pipeLead.signal_detail,
-          buyer_title: effectiveTitle,
-          service_line: pipeLead.vertical,
-          tone,
-        },
-      });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-      setEmailSubject(data.subject ?? '');
-      setEmailBody(data.body ?? '');
-    } catch (e: unknown) {
-      toast({ title: 'Email generation failed', description: e instanceof Error ? e.message : 'Try again.', variant: 'destructive' });
-    } finally {
-      setGenerating(false);
-    }
-  };
-
-  const handleSavePipeline = async () => {
-    if (!pipeLead || !effectiveTitle || !emailBody) return;
-    setSaving(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({ title: 'Sign in required', variant: 'destructive' });
-        setSaving(false);
-        return;
-      }
-
-      const noteBody =
-        `Target: ${effectiveTitle}\n` +
-        `Signal: ${pipeLead.signal_type} — ${pipeLead.signal_detail}\n` +
-        `Why housing: ${pipeLead.why_housing}\n\n` +
-        `--- EMAIL 1 ---\nSubject: ${emailSubject}\n\n${emailBody}`;
-
-      const { error: piErr } = await supabase.from('pipeline_items').insert({
-        user_id: user.id,
-        company_name: pipeLead.company_name,
-        contact_title: effectiveTitle,
-        stage: 'working',
-        notes: noteBody,
-      });
-      if (piErr) throw piErr;
-
-      const taskRows = SEQUENCE_STEPS.map(step => ({
-        user_id: user.id,
-        company_name: pipeLead.company_name,
-        contact_title: effectiveTitle,
-        task_type: step.task_type,
-        due_date: dueDateForDay(step.day),
-        status: 'pending',
-        signal: pipeLead.signal_detail,
-        reason: step.reason,
-        notes: step.day === 1 ? `Subject: ${emailSubject}\n\n${emailBody}` : null,
-      }));
-      const { error: tErr } = await supabase.from('tasks').insert(taskRows);
-      if (tErr) {
-        toast({ title: 'Pipeline saved, sequence partial', description: tErr.message, variant: 'destructive' });
-      } else {
-        toast({ title: '+ Pipeline · sequence scheduled', description: `${pipeLead.company_name} · 5 emails over 21 days` });
-      }
-      window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
-      setPipelineIds(prev => new Set(prev).add(pipeLead.company_name));
-      setPipeLead(null);
-    } catch (e: unknown) {
-      toast({ title: 'Could not save', description: e instanceof Error ? e.message : 'Try again.', variant: 'destructive' });
-    } finally {
-      setSaving(false);
-    }
-  };
+  const openPipeline = (lead: ScanLead) => setPipeLead(lead);
 
   return (
     <div className="p-5 rounded-xl" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.08)' }}>
