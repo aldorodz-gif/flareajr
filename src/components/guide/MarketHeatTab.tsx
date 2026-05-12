@@ -82,9 +82,12 @@ const MarketHeatTab = () => {
   }, []);
 
   const handleSelectorChange = (next: { state?: string; city?: string; vertical?: string }) => {
+    const cityChanged = next.city !== undefined && next.city !== city;
+    const stateChanged = next.state !== undefined && next.state !== state;
     if (next.state !== undefined) setState(next.state);
     if (next.city !== undefined) setCity(next.city);
     if (next.vertical !== undefined) setVertical(next.vertical);
+    if (cityChanged || stateChanged) setSeenCompanies([]);
   };
 
   const persistMarket = useCallback(async () => {
