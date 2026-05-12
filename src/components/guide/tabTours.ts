@@ -70,11 +70,13 @@ export const TAB_TOURS: Record<string, TabTour> = {
     example:
       'Example: Acme Corp shows ☑ Email 1 sent, ☑ Email 2 sent, ⏰ Day-7 LinkedIn due today, 📅 Day-14 scheduled. You log a LinkedIn connect, add a note, and you\'re done in 20 seconds.',
     steps: [
-      { title: 'Your active pipeline lives here', body: 'Each card is one prospect with a 5-touch cadence over 21 days. Color-coded: green = sent, pink = today, red = overdue.', why: 'You see the whole journey at a glance.' },
+      { title: 'Your active pipeline lives here', body: 'Each card is one prospect with a 5-touch cadence over 21 days. Color-coded: green = sent, pink = today, red = overdue.', why: 'You see the whole journey at a glance.', preview: 'pipelineSequence' },
       { title: 'Sequence Journey panel', body: 'Top of the tab: totals per step + due-today + overdue + a reminder for the oldest miss.', why: 'Catch slipping touches before they go cold.' },
-      { title: 'Log how you connected', body: 'On each card pick LinkedIn / Email / Phone / In-person / Referral. Add notes about what was said.', why: 'Future-you will thank present-you.' },
-      { title: 'Book the meeting', body: '"Book Disco Call" or "In-person" triggers a celebration and tags the lead. Made a mistake? Hit ↶ undo on the badge.', why: 'Wins should feel like wins.' },
-      { title: 'Archive when done', body: 'Closed-won, closed-lost, or paused — archive the card. It hides under the collapsible Archive section, restorable anytime.', why: 'Keep the working list clean.' },
+      { title: 'Add a lead manually', body: 'Got a referral or self-sourced a name? Hit "+ Add Lead Manually" — pick how you found them and we schedule the sequence the same way.', why: 'Your best leads aren\'t always in the auto feed.', preview: 'manualAdd' },
+      { title: 'Log how you connected', body: 'On each card pick LinkedIn / Email / Phone / In-person / Referral. Add notes about what was said.', why: 'Future-you will thank present-you.', preview: 'connectionPills' },
+      { title: 'Book the meeting', body: '"Book Disco Call" or "In-person" triggers a celebration and tags the lead with a badge. Made a mistake? Hit ↶ undo on the badge.', why: 'Wins should feel like wins.', preview: 'meetingBooked' },
+      { title: 'Log follow-ups after the meeting', body: 'Once a meeting is booked, a "🔁 Log follow-up" button appears. Each tap timestamps it and adds to the follow-up counter on the card.', why: 'Stay on top of post-meeting nurture.', preview: 'followupChip' },
+      { title: 'Archive when done', body: 'Closed-won, closed-lost, or paused — archive the card. It hides under the collapsible Archive section, restorable anytime.', why: 'Keep the working list clean.', preview: 'archiveCollapse' },
     ],
   },
 
