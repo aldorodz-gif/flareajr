@@ -403,6 +403,7 @@ const ProspectsTab = () => {
     }
   };
 
+  const todayStr = TODAY();
   const activeItems = useMemo(() => items.filter(i => !i.archived_at), [items]);
   const archivedItems = useMemo(() => items.filter(i => !!i.archived_at), [items]);
 
