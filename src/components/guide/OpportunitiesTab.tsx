@@ -33,7 +33,7 @@ interface Opportunity {
 // NOTE: tailwind.config.ts overrides `teal` as a single token (no shades),
 // so teal pills use a custom inline style instead of bg-teal-100.
 const PILL_FALLBACK = 'bg-slate-100 text-slate-700 border-slate-200';
-const MARKET_HEAT_ROUTE_KEY = 'flare.marketHeatRoute';
+
 
 const priorityPill = (raw: string | null): string => {
   const key = (raw || '').trim().toLowerCase();
@@ -68,14 +68,6 @@ const formatNearInventoryLabel = (inventory: string | null, distance: number | n
   return baseLabel;
 };
 
-const parseMarketTarget = (market: string | null) => {
-  if (!market) return null;
-  const [cityPart = '', remainder = ''] = market.split(',', 2);
-  const city = cityPart.trim();
-  const state = remainder.match(/\b[A-Z]{2}\b/)?.[0] ?? remainder.trim();
-  if (!city || !state) return null;
-  return { city, state };
-};
 
 
 export default function OpportunitiesTab() {
