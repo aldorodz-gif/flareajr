@@ -284,6 +284,8 @@ const ProspectsTab = () => {
     if (error) { toast.error(error.message); return; }
     setItems(prev => prev.map(i => i.id === id ? { ...i, ...patch } as PipelineItem : i));
     if ('archived_at' in patch) toast.success(patch.archived_at ? '📦 Archived' : '↩ Restored');
+    else if ('meeting_booked_at' in patch && !patch.meeting_booked_at) toast.success('↶ Meeting undone');
+    else if ('connection_type' in patch) toast.success(patch.connection_type ? 'Connection logged' : 'Connection cleared');
     else if ('notes' in patch) toast.success('Notes saved');
   };
 
