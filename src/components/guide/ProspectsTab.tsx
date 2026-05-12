@@ -594,6 +594,8 @@ const ProspectsTab = () => {
         </div>
       )}
 
+      <ExampleProspectDemo />
+
       {loading && <div className="py-12 text-center text-[13px] text-muted-foreground">Loading prospects…</div>}
 
       {!loading && items.length === 0 && (
