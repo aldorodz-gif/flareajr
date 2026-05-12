@@ -203,7 +203,8 @@ export default function OpportunitiesTab() {
     return 'no territory restrictions';
   })();
 
-  const filtered = territoryFiltered.filter(o => {
+  const baseList = includeOutside ? items : territoryFiltered;
+  const filtered = baseList.filter(o => {
     if (filter === 'top') return o.priority === 'Top Priority';
     if (filter === 'near') return o.near_core_inventory;
     if (filter === 'saved') return o.saved_by_bdr === selected?.id;
