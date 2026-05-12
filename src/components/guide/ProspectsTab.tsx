@@ -514,6 +514,7 @@ const ProspectsTab = () => {
               onTaskToggle={toggleTask}
               onUpdate={updateItem}
               onBookMeeting={bookMeeting}
+              onFollowup={logFollowup}
             />
           );
         })}
