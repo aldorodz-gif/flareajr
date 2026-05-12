@@ -85,6 +85,16 @@ export default function OpportunitiesTab() {
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
+  const [pipeOpp, setPipeOpp] = useState<Opportunity | null>(null);
+
+  const toPipelineLead = (o: Opportunity): PipelineLead => ({
+    company_name: o.company,
+    vertical: o.vertical || '',
+    signal_type: o.signal_type || '',
+    signal_detail: o.why_it_matters || o.description || '',
+    why_housing: o.why_it_matters || o.estimated_stay || '',
+    recommended_titles: o.suggested_contacts || [],
+  });
 
   const load = useCallback(async () => {
     if (!selected) return;
