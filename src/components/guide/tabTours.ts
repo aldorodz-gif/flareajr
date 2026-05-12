@@ -46,9 +46,9 @@ export const TAB_TOURS: Record<string, TabTour> = {
     example:
       'Example: 7 leads waiting. "Acme Corp · Phoenix · expanded HQ" scores 92. You click "Add to pipeline", pick the title, and a 5-touch sequence is scheduled. 30 seconds per lead.',
     steps: [
-      { title: 'These are pre-built for you', body: 'Every lead here was auto-scanned and scored overnight against your market. You don\'t request them — they\'re ready when you arrive.', why: 'Mornings start with action, not searching.' },
-      { title: 'Score = how strong the signal is', body: 'Higher score = fresher signal + better fit (SMB/SME only — no F500). Work top-down.', why: 'Best ROI on your first hour.' },
-      { title: 'Add to pipeline = full sequence', body: 'One click drafts Email 1 and schedules a 5-touch cadence over 21 days. The lead moves to Prospects automatically.', why: 'No manual cadence math.' },
+      { title: 'These are pre-built for you', body: 'Every lead here was auto-scanned and scored overnight against your market. You don\'t request them — they\'re ready when you arrive.', why: 'Mornings start with action, not searching.', preview: 'leadCard' },
+      { title: 'Score = how strong the signal is', body: 'Higher score = fresher signal + better fit (SMB/SME only — no F500). Work top-down.', why: 'Best ROI on your first hour.', preview: 'scoreBadge' },
+      { title: 'Add to pipeline = full sequence', body: 'One click drafts Email 1 and schedules a 5-touch cadence over 21 days. The lead moves to Prospects automatically.', why: 'No manual cadence math.', preview: 'pipelineSequence' },
     ],
   },
 
