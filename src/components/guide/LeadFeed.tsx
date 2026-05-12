@@ -33,8 +33,13 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
   const [pipelineIds, setPipelineIds] = useState<Set<string>>(new Set());
   const [askLead, setAskLead] = useState<ScanLead | null>(null);
   const [pipeLead, setPipeLead] = useState<ScanLead | null>(null);
+  const [burstId, setBurstId] = useState<string | null>(null);
 
-  const openPipeline = (lead: ScanLead) => setPipeLead(lead);
+  const openPipeline = (lead: ScanLead) => {
+    setBurstId(lead.company_name);
+    window.setTimeout(() => setBurstId(curr => (curr === lead.company_name ? null : curr)), 750);
+    window.setTimeout(() => setPipeLead(lead), 220);
+  };
 
   return (
     <div className="p-5 rounded-xl" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.08)' }}>
