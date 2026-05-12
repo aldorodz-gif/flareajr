@@ -6,7 +6,7 @@ import ProgressBar from '../components/guide/ProgressBar';
 
 import TrackerTab from '../components/guide/TrackerTab';
 import DashboardTab from '../components/guide/DashboardTab';
-
+import MarketHeatTab from '../components/guide/MarketHeatTab';
 
 import OutreachTab from '../components/guide/OutreachTab';
 import SignalsTab from '../components/guide/SignalsTab';
@@ -52,6 +52,7 @@ const Index = () => {
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
       case 'opportunities': return <OpportunitiesTab />;
+      case 'market': return <MarketHeatTab />;
       case 'tracker': return <TrackerTab {...props} />;
       case 'outreach': return <OutreachTab {...props} />;
       case 'signals': return <SignalsTab {...props} />;

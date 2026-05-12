@@ -1,10 +1,8 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBdr } from './BdrContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import TopVerticals, { VerticalShare } from './TopVerticals';
-import InventoryMap from './InventoryMap';
 
 interface Opportunity {
   id: string;
@@ -33,7 +31,7 @@ interface Opportunity {
 // NOTE: tailwind.config.ts overrides `teal` as a single token (no shades),
 // so teal pills use a custom inline style instead of bg-teal-100.
 const PILL_FALLBACK = 'bg-slate-100 text-slate-700 border-slate-200';
-
+const MARKET_HEAT_ROUTE_KEY = 'flare.marketHeatRoute';
 
 const priorityPill = (raw: string | null): string => {
   const key = (raw || '').trim().toLowerCase();
@@ -68,6 +66,14 @@ const formatNearInventoryLabel = (inventory: string | null, distance: number | n
   return baseLabel;
 };
 
+const parseMarketTarget = (market: string | null) => {
+  if (!market) return null;
+  const [cityPart = '', remainder = ''] = market.split(',', 2);
+  const city = cityPart.trim();
+  const state = remainder.match(/\b[A-Z]{2}\b/)?.[0] ?? remainder.trim();
+  if (!city || !state) return null;
+  return { city, state };
+};
 
 
 export default function OpportunitiesTab() {
@@ -76,22 +82,6 @@ export default function OpportunitiesTab() {
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
-  const [pulseOpen, setPulseOpen] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    return window.localStorage.getItem('flare.marketPulseOpen') !== '0';
-  });
-  const [focusInventory, setFocusInventory] = useState<string | null>(null);
-  const pulseRef = useRef<HTMLDivElement>(null);
-
-  const togglePulse = () => {
-    setPulseOpen(prev => {
-      const next = !prev;
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem('flare.marketPulseOpen', next ? '1' : '0');
-      }
-      return next;
-    });
-  };
 
   const load = useCallback(async () => {
     if (!selected) return;
@@ -140,12 +130,21 @@ export default function OpportunitiesTab() {
   };
 
   const openInventoryContext = (opportunity: Opportunity) => {
-    const inv = stripDistanceSuffix(opportunity.nearest_inventory) || null;
-    setFocusInventory(inv);
-    if (!pulseOpen) togglePulse();
-    setTimeout(() => {
-      pulseRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
+    if (typeof window === 'undefined') return;
+    const target = parseMarketTarget(opportunity.market);
+
+    if (target) {
+      sessionStorage.setItem(
+        MARKET_HEAT_ROUTE_KEY,
+        JSON.stringify({
+          city: target.city,
+          state: target.state,
+          inventory: stripDistanceSuffix(opportunity.nearest_inventory) || null,
+        })
+      );
+    }
+
+    window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'market' }));
   };
 
   // Build state + city allow-lists. Snapshot-derived BDRs often only have a
@@ -194,45 +193,6 @@ export default function OpportunitiesTab() {
     return true;
   });
 
-  // Derive top verticals locally from territory-filtered opportunities.
-  const topVerticals = useMemo<VerticalShare[]>(() => {
-    if (territoryFiltered.length === 0) return [];
-    const counts = new Map<string, { count: number; signals: Map<string, number> }>();
-    for (const o of territoryFiltered) {
-      const v = o.vertical?.trim();
-      if (!v) continue;
-      const entry = counts.get(v) ?? { count: 0, signals: new Map<string, number>() };
-      entry.count += 1;
-      if (o.signal_type) entry.signals.set(o.signal_type, (entry.signals.get(o.signal_type) ?? 0) + 1);
-      counts.set(v, entry);
-    }
-    const total = Array.from(counts.values()).reduce((s, e) => s + e.count, 0) || 1;
-    return Array.from(counts.entries())
-      .map(([vertical, entry]) => {
-        const topSignal = Array.from(entry.signals.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'mixed signals';
-        return {
-          vertical,
-          share_pct: Math.round((entry.count / total) * 100),
-          driver: `${entry.count} lead${entry.count > 1 ? 's' : ''} · driven by ${topSignal}`,
-        };
-      })
-      .sort((a, b) => b.share_pct - a.share_pct)
-      .slice(0, 5);
-  }, [territoryFiltered]);
-
-  // Pick a primary city/state for the inventory map from the BDR's first market.
-  const primaryMarket = useMemo(() => {
-    const first = selected?.markets?.[0];
-    if (!first) return { city: '', state: '' };
-    const tokens = first.split(',').map(s => s.trim()).filter(Boolean);
-    const last = tokens[tokens.length - 1];
-    const isState = last && /^[A-Z]{2}$/i.test(last);
-    return {
-      state: isState ? last!.toUpperCase() : '',
-      city: isState ? tokens.slice(0, -1).join(', ') : tokens.join(', '),
-    };
-  }, [selected?.id]);
-
   if (!selected) return <div className="p-12 text-center text-muted-foreground">Select a BDR to view opportunities</div>;
 
   return (
@@ -247,41 +207,6 @@ export default function OpportunitiesTab() {
         <Button onClick={refresh} disabled={scanning} size="lg" className="bg-pink-500 hover:bg-pink-600">
           {scanning ? '🔄 Scanning…' : '⚡ Refresh Scan'}
         </Button>
-      </div>
-
-      {/* Market Pulse — collapsible verticals + inventory map */}
-      <div ref={pulseRef} className="mb-5 rounded-xl border bg-card overflow-hidden">
-        <button
-          type="button"
-          onClick={togglePulse}
-          className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/40 transition-colors"
-          aria-expanded={pulseOpen}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-lg">🔥</span>
-            <div>
-              <div className="text-sm font-bold">Market Pulse</div>
-              <div className="text-[11px] text-muted-foreground">
-                {selected.markets.join(' · ')} — vertical mix and inventory footprint
-              </div>
-            </div>
-          </div>
-          <span className="text-xs text-muted-foreground">{pulseOpen ? '▲ Hide' : '▼ Show'}</span>
-        </button>
-        {pulseOpen && (
-          <div className="border-t p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <TopVerticals
-              data={topVerticals}
-              city={primaryMarket.city}
-              loading={loading}
-            />
-            <InventoryMap
-              city={primaryMarket.city}
-              state={primaryMarket.state}
-              focusInventory={focusInventory}
-            />
-          </div>
-        )}
       </div>
 
       <div className="flex gap-2 mb-4 flex-wrap">
