@@ -250,11 +250,15 @@ export type Database = {
       }
       pipeline_items: {
         Row: {
+          archived_at: string | null
           company_name: string
+          connection_type: string | null
           contact_name: string | null
           contact_title: string | null
           created_at: string
           id: string
+          meeting_booked_at: string | null
+          meeting_type: string | null
           notes: string | null
           prospect_id: string | null
           stage: string
@@ -262,11 +266,15 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          archived_at?: string | null
           company_name: string
+          connection_type?: string | null
           contact_name?: string | null
           contact_title?: string | null
           created_at?: string
           id?: string
+          meeting_booked_at?: string | null
+          meeting_type?: string | null
           notes?: string | null
           prospect_id?: string | null
           stage?: string
@@ -274,11 +282,15 @@ export type Database = {
           user_id: string
         }
         Update: {
+          archived_at?: string | null
           company_name?: string
+          connection_type?: string | null
           contact_name?: string | null
           contact_title?: string | null
           created_at?: string
           id?: string
+          meeting_booked_at?: string | null
+          meeting_type?: string | null
           notes?: string | null
           prospect_id?: string | null
           stage?: string
