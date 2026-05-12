@@ -346,6 +346,11 @@ const TabTour = ({ tabId }: Props) => {
           <div className="p-4">
             <div className="text-[15px] font-extrabold mb-1.5" style={{ color: '#0e1e3a' }}>{step.title}</div>
             <p className="text-[13px] leading-relaxed" style={{ color: '#1e293b' }}>{step.body}</p>
+            {step.preview && (
+              <div className="mt-2.5 animate-fade-in">
+                <PreviewBlock kind={step.preview} />
+              </div>
+            )}
             {step.why && (
               <div className="mt-2.5 p-2 rounded text-[12px]" style={{ background: 'rgba(45,212,191,.1)', color: '#0f766e', border: '1px solid rgba(45,212,191,.3)' }}>
                 <span className="font-bold">Why:</span> {step.why}
