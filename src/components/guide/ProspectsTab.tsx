@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import AiToolCard from './AiToolCard';
 import { SEQUENCE_STEPS, dueDateForDay } from './sequenceConfig';
 import DiscoBallCelebration from './DiscoBallCelebration';
+import ExampleProspectDemo from './ExampleProspectDemo';
 
 interface PipelineItem {
   id: string;
