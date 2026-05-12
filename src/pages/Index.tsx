@@ -17,6 +17,8 @@ import ProspectsTab from '../components/guide/ProspectsTab';
 import { BdrProvider } from '../components/guide/BdrContext';
 import { ThemeProvider } from '../components/guide/ThemeContext';
 import DailySummaryToast from '../components/guide/DailySummaryToast';
+import TabTour from '../components/guide/TabTour';
+import TourLauncher from '../components/guide/TourLauncher';
 import { TAB_ORDER } from '../components/guide/types';
 
 const Index = () => {
