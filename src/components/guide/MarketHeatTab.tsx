@@ -151,11 +151,11 @@ const MarketHeatTab = () => {
       <div className="mb-5">
         <AiToolCard
           icon="🔥"
-          title="Market Heat"
+          title="Scan a Market · Live territory pull, on demand"
           subtitle={`${city && state ? `${city}, ${state}` : 'Pick a state + city to begin'} · ${lastScanLabel}`}
         >
           <p className="text-[13px] leading-relaxed" style={{ color: '#475569' }}>
-            Live snapshot of your territory. Pick a market and click <strong style={{ color: '#0e1e3a' }}>Scan</strong> — leads, top verticals, and inventory will refresh.
+            Different from <strong style={{ color: '#0e1e3a' }}>Today's Leads</strong> (your auto-built daily list) — this is an <strong style={{ color: '#0e1e3a' }}>on-demand radar</strong>. Pick any market and click <strong style={{ color: '#0e1e3a' }}>Scan</strong> to pull fresh leads, top verticals, and inventory right now.
           </p>
         </AiToolCard>
       </div>

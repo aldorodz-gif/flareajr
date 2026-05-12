@@ -224,9 +224,9 @@ export default function OpportunitiesTab() {
     <div className="px-6 md:px-12 py-8 max-w-[1400px] mx-auto">
       <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold">AI Daily Lead Feed</h2>
+          <h2 className="text-2xl font-bold">⚡ Today's Leads <span className="text-sm font-medium text-muted-foreground">· Your auto-built morning list</span></h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Auto-scanned signals for {selected.markets.join(', ')}
+            Pre-scored opportunities auto-scanned daily for {selected.markets.join(', ')}. Work this list first.
           </p>
         </div>
         <Button onClick={refresh} disabled={scanning} size="lg" className="bg-pink-500 hover:bg-pink-600">

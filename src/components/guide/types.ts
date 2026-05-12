@@ -6,8 +6,8 @@ export interface TabConfig {
 
 export const TAB_ORDER: TabConfig[] = [
   { id: 'dashboard', icon: '🏠', label: 'Dashboard' },
-  { id: 'opportunities', icon: '⚡', label: 'AI Daily Lead Feed' },
-  { id: 'market', icon: '🔥', label: 'Market Heat' },
+  { id: 'opportunities', icon: '⚡', label: "Today's Leads" },
+  { id: 'market', icon: '🔥', label: 'Scan a Market' },
   { id: 'prospects', icon: '🎯', label: 'Prospects' },
   { id: 'events', icon: '🎪', label: 'Find Events' },
   { id: 'tracker', icon: '📡', label: 'Prompt Builder' },
