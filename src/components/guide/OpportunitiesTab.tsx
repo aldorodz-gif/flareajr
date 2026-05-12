@@ -249,14 +249,29 @@ export default function OpportunitiesTab() {
       </div>
 
       {territoryRemovedCount > 0 && (
-        <div className="mb-4 flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-200 text-[10px] font-bold text-amber-900">
-            {territoryRemovedCount}
-          </span>
-          <span>
-            opportunity{territoryRemovedCount > 1 ? 'ies' : 'y'} hidden outside territory
-          </span>
-          <span className="ml-auto font-medium">Rule: {territoryRuleText}</span>
+        <div className="mb-4 flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onClick={() => setIncludeOutside(v => !v)}
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+              includeOutside
+                ? 'bg-purple-100 text-purple-800 border-purple-200 hover:bg-purple-200'
+                : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
+            }`}
+            title={includeOutside ? 'Hide leads outside your territory' : 'Reveal leads outside your territory'}
+          >
+            <span className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
+              includeOutside ? 'bg-purple-200 text-purple-900' : 'bg-amber-200 text-amber-900'
+            }`}>
+              {territoryRemovedCount}
+            </span>
+            <span>
+              {includeOutside
+                ? `Hide off-territory leads`
+                : `Reveal ${territoryRemovedCount} off-territory lead${territoryRemovedCount > 1 ? 's' : ''}`}
+            </span>
+          </button>
+          <span className="text-[11px] text-muted-foreground font-medium">Rule: {territoryRuleText}</span>
         </div>
       )}
 
