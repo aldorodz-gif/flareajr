@@ -21,9 +21,8 @@ const stepBg = (status: 'done' | 'today' | 'overdue' | 'future') => {
 };
 
 // Pretend "today" for the demo so days line up nicely.
-const DEMO_STATUSES: Array<'done' | 'today' | 'future' | 'future' | 'future'> = [
-  'done', 'today', 'future', 'future', 'future',
-];
+type DemoStatus = 'done' | 'today' | 'overdue' | 'future';
+const DEMO_STATUSES: DemoStatus[] = ['done', 'today', 'future', 'future', 'future'];
 
 interface DemoState {
   connection: string | null;
