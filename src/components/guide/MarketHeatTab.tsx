@@ -17,6 +17,7 @@ const MarketHeatTab = () => {
   const [vertical, setVertical] = useState('all');
   const [loading, setLoading] = useState(false);
   const [leads, setLeads] = useState<ScanLead[]>([]);
+  const [seenCompanies, setSeenCompanies] = useState<string[]>([]);
   const [topVerticals, setTopVerticals] = useState<VerticalShare[]>([]);
   const [lastScanAt, setLastScanAt] = useState<Date | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
