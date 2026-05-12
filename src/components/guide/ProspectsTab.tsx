@@ -114,6 +114,70 @@ const ProspectsTab = () => {
         </AiToolCard>
       </div>
 
+      {!loading && items.length > 0 && (
+        <div className="mb-5 p-4 rounded-xl bg-white border" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#0e1e3a' }}>
+                📊 Sequence Journey
+              </div>
+              <div className="text-[12px] text-muted-foreground">
+                Where every touch sits across the 21-day cadence.
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(236,72,153,.12)', color: '#be185d' }}>
+                ⏰ {totalDueToday} due today
+              </span>
+              <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(239,68,68,.12)', color: '#b91c1c' }}>
+                🚨 {totalOverdue} overdue
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+            {stageStats.map(({ step, total, done, dueToday, overdue, scheduled }) => (
+              <div key={step.task_type} className="p-3 rounded-lg" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)' }}>
+                <div className="flex items-baseline justify-between mb-1.5">
+                  <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#0e1e3a' }}>
+                    Day {step.day} · {step.label.split(' · ')[1]}
+                  </div>
+                  <div className="text-[14px] font-extrabold" style={{ color: '#0e1e3a' }}>{total}</div>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {done > 0 && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(20,184,166,.15)', color: '#0f766e' }}>✓ {done}</span>
+                  )}
+                  {dueToday > 0 && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(236,72,153,.15)', color: '#be185d' }}>⏰ {dueToday}</span>
+                  )}
+                  {overdue > 0 && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'rgba(239,68,68,.15)', color: '#b91c1c' }}>🚨 {overdue}</span>
+                  )}
+                  {scheduled > 0 && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: '#F1F5F9', color: '#64748b' }}>📅 {scheduled}</span>
+                  )}
+                  {total === 0 && (
+                    <span className="text-[10px] text-muted-foreground">—</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {nextOverdue && (
+            <div className="mt-3 p-2.5 rounded-lg flex items-center gap-2 text-[12px]" style={{ background: 'rgba(239,68,68,.08)', border: '1px solid rgba(239,68,68,.25)' }}>
+              <span>🔔</span>
+              <span style={{ color: '#1e293b' }}>
+                <strong style={{ color: '#b91c1c' }}>Reminder:</strong> oldest overdue is{' '}
+                <strong>{nextOverdue.company_name}</strong> — {nextOverdue.task_type.replace(/_/g, ' ')} was due{' '}
+                {nextOverdue.due_date && new Date(nextOverdue.due_date + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}.
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       {loading && <div className="py-12 text-center text-[13px] text-muted-foreground">Loading prospects…</div>}
 
       {!loading && items.length === 0 && (
