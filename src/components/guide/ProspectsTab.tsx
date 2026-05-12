@@ -85,6 +85,21 @@ const ProspectsTab = () => {
   const todayStr = TODAY();
   const dueCount = tasks.filter(t => t.status === 'pending' && t.due_date && t.due_date <= todayStr).length;
 
+  const stageStats = SEQUENCE_STEPS.map(step => {
+    const stepTasks = tasks.filter(t => t.task_type === step.task_type);
+    const total = stepTasks.length;
+    const done = stepTasks.filter(t => t.status === 'done').length;
+    const dueToday = stepTasks.filter(t => t.status === 'pending' && t.due_date === todayStr).length;
+    const overdue = stepTasks.filter(t => t.status === 'pending' && t.due_date && t.due_date < todayStr).length;
+    const scheduled = stepTasks.filter(t => t.status === 'pending' && t.due_date && t.due_date > todayStr).length;
+    return { step, total, done, dueToday, overdue, scheduled };
+  });
+  const totalOverdue = stageStats.reduce((s, x) => s + x.overdue, 0);
+  const totalDueToday = stageStats.reduce((s, x) => s + x.dueToday, 0);
+  const nextOverdue = tasks
+    .filter(t => t.status === 'pending' && t.due_date && t.due_date < todayStr)
+    .sort((a, b) => (a.due_date ?? '').localeCompare(b.due_date ?? ''))[0];
+
   return (
     <section className="px-6 md:px-12 py-8 max-w-[1400px] mx-auto">
       <div className="mb-5">
