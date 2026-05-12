@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBdr } from './BdrContext';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
 
 interface Opportunity {
   id: string;
@@ -12,6 +12,7 @@ interface Opportunity {
   vertical: string | null;
   signal_type: string | null;
   why_it_matters: string | null;
+  description: string | null;
   estimated_stay: string | null;
   discovery_score: number;
   housing_fit_score: number;
@@ -22,6 +23,7 @@ interface Opportunity {
   nearest_inventory: string | null;
   near_core_inventory: boolean;
   distance_to_inventory: number | null;
+  suggested_contacts: string[] | null;
   last_verified: string;
   status: string;
   saved_by_bdr: string | null;
