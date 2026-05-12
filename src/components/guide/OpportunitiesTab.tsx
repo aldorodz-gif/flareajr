@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBdr } from './BdrContext';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
 
