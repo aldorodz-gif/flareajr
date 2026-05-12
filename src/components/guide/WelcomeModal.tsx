@@ -45,16 +45,6 @@ const TOUR_STEPS: TourStep[] = [
     simId: 'results',
   },
   {
-    icon: '🔥',
-    title: 'Market Heat',
-    subtitle: 'See where demand is spiking',
-    description: 'A live heat map of your markets so you know which cities and verticals are hot this week — and where to focus prospecting.',
-    detail: 'If a market goes red, prioritize it before competitors do.',
-    tabId: 'market',
-    gradient: 'linear-gradient(135deg, #4a1f1a, #2d1410)',
-    simId: 'heat',
-  },
-  {
     icon: '🎪',
     title: 'Find Events',
     subtitle: 'Verified events in your markets',
