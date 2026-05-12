@@ -447,6 +447,106 @@ const ProspectsTab = () => {
         </AiToolCard>
       </div>
 
+      {/* Manual add bar */}
+      <div className="mb-5 p-3 rounded-xl flex flex-wrap items-center justify-between gap-3" style={{ background: 'linear-gradient(135deg, rgba(168,85,247,.08), rgba(45,212,191,.06))', border: '1px dashed rgba(168,85,247,.35)' }}>
+        <div className="text-[12px]" style={{ color: '#1e293b' }}>
+          <strong style={{ color: '#7c3aed' }}>Got a lead from a referral or your own digging?</strong> Add it manually and a 5-touch sequence schedules instantly.
+        </div>
+        <button
+          onClick={() => setManualOpen(true)}
+          className="text-[12px] font-bold px-3.5 py-2 rounded-md text-white transition-all hover:-translate-y-0.5"
+          style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
+        >
+          + Add Lead Manually
+        </button>
+      </div>
+
+      {/* Manual add modal */}
+      {manualOpen && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-fade-in" style={{ background: 'rgba(10,12,28,.65)' }} onClick={() => !manualSaving && setManualOpen(false)}>
+          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl animate-scale-in" onClick={e => e.stopPropagation()}>
+            <div className="px-5 py-3 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #1a2744, #2d1b69)', color: '#fff', borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
+              <div className="text-[14px] font-extrabold">+ Add Lead Manually</div>
+              <button onClick={() => !manualSaving && setManualOpen(false)} className="text-[12px] hover:bg-white/10 px-2 py-0.5 rounded">✕</button>
+            </div>
+            <div className="p-5 space-y-3">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Company *</label>
+                <input
+                  autoFocus
+                  value={manualForm.company_name}
+                  onChange={e => setManualForm(f => ({ ...f, company_name: e.target.value }))}
+                  placeholder="e.g. Acme Healthcare"
+                  className="w-full mt-1 px-3 py-2 text-[13px] rounded border"
+                  style={{ borderColor: 'rgba(14,30,58,.15)' }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Contact name</label>
+                  <input value={manualForm.contact_name} onChange={e => setManualForm(f => ({ ...f, contact_name: e.target.value }))} placeholder="Jane Doe" className="w-full mt-1 px-3 py-2 text-[13px] rounded border" style={{ borderColor: 'rgba(14,30,58,.15)' }} />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Title</label>
+                  <input value={manualForm.contact_title} onChange={e => setManualForm(f => ({ ...f, contact_title: e.target.value }))} placeholder="Director of Ops" className="w-full mt-1 px-3 py-2 text-[13px] rounded border" style={{ borderColor: 'rgba(14,30,58,.15)' }} />
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">How did you find them?</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { id: 'referral', label: '🌟 Referral', conn: 'referral' },
+                    { id: 'self_sourced', label: '🔎 Self-sourced', conn: 'linkedin' },
+                    { id: 'event', label: '🎪 Event', conn: 'inperson' },
+                    { id: 'inbound', label: '📥 Inbound', conn: 'email' },
+                    { id: 'other', label: '✨ Other', conn: 'referral' },
+                  ].map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => setManualForm(f => ({ ...f, source: s.id, connection_type: s.conn }))}
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded-full transition-all"
+                      style={{
+                        background: manualForm.source === s.id ? '#0e1e3a' : '#FAF7F2',
+                        color: manualForm.source === s.id ? '#fff' : '#475569',
+                        border: '1px solid rgba(14,30,58,.08)',
+                      }}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Notes</label>
+                <textarea
+                  value={manualForm.notes}
+                  onChange={e => setManualForm(f => ({ ...f, notes: e.target.value }))}
+                  rows={3}
+                  placeholder="Who referred them, what you know, why they're a fit…"
+                  className="w-full mt-1 px-3 py-2 text-[13px] rounded border resize-y"
+                  style={{ borderColor: 'rgba(14,30,58,.15)' }}
+                />
+              </div>
+              <label className="flex items-center gap-2 text-[12px] cursor-pointer">
+                <input type="checkbox" checked={manualForm.schedule_sequence} onChange={e => setManualForm(f => ({ ...f, schedule_sequence: e.target.checked }))} />
+                <span style={{ color: '#1e293b' }}>Auto-schedule the 5-touch / 21-day sequence</span>
+              </label>
+              <div className="flex justify-end gap-2 pt-2">
+                <button onClick={() => setManualOpen(false)} disabled={manualSaving} className="text-[12px] px-3 py-1.5 rounded text-muted-foreground">Cancel</button>
+                <button
+                  onClick={addManualLead}
+                  disabled={manualSaving || !manualForm.company_name.trim()}
+                  className="text-[12px] font-bold px-4 py-1.5 rounded text-white"
+                  style={{ background: manualSaving || !manualForm.company_name.trim() ? '#94A3B8' : 'linear-gradient(135deg, #ec4899, #a855f7)' }}
+                >
+                  {manualSaving ? 'Adding…' : '+ Add to pipeline'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!loading && activeItems.length > 0 && (
         <div className="mb-5 p-4 rounded-xl bg-white border" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
           <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
