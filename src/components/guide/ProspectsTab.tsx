@@ -188,6 +188,16 @@ const ProspectCard = ({
               </button>
             </>
           )}
+          {!isArchived && item.meeting_booked_at && (
+            <button
+              onClick={() => onFollowup(item)}
+              className="text-[11px] font-bold px-3 py-1.5 rounded-md transition-all hover:-translate-y-0.5"
+              style={{ background: 'rgba(168,85,247,.15)', color: '#7c3aed', border: '1px solid rgba(168,85,247,.4)' }}
+              title={item.last_followup_at ? `Last follow-up: ${new Date(item.last_followup_at).toLocaleDateString()}` : 'Log a follow-up touch'}
+            >
+              🔁 Log follow-up
+            </button>
+          )}
           <button
             onClick={() => onUpdate(item.id, { archived_at: isArchived ? null : new Date().toISOString() })}
             className="text-[11px] font-semibold px-3 py-1.5 rounded-md transition-all"
