@@ -323,13 +323,30 @@ export default function OpportunitiesTab() {
                     <div className="text-2xl font-bold text-pink-400">{composite}</div>
                     <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall Score</div>
                   </div>
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex flex-col gap-1.5 mt-2 w-full">
                     {o.saved_by_bdr === selected.id ? (
-                      <span className="text-xs text-teal-400">✓ In pipeline</span>
+                      <span
+                        className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md text-center"
+                        style={{ background: 'rgba(16,185,129,.15)', color: '#14b8a6' }}
+                      >
+                        ✓ In pipeline
+                      </span>
                     ) : (
-                      <Button size="sm" onClick={() => saveOpp(o.id)}>+ Pipeline</Button>
+                      <button
+                        onClick={() => setPipeOpp(o)}
+                        className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
+                        style={{ background: '#0e1e3a', color: '#fff' }}
+                      >
+                        + Pipeline
+                      </button>
                     )}
-                    <Button size="sm" variant="ghost" onClick={() => archiveOpp(o.id)}>Archive</Button>
+                    <button
+                      onClick={() => archiveOpp(o.id)}
+                      className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
+                      style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899', border: '1px solid rgba(251,146,60,.35)' }}
+                    >
+                      Archive
+                    </button>
                   </div>
                 </div>
               </div>
@@ -337,6 +354,17 @@ export default function OpportunitiesTab() {
           );
         })}
       </div>
+
+      <AddToPipelineSheet
+        lead={pipeOpp ? toPipelineLead(pipeOpp) : null}
+        onClose={() => setPipeOpp(null)}
+        onSaved={async () => {
+          if (pipeOpp && selected) {
+            await supabase.from('opportunities').update({ saved_by_bdr: selected.id, status: 'working' }).eq('id', pipeOpp.id);
+            load();
+          }
+        }}
+      />
     </div>
   );
 }
