@@ -195,7 +195,42 @@ serve(async (req) => {
     // "Near core inventory" = within ~30 min drive (≈25 mi) of a GA or TN core property.
     const CORE_PROXIMITY_STATES = new Set(['GA', 'TN']);
     const PROXIMITY_MILES = 25;
-    const coreInv = inv.filter(i => i.state && CORE_PROXIMITY_STATES.has(i.state.toUpperCase()));
+    // Fallback core inventory (used when the BDR profile has no inventory_locations configured).
+    const FALLBACK_CORE_INV: Array<{name:string;city:string;state:string}> = [
+      { name: 'Stillhouse Vinings', city: 'Atlanta', state: 'GA' },
+      { name: 'The Fieldhouse', city: 'Atlanta', state: 'GA' },
+      { name: 'AMLI Arts Center', city: 'Atlanta', state: 'GA' },
+      { name: 'Bell Buckhead West', city: 'Atlanta', state: 'GA' },
+      { name: 'Bexley Summerhill', city: 'Atlanta', state: 'GA' },
+      { name: 'Aston City Springs', city: 'Sandy Springs', state: 'GA' },
+      { name: 'AMLI Decatur', city: 'Decatur', state: 'GA' },
+      { name: 'AMLI North Point', city: 'Alpharetta', state: 'GA' },
+      { name: 'Bell Kennesaw Mountain', city: 'Kennesaw', state: 'GA' },
+      { name: 'Millhouse Station', city: 'Marietta', state: 'GA' },
+      { name: 'Bexley Chamblee', city: 'Chamblee', state: 'GA' },
+      { name: 'Bexley Duluth', city: 'Duluth', state: 'GA' },
+      { name: 'The Everly', city: 'Johns Creek', state: 'GA' },
+      { name: 'Eden at Lakeview', city: 'Stockbridge', state: 'GA' },
+      { name: 'Retreat at Peachtree City', city: 'Peachtree City', state: 'GA' },
+      { name: 'Henley at Mirror Lake', city: 'Villa Rica', state: 'GA' },
+      { name: 'The Eddy at Riverview', city: 'Columbus', state: 'GA' },
+      { name: 'Riverworks at Eastern Wharf', city: 'Savannah', state: 'GA' },
+      { name: 'Parc at Pooler', city: 'Pooler', state: 'GA' },
+      { name: 'The Meridian at Lafayette', city: 'LaGrange', state: 'GA' },
+      { name: 'Camden Music Row', city: 'Nashville', state: 'TN' },
+      { name: 'Aspire Midtown', city: 'Nashville', state: 'TN' },
+      { name: 'Bexley Stockyard', city: 'Nashville', state: 'TN' },
+      { name: 'Avalon at Seven Springs', city: 'Brentwood', state: 'TN' },
+      { name: 'Camden Franklin Park', city: 'Franklin', state: 'TN' },
+      { name: 'Easton Place', city: 'Murfreesboro', state: 'TN' },
+      { name: 'Columns on Main', city: 'Spring Hill', state: 'TN' },
+      { name: 'Aventine Northshore', city: 'Knoxville', state: 'TN' },
+      { name: 'Hawthorne at the W', city: 'Chattanooga', state: 'TN' },
+      { name: 'Metro 67', city: 'Memphis', state: 'TN' },
+      { name: 'Grove Germantown', city: 'Germantown', state: 'TN' },
+    ];
+    const bdrCore = inv.filter(i => i.state && CORE_PROXIMITY_STATES.has(i.state.toUpperCase()));
+    const coreInv = bdrCore.length > 0 ? bdrCore : FALLBACK_CORE_INV;
 
     // Map full state names → 2-letter codes (markets sometimes come in as "Georgia" with no city).
     const STATE_NAME_TO_CODE: Record<string, string> = {
