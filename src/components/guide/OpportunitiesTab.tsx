@@ -312,9 +312,9 @@ export default function OpportunitiesTab() {
                   </div>
                   <div className="flex gap-2 mt-2">
                     {o.saved_by_bdr === selected.id ? (
-                      <span className="text-xs text-teal-400">⭐ Saved</span>
+                      <span className="text-xs text-teal-400">✓ In pipeline</span>
                     ) : (
-                      <Button size="sm" onClick={() => saveOpp(o.id)}>Save</Button>
+                      <Button size="sm" onClick={() => saveOpp(o.id)}>+ Pipeline</Button>
                     )}
                     <Button size="sm" variant="ghost" onClick={() => archiveOpp(o.id)}>Archive</Button>
                   </div>
