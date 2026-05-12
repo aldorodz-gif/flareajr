@@ -197,28 +197,54 @@ serve(async (req) => {
     const PROXIMITY_MILES = 25;
     const coreInv = inv.filter(i => i.state && CORE_PROXIMITY_STATES.has(i.state.toUpperCase()));
 
+    // Map full state names → 2-letter codes (markets sometimes come in as "Georgia" with no city).
+    const STATE_NAME_TO_CODE: Record<string, string> = {
+      georgia: 'GA', tennessee: 'TN', alabama: 'AL', florida: 'FL', 'south carolina': 'SC', 'north carolina': 'NC',
+    };
+    const normalizeStateToken = (raw: string): string => {
+      const t = raw.trim();
+      if (/^[A-Za-z]{2}$/.test(t)) return t.toUpperCase();
+      return STATE_NAME_TO_CODE[t.toLowerCase()] ?? t.toUpperCase();
+    };
+
     const pickNearestInventory = async (
       market: string | null
-    ): Promise<{ label: string; miles: number } | null> => {
+    ): Promise<{ label: string; miles: number | null } | null> => {
       if (!market || coreInv.length === 0) return null;
-      const parts = market.split(',').map(s => s.trim());
-      const leadCity = parts[0] ?? '';
-      const leadState = parts[parts.length - 1] ?? '';
-      if (!leadCity || !leadState) return null;
-      const leadGeo = await geocode(leadCity, leadState);
-      if (!leadGeo) return null;
+      const parts = market.split(',').map(s => s.trim()).filter(Boolean);
+      const leadStateRaw = parts[parts.length - 1] ?? '';
+      const leadState = normalizeStateToken(leadStateRaw);
+      // Anything outside GA/TN is never "near core inventory".
+      if (!CORE_PROXIMITY_STATES.has(leadState)) return null;
 
-      let best: { item: typeof coreInv[number]; miles: number } | null = null;
-      for (const i of coreInv) {
-        if (!i.city || !i.state) continue;
-        const g = await geocode(i.city, i.state);
-        if (!g) continue;
-        const miles = haversineMiles(leadGeo, g);
-        if (!best || miles < best.miles) best = { item: i, miles };
+      // If we have a city, try precise distance first.
+      const leadCity = parts.length > 1 ? parts[0] : '';
+      if (leadCity) {
+        const leadGeo = await geocode(leadCity, leadState);
+        if (leadGeo) {
+          let best: { item: typeof coreInv[number]; miles: number } | null = null;
+          for (const i of coreInv) {
+            if (!i.city || !i.state) continue;
+            const g = await geocode(i.city, i.state);
+            if (!g) continue;
+            const miles = haversineMiles(leadGeo, g);
+            if (!best || miles < best.miles) best = { item: i, miles };
+          }
+          if (best && best.miles <= PROXIMITY_MILES) {
+            const m = Math.round(best.miles);
+            return { label: `${best.item.name} (${best.item.city}, ${best.item.state}) — ~${m} mi`, miles: m };
+          }
+          // City known but too far — not near.
+          if (best) return null;
+        }
       }
-      if (!best || best.miles > PROXIMITY_MILES) return null;
-      const m = Math.round(best.miles);
-      return { label: `${best.item.name} (${best.item.city}, ${best.item.state}) — ~${m} mi`, miles: m };
+
+      // State-only market in GA/TN (or geocode failed): treat as near, surface the first core property in that state.
+      const stateMatch = coreInv.find(i => i.state?.toUpperCase() === leadState);
+      if (stateMatch) {
+        return { label: `${stateMatch.name} (${stateMatch.city}, ${stateMatch.state})`, miles: null };
+      }
+      return null;
     };
 
     let inserted = 0;
