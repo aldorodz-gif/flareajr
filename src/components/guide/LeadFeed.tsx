@@ -98,14 +98,40 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <button
-                    onClick={() => openPipeline(lead)}
-                    disabled={inPipeline}
-                    className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-default"
-                    style={{ background: inPipeline ? 'rgba(16,185,129,.15)' : '#0e1e3a', color: inPipeline ? '#14b8a6' : '#fff' }}
-                  >
-                    {inPipeline ? '✓ In pipeline' : '+ Pipeline'}
-                  </button>
+                  <div className="relative">
+                    <button
+                      onClick={() => openPipeline(lead)}
+                      disabled={inPipeline}
+                      className="relative w-full text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-60 disabled:cursor-default overflow-visible"
+                      style={{ background: inPipeline ? 'rgba(16,185,129,.15)' : '#0e1e3a', color: inPipeline ? '#14b8a6' : '#fff' }}
+                    >
+                      {inPipeline ? '✓ In pipeline' : '+ Pipeline'}
+                      {burstId === lead.company_name && <span className="flare-pulse-ring" aria-hidden />}
+                    </button>
+                    {burstId === lead.company_name && (
+                      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+                        {['✨','⚡','🎯','💥','✨','⭐'].map((emoji, i) => {
+                          const angle = (i / 6) * Math.PI * 2;
+                          const dist = 38 + (i % 2) * 14;
+                          return (
+                            <span
+                              key={i}
+                              className="flare-sparkle"
+                              style={{
+                                left: '50%',
+                                top: '50%',
+                                ['--fx' as string]: `${Math.cos(angle) * dist}px`,
+                                ['--fy' as string]: `${Math.sin(angle) * dist}px`,
+                                animationDelay: `${i * 25}ms`,
+                              }}
+                            >
+                              {emoji}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                   <button
                     onClick={() => setAskLead(lead)}
                     className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
