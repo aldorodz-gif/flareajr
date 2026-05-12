@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import AiToolCard from './AiToolCard';
-import { SEQUENCE_STEPS } from './sequenceConfig';
+import { SEQUENCE_STEPS, dueDateForDay } from './sequenceConfig';
 import DiscoBallCelebration from './DiscoBallCelebration';
 
 interface PipelineItem {
@@ -17,6 +17,8 @@ interface PipelineItem {
   archived_at: string | null;
   meeting_booked_at: string | null;
   meeting_type: string | null;
+  last_followup_at: string | null;
+  followup_count: number;
 }
 
 interface TaskRow {
@@ -55,6 +57,7 @@ const ProspectCard = ({
   onTaskToggle,
   onUpdate,
   onBookMeeting,
+  onFollowup,
 }: {
   item: PipelineItem;
   itemTasks: TaskRow[];
@@ -62,6 +65,7 @@ const ProspectCard = ({
   onTaskToggle: (t: TaskRow) => void;
   onUpdate: (id: string, patch: Partial<PipelineItem>) => Promise<void>;
   onBookMeeting: (item: PipelineItem, type: 'disco' | 'inperson') => void;
+  onFollowup: (item: PipelineItem) => void;
 }) => {
   const isArchived = !!item.archived_at;
   const [notesDraft, setNotesDraft] = useState(item.notes ?? '');
@@ -88,6 +92,11 @@ const ProspectCard = ({
               >
                 ↶ undo
               </button>
+            </span>
+          )}
+          {item.followup_count > 0 && (
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(45,212,191,.15)', color: '#0f766e' }}>
+              🔁 {item.followup_count} follow-up{item.followup_count === 1 ? '' : 's'}
             </span>
           )}
           <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(155,120,200,.1)', color: '#9B78C8' }}>
@@ -179,6 +188,16 @@ const ProspectCard = ({
               </button>
             </>
           )}
+          {!isArchived && item.meeting_booked_at && (
+            <button
+              onClick={() => onFollowup(item)}
+              className="text-[11px] font-bold px-3 py-1.5 rounded-md transition-all hover:-translate-y-0.5"
+              style={{ background: 'rgba(168,85,247,.15)', color: '#7c3aed', border: '1px solid rgba(168,85,247,.4)' }}
+              title={item.last_followup_at ? `Last follow-up: ${new Date(item.last_followup_at).toLocaleDateString()}` : 'Log a follow-up touch'}
+            >
+              🔁 Log follow-up
+            </button>
+          )}
           <button
             onClick={() => onUpdate(item.id, { archived_at: isArchived ? null : new Date().toISOString() })}
             className="text-[11px] font-semibold px-3 py-1.5 rounded-md transition-all"
@@ -237,6 +256,17 @@ const ProspectsTab = () => {
   const [loading, setLoading] = useState(true);
   const [showArchive, setShowArchive] = useState(false);
   const [celebration, setCelebration] = useState<{ company: string; type: 'disco' | 'inperson' } | null>(null);
+  const [manualOpen, setManualOpen] = useState(false);
+  const [manualSaving, setManualSaving] = useState(false);
+  const [manualForm, setManualForm] = useState({
+    company_name: '',
+    contact_name: '',
+    contact_title: '',
+    source: 'referral',
+    connection_type: 'referral' as string,
+    notes: '',
+    schedule_sequence: true,
+  });
 
   const refresh = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -306,6 +336,73 @@ const ProspectsTab = () => {
     setCelebration({ company: item.company_name, type });
   };
 
+  const logFollowup = async (item: PipelineItem) => {
+    const nowIso = new Date().toISOString();
+    const nextCount = (item.followup_count ?? 0) + 1;
+    const { error } = await supabase
+      .from('pipeline_items')
+      .update({ last_followup_at: nowIso, followup_count: nextCount })
+      .eq('id', item.id);
+    if (error) { toast.error(error.message); return; }
+    if (userId) {
+      await supabase.from('activity_log').insert({
+        user_id: userId,
+        action_type: 'meeting_followup',
+        company_name: item.company_name,
+        contact_name: item.contact_title,
+        notes: `🔁 Follow-up #${nextCount} after ${item.meeting_type === 'inperson' ? 'in-person meeting' : 'disco call'}`,
+      });
+    }
+    setItems(prev => prev.map(i => i.id === item.id ? { ...i, last_followup_at: nowIso, followup_count: nextCount } : i));
+    toast.success(`🔁 Follow-up #${nextCount} logged`);
+  };
+
+  const addManualLead = async () => {
+    const company = manualForm.company_name.trim();
+    if (!company) { toast.error('Company name is required'); return; }
+    if (!userId) { toast.error('Sign in required'); return; }
+    setManualSaving(true);
+    try {
+      const sourceLine = `Source: ${manualForm.source}`;
+      const noteBody = [sourceLine, manualForm.notes.trim()].filter(Boolean).join('\n\n');
+      const { error: piErr } = await supabase.from('pipeline_items').insert({
+        user_id: userId,
+        company_name: company,
+        contact_name: manualForm.contact_name.trim() || null,
+        contact_title: manualForm.contact_title.trim() || null,
+        connection_type: manualForm.connection_type || null,
+        stage: 'working',
+        notes: noteBody || null,
+      });
+      if (piErr) throw piErr;
+
+      if (manualForm.schedule_sequence) {
+        const taskRows = SEQUENCE_STEPS.map(step => ({
+          user_id: userId,
+          company_name: company,
+          contact_title: manualForm.contact_title.trim() || null,
+          task_type: step.task_type,
+          due_date: dueDateForDay(step.day),
+          status: 'pending',
+          signal: `Manual add — ${manualForm.source}`,
+          reason: step.reason,
+        }));
+        const { error: tErr } = await supabase.from('tasks').insert(taskRows);
+        if (tErr) toast.error(`Lead added; sequence partial: ${tErr.message}`);
+      }
+
+      toast.success(`+ ${company} added to pipeline`);
+      setManualOpen(false);
+      setManualForm({ company_name: '', contact_name: '', contact_title: '', source: 'referral', connection_type: 'referral', notes: '', schedule_sequence: true });
+      window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
+      refresh();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Could not add lead');
+    } finally {
+      setManualSaving(false);
+    }
+  };
+
   const todayStr = TODAY();
   const activeItems = useMemo(() => items.filter(i => !i.archived_at), [items]);
   const archivedItems = useMemo(() => items.filter(i => !!i.archived_at), [items]);
@@ -349,6 +446,106 @@ const ProspectsTab = () => {
           </p>
         </AiToolCard>
       </div>
+
+      {/* Manual add bar */}
+      <div className="mb-5 p-3 rounded-xl flex flex-wrap items-center justify-between gap-3" style={{ background: 'linear-gradient(135deg, rgba(168,85,247,.08), rgba(45,212,191,.06))', border: '1px dashed rgba(168,85,247,.35)' }}>
+        <div className="text-[12px]" style={{ color: '#1e293b' }}>
+          <strong style={{ color: '#7c3aed' }}>Got a lead from a referral or your own digging?</strong> Add it manually and a 5-touch sequence schedules instantly.
+        </div>
+        <button
+          onClick={() => setManualOpen(true)}
+          className="text-[12px] font-bold px-3.5 py-2 rounded-md text-white transition-all hover:-translate-y-0.5"
+          style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
+        >
+          + Add Lead Manually
+        </button>
+      </div>
+
+      {/* Manual add modal */}
+      {manualOpen && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-fade-in" style={{ background: 'rgba(10,12,28,.65)' }} onClick={() => !manualSaving && setManualOpen(false)}>
+          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl animate-scale-in" onClick={e => e.stopPropagation()}>
+            <div className="px-5 py-3 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #1a2744, #2d1b69)', color: '#fff', borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
+              <div className="text-[14px] font-extrabold">+ Add Lead Manually</div>
+              <button onClick={() => !manualSaving && setManualOpen(false)} className="text-[12px] hover:bg-white/10 px-2 py-0.5 rounded">✕</button>
+            </div>
+            <div className="p-5 space-y-3">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Company *</label>
+                <input
+                  autoFocus
+                  value={manualForm.company_name}
+                  onChange={e => setManualForm(f => ({ ...f, company_name: e.target.value }))}
+                  placeholder="e.g. Acme Healthcare"
+                  className="w-full mt-1 px-3 py-2 text-[13px] rounded border"
+                  style={{ borderColor: 'rgba(14,30,58,.15)' }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Contact name</label>
+                  <input value={manualForm.contact_name} onChange={e => setManualForm(f => ({ ...f, contact_name: e.target.value }))} placeholder="Jane Doe" className="w-full mt-1 px-3 py-2 text-[13px] rounded border" style={{ borderColor: 'rgba(14,30,58,.15)' }} />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Title</label>
+                  <input value={manualForm.contact_title} onChange={e => setManualForm(f => ({ ...f, contact_title: e.target.value }))} placeholder="Director of Ops" className="w-full mt-1 px-3 py-2 text-[13px] rounded border" style={{ borderColor: 'rgba(14,30,58,.15)' }} />
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">How did you find them?</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { id: 'referral', label: '🌟 Referral', conn: 'referral' },
+                    { id: 'self_sourced', label: '🔎 Self-sourced', conn: 'linkedin' },
+                    { id: 'event', label: '🎪 Event', conn: 'inperson' },
+                    { id: 'inbound', label: '📥 Inbound', conn: 'email' },
+                    { id: 'other', label: '✨ Other', conn: 'referral' },
+                  ].map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => setManualForm(f => ({ ...f, source: s.id, connection_type: s.conn }))}
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded-full transition-all"
+                      style={{
+                        background: manualForm.source === s.id ? '#0e1e3a' : '#FAF7F2',
+                        color: manualForm.source === s.id ? '#fff' : '#475569',
+                        border: '1px solid rgba(14,30,58,.08)',
+                      }}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Notes</label>
+                <textarea
+                  value={manualForm.notes}
+                  onChange={e => setManualForm(f => ({ ...f, notes: e.target.value }))}
+                  rows={3}
+                  placeholder="Who referred them, what you know, why they're a fit…"
+                  className="w-full mt-1 px-3 py-2 text-[13px] rounded border resize-y"
+                  style={{ borderColor: 'rgba(14,30,58,.15)' }}
+                />
+              </div>
+              <label className="flex items-center gap-2 text-[12px] cursor-pointer">
+                <input type="checkbox" checked={manualForm.schedule_sequence} onChange={e => setManualForm(f => ({ ...f, schedule_sequence: e.target.checked }))} />
+                <span style={{ color: '#1e293b' }}>Auto-schedule the 5-touch / 21-day sequence</span>
+              </label>
+              <div className="flex justify-end gap-2 pt-2">
+                <button onClick={() => setManualOpen(false)} disabled={manualSaving} className="text-[12px] px-3 py-1.5 rounded text-muted-foreground">Cancel</button>
+                <button
+                  onClick={addManualLead}
+                  disabled={manualSaving || !manualForm.company_name.trim()}
+                  className="text-[12px] font-bold px-4 py-1.5 rounded text-white"
+                  style={{ background: manualSaving || !manualForm.company_name.trim() ? '#94A3B8' : 'linear-gradient(135deg, #ec4899, #a855f7)' }}
+                >
+                  {manualSaving ? 'Adding…' : '+ Add to pipeline'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {!loading && activeItems.length > 0 && (
         <div className="mb-5 p-4 rounded-xl bg-white border" style={{ borderColor: 'rgba(14,30,58,.08)' }}>
@@ -401,7 +598,7 @@ const ProspectsTab = () => {
       {!loading && items.length === 0 && (
         <div className="p-10 text-center rounded-xl" style={{ background: '#FAF7F2', border: '1px dashed rgba(14,30,58,.15)' }}>
           <p className="text-[14px] font-semibold text-foreground mb-1">No prospects yet</p>
-          <p className="text-[12px] text-muted-foreground">Add leads from <strong>Scan a Market</strong> or <strong>Today's Leads</strong> with the <strong>+ Pipeline</strong> button.</p>
+          <p className="text-[12px] text-muted-foreground">Add leads from <strong>Scan a Market</strong> / <strong>Today's Leads</strong> with the <strong>+ Pipeline</strong> button — or use <strong>+ Add Lead Manually</strong> above for referrals and self-sourced leads.</p>
         </div>
       )}
 
@@ -417,6 +614,7 @@ const ProspectsTab = () => {
               onTaskToggle={toggleTask}
               onUpdate={updateItem}
               onBookMeeting={bookMeeting}
+              onFollowup={logFollowup}
             />
           );
         })}
@@ -453,6 +651,7 @@ const ProspectsTab = () => {
                     onTaskToggle={toggleTask}
                     onUpdate={updateItem}
                     onBookMeeting={bookMeeting}
+                    onFollowup={logFollowup}
                   />
                 );
               })}

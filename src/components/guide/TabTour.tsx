@@ -1,5 +1,134 @@
 import { useEffect, useState, useLayoutEffect, useRef } from 'react';
-import { TAB_TOURS, tourStorageKey, exampleStorageKey } from './tabTours';
+import { TAB_TOURS, tourStorageKey, exampleStorageKey, TourPreviewKind } from './tabTours';
+
+const PreviewBlock = ({ kind }: { kind: TourPreviewKind }) => {
+  const wrap: React.CSSProperties = { background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)', borderRadius: 10, padding: 10 };
+  switch (kind) {
+    case 'pipelineSequence':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>What appears →</div>
+          <div className="grid grid-cols-5 gap-1">
+            {[
+              { d: 'D1', s: 'done', label: 'Sent' },
+              { d: 'D3', s: 'done', label: 'Sent' },
+              { d: 'D7', s: 'today', label: 'Today' },
+              { d: 'D14', s: 'future', label: 'Sched' },
+              { d: 'D21', s: 'future', label: 'Sched' },
+            ].map(c => {
+              const colors: Record<string, { bg: string; fg: string; bd: string }> = {
+                done: { bg: 'rgba(20,184,166,.18)', fg: '#0f766e', bd: 'rgba(20,184,166,.45)' },
+                today: { bg: 'rgba(236,72,153,.18)', fg: '#be185d', bd: 'rgba(236,72,153,.5)' },
+                future: { bg: '#fff', fg: '#64748b', bd: 'rgba(14,30,58,.1)' },
+              };
+              const c2 = colors[c.s];
+              return (
+                <div key={c.d} className="text-center p-1 rounded" style={{ background: c2.bg, color: c2.fg, border: `1px solid ${c2.bd}` }}>
+                  <div className="text-[9px] font-extrabold">{c.d}</div>
+                  <div className="text-[8px]">{c.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    case 'connectionPills':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>Tap one — it sticks →</div>
+          <div className="flex flex-wrap gap-1">
+            {[
+              { l: '💼 LinkedIn', on: true },
+              { l: '✉️ Email', on: false },
+              { l: '📞 Phone', on: false },
+              { l: '🤝 In-person', on: false },
+              { l: '🌟 Referral', on: false },
+            ].map(p => (
+              <span key={p.l} className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{
+                background: p.on ? 'rgba(45,212,191,.18)' : '#fff',
+                color: p.on ? '#0f766e' : '#64748b',
+                border: `1px solid ${p.on ? 'rgba(45,212,191,.5)' : 'rgba(14,30,58,.1)'}`,
+              }}>{p.l}</span>
+            ))}
+          </div>
+        </div>
+      );
+    case 'meetingBooked':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>The card grows this badge →</div>
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(168,85,247,.15)', color: '#7c3aed' }}>
+            🪩 Disco call booked
+            <span className="ml-1 px-1.5 py-0.5 rounded" style={{ background: 'rgba(255,255,255,.6)' }}>↶ undo</span>
+          </span>
+          <div className="mt-1.5 text-[10px] text-muted-foreground">…and a 🪩 disco-ball celebration drops.</div>
+        </div>
+      );
+    case 'followupChip':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>Each tap adds →</div>
+          <div className="flex items-center gap-1.5">
+            <button className="text-[10px] font-bold px-2 py-1 rounded" style={{ background: 'rgba(168,85,247,.15)', color: '#7c3aed', border: '1px solid rgba(168,85,247,.4)' }}>🔁 Log follow-up</button>
+            <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded" style={{ background: 'rgba(45,212,191,.15)', color: '#0f766e' }}>🔁 2 follow-ups</span>
+          </div>
+        </div>
+      );
+    case 'archiveCollapse':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>Hidden but recoverable →</div>
+          <div className="flex items-center justify-between p-1.5 rounded bg-white" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
+            <span className="text-[10px] font-bold" style={{ color: '#0e1e3a' }}>📦 Archive <span className="ml-1 text-muted-foreground">(3 completed)</span></span>
+            <span className="text-[10px] text-muted-foreground">▼ Show</span>
+          </div>
+        </div>
+      );
+    case 'manualAdd':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>What happens →</div>
+          <div className="p-2 rounded bg-white text-[11px]" style={{ border: '1px solid rgba(45,212,191,.4)', color: '#0f766e' }}>
+            ✓ Acme Healthcare added · 5-touch sequence scheduled · Email 1 due today
+          </div>
+        </div>
+      );
+    case 'leadCard':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>Each lead looks like →</div>
+          <div className="p-2 rounded bg-white" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold" style={{ color: '#0e1e3a' }}>Acme Corp · Phoenix</span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', color: '#fff' }}>92</span>
+            </div>
+            <div className="text-[10px] text-muted-foreground">Expanded HQ · hiring 40 · 3 days ago</div>
+          </div>
+        </div>
+      );
+    case 'scoreBadge':
+      return (
+        <div style={wrap}>
+          <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>Score chip →</div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ background: '#0f766e' }}>92 hot</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ background: '#a855f7' }}>74 warm</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: '#F1F5F9', color: '#64748b' }}>48 cool</span>
+          </div>
+        </div>
+      );
+    case 'celebration':
+      return (
+        <div style={{ ...wrap, textAlign: 'center' }}>
+          <div className="text-[24px]">🪩✨🎉</div>
+          <div className="text-[10px] text-muted-foreground">A disco ball drops + confetti burst.</div>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
 
 interface Props {
   tabId: string;
@@ -217,6 +346,11 @@ const TabTour = ({ tabId }: Props) => {
           <div className="p-4">
             <div className="text-[15px] font-extrabold mb-1.5" style={{ color: '#0e1e3a' }}>{step.title}</div>
             <p className="text-[13px] leading-relaxed" style={{ color: '#1e293b' }}>{step.body}</p>
+            {step.preview && (
+              <div className="mt-2.5 animate-fade-in">
+                <PreviewBlock kind={step.preview} />
+              </div>
+            )}
             {step.why && (
               <div className="mt-2.5 p-2 rounded text-[12px]" style={{ background: 'rgba(45,212,191,.1)', color: '#0f766e', border: '1px solid rgba(45,212,191,.3)' }}>
                 <span className="font-bold">Why:</span> {step.why}

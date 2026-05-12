@@ -256,7 +256,9 @@ export type Database = {
           contact_name: string | null
           contact_title: string | null
           created_at: string
+          followup_count: number
           id: string
+          last_followup_at: string | null
           meeting_booked_at: string | null
           meeting_type: string | null
           notes: string | null
@@ -272,7 +274,9 @@ export type Database = {
           contact_name?: string | null
           contact_title?: string | null
           created_at?: string
+          followup_count?: number
           id?: string
+          last_followup_at?: string | null
           meeting_booked_at?: string | null
           meeting_type?: string | null
           notes?: string | null
@@ -288,7 +292,9 @@ export type Database = {
           contact_name?: string | null
           contact_title?: string | null
           created_at?: string
+          followup_count?: number
           id?: string
+          last_followup_at?: string | null
           meeting_booked_at?: string | null
           meeting_type?: string | null
           notes?: string | null
