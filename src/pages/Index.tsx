@@ -76,9 +76,11 @@ const Index = () => {
             <TabBar activeTab={activeTab} visitedTabs={visitedTabs} onTabChange={handleTabChange} />
           </div>
           <ProgressBar activeTab={activeTab} />
+          <TourLauncher tabId={activeTab} />
           <div key={animKey} className="animate-tab-fade">
             {renderTab()}
           </div>
+          <TabTour tabId={activeTab} />
           <footer data-shell="footer" className="flex flex-col md:flex-row justify-between items-center px-6 md:px-12 py-5 gap-2.5" style={{ background: '#1E293B', borderTop: '1px solid rgba(99,102,241,.15)' }}>
             <p className="text-[11px]" style={{ color: 'rgba(255,255,255,.42)' }}>Flare</p>
             <span className="text-[11px] px-3 py-1 rounded-full" style={{ background: 'rgba(99,102,241,.15)', color: '#A5B4FC' }}>Created by Aldo Rodriguez</span>
