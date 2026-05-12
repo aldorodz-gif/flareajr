@@ -1,3 +1,14 @@
+export type TourPreviewKind =
+  | 'pipelineSequence'    // mock 5-touch grid showing what auto-schedule produces
+  | 'connectionPills'     // mock connection-type chips toggled on
+  | 'meetingBooked'       // mock booked-meeting badge with undo + follow-up
+  | 'followupChip'        // mock follow-up counter chip
+  | 'archiveCollapse'     // mock archive toggle row
+  | 'manualAdd'           // mock manual-add success toast
+  | 'leadCard'            // mock auto-built daily lead card
+  | 'scoreBadge'          // mock score chip
+  | 'celebration';        // mini celebration disco/handshake
+
 export interface TourStep {
   /** CSS selector to spotlight. If missing or not found, step renders centered. */
   target?: string;
@@ -5,6 +16,8 @@ export interface TourStep {
   body: string;
   /** Why this matters — one short line. */
   why?: string;
+  /** Optional interactive-result preview shown beneath the body. */
+  preview?: TourPreviewKind;
 }
 
 export interface TabTour {
