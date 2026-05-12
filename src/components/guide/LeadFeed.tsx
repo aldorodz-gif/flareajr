@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import Eyebrow from './Eyebrow';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { getDiscoveryPlaybook } from './discoveryQuestions';
-import { SEQUENCE_STEPS, dueDateForDay } from './sequenceConfig';
+import AddToPipelineSheet from './AddToPipelineSheet';
 
 export interface ScanLead {
   company_name: string;
@@ -31,115 +29,12 @@ const SIGNAL_COLORS: Record<string, string> = {
   Default: '#9B78C8',
 };
 
-const TONES = ['direct', 'warm', 'analytical', 'consultative', 'bold'] as const;
-type Tone = typeof TONES[number];
-
 const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
   const [pipelineIds, setPipelineIds] = useState<Set<string>>(new Set());
   const [askLead, setAskLead] = useState<ScanLead | null>(null);
   const [pipeLead, setPipeLead] = useState<ScanLead | null>(null);
 
-  // Add-to-pipeline sheet state
-  const [chosenTitle, setChosenTitle] = useState('');
-  const [customTitle, setCustomTitle] = useState('');
-  const [tone, setTone] = useState<Tone>('direct');
-  const [generating, setGenerating] = useState(false);
-  const [emailSubject, setEmailSubject] = useState('');
-  const [emailBody, setEmailBody] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  const openPipeline = (lead: ScanLead) => {
-    setPipeLead(lead);
-    setChosenTitle(lead.recommended_titles[0] ?? '');
-    setCustomTitle('');
-    setTone('direct');
-    setEmailSubject('');
-    setEmailBody('');
-  };
-
-  const closePipeline = () => {
-    if (saving || generating) return;
-    setPipeLead(null);
-  };
-
-  const effectiveTitle = (customTitle.trim() || chosenTitle).trim();
-
-  const handleGenerate = async () => {
-    if (!pipeLead || !effectiveTitle) return;
-    setGenerating(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('email-generator', {
-        body: {
-          company: pipeLead.company_name,
-          signal: pipeLead.signal_detail,
-          buyer_title: effectiveTitle,
-          service_line: pipeLead.vertical,
-          tone,
-        },
-      });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-      setEmailSubject(data.subject ?? '');
-      setEmailBody(data.body ?? '');
-    } catch (e: unknown) {
-      toast({ title: 'Email generation failed', description: e instanceof Error ? e.message : 'Try again.', variant: 'destructive' });
-    } finally {
-      setGenerating(false);
-    }
-  };
-
-  const handleSavePipeline = async () => {
-    if (!pipeLead || !effectiveTitle || !emailBody) return;
-    setSaving(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({ title: 'Sign in required', variant: 'destructive' });
-        setSaving(false);
-        return;
-      }
-
-      const noteBody =
-        `Target: ${effectiveTitle}\n` +
-        `Signal: ${pipeLead.signal_type} — ${pipeLead.signal_detail}\n` +
-        `Why housing: ${pipeLead.why_housing}\n\n` +
-        `--- EMAIL 1 ---\nSubject: ${emailSubject}\n\n${emailBody}`;
-
-      const { error: piErr } = await supabase.from('pipeline_items').insert({
-        user_id: user.id,
-        company_name: pipeLead.company_name,
-        contact_title: effectiveTitle,
-        stage: 'working',
-        notes: noteBody,
-      });
-      if (piErr) throw piErr;
-
-      const taskRows = SEQUENCE_STEPS.map(step => ({
-        user_id: user.id,
-        company_name: pipeLead.company_name,
-        contact_title: effectiveTitle,
-        task_type: step.task_type,
-        due_date: dueDateForDay(step.day),
-        status: 'pending',
-        signal: pipeLead.signal_detail,
-        reason: step.reason,
-        notes: step.day === 1 ? `Subject: ${emailSubject}\n\n${emailBody}` : null,
-      }));
-      const { error: tErr } = await supabase.from('tasks').insert(taskRows);
-      if (tErr) {
-        toast({ title: 'Pipeline saved, sequence partial', description: tErr.message, variant: 'destructive' });
-      } else {
-        toast({ title: '+ Pipeline · sequence scheduled', description: `${pipeLead.company_name} · 5 emails over 21 days` });
-      }
-      window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
-      setPipelineIds(prev => new Set(prev).add(pipeLead.company_name));
-      setPipeLead(null);
-    } catch (e: unknown) {
-      toast({ title: 'Could not save', description: e instanceof Error ? e.message : 'Try again.', variant: 'destructive' });
-    } finally {
-      setSaving(false);
-    }
-  };
+  const openPipeline = (lead: ScanLead) => setPipeLead(lead);
 
   return (
     <div className="p-5 rounded-xl" style={{ background: '#fff', border: '1px solid rgba(14,30,58,.08)' }}>
@@ -221,138 +116,11 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
       </div>
 
       {/* Add-to-pipeline sheet */}
-      <Sheet open={!!pipeLead} onOpenChange={(o) => !o && closePipeline()}>
-        <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-          {pipeLead && (
-            <div className="space-y-5">
-              <SheetHeader className="text-left">
-                <SheetTitle className="text-lg font-extrabold" style={{ color: '#0e1e3a' }}>
-                  Add {pipeLead.company_name} to pipeline
-                </SheetTitle>
-                <p className="text-[12px] text-muted-foreground">Generate Email 1 and auto-schedule a 5-touch sequence.</p>
-              </SheetHeader>
-
-              {/* Title picker */}
-              <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider mb-2 block text-muted-foreground">Target this person</label>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {pipeLead.recommended_titles.map(t => (
-                    <button
-                      key={t}
-                      onClick={() => { setChosenTitle(t); setCustomTitle(''); }}
-                      className="text-[11px] font-semibold px-2.5 py-1 rounded transition-all"
-                      style={{
-                        background: chosenTitle === t && !customTitle ? '#0e1e3a' : '#FAF7F2',
-                        color: chosenTitle === t && !customTitle ? '#fff' : '#475569',
-                        border: '1px solid rgba(14,30,58,.08)',
-                      }}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={customTitle}
-                  onChange={e => setCustomTitle(e.target.value)}
-                  placeholder="…or type a custom title"
-                  className="w-full px-3 py-2 text-[13px] border rounded"
-                  style={{ borderColor: 'rgba(14,30,58,.15)', background: '#fff' }}
-                />
-              </div>
-
-              {/* Tone picker */}
-              <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider mb-2 block text-muted-foreground">Tone</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {TONES.map(t => (
-                    <button
-                      key={t}
-                      onClick={() => setTone(t)}
-                      className="text-[11px] font-semibold px-2.5 py-1 rounded capitalize transition-all"
-                      style={{
-                        background: tone === t ? 'linear-gradient(135deg, #ec4899, #db2777)' : '#FAF7F2',
-                        color: tone === t ? '#fff' : '#475569',
-                        border: '1px solid rgba(14,30,58,.08)',
-                      }}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Signal context */}
-              <div className="p-3 rounded text-[12px]" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)', color: '#1e293b' }}>
-                <span className="font-bold" style={{ color: '#14b8a6' }}>Signal:</span> {pipeLead.signal_detail}
-              </div>
-
-              {/* Generate */}
-              <button
-                onClick={handleGenerate}
-                disabled={!effectiveTitle || generating}
-                className="w-full px-4 py-2.5 text-[13px] font-bold tracking-wide rounded transition-all"
-                style={{
-                  background: !effectiveTitle || generating ? '#94A3B8' : 'linear-gradient(135deg, #ec4899, #db2777)',
-                  color: '#fff',
-                  cursor: !effectiveTitle || generating ? 'not-allowed' : 'pointer',
-                }}
-              >
-                {generating ? '⏳ Generating…' : emailBody ? '↻ Regenerate Email 1' : '⚡ Generate Email 1'}
-              </button>
-
-              {/* Email preview */}
-              {emailBody && (
-                <div className="space-y-2">
-                  <label className="text-[11px] font-bold uppercase tracking-wider block text-muted-foreground">Email 1 — editable</label>
-                  <input
-                    type="text"
-                    value={emailSubject}
-                    onChange={e => setEmailSubject(e.target.value)}
-                    className="w-full px-3 py-2 text-[13px] font-semibold border rounded"
-                    style={{ borderColor: 'rgba(14,30,58,.15)' }}
-                    placeholder="Subject"
-                  />
-                  <textarea
-                    value={emailBody}
-                    onChange={e => setEmailBody(e.target.value)}
-                    rows={10}
-                    className="w-full px-3 py-2 text-[13px] border rounded font-sans"
-                    style={{ borderColor: 'rgba(14,30,58,.15)' }}
-                  />
-                </div>
-              )}
-
-              {/* Cadence preview */}
-              <div>
-                <label className="text-[11px] font-bold uppercase tracking-wider mb-2 block text-muted-foreground">5-touch cadence (auto-scheduled)</label>
-                <div className="grid grid-cols-5 gap-1.5">
-                  {SEQUENCE_STEPS.map(s => (
-                    <div key={s.task_type} className="p-2 rounded text-center" style={{ background: '#F8FAFC', border: '1px solid rgba(14,30,58,.08)' }}>
-                      <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#0e1e3a' }}>Day {s.day}</div>
-                      <div className="text-[9px] text-muted-foreground mt-0.5">{s.label.split(' · ')[1]}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Save */}
-              <button
-                onClick={handleSavePipeline}
-                disabled={!emailBody || !effectiveTitle || saving}
-                className="w-full px-4 py-3 text-[13px] font-bold tracking-wide rounded transition-all"
-                style={{
-                  background: !emailBody || !effectiveTitle || saving ? '#94A3B8' : '#0e1e3a',
-                  color: '#fff',
-                  cursor: !emailBody || !effectiveTitle || saving ? 'not-allowed' : 'pointer',
-                }}
-              >
-                {saving ? 'Saving…' : '✓ Save to pipeline & schedule sequence'}
-              </button>
-            </div>
-          )}
-        </SheetContent>
-      </Sheet>
+      <AddToPipelineSheet
+        lead={pipeLead}
+        onClose={() => setPipeLead(null)}
+        onSaved={(l) => setPipelineIds(prev => new Set(prev).add(l.company_name))}
+      />
 
       {/* What-to-ask sheet (unchanged) */}
       <Sheet open={!!askLead} onOpenChange={(o) => !o && setAskLead(null)}>

@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBdr } from './BdrContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
 
 interface Opportunity {
   id: string;
@@ -12,6 +13,7 @@ interface Opportunity {
   vertical: string | null;
   signal_type: string | null;
   why_it_matters: string | null;
+  description: string | null;
   estimated_stay: string | null;
   discovery_score: number;
   housing_fit_score: number;
@@ -22,6 +24,7 @@ interface Opportunity {
   nearest_inventory: string | null;
   near_core_inventory: boolean;
   distance_to_inventory: number | null;
+  suggested_contacts: string[] | null;
   last_verified: string;
   status: string;
   saved_by_bdr: string | null;
@@ -82,6 +85,19 @@ export default function OpportunitiesTab() {
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
+  const [pipeOpp, setPipeOpp] = useState<Opportunity | null>(null);
+
+  const pipelineLead = useMemo<PipelineLead | null>(() => {
+    if (!pipeOpp) return null;
+    return {
+      company_name: pipeOpp.company,
+      vertical: pipeOpp.vertical || '',
+      signal_type: pipeOpp.signal_type || '',
+      signal_detail: pipeOpp.why_it_matters || pipeOpp.description || '',
+      why_housing: pipeOpp.why_it_matters || pipeOpp.estimated_stay || '',
+      recommended_titles: pipeOpp.suggested_contacts || [],
+    };
+  }, [pipeOpp]);
 
   const load = useCallback(async () => {
     if (!selected) return;
@@ -310,13 +326,30 @@ export default function OpportunitiesTab() {
                     <div className="text-2xl font-bold text-pink-400">{composite}</div>
                     <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall Score</div>
                   </div>
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex flex-col gap-1.5 mt-2 w-full">
                     {o.saved_by_bdr === selected.id ? (
-                      <span className="text-xs text-teal-400">✓ In pipeline</span>
+                      <span
+                        className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md text-center"
+                        style={{ background: 'rgba(16,185,129,.15)', color: '#14b8a6' }}
+                      >
+                        ✓ In pipeline
+                      </span>
                     ) : (
-                      <Button size="sm" onClick={() => saveOpp(o.id)}>+ Pipeline</Button>
+                      <button
+                        onClick={() => setPipeOpp(o)}
+                        className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
+                        style={{ background: '#0e1e3a', color: '#fff' }}
+                      >
+                        + Pipeline
+                      </button>
                     )}
-                    <Button size="sm" variant="ghost" onClick={() => archiveOpp(o.id)}>Archive</Button>
+                    <button
+                      onClick={() => archiveOpp(o.id)}
+                      className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
+                      style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899', border: '1px solid rgba(251,146,60,.35)' }}
+                    >
+                      Archive
+                    </button>
                   </div>
                 </div>
               </div>
@@ -324,6 +357,17 @@ export default function OpportunitiesTab() {
           );
         })}
       </div>
+
+      <AddToPipelineSheet
+        lead={pipelineLead}
+        onClose={() => setPipeOpp(null)}
+        onSaved={async () => {
+          if (pipeOpp && selected) {
+            await supabase.from('opportunities').update({ saved_by_bdr: selected.id, status: 'working' }).eq('id', pipeOpp.id);
+            load();
+          }
+        }}
+      />
     </div>
   );
 }

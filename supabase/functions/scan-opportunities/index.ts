@@ -192,37 +192,33 @@ serve(async (req) => {
       return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
     };
 
-    // Pick the inventory closest to this lead's market. Returns name, city, state, and miles.
+    // "Near core inventory" = within ~30 min drive (≈25 mi) of a GA or TN core property.
+    const CORE_PROXIMITY_STATES = new Set(['GA', 'TN']);
+    const PROXIMITY_MILES = 25;
+    const coreInv = inv.filter(i => i.state && CORE_PROXIMITY_STATES.has(i.state.toUpperCase()));
+
     const pickNearestInventory = async (
       market: string | null
-    ): Promise<{ label: string; miles: number | null } | null> => {
-      if (!market || inv.length === 0) return null;
+    ): Promise<{ label: string; miles: number } | null> => {
+      if (!market || coreInv.length === 0) return null;
       const parts = market.split(',').map(s => s.trim());
       const leadCity = parts[0] ?? '';
       const leadState = parts[parts.length - 1] ?? '';
-      const leadGeo = leadCity && leadState ? await geocode(leadCity, leadState) : null;
+      if (!leadCity || !leadState) return null;
+      const leadGeo = await geocode(leadCity, leadState);
+      if (!leadGeo) return null;
 
-      if (leadGeo) {
-        let best: { item: typeof inv[number]; miles: number } | null = null;
-        for (const i of inv) {
-          if (!i.city || !i.state) continue;
-          const g = await geocode(i.city, i.state);
-          if (!g) continue;
-          const miles = haversineMiles(leadGeo, g);
-          if (!best || miles < best.miles) best = { item: i, miles };
-        }
-        if (best) {
-          const m = Math.round(best.miles);
-          return { label: `${best.item.name} (${best.item.city}, ${best.item.state}) — ~${m} mi`, miles: m };
-        }
+      let best: { item: typeof coreInv[number]; miles: number } | null = null;
+      for (const i of coreInv) {
+        if (!i.city || !i.state) continue;
+        const g = await geocode(i.city, i.state);
+        if (!g) continue;
+        const miles = haversineMiles(leadGeo, g);
+        if (!best || miles < best.miles) best = { item: i, miles };
       }
-
-      // Fallback: city/state name match without distance
-      const cityMatch = inv.find(i => i.city?.toLowerCase() === leadCity.toLowerCase());
-      if (cityMatch) return { label: `${cityMatch.name} (${cityMatch.city}, ${cityMatch.state})`, miles: null };
-      const stateMatch = inv.find(i => i.state?.toLowerCase() === leadState.toLowerCase());
-      if (stateMatch) return { label: `${stateMatch.name} (${stateMatch.city}, ${stateMatch.state})`, miles: null };
-      return null;
+      if (!best || best.miles > PROXIMITY_MILES) return null;
+      const m = Math.round(best.miles);
+      return { label: `${best.item.name} (${best.item.city}, ${best.item.state}) — ~${m} mi`, miles: m };
     };
 
     let inserted = 0;
