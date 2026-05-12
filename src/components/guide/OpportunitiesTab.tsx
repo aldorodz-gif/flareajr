@@ -359,7 +359,7 @@ export default function OpportunitiesTab() {
       </div>
 
       <AddToPipelineSheet
-        lead={useMemo(() => (pipeOpp ? toPipelineLead(pipeOpp) : null), [pipeOpp])}
+        lead={pipelineLead}
         onClose={() => setPipeOpp(null)}
         onSaved={async () => {
           if (pipeOpp && selected) {
