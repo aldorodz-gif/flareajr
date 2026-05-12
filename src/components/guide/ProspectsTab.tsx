@@ -94,6 +94,11 @@ const ProspectCard = ({
               </button>
             </span>
           )}
+          {item.followup_count > 0 && (
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(45,212,191,.15)', color: '#0f766e' }}>
+              🔁 {item.followup_count} follow-up{item.followup_count === 1 ? '' : 's'}
+            </span>
+          )}
           <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(155,120,200,.1)', color: '#9B78C8' }}>
             {isArchived ? 'archived' : item.stage}
           </span>
