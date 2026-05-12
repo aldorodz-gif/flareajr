@@ -57,6 +57,7 @@ const ProspectCard = ({
   onTaskToggle,
   onUpdate,
   onBookMeeting,
+  onFollowup,
 }: {
   item: PipelineItem;
   itemTasks: TaskRow[];
@@ -64,6 +65,7 @@ const ProspectCard = ({
   onTaskToggle: (t: TaskRow) => void;
   onUpdate: (id: string, patch: Partial<PipelineItem>) => Promise<void>;
   onBookMeeting: (item: PipelineItem, type: 'disco' | 'inperson') => void;
+  onFollowup: (item: PipelineItem) => void;
 }) => {
   const isArchived = !!item.archived_at;
   const [notesDraft, setNotesDraft] = useState(item.notes ?? '');
