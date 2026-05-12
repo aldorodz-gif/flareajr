@@ -87,14 +87,17 @@ export default function OpportunitiesTab() {
   const [filter, setFilter] = useState<'all' | 'top' | 'near' | 'saved'>('all');
   const [pipeOpp, setPipeOpp] = useState<Opportunity | null>(null);
 
-  const toPipelineLead = (o: Opportunity): PipelineLead => ({
-    company_name: o.company,
-    vertical: o.vertical || '',
-    signal_type: o.signal_type || '',
-    signal_detail: o.why_it_matters || o.description || '',
-    why_housing: o.why_it_matters || o.estimated_stay || '',
-    recommended_titles: o.suggested_contacts || [],
-  });
+  const pipelineLead = useMemo<PipelineLead | null>(() => {
+    if (!pipeOpp) return null;
+    return {
+      company_name: pipeOpp.company,
+      vertical: pipeOpp.vertical || '',
+      signal_type: pipeOpp.signal_type || '',
+      signal_detail: pipeOpp.why_it_matters || pipeOpp.description || '',
+      why_housing: pipeOpp.why_it_matters || pipeOpp.estimated_stay || '',
+      recommended_titles: pipeOpp.suggested_contacts || [],
+    };
+  }, [pipeOpp]);
 
   const load = useCallback(async () => {
     if (!selected) return;
