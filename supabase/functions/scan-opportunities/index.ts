@@ -195,30 +195,91 @@ serve(async (req) => {
     // "Near core inventory" = within ~30 min drive (≈25 mi) of a GA or TN core property.
     const CORE_PROXIMITY_STATES = new Set(['GA', 'TN']);
     const PROXIMITY_MILES = 25;
-    const coreInv = inv.filter(i => i.state && CORE_PROXIMITY_STATES.has(i.state.toUpperCase()));
+    // Fallback core inventory (used when the BDR profile has no inventory_locations configured).
+    const FALLBACK_CORE_INV: Array<{name:string;city:string;state:string}> = [
+      { name: 'Stillhouse Vinings', city: 'Atlanta', state: 'GA' },
+      { name: 'The Fieldhouse', city: 'Atlanta', state: 'GA' },
+      { name: 'AMLI Arts Center', city: 'Atlanta', state: 'GA' },
+      { name: 'Bell Buckhead West', city: 'Atlanta', state: 'GA' },
+      { name: 'Bexley Summerhill', city: 'Atlanta', state: 'GA' },
+      { name: 'Aston City Springs', city: 'Sandy Springs', state: 'GA' },
+      { name: 'AMLI Decatur', city: 'Decatur', state: 'GA' },
+      { name: 'AMLI North Point', city: 'Alpharetta', state: 'GA' },
+      { name: 'Bell Kennesaw Mountain', city: 'Kennesaw', state: 'GA' },
+      { name: 'Millhouse Station', city: 'Marietta', state: 'GA' },
+      { name: 'Bexley Chamblee', city: 'Chamblee', state: 'GA' },
+      { name: 'Bexley Duluth', city: 'Duluth', state: 'GA' },
+      { name: 'The Everly', city: 'Johns Creek', state: 'GA' },
+      { name: 'Eden at Lakeview', city: 'Stockbridge', state: 'GA' },
+      { name: 'Retreat at Peachtree City', city: 'Peachtree City', state: 'GA' },
+      { name: 'Henley at Mirror Lake', city: 'Villa Rica', state: 'GA' },
+      { name: 'The Eddy at Riverview', city: 'Columbus', state: 'GA' },
+      { name: 'Riverworks at Eastern Wharf', city: 'Savannah', state: 'GA' },
+      { name: 'Parc at Pooler', city: 'Pooler', state: 'GA' },
+      { name: 'The Meridian at Lafayette', city: 'LaGrange', state: 'GA' },
+      { name: 'Camden Music Row', city: 'Nashville', state: 'TN' },
+      { name: 'Aspire Midtown', city: 'Nashville', state: 'TN' },
+      { name: 'Bexley Stockyard', city: 'Nashville', state: 'TN' },
+      { name: 'Avalon at Seven Springs', city: 'Brentwood', state: 'TN' },
+      { name: 'Camden Franklin Park', city: 'Franklin', state: 'TN' },
+      { name: 'Easton Place', city: 'Murfreesboro', state: 'TN' },
+      { name: 'Columns on Main', city: 'Spring Hill', state: 'TN' },
+      { name: 'Aventine Northshore', city: 'Knoxville', state: 'TN' },
+      { name: 'Hawthorne at the W', city: 'Chattanooga', state: 'TN' },
+      { name: 'Metro 67', city: 'Memphis', state: 'TN' },
+      { name: 'Grove Germantown', city: 'Germantown', state: 'TN' },
+    ];
+    const bdrCore = inv.filter(i => i.state && CORE_PROXIMITY_STATES.has(i.state.toUpperCase()));
+    const coreInv = bdrCore.length > 0 ? bdrCore : FALLBACK_CORE_INV;
+
+    // Map full state names → 2-letter codes (markets sometimes come in as "Georgia" with no city).
+    const STATE_NAME_TO_CODE: Record<string, string> = {
+      georgia: 'GA', tennessee: 'TN', alabama: 'AL', florida: 'FL', 'south carolina': 'SC', 'north carolina': 'NC',
+    };
+    const normalizeStateToken = (raw: string): string => {
+      const t = raw.trim();
+      if (/^[A-Za-z]{2}$/.test(t)) return t.toUpperCase();
+      return STATE_NAME_TO_CODE[t.toLowerCase()] ?? t.toUpperCase();
+    };
 
     const pickNearestInventory = async (
       market: string | null
-    ): Promise<{ label: string; miles: number } | null> => {
+    ): Promise<{ label: string; miles: number | null } | null> => {
       if (!market || coreInv.length === 0) return null;
-      const parts = market.split(',').map(s => s.trim());
-      const leadCity = parts[0] ?? '';
-      const leadState = parts[parts.length - 1] ?? '';
-      if (!leadCity || !leadState) return null;
-      const leadGeo = await geocode(leadCity, leadState);
-      if (!leadGeo) return null;
+      const parts = market.split(',').map(s => s.trim()).filter(Boolean);
+      const leadStateRaw = parts[parts.length - 1] ?? '';
+      const leadState = normalizeStateToken(leadStateRaw);
+      // Anything outside GA/TN is never "near core inventory".
+      if (!CORE_PROXIMITY_STATES.has(leadState)) return null;
 
-      let best: { item: typeof coreInv[number]; miles: number } | null = null;
-      for (const i of coreInv) {
-        if (!i.city || !i.state) continue;
-        const g = await geocode(i.city, i.state);
-        if (!g) continue;
-        const miles = haversineMiles(leadGeo, g);
-        if (!best || miles < best.miles) best = { item: i, miles };
+      // If we have a city, try precise distance first.
+      const leadCity = parts.length > 1 ? parts[0] : '';
+      if (leadCity) {
+        const leadGeo = await geocode(leadCity, leadState);
+        if (leadGeo) {
+          let best: { item: typeof coreInv[number]; miles: number } | null = null;
+          for (const i of coreInv) {
+            if (!i.city || !i.state) continue;
+            const g = await geocode(i.city, i.state);
+            if (!g) continue;
+            const miles = haversineMiles(leadGeo, g);
+            if (!best || miles < best.miles) best = { item: i, miles };
+          }
+          if (best && best.miles <= PROXIMITY_MILES) {
+            const m = Math.round(best.miles);
+            return { label: `${best.item.name} (${best.item.city}, ${best.item.state}) — ~${m} mi`, miles: m };
+          }
+          // City known but too far — not near.
+          if (best) return null;
+        }
       }
-      if (!best || best.miles > PROXIMITY_MILES) return null;
-      const m = Math.round(best.miles);
-      return { label: `${best.item.name} (${best.item.city}, ${best.item.state}) — ~${m} mi`, miles: m };
+
+      // State-only market in GA/TN (or geocode failed): treat as near, surface the first core property in that state.
+      const stateMatch = coreInv.find(i => i.state?.toUpperCase() === leadState);
+      if (stateMatch) {
+        return { label: `${stateMatch.name} (${stateMatch.city}, ${stateMatch.state})`, miles: null };
+      }
+      return null;
     };
 
     let inserted = 0;
