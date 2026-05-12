@@ -147,7 +147,7 @@ const ExampleProspectDemo = () => {
             {/* Sequence */}
             <div className="grid grid-cols-5 gap-2">
               {SEQUENCE_STEPS.map((step, i) => {
-                const status: 'done' | 'today' | 'overdue' | 'future' = s.doneSteps[i] ? 'done' : DEMO_STATUSES[i];
+                const status: DemoStatus = s.doneSteps[i] ? 'done' : DEMO_STATUSES[i];
                 const c = stepBg(status);
                 const labelDate = new Date(Date.now() + (step.day - 1) * 86400000);
                 return (
