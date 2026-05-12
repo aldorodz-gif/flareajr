@@ -30,6 +30,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailBody, setEmailBody] = useState('');
   const [saving, setSaving] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
 
   useEffect(() => {
     if (lead) {
@@ -38,6 +39,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
       setTone('direct');
       setEmailSubject('');
       setEmailBody('');
+      setCelebrating(false);
     }
   }, [lead]);
 
