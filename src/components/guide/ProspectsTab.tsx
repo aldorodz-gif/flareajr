@@ -78,8 +78,16 @@ const ProspectCard = ({
         </div>
         <div className="flex items-center gap-2">
           {item.meeting_booked_at && (
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(168,85,247,.15)', color: '#7c3aed' }}>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(168,85,247,.15)', color: '#7c3aed' }}>
               {item.meeting_type === 'inperson' ? '🤝 In-person booked' : '🪩 Disco call booked'}
+              <button
+                onClick={() => onUpdate(item.id, { meeting_booked_at: null, meeting_type: null, stage: 'working' })}
+                title="Undo meeting"
+                className="ml-1 px-1.5 py-0.5 rounded hover:bg-white/60 transition-colors"
+                style={{ color: '#7c3aed' }}
+              >
+                ↶ undo
+              </button>
             </span>
           )}
           <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(155,120,200,.1)', color: '#9B78C8' }}>
@@ -276,6 +284,8 @@ const ProspectsTab = () => {
     if (error) { toast.error(error.message); return; }
     setItems(prev => prev.map(i => i.id === id ? { ...i, ...patch } as PipelineItem : i));
     if ('archived_at' in patch) toast.success(patch.archived_at ? '📦 Archived' : '↩ Restored');
+    else if ('meeting_booked_at' in patch && !patch.meeting_booked_at) toast.success('↶ Meeting undone');
+    else if ('connection_type' in patch) toast.success(patch.connection_type ? 'Connection logged' : 'Connection cleared');
     else if ('notes' in patch) toast.success('Notes saved');
   };
 
