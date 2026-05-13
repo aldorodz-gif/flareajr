@@ -71,7 +71,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
     setResult(null);
     try {
       const { data, error: fnError } = await supabase.functions.invoke('signal-scorer', {
-        body: { signal: signalText.trim() },
+        body: { signal: signalText.trim(), bdr_id: selected?.id ?? null },
       });
       if (fnError) throw fnError;
       if (data.error) throw new Error(data.error);
@@ -81,7 +81,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
     } finally {
       setLoading(false);
     }
-  }, [signalText]);
+  }, [signalText, selected?.id]);
 
   const handleReset = () => {
     setSignalText('');
