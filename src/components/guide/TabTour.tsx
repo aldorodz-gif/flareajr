@@ -1,5 +1,6 @@
 import { useEffect, useState, useLayoutEffect, useRef } from 'react';
 import { TAB_TOURS, tourStorageKey, exampleStorageKey, TourPreviewKind } from './tabTours';
+import { useBdr } from './BdrContext';
 
 const PreviewBlock = ({ kind }: { kind: TourPreviewKind }) => {
   const wrap: React.CSSProperties = { background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)', borderRadius: 10, padding: 10 };
@@ -142,28 +143,31 @@ const TOOLTIP_GAP = 14;
 
 const TabTour = ({ tabId }: Props) => {
   const tour = TAB_TOURS[tabId];
+  const { selected } = useBdr();
+  const bdrId = selected?.id ?? null;
   const [open, setOpen] = useState(false);
   const [stepIdx, setStepIdx] = useState(0);
   const [rect, setRect] = useState<Rect | null>(null);
   const [showExample, setShowExample] = useState(false);
   const lastTabRef = useRef<string>('');
 
-  // Auto-start once per tab
+  // Auto-start once per tab per BDR
   useEffect(() => {
     if (!tour) return;
-    if (lastTabRef.current === tabId) return;
-    lastTabRef.current = tabId;
+    const key = `${tabId}|${bdrId ?? 'global'}`;
+    if (lastTabRef.current === key) return;
+    lastTabRef.current = key;
     setOpen(false);
     setStepIdx(0);
     setShowExample(false);
     try {
-      if (!localStorage.getItem(tourStorageKey(tabId))) {
+      if (!localStorage.getItem(tourStorageKey(tabId, bdrId))) {
         // small delay so tab content renders first
         const t = window.setTimeout(() => setOpen(true), 350);
         return () => window.clearTimeout(t);
       }
     } catch { /* ignore */ }
-  }, [tabId, tour]);
+  }, [tabId, tour, bdrId]);
 
   // Listen for manual replay/example triggers from the launcher
   useEffect(() => {
@@ -187,9 +191,9 @@ const TabTour = ({ tabId }: Props) => {
   useEffect(() => {
     if (!tour) return;
     try {
-      setShowExample(localStorage.getItem(exampleStorageKey(tabId)) === '1');
+      setShowExample(localStorage.getItem(exampleStorageKey(tabId, bdrId)) === '1');
     } catch { /* ignore */ }
-  }, [tabId, tour]);
+  }, [tabId, tour, bdrId]);
 
   // Track target rect
   useLayoutEffect(() => {
@@ -219,7 +223,7 @@ const TabTour = ({ tabId }: Props) => {
 
   const finish = () => {
     setOpen(false);
-    try { localStorage.setItem(tourStorageKey(tabId), '1'); } catch { /* ignore */ }
+    try { localStorage.setItem(tourStorageKey(tabId, bdrId), '1'); } catch { /* ignore */ }
   };
   const stop = () => finish();
   const next = () => stepIdx < tour.steps.length - 1 ? setStepIdx(stepIdx + 1) : finish();
@@ -275,7 +279,7 @@ const TabTour = ({ tabId }: Props) => {
         <button
           onClick={() => {
             setShowExample(false);
-            try { localStorage.removeItem(exampleStorageKey(tabId)); } catch { /* ignore */ }
+            try { localStorage.removeItem(exampleStorageKey(tabId, bdrId)); } catch { /* ignore */ }
           }}
           className="text-[11px] font-semibold px-2 py-1 rounded text-muted-foreground hover:bg-white/60"
         >
