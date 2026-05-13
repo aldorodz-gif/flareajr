@@ -191,9 +191,9 @@ const TabTour = ({ tabId }: Props) => {
   useEffect(() => {
     if (!tour) return;
     try {
-      setShowExample(localStorage.getItem(exampleStorageKey(tabId)) === '1');
+      setShowExample(localStorage.getItem(exampleStorageKey(tabId, bdrId)) === '1');
     } catch { /* ignore */ }
-  }, [tabId, tour]);
+  }, [tabId, tour, bdrId]);
 
   // Track target rect
   useLayoutEffect(() => {
