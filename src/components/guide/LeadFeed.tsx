@@ -3,6 +3,8 @@ import Eyebrow from './Eyebrow';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { getDiscoveryPlaybook } from './discoveryQuestions';
 import AddToPipelineSheet from './AddToPipelineSheet';
+import { exportRowsToXlsx } from './exportXlsx';
+import { toast } from '@/hooks/use-toast';
 
 export interface ScanLead {
   company_name: string;
@@ -50,9 +52,34 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
             Leads {city && state ? `in ${city}, ${state}` : ''}
           </h3>
         </div>
-        <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899' }}>
-          {leads.length} found
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899' }}>
+            {leads.length} found
+          </span>
+          <button
+            onClick={() => {
+              if (!leads.length) { toast({ title: 'Nothing to export', description: 'Run a scan first.' }); return; }
+              const rows = leads.map(l => ({
+                Company: l.company_name,
+                Vertical: l.vertical,
+                Signal: l.signal_type,
+                'Signal Detail': l.signal_detail,
+                'Why Housing': l.why_housing,
+                'Recommended Titles': (l.recommended_titles || []).join('; '),
+                City: city,
+                State: state,
+              }));
+              const stamp = new Date().toISOString().slice(0, 10);
+              const slug = `${city || 'market'}-${state || ''}`.replace(/\s+/g, '-');
+              exportRowsToXlsx(rows, `flare-market-scan-${slug}-${stamp}.xlsx`, 'Market Scan');
+              toast({ title: 'Exported', description: `${rows.length} leads exported to Excel` });
+            }}
+            className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md transition-all hover:-translate-y-0.5"
+            style={{ background: '#0e1e3a', color: '#fff' }}
+          >
+            📊 Export Excel
+          </button>
+        </div>
       </div>
 
       {loading && <div className="py-12 text-center text-[13px]" style={{ color: '#94a3b8' }}>Scanning the market…</div>}
