@@ -68,9 +68,12 @@ serve(async (req) => {
     const focus = focusRotations[Math.floor(Math.random() * focusRotations.length)];
     const variety = `Variety seed: ${Date.now()}-${Math.floor(Math.random() * 100000)}.`;
 
+    const mindsetBlock = await loadMindsetBlocks(bdr_id);
+
     const systemPrompt = [
       "You are a sales intelligence analyst for a corporate housing BDR at National Corporate Housing.",
       `Today is ${today}.`,
+      mindsetBlock,
       `BDR markets: ${markets.join(", ")}.`,
       `BDR target verticals: ${verticals.join(", ") || "all 7 verticals"}.`,
       `BDR inventory near: ${inv.map(i => `${i.city}, ${i.state}`).join("; ") || "n/a"}.`,
