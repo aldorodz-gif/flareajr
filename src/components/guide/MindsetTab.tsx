@@ -4,6 +4,7 @@ import SectionNav from './SectionNav';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useBdr } from './BdrContext';
 import DefenseFrameworkCard from './DefenseFrameworkCard';
+import MindsetLibrary from './MindsetLibrary';
 
 interface MindsetTabProps {
   onNavigate: (tabId: string) => void;
