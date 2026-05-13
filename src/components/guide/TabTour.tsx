@@ -279,7 +279,7 @@ const TabTour = ({ tabId }: Props) => {
         <button
           onClick={() => {
             setShowExample(false);
-            try { localStorage.removeItem(exampleStorageKey(tabId)); } catch { /* ignore */ }
+            try { localStorage.removeItem(exampleStorageKey(tabId, bdrId)); } catch { /* ignore */ }
           }}
           className="text-[11px] font-semibold px-2 py-1 rounded text-muted-foreground hover:bg-white/60"
         >
