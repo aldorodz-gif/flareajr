@@ -4,6 +4,7 @@ import { useBdr } from './BdrContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
+import { exportRowsToXlsx } from './exportXlsx';
 
 interface Opportunity {
   id: string;
