@@ -143,6 +143,8 @@ const TOOLTIP_GAP = 14;
 
 const TabTour = ({ tabId }: Props) => {
   const tour = TAB_TOURS[tabId];
+  const { selected } = useBdr();
+  const bdrId = selected?.id ?? null;
   const [open, setOpen] = useState(false);
   const [stepIdx, setStepIdx] = useState(0);
   const [rect, setRect] = useState<Rect | null>(null);
