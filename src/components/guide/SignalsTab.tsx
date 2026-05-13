@@ -36,6 +36,7 @@ interface ScoreResult {
 }
 
 const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
+  const { selected } = useBdr();
   const [signalText, setSignalText] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScoreResult | null>(null);
