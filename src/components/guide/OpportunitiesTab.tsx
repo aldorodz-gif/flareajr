@@ -230,9 +230,43 @@ export default function OpportunitiesTab() {
             Pre-scored opportunities auto-scanned daily for {selected.markets.join(', ')}. Work this list first.
           </p>
         </div>
-        <Button onClick={refresh} disabled={scanning} size="lg" className="bg-pink-500 hover:bg-pink-600">
-          {scanning ? '🔄 Scanning…' : '⚡ Refresh Scan'}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              if (!filtered.length) { toast.error('Nothing to export'); return; }
+              const rows = filtered.map(o => ({
+                Company: o.company,
+                Market: o.market || '',
+                Vertical: o.vertical || '',
+                Signal: o.signal_type || '',
+                Project: o.project || '',
+                Priority: o.priority || '',
+                Confidence: o.confidence_label || '',
+                'Discovery Score': o.discovery_score,
+                'Housing Fit': o.housing_fit_score,
+                'Confidence Score': o.confidence_score,
+                'Overall Score': Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2),
+                'Why It Matters': o.why_it_matters || '',
+                'Estimated Stay': o.estimated_stay || '',
+                'Nearest Inventory': o.nearest_inventory || '',
+                'Distance (mi)': o.distance_to_inventory ?? '',
+                'Suggested Contacts': (o.suggested_contacts || []).join('; '),
+                Status: o.status,
+                'Last Verified': o.last_verified,
+              }));
+              const stamp = new Date().toISOString().slice(0, 10);
+              exportRowsToXlsx(rows, `flare-todays-leads-${selected.name.replace(/\s+/g, '-')}-${stamp}.xlsx`, "Today's Leads");
+              toast.success(`Exported ${rows.length} leads to Excel`);
+            }}
+            variant="outline"
+            size="lg"
+          >
+            📊 Export Excel
+          </Button>
+          <Button onClick={refresh} disabled={scanning} size="lg" className="bg-pink-500 hover:bg-pink-600">
+            {scanning ? '🔄 Scanning…' : '⚡ Refresh Scan'}
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-2 mb-4 flex-wrap">
