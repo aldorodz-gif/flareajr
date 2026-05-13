@@ -41,6 +41,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
       </p>
 
       <div className="flex flex-col gap-8">
+        <MindsetLibrary />
         {showDefense && <DefenseFrameworkCard />}
 
         {/* ── Buyer Persona Chain ── Hero Card */}
