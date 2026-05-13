@@ -10,7 +10,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { signal } = await req.json();
+    const { signal, bdr_id } = await req.json();
     if (!signal || typeof signal !== "string") {
       return new Response(JSON.stringify({ error: "Signal text is required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
