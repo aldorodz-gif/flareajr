@@ -25,6 +25,11 @@ const MISTAKES = [
 
 const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
   const [activeExample, setActiveExample] = useState(0);
+  const { selected } = useBdr();
+  const showDefense =
+    !!selected &&
+    (/milo/i.test(selected.name) ||
+      (selected.markets || []).some(m => /\bwdc\b|washington|virginia|\bva\b|norfolk|tysons|reston|arlington|hampton|newport/i.test(m)));
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
@@ -35,6 +40,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
       </p>
 
       <div className="flex flex-col gap-8">
+        {showDefense && <DefenseFrameworkCard />}
 
         {/* ── Buyer Persona Chain ── Hero Card */}
         <section>
