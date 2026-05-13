@@ -151,22 +151,23 @@ const TabTour = ({ tabId }: Props) => {
   const [showExample, setShowExample] = useState(false);
   const lastTabRef = useRef<string>('');
 
-  // Auto-start once per tab
+  // Auto-start once per tab per BDR
   useEffect(() => {
     if (!tour) return;
-    if (lastTabRef.current === tabId) return;
-    lastTabRef.current = tabId;
+    const key = `${tabId}|${bdrId ?? 'global'}`;
+    if (lastTabRef.current === key) return;
+    lastTabRef.current = key;
     setOpen(false);
     setStepIdx(0);
     setShowExample(false);
     try {
-      if (!localStorage.getItem(tourStorageKey(tabId))) {
+      if (!localStorage.getItem(tourStorageKey(tabId, bdrId))) {
         // small delay so tab content renders first
         const t = window.setTimeout(() => setOpen(true), 350);
         return () => window.clearTimeout(t);
       }
     } catch { /* ignore */ }
-  }, [tabId, tour]);
+  }, [tabId, tour, bdrId]);
 
   // Listen for manual replay/example triggers from the launcher
   useEffect(() => {
