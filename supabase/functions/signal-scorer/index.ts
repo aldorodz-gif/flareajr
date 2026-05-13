@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { loadMindsetBlocks } from "../_shared/mindset.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,7 +10,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { signal } = await req.json();
+    const { signal, bdr_id } = await req.json();
     if (!signal || typeof signal !== "string") {
       return new Response(JSON.stringify({ error: "Signal text is required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -37,7 +38,9 @@ Industry-specific guidance:
 - Sports: Player housing, fellowship programs, seasonal roster moves are HIGH.
 - Aerospace & Aviation: Manufacturing facility buildouts, flight test programs, and new aircraft development partnerships are MEDIUM — they typically lead to engineer and contractor relocations.
 
-TARGET SEGMENT BIAS: This team only sells to SMB and SME companies (roughly 10-1500 employees, under ~$500M revenue). If the company in the signal is clearly Fortune 500 / large enterprise, drop the score by one tier (HIGH→MEDIUM, MEDIUM→LOW) and note in the rationale that the BDR should pivot to SMB/SME subs, vendors, or staffing firms attached to that prime instead.`;
+TARGET SEGMENT BIAS: This team only sells to SMB and SME companies (roughly 10-1500 employees, under ~$500M revenue). If the company in the signal is clearly Fortune 500 / large enterprise, drop the score by one tier (HIGH→MEDIUM, MEDIUM→LOW) and note in the rationale that the BDR should pivot to SMB/SME subs, vendors, or staffing firms attached to that prime instead.
+
+${await loadMindsetBlocks(bdr_id)}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

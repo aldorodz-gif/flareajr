@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import { useBdr } from './BdrContext';
 
 interface SignalsTabProps {
   onNavigate: (tabId: string) => void;
@@ -35,6 +36,7 @@ interface ScoreResult {
 }
 
 const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
+  const { selected } = useBdr();
   const [signalText, setSignalText] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScoreResult | null>(null);
@@ -69,7 +71,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
     setResult(null);
     try {
       const { data, error: fnError } = await supabase.functions.invoke('signal-scorer', {
-        body: { signal: signalText.trim() },
+        body: { signal: signalText.trim(), bdr_id: selected?.id ?? null },
       });
       if (fnError) throw fnError;
       if (data.error) throw new Error(data.error);
@@ -79,7 +81,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
     } finally {
       setLoading(false);
     }
-  }, [signalText]);
+  }, [signalText, selected?.id]);
 
   const handleReset = () => {
     setSignalText('');
