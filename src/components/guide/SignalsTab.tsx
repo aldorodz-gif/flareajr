@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import { useBdr } from './BdrContext';
 
 interface SignalsTabProps {
   onNavigate: (tabId: string) => void;
