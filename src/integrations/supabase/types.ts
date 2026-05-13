@@ -65,6 +65,44 @@ export type Database = {
           },
         ]
       }
+      bdr_mindsets: {
+        Row: {
+          bdr_id: string | null
+          content: string
+          created_at: string
+          id: string
+          label: string
+          scope: string
+          updated_at: string
+        }
+        Insert: {
+          bdr_id?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          label: string
+          scope?: string
+          updated_at?: string
+        }
+        Update: {
+          bdr_id?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          label?: string
+          scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bdr_mindsets_bdr_id_fkey"
+            columns: ["bdr_id"]
+            isOneToOne: false
+            referencedRelation: "bdr_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bdr_profiles: {
         Row: {
           created_at: string
