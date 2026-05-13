@@ -223,7 +223,7 @@ const TabTour = ({ tabId }: Props) => {
 
   const finish = () => {
     setOpen(false);
-    try { localStorage.setItem(tourStorageKey(tabId), '1'); } catch { /* ignore */ }
+    try { localStorage.setItem(tourStorageKey(tabId, bdrId), '1'); } catch { /* ignore */ }
   };
   const stop = () => finish();
   const next = () => stepIdx < tour.steps.length - 1 ? setStepIdx(stepIdx + 1) : finish();
