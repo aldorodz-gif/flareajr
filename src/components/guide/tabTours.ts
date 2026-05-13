@@ -126,5 +126,7 @@ export const TAB_TOURS: Record<string, TabTour> = {
   },
 };
 
-export const tourStorageKey = (tabId: string) => `flare:tour:seen:${tabId}`;
-export const exampleStorageKey = (tabId: string) => `flare:example:open:${tabId}`;
+export const tourStorageKey = (tabId: string, bdrId?: string | null) =>
+  `flare:tour:seen:${bdrId || 'global'}:${tabId}`;
+export const exampleStorageKey = (tabId: string, bdrId?: string | null) =>
+  `flare:example:open:${bdrId || 'global'}:${tabId}`;
