@@ -1,17 +1,19 @@
 import { exampleStorageKey, TAB_TOURS } from './tabTours';
+import { useBdr } from './BdrContext';
 
 interface Props {
   tabId: string;
 }
 
 const TourLauncher = ({ tabId }: Props) => {
+  const { selected } = useBdr();
   if (!TAB_TOURS[tabId]) return null;
 
   const startTour = () => {
     window.dispatchEvent(new CustomEvent('flare:tour:start', { detail: tabId }));
   };
   const showExample = () => {
-    try { localStorage.setItem(exampleStorageKey(tabId), '1'); } catch { /* ignore */ }
+    try { localStorage.setItem(exampleStorageKey(tabId, selected?.id ?? null), '1'); } catch { /* ignore */ }
     window.dispatchEvent(new CustomEvent('flare:example:show', { detail: tabId }));
   };
 
@@ -40,7 +42,7 @@ const TourLauncher = ({ tabId }: Props) => {
         💡 See an example
       </button>
       <span className="text-[11px] text-muted-foreground italic ml-1">
-        Optional — auto-runs once per tab. Stop anytime.
+        Optional — auto-runs once per tab per BDR. Stop anytime.
       </span>
     </div>
   );
