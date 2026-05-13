@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { loadMindsetBlocks } from "../_shared/mindset.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -67,9 +68,12 @@ serve(async (req) => {
     const focus = focusRotations[Math.floor(Math.random() * focusRotations.length)];
     const variety = `Variety seed: ${Date.now()}-${Math.floor(Math.random() * 100000)}.`;
 
+    const mindsetBlock = await loadMindsetBlocks(bdr_id);
+
     const systemPrompt = [
       "You are a sales intelligence analyst for a corporate housing BDR at National Corporate Housing.",
       `Today is ${today}.`,
+      mindsetBlock,
       `BDR markets: ${markets.join(", ")}.`,
       `BDR target verticals: ${verticals.join(", ") || "all 7 verticals"}.`,
       `BDR inventory near: ${inv.map(i => `${i.city}, ${i.state}`).join("; ") || "n/a"}.`,

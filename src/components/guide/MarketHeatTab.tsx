@@ -109,6 +109,7 @@ const MarketHeatTab = () => {
           state,
           city,
           vertical,
+          bdr_id: selected?.id ?? null,
           // Send recent companies (current + rolling history, scoped to this market) so the AI returns fresh leads.
           exclude: Array.from(new Set([
             ...leads.map(l => l.company_name),
