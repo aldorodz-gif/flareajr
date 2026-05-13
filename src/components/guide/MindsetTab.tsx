@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Eyebrow from './Eyebrow';
 import SectionNav from './SectionNav';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useBdr } from './BdrContext';
+import DefenseFrameworkCard from './DefenseFrameworkCard';
 
 interface MindsetTabProps {
   onNavigate: (tabId: string) => void;
