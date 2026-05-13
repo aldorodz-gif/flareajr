@@ -20,7 +20,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { state, city, vertical, exclude } = await req.json();
+    const { state, city, vertical, exclude, bdr_id } = await req.json();
     if (!state || !city) {
       return new Response(JSON.stringify({ error: "State and city are required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
