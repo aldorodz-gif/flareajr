@@ -3,6 +3,8 @@ import Eyebrow from './Eyebrow';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { getDiscoveryPlaybook } from './discoveryQuestions';
 import AddToPipelineSheet from './AddToPipelineSheet';
+import { exportRowsToXlsx } from './exportXlsx';
+import { toast } from '@/hooks/use-toast';
 
 export interface ScanLead {
   company_name: string;
