@@ -1,5 +1,6 @@
 import { useEffect, useState, useLayoutEffect, useRef } from 'react';
 import { TAB_TOURS, tourStorageKey, exampleStorageKey, TourPreviewKind } from './tabTours';
+import { useBdr } from './BdrContext';
 
 const PreviewBlock = ({ kind }: { kind: TourPreviewKind }) => {
   const wrap: React.CSSProperties = { background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)', borderRadius: 10, padding: 10 };
