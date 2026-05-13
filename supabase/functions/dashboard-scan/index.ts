@@ -51,21 +51,26 @@ serve(async (req) => {
     const varietySeed = `${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
     const excludeList: string[] = Array.isArray(exclude) ? exclude.filter(Boolean).slice(0, 60) : [];
 
+    const resolvedBdrId = bdr_id || (await findBdrIdForMarket(city, state));
+    const mindsetBlock = await loadMindsetBlocks(resolvedBdrId);
+
     const systemPrompt = [
       "You are a market intelligence analyst for a corporate housing sales BDR at National Corporate Housing.",
       `Today is ${today}.`,
       `The rep covers ${city}, ${state}.`,
       verticalScope,
-      "Surface 8 high-confidence prospect signals — companies in this market that likely need 30+ day corporate housing in the next 90 days.",
-      "Signal types include: announced expansions, new office openings, large project wins, government contract awards, hiring surges, mergers, hospital staffing initiatives, construction project starts, intern cohort announcements, etc.",
+      mindsetBlock,
+      "MISSION: Run a true DEEP-DIVE — leave no stone unturned. Cross-reference news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, LinkedIn job posts / career pages, regional business journals, hospital/university expansion news, defense and DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press.",
+      "Surface 10 high-confidence prospect signals — SMB/SME companies in this market that likely need 30+ day corporate housing in the next 90 days. The 'company' field MUST be the SMB/SME executing the work, never the F500 / hospital system / utility / agency umbrella.",
+      "Signal types include: announced expansions, new office openings, large project wins, government contract awards, hiring surges, mergers, hospital staffing initiatives, construction project starts, intern cohort announcements, mobilizations, training cohorts, infrastructure modernization, etc.",
       focus,
       excludeList.length
         ? `CRITICAL: DO NOT return any of these companies — they were already shown. Find DIFFERENT companies (different specialty subs, different niche firms, different program managers): ${excludeList.join(", ")}.`
-        : "Surface fresh, less-obvious SMBs — go beyond the top 10 most-known firms in this market.",
+        : "Surface fresh, less-obvious SMBs — go beyond the top 10 most-known firms in this market. Dig into specialty subs, regional staffing firms, niche engineering shops.",
       `Variety seed: ${varietySeed}. Use this to diversify your selection across scans.`,
       "ALSO return a ranked breakdown of which of the 7 canonical verticals are MOST active in this market right now (share percentages summing to 100).",
       "Only use the 7 canonical vertical names exactly as listed.",
-      "For each lead, give: company_name, vertical (one of the 7), signal_type (e.g. 'Expansion', 'Contract Win', 'Hiring Surge', 'Project Award'), signal_detail (1 specific sentence), why_housing (one sentence on the housing/travel implication), and recommended_titles (3-5 job titles to target).",
+      "For each lead, give: company_name, vertical (one of the 7), signal_type (e.g. 'Expansion', 'Contract Win', 'Hiring Surge', 'Project Award'), signal_detail (1 specific sentence anchored to a real-sounding event), why_housing (one sentence on the housing/travel implication, ideally citing crew size or duration), and recommended_titles (3-5 job titles to target — never C-suite).",
       "Do not fabricate specific dollar amounts or dates you cannot reasonably infer; keep claims plausible and generic when uncertain.",
       "Return ONLY valid JSON via the tool call.",
     ].join(" ");
