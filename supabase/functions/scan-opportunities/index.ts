@@ -111,70 +111,33 @@ serve(async (req) => {
       "MANDATORY CITATION: every lead MUST include a real, public source_url (https://...) — news article, RFP/award notice, press release, official notice. NO synthetic URLs. NO placeholders. NO bare domains. If you cannot cite a verifiable source, do NOT return that lead.",
       "DO NOT prefix why_it_matters with [WHALE], [GLOBAL], [COLLAB], or [TREND:] tags. Plain prose only.",
       variety,
-      "Return ONLY via the tool call.",
+      "OUTPUT FORMAT — return ONLY a JSON object inside a ```json code fence, no prose:",
+      '{ "opportunities": [ { "company": "...", "market": "City, ST", "project": "...", "vertical": "...", "signal_type": "...", "description": "...", "why_it_matters": "...", "estimated_stay": "...", "discovery_score": 0-100, "housing_fit_score": 0-100, "confidence_score": 0-100, "suggested_contacts": ["..."], "pitch_angle": "...", "key_talking_points": ["..."], "source_type": "...", "source_url": "https://..." } ] }',
     ].filter(Boolean).join(" ");
 
-    const oppSchema = {
-      type: "object",
-      properties: {
-        opportunities: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              company: { type: "string" },
-              market: { type: "string" },
-              project: { type: "string" },
-              vertical: { type: "string" },
-              signal_type: { type: "string" },
-              description: { type: "string" },
-              why_it_matters: { type: "string" },
-              estimated_stay: { type: "string" },
-              discovery_score: { type: "number" },
-              housing_fit_score: { type: "number" },
-              confidence_score: { type: "number" },
-              suggested_contacts: { type: "array", items: { type: "string" } },
-              pitch_angle: { type: "string" },
-              key_talking_points: { type: "array", items: { type: "string" } },
-              source_type: { type: "string" },
-              source_url: { type: "string" },
-            },
-            required: ["company","market","project","vertical","signal_type","description","why_it_matters","estimated_stay","discovery_score","housing_fit_score","confidence_score","suggested_contacts","pitch_angle","key_talking_points","source_type","source_url"],
-          },
-        },
-      },
-      required: ["opportunities"],
-    };
-
-    const aiRes = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${PERPLEXITY_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "sonar-pro",
+    let opportunities: Array<{
+      company: string; market: string; project: string; vertical: string; signal_type: string;
+      description: string; why_it_matters: string; estimated_stay: string;
+      discovery_score: number; housing_fit_score: number; confidence_score: number;
+      suggested_contacts: string[]; pitch_angle: string; key_talking_points: string[];
+      source_type: string; source_url: string;
+    }>;
+    try {
+      const text = await callGeminiGrounded({
+        systemPrompt,
+        userPrompt: `Use Google Search to scan opportunities for ${markets.join(", ")}. Today is ${today}. Return 12+ NEW companies not in the exclusion list. Respond with JSON matching the schema.`,
         temperature: 0.7,
-        search_recency_filter: "month",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: `Scan opportunities for ${markets.join(", ")}. Today is ${today}. Return 12+ NEW companies not in the exclusion list. Respond with JSON matching the schema.` },
-        ],
-        response_format: {
-          type: "json_schema",
-          json_schema: { name: "return_opportunities", schema: oppSchema },
-        },
-      }),
-    });
-
-    if (!aiRes.ok) {
-      if (aiRes.status === 429) return new Response(JSON.stringify({ error: "Rate limited. Try again shortly." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (aiRes.status === 401 || aiRes.status === 402) return new Response(JSON.stringify({ error: "Perplexity credits/auth issue." }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      const errTxt = await aiRes.text();
-      throw new Error(`Perplexity error ${aiRes.status}: ${errTxt}`);
+      });
+      const parsed = extractJson<{ opportunities: typeof opportunities }>(text);
+      opportunities = parsed.opportunities || [];
+    } catch (e) {
+      if (e instanceof GeminiError) {
+        return new Response(JSON.stringify({ error: e.message }), {
+          status: e.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      throw e;
     }
-
-    const aiData = await aiRes.json();
-    const content = aiData.choices?.[0]?.message?.content;
-    if (!content) throw new Error("No content returned");
-    const { opportunities } = JSON.parse(content);
 
     // Geocode helper using OpenStreetMap Nominatim (free, no key). Cached per request.
     const geoCache = new Map<string, { lat: number; lon: number } | null>();
