@@ -30,13 +30,15 @@ export interface TabTour {
 export const TAB_TOURS: Record<string, TabTour> = {
   dashboard: {
     tabId: 'dashboard',
-    intro: 'Your morning command center — a snapshot of today before you do anything else.',
+    intro: 'Your morning launch pad — what to do, what\'s in flight, where you stand. In that order.',
     example:
-      'Example: You log in at 8:02am. Dashboard shows "3 emails due today, 1 overdue follow-up with Acme Relocation, 2 fresh leads in Phoenix." You click straight into Today\'s Leads and start working — no thinking required.',
+      'Example: You log in at 8:02am. Briefing says 2 fresh leads + 3 due today + 1 overdue. Action Queue lists Acme Corp (3d overdue, Send now) and a meeting Wed 10am with Beta LLC. Pipeline Health: 12 active, 2 stalled. Momentum: 4-day streak, 18/25 weekly touches. You click "Send now" on Acme and start working.',
     steps: [
-      { title: 'Welcome to your Dashboard', body: 'This is the first thing you should look at every morning. It tells you what\'s due, what\'s hot, and where to start.', why: 'Less decision-making = faster start.' },
-      { title: 'Pick your BDR / market', body: 'The market selector at the top scopes every other tab to your territory. Change it once and the whole app follows.', why: 'No re-filtering on each tab.' },
-      { title: 'Daily briefing toast', body: 'A floating summary appears with overdue, due-today, and fresh-lead counts. Click any pill to jump to that work.', why: 'Triage in 5 seconds.' },
+      { title: 'Pick your BDR first', body: 'The selector up top scopes every other tab to your market. Change it once and the whole app follows.', why: 'No re-filtering on each tab.' },
+      { title: 'Daily Briefing — the headline', body: 'Purple banner: greeting + 4 stat tiles (Today\'s Leads, Due Today, Overdue, Meetings) and Top Picks chips. Click any tile to jump to that work.', why: 'Triage in 5 seconds.' },
+      { title: 'Today\'s Action Queue — what to do right now', body: 'A short ordered list: overdue touches first, then upcoming meetings, then top-priority new leads. Each row has a one-tap action button.', why: 'Stop deciding what to do — just do the next row.' },
+      { title: 'Pipeline Health — what\'s in flight', body: 'Four mini-cards: Active pipeline, Added this week, Stalled 7+ days, Meeting rate. Stalled count is your nudge to send a touch.', why: 'Catch deals going cold before they die.' },
+      { title: 'Momentum — are you on pace', body: 'Teal card shows your current send streak and weekly touches vs. your goal. Personal-only — no team comparison, no leaderboard.', why: 'Keep your own rhythm, hit your own number.' },
     ],
   },
 
