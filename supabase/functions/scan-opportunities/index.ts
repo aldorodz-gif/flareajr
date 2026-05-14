@@ -385,7 +385,7 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ inserted, skipped, total: opportunities.length }), {
+    return new Response(JSON.stringify({ inserted, skipped, unverified, total: opportunities.length }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
