@@ -72,7 +72,7 @@ serve(async (req) => {
 
     const userPrompt = `Search Google right now for 12-18 SMB/SME companies in ${city}, ${state} with active corporate housing demand signals (expansions, contract wins, hiring surges, project starts, mobilizations, subcontractor mobilizations under larger F500/utility/agency projects) in the last 90 days. Apply the OPERATOR MINDSET rules. Include source_url for each lead from your search results.`;
 
-    let result: { leads: Array<{ company_name: string; source_url?: string; [k: string]: unknown }>; top_verticals?: unknown[] };
+    let result: Record<string, unknown> & { leads?: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> };
     try {
       const text = await callGeminiGrounded({ systemPrompt, userPrompt, temperature: 0.3 });
       result = extractJson(text);
