@@ -135,10 +135,9 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
       if (tErr) {
         toast({ title: 'Pipeline saved, sequence partial', description: tErr.message, variant: 'destructive' });
       } else {
-        const draftedCount = taskRows.filter(t => t.notes).length;
         toast({
           title: '+ Pipeline · sequence scheduled',
-          description: `${lead.company_name} · ${draftedCount}/5 emails pre-drafted across 21 days`,
+          description: `${lead.company_name} · Email 1 ready · Emails 2-5 draft on demand from Pipeline`,
         });
       }
       window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
