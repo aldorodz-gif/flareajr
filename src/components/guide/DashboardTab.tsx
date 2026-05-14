@@ -1,5 +1,4 @@
 import AiToolCard from './AiToolCard';
-import BdrScoreboard from './BdrScoreboard';
 import BdrSelector from './BdrSelector';
 import DailyBrief from './DailyBrief';
 
@@ -10,15 +9,13 @@ const DashboardTab = () => {
         <AiToolCard
           icon="🏠"
           title="Your Dashboard"
-          subtitle="Your numbers at a glance — switch BDR to compare"
+          subtitle="Your numbers at a glance"
         >
           <BdrSelector />
         </AiToolCard>
       </div>
 
       <DailyBrief />
-
-      <BdrScoreboard />
     </section>
   );
 };
