@@ -13,6 +13,7 @@ export interface ScanLead {
   signal_detail: string;
   why_housing: string;
   recommended_titles: string[];
+  source_url?: string;
 }
 
 interface LeadFeedProps {
@@ -115,12 +116,23 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   <p className="text-[12px] italic mb-2" style={{ color: '#64748b' }}>
                     <span className="font-bold not-italic" style={{ color: '#14b8a6' }}>Why housing:</span> {lead.why_housing}
                   </p>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     {lead.recommended_titles.slice(0, 5).map((t) => (
                       <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ background: '#FAF7F2', color: '#475569', border: '1px solid rgba(14,30,58,.08)' }}>
                         {t}
                       </span>
                     ))}
+                    {lead.source_url && (
+                      <a
+                        href={lead.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded inline-flex items-center gap-1 transition-all hover:-translate-y-0.5"
+                        style={{ background: 'rgba(20,184,166,.12)', color: '#14b8a6', border: '1px solid rgba(20,184,166,.35)' }}
+                      >
+                        🔗 Source
+                      </a>
+                    )}
                   </div>
                 </div>
 
