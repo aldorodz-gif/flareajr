@@ -74,6 +74,7 @@ serve(async (req) => {
       "You are a sales intelligence analyst for a corporate housing BDR at National Corporate Housing.",
       `Today is ${today}.`,
       mindsetBlock,
+      "OPERATING RULE: The OPERATOR MINDSET block above is load-bearing. Apply every rule, signal type, and target archetype it lists when you select leads — do not just acknowledge it, USE it on every lead.",
       `BDR markets: ${markets.join(", ")}.`,
       `BDR target verticals: ${verticals.join(", ") || "all 7 verticals"}.`,
       `BDR inventory near: ${inv.map(i => `${i.city}, ${i.state}`).join("; ") || "n/a"}.`,
