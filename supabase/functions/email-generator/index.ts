@@ -219,55 +219,55 @@ ${referenceEmail}`;
       required.push("suggested_targets", "article_insight");
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "sonar-pro",
+        temperature: 0.5,
+        search_recency_filter: "month",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Write the email now.` },
+          { role: "user", content: `Search the live web for the most recent verifiable context on ${company} related to: "${signal}". Then write the email now, anchoring sentence 1 on a real, current detail.` },
         ],
-        tools: [{
-          type: "function",
-          function: {
+        response_format: {
+          type: "json_schema",
+          json_schema: {
             name: "write_email",
-            description: "Generate a sales outreach email with optional target suggestions",
-            parameters: {
+            schema: {
               type: "object",
               properties: emailProperties,
               required,
-              additionalProperties: false,
             },
           },
-        }],
-        tool_choice: { type: "function", function: { name: "write_email" } },
+        },
       }),
     });
 
     if (!response.ok) {
+      const txt = await response.text();
+      console.error("Perplexity error", response.status, txt);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited. Please try again in a moment." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
+      if (response.status === 401 || response.status === 402) {
+        return new Response(JSON.stringify({ error: "Perplexity credit/auth issue." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      throw new Error("AI gateway error");
+      throw new Error("Perplexity error " + response.status);
     }
 
     const data = await response.json();
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall) throw new Error("No tool call in response");
-
-    const result = JSON.parse(toolCall.function.arguments);
-    return new Response(JSON.stringify(result), {
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) throw new Error("No content from Perplexity");
+    const result = JSON.parse(content);
+    return new Response(JSON.stringify({ ...result, citations: data.citations ?? [] }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
