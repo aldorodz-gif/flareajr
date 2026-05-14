@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
+import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface Opportunity {
   id: string;
