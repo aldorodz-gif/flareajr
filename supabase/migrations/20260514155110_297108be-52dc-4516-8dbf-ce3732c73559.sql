@@ -1,0 +1,1 @@
+DELETE FROM public.opportunities WHERE source_url IS NULL OR source_url = '';
