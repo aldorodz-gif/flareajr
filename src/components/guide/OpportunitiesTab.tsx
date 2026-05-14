@@ -132,6 +132,12 @@ export default function OpportunitiesTab() {
   useEffect(() => { load(); }, [load]);
 
   const refresh = async () => {
+    if (!PERPLEXITY_FEATURES_ENABLED) {
+      toast.error('Scan is temporarily disabled', {
+        description: 'Live opportunity scans require Perplexity, which is currently disconnected.',
+      });
+      return;
+    }
     if (!selected) return;
     setScanning(true);
     try {
