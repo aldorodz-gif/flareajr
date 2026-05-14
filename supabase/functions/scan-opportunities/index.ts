@@ -106,6 +106,8 @@ serve(async (req) => {
       "2026-2027 CATALYST FOCUS — scan especially for: (a) PUBLIC HOUSING MODERNIZATION — HUD/PHA 'Phased Modernization' or 'Total Building Rehab' bids >$20M; IGNORE pure new construction (no displacement). (b) TECHNICAL WORKFORCE — Data center 'commissioning' or 'equipment onboarding' crews in Northern VA and Texas hubs, 6-9 month rotations of specialized technicians. (c) STRATEGIC M&A — acquisitions where acquirer HQ and target HQ are in different cities, integration teams of 20+ executives relocating 6+ months.",
       "OUTPUT REQUIREMENTS per lead — make sure why_it_matters reads as a one-sentence Catalyst Event AND key_talking_points contains: (1) The Payer (GC or acquiring company holding the budget), (2) Unit Count (specific or estimated, e.g. '~75 units'), (3) Friction Point (why corporate housing vs hotel — kitchens, length of stay, family displacement, crew cohesion), (4) Buyer HQ city/state for RoE check.",
       "JUST FLAG — do not draft outreach copy or email subject lines here; populate the data fields only.",
+      "MANDATORY CITATION: every lead MUST include a real, public source_url (https://...) — news article, RFP/award notice, press release, official notice. NO synthetic URLs. NO placeholders. NO bare domains. If you cannot cite a verifiable source, do NOT return that lead.",
+      "DO NOT prefix why_it_matters with [WHALE], [GLOBAL], [COLLAB], or [TREND:] tags. Plain prose only.",
       variety,
       "Return ONLY via the tool call.",
     ].filter(Boolean).join(" ");
