@@ -7,6 +7,7 @@ import TopVerticals, { VerticalShare } from './TopVerticals';
 import LeadFeed, { ScanLead } from './LeadFeed';
 import InventoryMap from './InventoryMap';
 import { useBdr } from './BdrContext';
+import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 const MARKET_HEAT_ROUTE_KEY = 'flare.marketHeatRoute';
 
