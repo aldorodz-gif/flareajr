@@ -87,11 +87,40 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
         return;
       }
 
+      // Generate Emails 2-5 via Perplexity, grounded on the lead's signal + source URL.
+      // Email 1 is the one the rep just edited above; we keep that verbatim.
+      let sequenceEmails: Array<{ step_key: string; subject: string; body: string }> = [];
+      try {
+        const { data: seqData, error: seqErr } = await supabase.functions.invoke('sequence-emails', {
+          body: {
+            company: lead.company_name,
+            vertical: lead.vertical,
+            signal_type: lead.signal_type,
+            signal_detail: lead.signal_detail,
+            why_housing: lead.why_housing,
+            buyer_title: effectiveTitle,
+            source_url: lead.source_url,
+            city: lead.city,
+            tone,
+          },
+        });
+        if (seqErr) throw seqErr;
+        if (seqData?.error) throw new Error(seqData.error);
+        sequenceEmails = Array.isArray(seqData?.emails) ? seqData.emails : [];
+      } catch (e) {
+        // Non-blocking: still save the pipeline + the rep's Email 1; flag missing drafts.
+        toast({
+          title: 'Saved Email 1 — Emails 2-5 will draft on demand',
+          description: e instanceof Error ? e.message : 'Sequence draft failed.',
+        });
+      }
+
       const noteBody =
         `Target: ${effectiveTitle}\n` +
         `Signal: ${lead.signal_type} — ${lead.signal_detail}\n` +
-        `Why housing: ${lead.why_housing}\n\n` +
-        `--- EMAIL 1 ---\nSubject: ${emailSubject}\n\n${emailBody}`;
+        `Why housing: ${lead.why_housing}\n` +
+        (lead.source_url ? `Source: ${lead.source_url}\n` : '') +
+        `\n--- EMAIL 1 ---\nSubject: ${emailSubject}\n\n${emailBody}`;
 
       const { error: piErr } = await supabase.from('pipeline_items').insert({
         user_id: user.id,
@@ -102,22 +131,39 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
       });
       if (piErr) throw piErr;
 
-      const taskRows = SEQUENCE_STEPS.map(step => ({
-        user_id: user.id,
-        company_name: lead.company_name,
-        contact_title: effectiveTitle,
-        task_type: step.task_type,
-        due_date: dueDateForDay(step.day),
-        status: 'pending',
-        signal: lead.signal_detail,
-        reason: step.reason,
-        notes: step.day === 1 ? `Subject: ${emailSubject}\n\n${emailBody}` : null,
-      }));
+      const draftFor = (stepKey: string) =>
+        sequenceEmails.find((e) => e.step_key === stepKey);
+
+      const taskRows = SEQUENCE_STEPS.map(step => {
+        let notes: string | null = null;
+        if (step.day === 1) {
+          // Use the rep's edited Email 1 verbatim.
+          notes = `Subject: ${emailSubject}\n\n${emailBody}`;
+        } else {
+          const d = draftFor(step.task_type);
+          notes = d ? `Subject: ${d.subject}\n\n${d.body}` : null;
+        }
+        return {
+          user_id: user.id,
+          company_name: lead.company_name,
+          contact_title: effectiveTitle,
+          task_type: step.task_type,
+          due_date: dueDateForDay(step.day),
+          status: 'pending',
+          signal: lead.signal_detail,
+          reason: step.reason,
+          notes,
+        };
+      });
       const { error: tErr } = await supabase.from('tasks').insert(taskRows);
       if (tErr) {
         toast({ title: 'Pipeline saved, sequence partial', description: tErr.message, variant: 'destructive' });
       } else {
-        toast({ title: '+ Pipeline · sequence scheduled', description: `${lead.company_name} · 5 emails over 21 days` });
+        const draftedCount = taskRows.filter(t => t.notes).length;
+        toast({
+          title: '+ Pipeline · sequence scheduled',
+          description: `${lead.company_name} · ${draftedCount}/5 emails pre-drafted across 21 days`,
+        });
       }
       window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
       onSaved?.(lead);
