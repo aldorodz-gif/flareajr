@@ -8,6 +8,7 @@ import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { US_STATES } from './usStatesData';
+import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface EventsTabProps {
   onNavigate: (tabId: string) => void;
