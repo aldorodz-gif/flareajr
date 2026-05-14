@@ -339,52 +339,48 @@ serve(async (req) => {
       "Return ONLY valid JSON, no explanation."
     ].join(" ");
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const eventSchema = {
+      type: "object",
+      properties: {
+        events: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              organization: { type: "string" },
+              date: { type: "string" },
+              location: { type: "string" },
+              why: { type: "string" },
+              attendees: { type: "string" },
+              angle: { type: "string" },
+              priority: { type: "string", enum: ["High", "Medium", "Low"] },
+              url: { type: "string" },
+            },
+            required: ["name", "organization", "date", "location", "why", "attendees", "angle", "priority", "url"],
+          },
+        },
+      },
+      required: ["events"],
+    };
+
+    const response = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: "Bearer " + LOVABLE_API_KEY,
+        Authorization: "Bearer " + PERPLEXITY_API_KEY,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "sonar-pro",
+        search_recency_filter: "month",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: "Find networking events for " + vertical + " in " + city + " within the " + tf + "." },
+          { role: "user", content: "Find networking events for " + vertical + " in " + city + " within the " + tf + ". Return JSON matching the schema." },
         ],
-        tools: [{
-          type: "function",
-          function: {
-            name: "list_events",
-            description: "Return a list of networking events",
-            parameters: {
-              type: "object",
-              properties: {
-                events: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      name: { type: "string", description: "Event name" },
-                      organization: { type: "string", description: "Hosting organization name" },
-                      date: { type: "string", description: "Date or date range" },
-                      location: { type: "string", description: "Venue or location" },
-                      why: { type: "string", description: "Why it matters for corporate housing sales" },
-                      attendees: { type: "string", description: "Type of attendees" },
-                      angle: { type: "string", description: "Suggested outreach angle" },
-                      priority: { type: "string", enum: ["High", "Medium", "Low"], description: "Priority for prospecting" },
-                      url: { type: "string", description: "Homepage URL of the hosting organization. Empty string if unsure." },
-                    },
-                    required: ["name", "organization", "date", "location", "why", "attendees", "angle", "priority"],
-                    additionalProperties: false,
-                  },
-                },
-              },
-              required: ["events"],
-              additionalProperties: false,
-            },
-          },
-        }],
-        tool_choice: { type: "function", function: { name: "list_events" } },
+        response_format: {
+          type: "json_schema",
+          json_schema: { name: "list_events", schema: eventSchema },
+        },
       }),
     });
 
@@ -394,19 +390,19 @@ serve(async (req) => {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
+      if (response.status === 401 || response.status === 402) {
+        return new Response(JSON.stringify({ error: "Perplexity API key issue or credits exhausted." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      throw new Error("AI gateway error");
+      throw new Error("Perplexity error: " + response.status);
     }
 
     const data = await response.json();
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall) throw new Error("No tool call in response");
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) throw new Error("No content in response");
 
-    const result = JSON.parse(toolCall.function.arguments);
+    const result = JSON.parse(content);
     const rawEvents: EventItem[] = Array.isArray(result?.events) ? result.events : [];
     const verifiedEvents = (await Promise.all(rawEvents.map((event) => verifyEvent(event, city))))
       .filter((event): event is EventItem => Boolean(event));
