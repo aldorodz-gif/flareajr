@@ -292,12 +292,45 @@ serve(async (req) => {
       return null;
     };
 
+    // URL verifier — fetches the source page and confirms (a) it loads (2xx/3xx) and
+    // (b) the company name actually appears in the page text. No URL or failed verify = lead is dropped.
+    const verifyUrlMentionsCompany = async (url: string, company: string): Promise<boolean> => {
+      try {
+        const u = new URL(url);
+        if (u.protocol !== "https:" && u.protocol !== "http:") return false;
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 8000);
+        const res = await fetch(url, {
+          method: "GET",
+          redirect: "follow",
+          signal: ctrl.signal,
+          headers: { "User-Agent": "Mozilla/5.0 (compatible; FlareLeadVerifier/1.0)" },
+        });
+        clearTimeout(timer);
+        if (!res.ok) return false;
+        const text = (await res.text()).toLowerCase();
+        // Match on the strongest distinctive token of the company name (longest word > 3 chars).
+        const tokens = company.toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length > 3);
+        if (tokens.length === 0) return text.includes(company.toLowerCase());
+        return tokens.some(t => text.includes(t));
+      } catch {
+        return false;
+      }
+    };
+
     let inserted = 0;
     let skipped = 0;
+    let unverified = 0;
     for (const o of opportunities) {
       const blob = `${o.company} ${o.description} ${o.project}`;
       if (isCompetitor(blob)) { skipped++; continue; }
       if (!hasHousingNeed(blob)) { skipped++; continue; }
+
+      // HARD GATE: every lead must have a verifiable source URL that actually mentions the company.
+      if (!o.source_url || !(await verifyUrlMentionsCompany(o.source_url, o.company))) {
+        unverified++;
+        continue;
+      }
 
       const composite = (Number(o.discovery_score) * 0.4) + (Number(o.housing_fit_score) * 0.4) + (Number(o.confidence_score) * 0.2);
       const priority = composite >= 80 ? "Top Priority" : composite >= 65 ? "Strong Opportunity" : composite >= 45 ? "Early Signal" : "Reject";
@@ -352,7 +385,7 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ inserted, skipped, total: opportunities.length }), {
+    return new Response(JSON.stringify({ inserted, skipped, unverified, total: opportunities.length }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
