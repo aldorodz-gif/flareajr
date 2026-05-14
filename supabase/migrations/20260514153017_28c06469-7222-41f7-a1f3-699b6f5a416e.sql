@@ -1,0 +1,1 @@
+UPDATE public.opportunities SET why_it_matters = TRIM(REGEXP_REPLACE(why_it_matters, '\[(WHALE|GLOBAL|COLLAB|TREND:[^\]]*)\]\s*', '', 'gi')) WHERE why_it_matters ~* '\[(WHALE|GLOBAL|COLLAB|TREND:)';
