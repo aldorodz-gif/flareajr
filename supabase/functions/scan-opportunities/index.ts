@@ -38,8 +38,8 @@ serve(async (req) => {
     const { data: bdr, error: bdrErr } = await supabase.from("bdr_profiles").select("*").eq("id", bdr_id).maybeSingle();
     if (bdrErr || !bdr) throw new Error("BDR profile not found");
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const PERPLEXITY_API_KEY = Deno.env.get("PERPLEXITY_API_KEY");
+    if (!PERPLEXITY_API_KEY) throw new Error("PERPLEXITY_API_KEY not configured");
 
     const today = new Date().toISOString().split("T")[0];
     const verticals = (bdr.target_verticals as string[]) || [];
