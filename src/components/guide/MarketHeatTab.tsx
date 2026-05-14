@@ -11,6 +11,53 @@ import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 const MARKET_HEAT_ROUTE_KEY = 'flare.marketHeatRoute';
 
+const FALLBACK_LEAD_DETAIL = 'Fresh market signal identified.';
+const FALLBACK_HOUSING_REASON = 'Potential temporary housing demand needs validation.';
+
+const asTrimmedString = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
+
+const normalizeLead = (value: unknown): ScanLead | null => {
+  if (!value || typeof value !== 'object') return null;
+
+  const lead = value as Record<string, unknown>;
+  const company_name = asTrimmedString(lead.company_name);
+  if (!company_name) return null;
+
+  const recommended_titles = Array.isArray(lead.recommended_titles)
+    ? lead.recommended_titles
+        .filter((title): title is string => typeof title === 'string' && title.trim().length > 0)
+        .map((title) => title.trim())
+        .slice(0, 5)
+    : [];
+
+  return {
+    company_name,
+    vertical: asTrimmedString(lead.vertical) || 'Unknown vertical',
+    signal_type: asTrimmedString(lead.signal_type) || 'Market signal',
+    signal_detail: asTrimmedString(lead.signal_detail) || FALLBACK_LEAD_DETAIL,
+    why_housing: asTrimmedString(lead.why_housing) || FALLBACK_HOUSING_REASON,
+    recommended_titles,
+    source_url: asTrimmedString(lead.source_url) || undefined,
+  };
+};
+
+const normalizeVerticalShare = (value: unknown): VerticalShare | null => {
+  if (!value || typeof value !== 'object') return null;
+
+  const row = value as Record<string, unknown>;
+  const vertical = asTrimmedString(row.vertical);
+  if (!vertical) return null;
+
+  const sharePctRaw = typeof row.share_pct === 'number' ? row.share_pct : Number(row.share_pct);
+  const share_pct = Number.isFinite(sharePctRaw) ? Math.max(0, Math.min(100, Math.round(sharePctRaw))) : 0;
+
+  return {
+    vertical,
+    share_pct,
+    driver: asTrimmedString(row.driver) || 'Active demand signals in this market.',
+  };
+};
+
 const MarketHeatTab = () => {
   const { selected } = useBdr();
   const [state, setState] = useState('');
@@ -128,10 +175,19 @@ const MarketHeatTab = () => {
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      const newLeads: ScanLead[] = data.leads ?? [];
+      const newLeads: ScanLead[] = Array.isArray(data?.leads)
+        ? data.leads.map(normalizeLead).filter((lead): lead is ScanLead => !!lead)
+        : [];
+      const nextTopVerticals: VerticalShare[] = Array.isArray(data?.top_verticals)
+        ? data.top_verticals
+            .map(normalizeVerticalShare)
+            .filter((row): row is VerticalShare => !!row)
+            .sort((a, b) => b.share_pct - a.share_pct)
+        : [];
+
       setLeads(newLeads);
       setSeenCompanies(prev => Array.from(new Set([...newLeads.map(l => l.company_name), ...prev])).slice(0, 120));
-      setTopVerticals((data.top_verticals ?? []).sort((a: VerticalShare, b: VerticalShare) => b.share_pct - a.share_pct));
+      setTopVerticals(nextTopVerticals);
       setLastScanAt(new Date());
       await persistMarket();
       toast({ title: 'Scan complete', description: `${newLeads.length} fresh leads in ${city}, ${state}` });
