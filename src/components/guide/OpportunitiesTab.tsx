@@ -26,10 +26,14 @@ interface Opportunity {
   near_core_inventory: boolean;
   distance_to_inventory: number | null;
   suggested_contacts: string[] | null;
+  source_url: string | null;
   last_verified: string;
   status: string;
   saved_by_bdr: string | null;
 }
+
+const stripLegacyTags = (s: string | null | undefined): string =>
+  (s || '').replace(/\[(WHALE|GLOBAL|COLLAB|TREND:[^\]]*)\]\s*/gi, '').trim();
 
 // Pill color helpers — softer/lighter tones with dark text for readability.
 // NOTE: tailwind.config.ts overrides `teal` as a single token (no shades),
@@ -384,9 +388,24 @@ export default function OpportunitiesTab() {
                     {o.signal_type} · {o.market} · {o.vertical}
                   </p>
                   {o.project && <p className="text-sm font-medium">{o.project}</p>}
-                  {o.why_it_matters && <p className="text-sm mt-2 text-foreground/80">{o.why_it_matters}</p>}
+                  {o.why_it_matters && <p className="text-sm mt-2 text-foreground/80">{stripLegacyTags(o.why_it_matters)}</p>}
                   {o.estimated_stay && (
                     <p className="text-xs mt-2 text-muted-foreground">Estimated stay: <span className="font-medium text-foreground">{o.estimated_stay}</span></p>
+                  )}
+                  {o.source_url ? (
+                    <a
+                      href={o.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold mt-2 px-2.5 py-1 rounded-full border transition-opacity hover:opacity-80"
+                      style={{ background: 'rgba(45,212,191,.12)', color: '#0d9488', borderColor: 'rgba(45,212,191,.3)' }}
+                    >
+                      🔗 View source
+                    </a>
+                  ) : (
+                    <span className="inline-block text-[11px] font-semibold mt-2 px-2.5 py-1 rounded-full border bg-amber-50 text-amber-700 border-amber-200">
+                      ⚠ No source link — re-scan to refresh
+                    </span>
                   )}
                 </div>
 
