@@ -187,7 +187,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
 
       {/* Add-to-pipeline sheet */}
       <AddToPipelineSheet
-        lead={pipeLead}
+        lead={pipeLead ? { ...pipeLead, city: `${city}, ${state}` } : null}
         onClose={() => setPipeLead(null)}
         onSaved={(l) => setPipelineIds(prev => new Set(prev).add(l.company_name))}
       />
