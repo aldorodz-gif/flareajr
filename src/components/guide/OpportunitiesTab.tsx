@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
+import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface Opportunity {
   id: string;
@@ -132,6 +133,12 @@ export default function OpportunitiesTab() {
   useEffect(() => { load(); }, [load]);
 
   const refresh = async () => {
+    if (!PERPLEXITY_FEATURES_ENABLED) {
+      toast.error('Scan is temporarily disabled', {
+        description: 'Live opportunity scans require Perplexity, which is currently disconnected.',
+      });
+      return;
+    }
     if (!selected) return;
     setScanning(true);
     try {

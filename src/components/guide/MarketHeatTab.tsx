@@ -7,6 +7,7 @@ import TopVerticals, { VerticalShare } from './TopVerticals';
 import LeadFeed, { ScanLead } from './LeadFeed';
 import InventoryMap from './InventoryMap';
 import { useBdr } from './BdrContext';
+import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 const MARKET_HEAT_ROUTE_KEY = 'flare.marketHeatRoute';
 
@@ -98,6 +99,14 @@ const MarketHeatTab = () => {
   }, [focusInventory, state, city]);
 
   const handleScan = async () => {
+    if (!PERPLEXITY_FEATURES_ENABLED) {
+      toast({
+        title: 'Scan a Market is temporarily disabled',
+        description: 'Live market scans require Perplexity, which is currently disconnected.',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!state || !city) {
       toast({ title: 'Pick a market', description: 'Select a state and city before scanning.', variant: 'destructive' });
       return;

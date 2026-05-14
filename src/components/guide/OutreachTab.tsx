@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface OutreachTabProps {
   onNavigate: (tabId: string) => void;
@@ -89,7 +90,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     setArticleContent('');
     setScrapedTitle('');
 
-    if (isUrl(value.trim()) && value.trim().length > 10) {
+    if (isUrl(value.trim()) && value.trim().length > 10 && PERPLEXITY_FEATURES_ENABLED) {
       setScrapingUrl(true);
       try {
         const { data, error: fnError } = await supabase.functions.invoke('article-scraper', {
