@@ -14,6 +14,8 @@ export interface PipelineLead {
   signal_detail: string;
   why_housing: string;
   recommended_titles: string[];
+  source_url?: string;
+  city?: string;
 }
 
 interface Props {
