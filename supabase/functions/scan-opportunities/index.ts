@@ -74,6 +74,7 @@ serve(async (req) => {
       "You are a sales intelligence analyst for a corporate housing BDR at National Corporate Housing.",
       `Today is ${today}.`,
       mindsetBlock,
+      "OPERATING RULE: The OPERATOR MINDSET block above is load-bearing. Apply every rule, signal type, and target archetype it lists when you select leads — do not just acknowledge it, USE it on every lead.",
       `BDR markets: ${markets.join(", ")}.`,
       `BDR target verticals: ${verticals.join(", ") || "all 7 verticals"}.`,
       `BDR inventory near: ${inv.map(i => `${i.city}, ${i.state}`).join("; ") || "n/a"}.`,
@@ -326,17 +327,20 @@ serve(async (req) => {
       if (isCompetitor(blob)) { skipped++; continue; }
       if (!hasHousingNeed(blob)) { skipped++; continue; }
 
-      // HARD GATE: every lead must have a verifiable source URL that actually mentions the company.
-      if (!o.source_url || !(await verifyUrlMentionsCompany(o.source_url, o.company))) {
-        unverified++;
-        continue;
+      // SOFT verification: try to confirm the source URL actually mentions the company.
+      // We DO NOT drop the lead if verification fails — BDRs decide what to archive or move to pipeline.
+      // Verification only feeds the confidence label so reps see what's been checked.
+      let urlVerified = false;
+      if (o.source_url) {
+        try { urlVerified = await verifyUrlMentionsCompany(o.source_url, o.company); } catch { urlVerified = false; }
       }
+      if (!urlVerified) unverified++;
 
       const composite = (Number(o.discovery_score) * 0.4) + (Number(o.housing_fit_score) * 0.4) + (Number(o.confidence_score) * 0.2);
-      const priority = composite >= 80 ? "Top Priority" : composite >= 65 ? "Strong Opportunity" : composite >= 45 ? "Early Signal" : "Reject";
-      if (priority === "Reject") { skipped++; continue; }
+      const priority = composite >= 80 ? "Top Priority" : composite >= 65 ? "Strong Opportunity" : composite >= 45 ? "Early Signal" : "Watch List";
       const review_status = composite >= 75 ? "Ready Now" : composite >= 55 ? "Needs Review" : "Watch List";
-      const confidence_label = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
+      const baseConfidence = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
+      const confidence_label = urlVerified ? baseConfidence : `${baseConfidence} · Unverified URL`;
       const nearestResult = await pickNearestInventory(o.market);
       const nearest = nearestResult?.label ?? null;
       const nearestMiles = nearestResult?.miles ?? null;
