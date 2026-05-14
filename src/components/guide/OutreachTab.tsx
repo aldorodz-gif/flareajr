@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface OutreachTabProps {
   onNavigate: (tabId: string) => void;
