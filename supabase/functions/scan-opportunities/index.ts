@@ -113,69 +113,67 @@ serve(async (req) => {
       "Return ONLY via the tool call.",
     ].filter(Boolean).join(" ");
 
-    const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const oppSchema = {
+      type: "object",
+      properties: {
+        opportunities: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              company: { type: "string" },
+              market: { type: "string" },
+              project: { type: "string" },
+              vertical: { type: "string" },
+              signal_type: { type: "string" },
+              description: { type: "string" },
+              why_it_matters: { type: "string" },
+              estimated_stay: { type: "string" },
+              discovery_score: { type: "number" },
+              housing_fit_score: { type: "number" },
+              confidence_score: { type: "number" },
+              suggested_contacts: { type: "array", items: { type: "string" } },
+              pitch_angle: { type: "string" },
+              key_talking_points: { type: "array", items: { type: "string" } },
+              source_type: { type: "string" },
+              source_url: { type: "string" },
+            },
+            required: ["company","market","project","vertical","signal_type","description","why_it_matters","estimated_stay","discovery_score","housing_fit_score","confidence_score","suggested_contacts","pitch_angle","key_talking_points","source_type","source_url"],
+          },
+        },
+      },
+      required: ["opportunities"],
+    };
+
+    const aiRes = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
-      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
+      headers: { Authorization: `Bearer ${PERPLEXITY_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        temperature: 1.0,
+        model: "sonar-pro",
+        temperature: 0.7,
+        search_recency_filter: "month",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Scan opportunities for ${markets.join(", ")}. Today is ${today}. Return 12+ NEW companies not in the exclusion list.` },
+          { role: "user", content: `Scan opportunities for ${markets.join(", ")}. Today is ${today}. Return 12+ NEW companies not in the exclusion list. Respond with JSON matching the schema.` },
         ],
-        tools: [{
-          type: "function",
-          function: {
-            name: "return_opportunities",
-            parameters: {
-              type: "object",
-              properties: {
-                opportunities: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      company: { type: "string" },
-                      market: { type: "string" },
-                      project: { type: "string" },
-                      vertical: { type: "string" },
-                      signal_type: { type: "string" },
-                      description: { type: "string" },
-                      why_it_matters: { type: "string" },
-                      estimated_stay: { type: "string" },
-                      discovery_score: { type: "number" },
-                      housing_fit_score: { type: "number" },
-                      confidence_score: { type: "number" },
-                      suggested_contacts: { type: "array", items: { type: "string" } },
-                      pitch_angle: { type: "string" },
-                       key_talking_points: { type: "array", items: { type: "string" } },
-                       source_type: { type: "string" },
-                       source_url: { type: "string", description: "REQUIRED. Full https URL to the public source (news article, RFP, award notice, press release) that documents this lead. No URL = lead is rejected." },
-                     },
-                     required: ["company","market","project","vertical","signal_type","description","why_it_matters","estimated_stay","discovery_score","housing_fit_score","confidence_score","suggested_contacts","pitch_angle","key_talking_points","source_type","source_url"],
-                    additionalProperties: false,
-                  },
-                },
-              },
-              required: ["opportunities"],
-              additionalProperties: false,
-            },
-          },
-        }],
-        tool_choice: { type: "function", function: { name: "return_opportunities" } },
+        response_format: {
+          type: "json_schema",
+          json_schema: { name: "return_opportunities", schema: oppSchema },
+        },
       }),
     });
 
     if (!aiRes.ok) {
       if (aiRes.status === 429) return new Response(JSON.stringify({ error: "Rate limited. Try again shortly." }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (aiRes.status === 402) return new Response(JSON.stringify({ error: "AI credits exhausted." }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      throw new Error(`AI gateway error ${aiRes.status}`);
+      if (aiRes.status === 401 || aiRes.status === 402) return new Response(JSON.stringify({ error: "Perplexity credits/auth issue." }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const errTxt = await aiRes.text();
+      throw new Error(`Perplexity error ${aiRes.status}: ${errTxt}`);
     }
 
     const aiData = await aiRes.json();
-    const tc = aiData.choices?.[0]?.message?.tool_calls?.[0];
-    if (!tc) throw new Error("No tool call returned");
-    const { opportunities } = JSON.parse(tc.function.arguments);
+    const content = aiData.choices?.[0]?.message?.content;
+    if (!content) throw new Error("No content returned");
+    const { opportunities } = JSON.parse(content);
 
     // Geocode helper using OpenStreetMap Nominatim (free, no key). Cached per request.
     const geoCache = new Map<string, { lat: number; lon: number } | null>();
