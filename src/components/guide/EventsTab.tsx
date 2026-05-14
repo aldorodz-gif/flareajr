@@ -76,6 +76,11 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
   };
 
   const handleSearch = useCallback(async () => {
+    toast.info('Event Finder is temporarily disabled', {
+      description: 'Live event search requires Perplexity, which is currently disconnected.',
+    });
+    return;
+    // eslint-disable-next-line no-unreachable
     if (!city || !vertical) return;
     setLoading(true);
     setError('');
