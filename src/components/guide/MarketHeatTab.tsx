@@ -98,13 +98,14 @@ const MarketHeatTab = () => {
   }, [focusInventory, state, city]);
 
   const handleScan = async () => {
-    toast({
-      title: 'Scan a Market is temporarily disabled',
-      description: 'Live market scans require Perplexity, which is currently disconnected.',
-      variant: 'destructive',
-    });
-    return;
-    // eslint-disable-next-line no-unreachable
+    if (!PERPLEXITY_FEATURES_ENABLED) {
+      toast({
+        title: 'Scan a Market is temporarily disabled',
+        description: 'Live market scans require Perplexity, which is currently disconnected.',
+        variant: 'destructive',
+      });
+      return;
+    }
     if (!state || !city) {
       toast({ title: 'Pick a market', description: 'Select a state and city before scanning.', variant: 'destructive' });
       return;
