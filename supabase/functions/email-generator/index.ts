@@ -16,8 +16,8 @@ serve(async (req) => {
       });
     }
 
-    const PERPLEXITY_API_KEY = Deno.env.get("PERPLEXITY_API_KEY");
-    if (!PERPLEXITY_API_KEY) throw new Error("PERPLEXITY_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const isArticle = signal.startsWith("Article:");
     const varyInstruction = vary ? " Use a different tone and angle than a typical first outreach — vary the approach while keeping the same rules." : "";
@@ -219,55 +219,53 @@ ${referenceEmail}`;
       required.push("suggested_targets", "article_insight");
     }
 
-    const response = await fetch("https://api.perplexity.ai/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "sonar-pro",
+        model: "google/gemini-3-flash-preview",
         temperature: 0.5,
-        search_recency_filter: "month",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Search the live web for the most recent verifiable context on ${company} related to: "${signal}". Then write the email now, anchoring sentence 1 on a real, current detail.` },
+          { role: "user", content: `Write the email now for ${company}, anchoring sentence 1 on the specific signal detail: "${signal}".` },
         ],
-        response_format: {
-          type: "json_schema",
-          json_schema: {
+        tools: [{
+          type: "function",
+          function: {
             name: "write_email",
-            schema: {
-              type: "object",
-              properties: emailProperties,
-              required,
-            },
+            description: "Return the structured email",
+            parameters: { type: "object", properties: emailProperties, required, additionalProperties: false },
           },
-        },
+        }],
+        tool_choice: { type: "function", function: { name: "write_email" } },
       }),
     });
 
     if (!response.ok) {
       const txt = await response.text();
-      console.error("Perplexity error", response.status, txt);
+      console.error("Lovable AI error", response.status, txt);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited. Please try again in a moment." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 401 || response.status === 402) {
-        return new Response(JSON.stringify({ error: "Perplexity credit/auth issue." }), {
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Add funds in Settings → Workspace → Usage." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      throw new Error("Perplexity error " + response.status);
+      throw new Error("Lovable AI error " + response.status);
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) throw new Error("No content from Perplexity");
-    const result = JSON.parse(content);
-    return new Response(JSON.stringify({ ...result, citations: data.citations ?? [] }), {
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const args = toolCall?.function?.arguments;
+    if (!args) throw new Error("No tool call from Lovable AI");
+    const result = JSON.parse(args);
+    return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

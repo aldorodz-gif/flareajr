@@ -87,33 +87,9 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
         return;
       }
 
-      // Generate Emails 2-5 via Perplexity, grounded on the lead's signal + source URL.
-      // Email 1 is the one the rep just edited above; we keep that verbatim.
-      let sequenceEmails: Array<{ step_key: string; subject: string; body: string }> = [];
-      try {
-        const { data: seqData, error: seqErr } = await supabase.functions.invoke('sequence-emails', {
-          body: {
-            company: lead.company_name,
-            vertical: lead.vertical,
-            signal_type: lead.signal_type,
-            signal_detail: lead.signal_detail,
-            why_housing: lead.why_housing,
-            buyer_title: effectiveTitle,
-            source_url: lead.source_url,
-            city: lead.city,
-            tone,
-          },
-        });
-        if (seqErr) throw seqErr;
-        if (seqData?.error) throw new Error(seqData.error);
-        sequenceEmails = Array.isArray(seqData?.emails) ? seqData.emails : [];
-      } catch (e) {
-        // Non-blocking: still save the pipeline + the rep's Email 1; flag missing drafts.
-        toast({
-          title: 'Saved Email 1 — Emails 2-5 will draft on demand',
-          description: e instanceof Error ? e.message : 'Sequence draft failed.',
-        });
-      }
+      // Emails 2-5 are drafted on demand from the Pipeline tab to save AI credits.
+      // Email 1 (above) is what the rep edited and gets sent today.
+      const sequenceEmails: Array<{ step_key: string; subject: string; body: string }> = [];
 
       const noteBody =
         `Target: ${effectiveTitle}\n` +
@@ -159,10 +135,9 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
       if (tErr) {
         toast({ title: 'Pipeline saved, sequence partial', description: tErr.message, variant: 'destructive' });
       } else {
-        const draftedCount = taskRows.filter(t => t.notes).length;
         toast({
           title: '+ Pipeline · sequence scheduled',
-          description: `${lead.company_name} · ${draftedCount}/5 emails pre-drafted across 21 days`,
+          description: `${lead.company_name} · Email 1 ready · Emails 2-5 draft on demand from Pipeline`,
         });
       }
       window.dispatchEvent(new CustomEvent('flare:tasks-updated'));

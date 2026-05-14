@@ -71,8 +71,8 @@ serve(async (req) => {
       );
     }
 
-    const PERPLEXITY_API_KEY = Deno.env.get("PERPLEXITY_API_KEY");
-    if (!PERPLEXITY_API_KEY) throw new Error("PERPLEXITY_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const toneGuide = TONE_GUIDES[(tone as string) || "direct"];
 
@@ -106,75 +106,78 @@ Return EXACTLY 5 emails in order matching the cadence above.`;
 
     const userPrompt = `Search the live web for the most recent verifiable context on ${company}${city ? ` in ${city}` : ""} related to: "${signal_detail}". Then draft the 5-email sequence. Each email gets a unique subject and body. Anchor at least Email 1 on a real, current detail you find.`;
 
-    const response = await fetch("https://api.perplexity.ai/chat/completions", {
+    const sequenceSchema = {
+      type: "object",
+      properties: {
+        emails: {
+          type: "array",
+          minItems: 5,
+          maxItems: 5,
+          items: {
+            type: "object",
+            properties: {
+              step_key: { type: "string", enum: STEPS.map((s) => s.key) },
+              day: { type: "integer" },
+              subject: { type: "string" },
+              body: { type: "string" },
+            },
+            required: ["step_key", "day", "subject", "body"],
+            additionalProperties: false,
+          },
+        },
+      },
+      required: ["emails"],
+      additionalProperties: false,
+    };
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "sonar-pro",
+        model: "google/gemini-3-flash-preview",
         temperature: 0.5,
-        search_recency_filter: "month",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        response_format: {
-          type: "json_schema",
-          json_schema: {
+        tools: [{
+          type: "function",
+          function: {
             name: "email_sequence",
-            schema: {
-              type: "object",
-              properties: {
-                emails: {
-                  type: "array",
-                  minItems: 5,
-                  maxItems: 5,
-                  items: {
-                    type: "object",
-                    properties: {
-                      step_key: {
-                        type: "string",
-                        enum: STEPS.map((s) => s.key),
-                      },
-                      day: { type: "integer" },
-                      subject: { type: "string" },
-                      body: { type: "string" },
-                    },
-                    required: ["step_key", "day", "subject", "body"],
-                  },
-                },
-              },
-              required: ["emails"],
-            },
+            description: "Return the 5-email sequence",
+            parameters: sequenceSchema,
           },
-        },
+        }],
+        tool_choice: { type: "function", function: { name: "email_sequence" } },
       }),
     });
 
     if (!response.ok) {
       const txt = await response.text();
-      console.error("Perplexity error", response.status, txt);
+      console.error("Lovable AI error", response.status, txt);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited. Try again in a moment." }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 401 || response.status === 402) {
-        return new Response(JSON.stringify({ error: "Perplexity credit/auth issue." }), {
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Add funds in Settings → Workspace → Usage." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      throw new Error(`Perplexity error ${response.status}`);
+      throw new Error(`Lovable AI error ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) throw new Error("No content from Perplexity");
-    const parsed = JSON.parse(content);
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const args = toolCall?.function?.arguments;
+    if (!args) throw new Error("No tool call from Lovable AI");
+    const parsed = JSON.parse(args);
 
     // Normalize/sort by canonical day order in case the model reorders.
     const order = new Map(STEPS.map((s, i) => [s.key, i] as const));
@@ -183,7 +186,7 @@ Return EXACTLY 5 emails in order matching the cadence above.`;
       .sort((a, b) => (order.get(a.step_key)! - order.get(b.step_key)!));
 
     return new Response(
-      JSON.stringify({ emails, citations: data.citations ?? [] }),
+      JSON.stringify({ emails }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
