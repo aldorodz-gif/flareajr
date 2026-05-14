@@ -109,6 +109,8 @@ export default function OpportunitiesTab() {
       signal_detail: pipeOpp.why_it_matters || pipeOpp.description || '',
       why_housing: pipeOpp.why_it_matters || pipeOpp.estimated_stay || '',
       recommended_titles: pipeOpp.suggested_contacts || [],
+      source_url: pipeOpp.source_url || undefined,
+      city: pipeOpp.market || undefined,
     };
   }, [pipeOpp]);
 
