@@ -1,4 +1,5 @@
-// Centralized feature flags. Search-powered features now run on Gemini with
-// Google Search grounding (GEMINI_API_KEY). Flip this off to disable them again.
-export const PERPLEXITY_FEATURES_ENABLED: boolean = true;
+// Centralized feature flags. Live web-search features (Event Finder,
+// Scan a Market, Dashboard scan) are OFF — they would charge per scan.
+// Email drafting still works on Lovable AI. Flip back to true to re-enable.
+export const PERPLEXITY_FEATURES_ENABLED: boolean = false;
 
