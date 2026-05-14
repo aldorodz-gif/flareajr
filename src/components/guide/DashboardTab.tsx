@@ -1,9 +1,7 @@
 import AiToolCard from './AiToolCard';
+import BdrScoreboard from './BdrScoreboard';
 import BdrSelector from './BdrSelector';
 import DailyBrief from './DailyBrief';
-import ActionQueue from './ActionQueue';
-import PipelineHealth from './PipelineHealth';
-import MomentumCard from './MomentumCard';
 
 const DashboardTab = () => {
   return (
@@ -12,16 +10,15 @@ const DashboardTab = () => {
         <AiToolCard
           icon="🏠"
           title="Your Dashboard"
-          subtitle="Your morning launch pad — what to do, what's in flight, where you stand"
+          subtitle="Your numbers at a glance — switch BDR to compare"
         >
           <BdrSelector />
         </AiToolCard>
       </div>
 
       <DailyBrief />
-      <ActionQueue />
-      <PipelineHealth />
-      <MomentumCard />
+
+      <BdrScoreboard />
     </section>
   );
 };
