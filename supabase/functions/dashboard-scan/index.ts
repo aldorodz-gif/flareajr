@@ -45,20 +45,21 @@ serve(async (req) => {
       `Today is ${today}. The rep covers ${city}, ${state}.`,
       verticalScope,
       mindsetBlock,
-      "MISSION: Search the live web RIGHT NOW for SMB/SME companies with active 30+ day corporate housing demand signals in this market.",
-      "ONLY use real, verifiable companies you find in current news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, regional business journals, hospital/university expansion news, defense/DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press, LinkedIn job posts.",
-      "The 'company' field MUST be the SMB/SME executing the work — never an F500 / hospital system / utility / agency umbrella.",
-      "Skip any company you cannot confirm with a real source URL. NEVER fabricate.",
+      "OPERATING RULE: The OPERATOR MINDSET block above is load-bearing. Apply every rule, signal type, and target archetype it lists when you select leads — do not just acknowledge it, USE it on every lead.",
+      "MISSION: Leave no stone unturned. Search the live web RIGHT NOW for SMB/SME companies with active 30+ day corporate housing demand signals in this market.",
+      "Use real, verifiable companies you find in current news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, regional business journals, hospital/university expansion news, defense/DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press, LinkedIn job posts.",
+      "The 'company' field MUST be the SMB/SME executing the work — never an F500 / hospital system / utility / agency umbrella. When the umbrella project belongs to an F500, name the SMB sub doing the work.",
+      "Always include a real source_url per lead. If you can only find a weaker source (e.g. company news page, press release) include it anyway — the BDR will verify and decide. Do NOT fabricate URLs.",
       excludeList.length
         ? `Exclude these already-shown companies: ${excludeList.join(", ")}.`
-        : "Surface fresh, less-obvious SMBs — specialty subs, regional staffing firms, niche engineering shops.",
-      "Return EXACTLY 8-10 leads as a JSON object matching the schema. Each lead MUST include a real source_url.",
+        : "Surface fresh, less-obvious SMBs — specialty subs, regional staffing firms, niche engineering shops, regional staffing firms, mid-tier consultancies.",
+      "Return AT LEAST 12 leads (target 12-18) as a JSON object matching the schema. Quantity AND quality — we are paying for this scan, surface every credible SMB signal.",
       "Also rank which of the 7 canonical verticals are most active in this market right now (share % summing to 100).",
       "Use the 7 canonical vertical names exactly as listed.",
       "For recommended_titles: 3-5 job titles to target — never C-suite.",
     ].join(" ");
 
-    const userPrompt = `Search current web sources and find 8-10 SMB/SME companies in ${city}, ${state} with active corporate housing demand signals (expansions, contract wins, hiring surges, project starts, mobilizations) in the last 90 days. Return only companies with verifiable source URLs.`;
+    const userPrompt = `Search current web sources and find 12-18 SMB/SME companies in ${city}, ${state} with active corporate housing demand signals (expansions, contract wins, hiring surges, project starts, mobilizations, subcontractor mobilizations under larger F500/utility/agency projects) in the last 90 days. Apply the OPERATOR MINDSET rules. Include source_url for each.`;
 
     const response = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
