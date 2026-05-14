@@ -138,9 +138,54 @@ serve(async (req) => {
     if (!content) throw new Error("No content in Perplexity response");
 
     const result = JSON.parse(content);
+    const citations: string[] = Array.isArray(data.citations) ? data.citations : [];
 
-    // Attach the citation list at the top level too in case UI wants it.
-    result.citations = data.citations || [];
+    // Verify each lead's source_url actually loads AND mentions the company.
+    // If the model-supplied URL fails, try the Perplexity citation list as a fallback.
+    const verifyUrlMentionsCompany = async (url: string, company: string): Promise<boolean> => {
+      try {
+        const u = new URL(url);
+        if (u.protocol !== "https:" && u.protocol !== "http:") return false;
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 8000);
+        const res = await fetch(url, {
+          method: "GET",
+          redirect: "follow",
+          signal: ctrl.signal,
+          headers: { "User-Agent": "Mozilla/5.0 (compatible; FlareLeadVerifier/1.0)" },
+        });
+        clearTimeout(timer);
+        if (!res.ok) return false;
+        const text = (await res.text()).toLowerCase();
+        const tokens = company.toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length > 3);
+        if (tokens.length === 0) return text.includes(company.toLowerCase());
+        return tokens.some(t => text.includes(t));
+      } catch {
+        return false;
+      }
+    };
+
+    const rawLeads: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> = result.leads || [];
+    const verifiedLeads: typeof rawLeads = [];
+    let dropped = 0;
+    for (const lead of rawLeads) {
+      const candidates = [lead.source_url, ...citations].filter((u): u is string => !!u);
+      let goodUrl: string | null = null;
+      for (const url of candidates) {
+        if (await verifyUrlMentionsCompany(url, lead.company_name)) {
+          goodUrl = url;
+          break;
+        }
+      }
+      if (goodUrl) {
+        verifiedLeads.push({ ...lead, source_url: goodUrl });
+      } else {
+        dropped++;
+      }
+    }
+    result.leads = verifiedLeads;
+    result.citations = citations;
+    result.dropped_unverified = dropped;
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
