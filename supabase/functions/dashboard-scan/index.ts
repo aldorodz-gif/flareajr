@@ -27,28 +27,14 @@ serve(async (req) => {
       });
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const PERPLEXITY_API_KEY = Deno.env.get("PERPLEXITY_API_KEY");
+    if (!PERPLEXITY_API_KEY) throw new Error("PERPLEXITY_API_KEY is not configured");
 
     const verticalScope = vertical && vertical !== "all"
       ? `Focus exclusively on the "${vertical}" vertical.`
       : `Cover any of these 7 verticals: ${VERTICALS.join(", ")}.`;
 
     const today = new Date().toISOString().split("T")[0];
-
-    // Variety: rotate signal focus + add a randomized seed so consecutive scans don't return the same leads.
-    const focusRotations = [
-      "Lean into CONTRACT AWARDS, government & defense subs, and federal/state-funded projects.",
-      "Lean into CONSTRUCTION & PHASED PROJECTS — surface specialty subs (MEP, commissioning, controls).",
-      "Lean into CORPORATE EXPANSIONS, HQ relocations, and brand-new facility openings.",
-      "Lean into TECH IMPLEMENTATIONS, SaaS rollouts, and consulting deployments.",
-      "Lean into HEALTHCARE — equipment installs, hospital expansions, traveling clinical staff.",
-      "Lean into ENERGY, INFRASTRUCTURE, utility & substation mobilizations.",
-      "Lean into BROADBAND / FIBER / OSP buildouts and BEAD-funded projects.",
-      "Lean into MANUFACTURING / PLANT LAUNCHES and supplier ramp-ups.",
-    ];
-    const focus = focusRotations[Math.floor(Math.random() * focusRotations.length)];
-    const varietySeed = `${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
     const excludeList: string[] = Array.isArray(exclude) ? exclude.filter(Boolean).slice(0, 60) : [];
 
     const resolvedBdrId = bdr_id || (await findBdrIdForMarket(city, state));
@@ -56,44 +42,43 @@ serve(async (req) => {
 
     const systemPrompt = [
       "You are a market intelligence analyst for a corporate housing sales BDR at National Corporate Housing.",
-      `Today is ${today}.`,
-      `The rep covers ${city}, ${state}.`,
+      `Today is ${today}. The rep covers ${city}, ${state}.`,
       verticalScope,
       mindsetBlock,
-      "MISSION: Run a true DEEP-DIVE — leave no stone unturned. Cross-reference news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, LinkedIn job posts / career pages, regional business journals, hospital/university expansion news, defense and DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press.",
-      "Surface 10 high-confidence prospect signals — SMB/SME companies in this market that likely need 30+ day corporate housing in the next 90 days. The 'company' field MUST be the SMB/SME executing the work, never the F500 / hospital system / utility / agency umbrella.",
-      "Signal types include: announced expansions, new office openings, large project wins, government contract awards, hiring surges, mergers, hospital staffing initiatives, construction project starts, intern cohort announcements, mobilizations, training cohorts, infrastructure modernization, etc.",
-      focus,
+      "MISSION: Search the live web RIGHT NOW for SMB/SME companies with active 30+ day corporate housing demand signals in this market.",
+      "ONLY use real, verifiable companies you find in current news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, regional business journals, hospital/university expansion news, defense/DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press, LinkedIn job posts.",
+      "The 'company' field MUST be the SMB/SME executing the work — never an F500 / hospital system / utility / agency umbrella.",
+      "Skip any company you cannot confirm with a real source URL. NEVER fabricate.",
       excludeList.length
-        ? `CRITICAL: DO NOT return any of these companies — they were already shown. Find DIFFERENT companies (different specialty subs, different niche firms, different program managers): ${excludeList.join(", ")}.`
-        : "Surface fresh, less-obvious SMBs — go beyond the top 10 most-known firms in this market. Dig into specialty subs, regional staffing firms, niche engineering shops.",
-      `Variety seed: ${varietySeed}. Use this to diversify your selection across scans.`,
-      "ALSO return a ranked breakdown of which of the 7 canonical verticals are MOST active in this market right now (share percentages summing to 100).",
-      "Only use the 7 canonical vertical names exactly as listed.",
-      "For each lead, give: company_name, vertical (one of the 7), signal_type (e.g. 'Expansion', 'Contract Win', 'Hiring Surge', 'Project Award'), signal_detail (1 specific sentence anchored to a real-sounding event), why_housing (one sentence on the housing/travel implication, ideally citing crew size or duration), and recommended_titles (3-5 job titles to target — never C-suite).",
-      "Do not fabricate specific dollar amounts or dates you cannot reasonably infer; keep claims plausible and generic when uncertain.",
-      "Return ONLY valid JSON via the tool call.",
+        ? `Exclude these already-shown companies: ${excludeList.join(", ")}.`
+        : "Surface fresh, less-obvious SMBs — specialty subs, regional staffing firms, niche engineering shops.",
+      "Return EXACTLY 8-10 leads as a JSON object matching the schema. Each lead MUST include a real source_url.",
+      "Also rank which of the 7 canonical verticals are most active in this market right now (share % summing to 100).",
+      "Use the 7 canonical vertical names exactly as listed.",
+      "For recommended_titles: 3-5 job titles to target — never C-suite.",
     ].join(" ");
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const userPrompt = `Search current web sources and find 8-10 SMB/SME companies in ${city}, ${state} with active corporate housing demand signals (expansions, contract wins, hiring surges, project starts, mobilizations) in the last 90 days. Return only companies with verifiable source URLs.`;
+
+    const response = await fetch("https://api.perplexity.ai/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        temperature: 0.9,
+        model: "sonar-pro",
+        temperature: 0.3,
+        search_recency_filter: "month",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Scan ${city}, ${state} for active corporate housing demand signals.` },
+          { role: "user", content: userPrompt },
         ],
-        tools: [{
-          type: "function",
-          function: {
+        response_format: {
+          type: "json_schema",
+          json_schema: {
             name: "market_scan",
-            description: "Return market scan results",
-            parameters: {
+            schema: {
               type: "object",
               properties: {
                 leads: {
@@ -107,9 +92,9 @@ serve(async (req) => {
                       signal_detail: { type: "string" },
                       why_housing: { type: "string" },
                       recommended_titles: { type: "array", items: { type: "string" } },
+                      source_url: { type: "string" },
                     },
-                    required: ["company_name", "vertical", "signal_type", "signal_detail", "why_housing", "recommended_titles"],
-                    additionalProperties: false,
+                    required: ["company_name", "vertical", "signal_type", "signal_detail", "why_housing", "recommended_titles", "source_url"],
                   },
                 },
                 top_verticals: {
@@ -119,48 +104,51 @@ serve(async (req) => {
                     properties: {
                       vertical: { type: "string", enum: VERTICALS },
                       share_pct: { type: "number" },
-                      driver: { type: "string", description: "One short sentence on why this vertical is hot here." },
+                      driver: { type: "string" },
                     },
                     required: ["vertical", "share_pct", "driver"],
-                    additionalProperties: false,
                   },
                 },
               },
               required: ["leads", "top_verticals"],
-              additionalProperties: false,
             },
           },
-        }],
-        tool_choice: { type: "function", function: { name: "market_scan" } },
+        },
       }),
     });
 
     if (!response.ok) {
+      const body = await response.text();
+      console.error("Perplexity error", response.status, body);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited. Please try again in a moment." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
+      if (response.status === 401 || response.status === 402) {
+        return new Response(JSON.stringify({ error: "Perplexity credit/auth issue. Check the connection." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      throw new Error("AI gateway error");
+      throw new Error(`Perplexity API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    if (!toolCall) throw new Error("No tool call in response");
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) throw new Error("No content in Perplexity response");
 
-    const result = JSON.parse(toolCall.function.arguments);
+    const result = JSON.parse(content);
+
+    // Attach the citation list at the top level too in case UI wants it.
+    result.citations = data.citations || [];
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("dashboard-scan error:", e);
-    return new Response(JSON.stringify({ error: "Something went wrong. Try again." }), {
+    const msg = e instanceof Error ? e.message : "Something went wrong. Try again.";
+    return new Response(JSON.stringify({ error: msg }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
