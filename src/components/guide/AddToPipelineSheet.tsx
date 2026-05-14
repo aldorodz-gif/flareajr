@@ -33,17 +33,18 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
   const [emailBody, setEmailBody] = useState('');
   const [saving, setSaving] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
+  const recommendedTitles = Array.isArray(lead?.recommended_titles) ? lead.recommended_titles : [];
 
   useEffect(() => {
     if (lead) {
-      setChosenTitle(lead.recommended_titles[0] ?? '');
+      setChosenTitle(recommendedTitles[0] ?? '');
       setCustomTitle('');
       setTone('direct');
       setEmailSubject('');
       setEmailBody('');
       setCelebrating(false);
     }
-  }, [lead]);
+  }, [lead, recommendedTitles]);
 
   const effectiveTitle = (customTitle.trim() || chosenTitle).trim();
 
@@ -209,7 +210,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
             <div>
               <label className="text-[11px] font-bold uppercase tracking-wider mb-2 block text-muted-foreground">Target this person</label>
               <div className="flex flex-wrap gap-1.5 mb-2">
-                {lead.recommended_titles.map(t => (
+                {recommendedTitles.map(t => (
                   <button
                     key={t}
                     onClick={() => { setChosenTitle(t); setCustomTitle(''); }}

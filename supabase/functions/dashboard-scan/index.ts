@@ -17,6 +17,50 @@ const VERTICALS = [
   "Intern Programs",
 ];
 
+const asTrimmedString = (value: unknown) => typeof value === "string" ? value.trim() : "";
+
+const normalizeLead = (value: unknown) => {
+  if (!value || typeof value !== "object") return null;
+
+  const lead = value as Record<string, unknown>;
+  const company_name = asTrimmedString(lead.company_name);
+  if (!company_name) return null;
+
+  const recommended_titles = Array.isArray(lead.recommended_titles)
+    ? lead.recommended_titles
+      .filter((title): title is string => typeof title === "string" && title.trim().length > 0)
+      .map((title) => title.trim())
+      .slice(0, 5)
+    : [];
+
+  return {
+    ...lead,
+    company_name,
+    vertical: asTrimmedString(lead.vertical) || "Unknown vertical",
+    signal_type: asTrimmedString(lead.signal_type) || "Market signal",
+    signal_detail: asTrimmedString(lead.signal_detail) || "Fresh market signal identified.",
+    why_housing: asTrimmedString(lead.why_housing) || "Potential temporary housing demand needs validation.",
+    recommended_titles,
+    source_url: asTrimmedString(lead.source_url) || undefined,
+  };
+};
+
+const normalizeTopVertical = (value: unknown) => {
+  if (!value || typeof value !== "object") return null;
+
+  const row = value as Record<string, unknown>;
+  const vertical = asTrimmedString(row.vertical);
+  if (!vertical) return null;
+
+  const share = typeof row.share_pct === "number" ? row.share_pct : Number(row.share_pct);
+
+  return {
+    vertical,
+    share_pct: Number.isFinite(share) ? Math.max(0, Math.min(100, Math.round(share))) : 0,
+    driver: asTrimmedString(row.driver) || "Active market demand right now.",
+  };
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -111,7 +155,9 @@ serve(async (req) => {
       }
     };
 
-    const rawLeads: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> = result.leads || [];
+    const rawLeads: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> = Array.isArray(result.leads)
+      ? result.leads.map(normalizeLead).filter((lead): lead is { company_name: string; source_url?: string; [k: string]: unknown } => !!lead)
+      : [];
     const verifiedLeads: typeof rawLeads = [];
     let unverifiedCount = 0;
     for (const lead of rawLeads) {
@@ -130,6 +176,9 @@ serve(async (req) => {
       verifiedLeads.push({ ...lead, source_url: fallbackUrl, url_verified: !!goodUrl });
     }
     result.leads = verifiedLeads;
+    result.top_verticals = Array.isArray(result.top_verticals)
+      ? result.top_verticals.map(normalizeTopVertical).filter((row): row is { vertical: string; share_pct: number; driver: string } => !!row)
+      : [];
     result.citations = citations;
     result.unverified_count = unverifiedCount;
 

@@ -92,12 +92,13 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
       )}
 
       <div className="grid gap-3">
-        {leads.map((lead) => {
+        {leads.map((lead, index) => {
           const color = SIGNAL_COLORS[lead.signal_type] ?? SIGNAL_COLORS.Default;
           const inPipeline = pipelineIds.has(lead.company_name);
+          const recommendedTitles = Array.isArray(lead.recommended_titles) ? lead.recommended_titles : [];
           return (
             <div
-              key={lead.company_name}
+              key={`${lead.company_name}-${index}`}
               className="p-4 rounded-lg border transition-all hover:shadow-md"
               style={{ borderColor: 'rgba(14,30,58,.08)', borderLeft: `3px solid ${color}` }}
             >
@@ -117,7 +118,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                     <span className="font-bold not-italic" style={{ color: '#14b8a6' }}>Why housing:</span> {lead.why_housing}
                   </p>
                   <div className="flex flex-wrap items-center gap-1.5">
-                    {lead.recommended_titles.slice(0, 5).map((t) => (
+                    {recommendedTitles.slice(0, 5).map((t) => (
                       <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ background: '#FAF7F2', color: '#475569', border: '1px solid rgba(14,30,58,.08)' }}>
                         {t}
                       </span>

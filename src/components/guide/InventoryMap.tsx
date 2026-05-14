@@ -51,6 +51,50 @@ interface VerticalsPayload {
 }
 
 const normalizeInventoryName = (value: string) => value.replace(/\s*\([^)]*\)\s*$/, '').trim().toLowerCase();
+const safeStringArray = (value: unknown) => Array.isArray(value)
+  ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+  : [];
+
+const normalizeVerticalsPayload = (value: unknown): VerticalsPayload | null => {
+  if (!value || typeof value !== 'object') return null;
+
+  const payload = value as Record<string, unknown>;
+  const top_verticals = Array.isArray(payload.top_verticals)
+    ? payload.top_verticals.flatMap((row) => {
+        if (!row || typeof row !== 'object') return [];
+        const item = row as Record<string, unknown>;
+        const vertical = typeof item.vertical === 'string' ? item.vertical.trim() : '';
+        if (!vertical) return [];
+        return [{
+          vertical,
+          why_here: typeof item.why_here === 'string' ? item.why_here.trim() : 'Relevant submarket fit.',
+          recommended_titles: safeStringArray(item.recommended_titles),
+        }];
+      })
+    : [];
+
+  const nearby_targets = Array.isArray(payload.nearby_targets)
+    ? payload.nearby_targets.flatMap((row) => {
+        if (!row || typeof row !== 'object') return [];
+        const item = row as Record<string, unknown>;
+        const anchor = typeof item.anchor === 'string' ? item.anchor.trim() : '';
+        if (!anchor) return [];
+        return [{
+          vertical: typeof item.vertical === 'string' ? item.vertical.trim() || 'Unknown vertical' : 'Unknown vertical',
+          anchor,
+          summary: typeof item.summary === 'string' ? item.summary.trim() : 'Nearby prospecting angle.',
+          target_titles: safeStringArray(item.target_titles),
+          signals: safeStringArray(item.signals),
+        }];
+      })
+    : [];
+
+  return {
+    angle: typeof payload.angle === 'string' ? payload.angle.trim() : 'Submarket intelligence unavailable.',
+    top_verticals,
+    nearby_targets,
+  };
+};
 
 const InventoryMap = ({ city, state, focusInventory = null }: InventoryMapProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -110,7 +154,7 @@ const InventoryMap = ({ city, state, focusInventory = null }: InventoryMapProps)
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      setVerticals(data);
+      setVerticals(normalizeVerticalsPayload(data));
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Failed to load verticals';
       toast({ title: 'Could not load verticals', description: msg, variant: 'destructive' });
@@ -257,11 +301,11 @@ const InventoryMap = ({ city, state, focusInventory = null }: InventoryMapProps)
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
                       <div>
                         <span className="font-bold" style={{ color: '#ec4899' }}>Target: </span>
-                        <span style={{ color: '#0e1e3a' }}>{t.target_titles.join(', ')}</span>
+                        <span style={{ color: '#0e1e3a' }}>{t.target_titles.join(', ') || 'Recommended contacts vary by account'}</span>
                       </div>
                       <div>
                         <span className="font-bold" style={{ color: '#ec4899' }}>Signals: </span>
-                        <span style={{ color: '#0e1e3a', fontStyle: 'italic' }}>{t.signals.join(', ')}</span>
+                        <span style={{ color: '#0e1e3a', fontStyle: 'italic' }}>{t.signals.join(', ') || 'Current local demand signals'}</span>
                       </div>
                     </div>
                   </div>
