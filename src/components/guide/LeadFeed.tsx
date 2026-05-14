@@ -13,6 +13,7 @@ export interface ScanLead {
   signal_detail: string;
   why_housing: string;
   recommended_titles: string[];
+  source_url?: string;
 }
 
 interface LeadFeedProps {
