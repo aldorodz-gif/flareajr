@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { loadMindsetBlocks, findBdrIdForMarket } from "../_shared/mindset.ts";
+import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
