@@ -114,23 +114,90 @@ async function callViaLovableGateway(
   return text;
 }
 
-// Defensive JSON extraction — handles ```json fences, leading prose, trailing text.
+// Defensive JSON extraction — handles ```json fences, leading prose, trailing text,
+// trailing commas, and truncated responses.
 export function extractJson<T = unknown>(text: string): T {
   let t = text.trim();
+  // Prefer fenced block if present
   const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i);
   if (fence) t = fence[1].trim();
-  // Find first { or [ and matching last } or ]
+
   const firstObj = t.indexOf("{");
   const firstArr = t.indexOf("[");
   let start = -1;
   if (firstObj === -1) start = firstArr;
   else if (firstArr === -1) start = firstObj;
   else start = Math.min(firstObj, firstArr);
-  if (start === -1) throw new Error("No JSON found in response");
+  if (start === -1) {
+    console.error("extractJson: no JSON found. Raw response head:", text.slice(0, 500));
+    throw new Error("No JSON found in response");
+  }
+
   const open = t[start];
   const close = open === "{" ? "}" : "]";
-  const end = t.lastIndexOf(close);
-  if (end <= start) throw new Error("Malformed JSON in response");
-  const slice = t.slice(start, end + 1);
-  return JSON.parse(slice) as T;
+
+  // Walk the string respecting strings/escapes to find the matching close.
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  let end = -1;
+  for (let i = start; i < t.length; i++) {
+    const ch = t[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === "\\") esc = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') { inStr = true; continue; }
+    if (ch === open) depth++;
+    else if (ch === close) {
+      depth--;
+      if (depth === 0) { end = i; break; }
+    }
+  }
+
+  let slice: string;
+  if (end !== -1) {
+    slice = t.slice(start, end + 1);
+  } else {
+    // Truncated — try to repair by closing open structures.
+    slice = repairTruncatedJson(t.slice(start));
+  }
+
+  // Strip trailing commas before } or ]
+  slice = slice.replace(/,(\s*[}\]])/g, "$1");
+
+  try {
+    return JSON.parse(slice) as T;
+  } catch (e) {
+    console.error("extractJson: JSON.parse failed. Slice head:", slice.slice(0, 500));
+    console.error("Raw response head:", text.slice(0, 500));
+    throw new Error("Malformed JSON in response");
+  }
+}
+
+function repairTruncatedJson(s: string): string {
+  const stack: string[] = [];
+  let inStr = false;
+  let esc = false;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === "\\") esc = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') inStr = true;
+    else if (ch === "{") stack.push("}");
+    else if (ch === "[") stack.push("]");
+    else if (ch === "}" || ch === "]") stack.pop();
+  }
+  let out = s;
+  if (inStr) out += '"';
+  // Drop a trailing partial token like `"company_name": "Acm` already handled; remove trailing comma/colon
+  out = out.replace(/[,:]\s*$/, "");
+  while (stack.length) out += stack.pop();
+  return out;
 }
