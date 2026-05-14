@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { loadMindsetBlocks, findBdrIdForMarket } from "../_shared/mindset.ts";
+import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -27,8 +28,8 @@ serve(async (req) => {
       });
     }
 
-    const PERPLEXITY_API_KEY = Deno.env.get("PERPLEXITY_API_KEY");
-    if (!PERPLEXITY_API_KEY) throw new Error("PERPLEXITY_API_KEY is not configured");
+    const PERPLEXITY_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!PERPLEXITY_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
     const verticalScope = vertical && vertical !== "all"
       ? `Focus exclusively on the "${vertical}" vertical.`
@@ -46,100 +47,44 @@ serve(async (req) => {
       verticalScope,
       mindsetBlock,
       "OPERATING RULE: The OPERATOR MINDSET block above is load-bearing. Apply every rule, signal type, and target archetype it lists when you select leads — do not just acknowledge it, USE it on every lead.",
-      "MISSION: Leave no stone unturned. Search the live web RIGHT NOW for SMB/SME companies with active 30+ day corporate housing demand signals in this market.",
-      "Use real, verifiable companies you find in current news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, regional business journals, hospital/university expansion news, defense/DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press, LinkedIn job posts.",
+      "MISSION: Use Google Search RIGHT NOW to find SMB/SME companies with active 30+ day corporate housing demand signals in this market.",
+      "Search current news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, regional business journals, hospital/university expansion news, defense/DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press, LinkedIn job posts.",
       "The 'company' field MUST be the SMB/SME executing the work — never an F500 / hospital system / utility / agency umbrella. When the umbrella project belongs to an F500, name the SMB sub doing the work.",
-      "Always include a real source_url per lead. If you can only find a weaker source (e.g. company news page, press release) include it anyway — the BDR will verify and decide. Do NOT fabricate URLs.",
+      "Always include a real source_url per lead from your Google Search results. Do NOT fabricate URLs.",
       excludeList.length
         ? `Exclude these already-shown companies: ${excludeList.join(", ")}.`
-        : "Surface fresh, less-obvious SMBs — specialty subs, regional staffing firms, niche engineering shops, regional staffing firms, mid-tier consultancies.",
-      "Return AT LEAST 12 leads (target 12-18) as a JSON object matching the schema. Quantity AND quality — we are paying for this scan, surface every credible SMB signal.",
+        : "Surface fresh, less-obvious SMBs — specialty subs, regional staffing firms, niche engineering shops, mid-tier consultancies.",
+      "Return AT LEAST 12 leads (target 12-18).",
       "Also rank which of the 7 canonical verticals are most active in this market right now (share % summing to 100).",
-      "Use the 7 canonical vertical names exactly as listed.",
-      "For recommended_titles: 3-5 job titles to target — never C-suite.",
+      `Use the 7 canonical vertical names exactly: ${VERTICALS.join(", ")}.`,
+      "For recommended_titles: 3-5 job titles per lead — never C-suite.",
+      "",
+      "OUTPUT FORMAT — return ONLY a JSON object inside a ```json code fence, no prose before or after:",
+      "{",
+      '  "leads": [',
+      '    {"company_name": "...", "vertical": "<one of the 7>", "signal_type": "...", "signal_detail": "...", "why_housing": "...", "recommended_titles": ["...", "..."], "source_url": "https://..."}',
+      "  ],",
+      '  "top_verticals": [',
+      '    {"vertical": "<one of the 7>", "share_pct": 25, "driver": "..."}',
+      "  ]",
+      "}",
     ].join(" ");
 
-    const userPrompt = `Search current web sources and find 12-18 SMB/SME companies in ${city}, ${state} with active corporate housing demand signals (expansions, contract wins, hiring surges, project starts, mobilizations, subcontractor mobilizations under larger F500/utility/agency projects) in the last 90 days. Apply the OPERATOR MINDSET rules. Include source_url for each.`;
+    const userPrompt = `Search Google right now for 12-18 SMB/SME companies in ${city}, ${state} with active corporate housing demand signals (expansions, contract wins, hiring surges, project starts, mobilizations, subcontractor mobilizations under larger F500/utility/agency projects) in the last 90 days. Apply the OPERATOR MINDSET rules. Include source_url for each lead from your search results.`;
 
-    const response = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${PERPLEXITY_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "sonar-pro",
-        temperature: 0.3,
-        search_recency_filter: "month",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        response_format: {
-          type: "json_schema",
-          json_schema: {
-            name: "market_scan",
-            schema: {
-              type: "object",
-              properties: {
-                leads: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      company_name: { type: "string" },
-                      vertical: { type: "string", enum: VERTICALS },
-                      signal_type: { type: "string" },
-                      signal_detail: { type: "string" },
-                      why_housing: { type: "string" },
-                      recommended_titles: { type: "array", items: { type: "string" } },
-                      source_url: { type: "string" },
-                    },
-                    required: ["company_name", "vertical", "signal_type", "signal_detail", "why_housing", "recommended_titles", "source_url"],
-                  },
-                },
-                top_verticals: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      vertical: { type: "string", enum: VERTICALS },
-                      share_pct: { type: "number" },
-                      driver: { type: "string" },
-                    },
-                    required: ["vertical", "share_pct", "driver"],
-                  },
-                },
-              },
-              required: ["leads", "top_verticals"],
-            },
-          },
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      const body = await response.text();
-      console.error("Perplexity error", response.status, body);
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limited. Please try again in a moment." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    let result: Record<string, unknown> & { leads?: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> };
+    try {
+      const text = await callGeminiGrounded({ systemPrompt, userPrompt, temperature: 0.3 });
+      result = extractJson(text);
+    } catch (e) {
+      if (e instanceof GeminiError) {
+        return new Response(JSON.stringify({ error: e.message }), {
+          status: e.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 401 || response.status === 402) {
-        return new Response(JSON.stringify({ error: "Perplexity credit/auth issue. Check the connection." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      throw new Error(`Perplexity API error: ${response.status}`);
+      throw e;
     }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) throw new Error("No content in Perplexity response");
-
-    const result = JSON.parse(content);
-    const citations: string[] = Array.isArray(data.citations) ? data.citations : [];
+    const citations: string[] = [];
 
     // Verify each lead's source_url actually loads AND mentions the company.
     // If the model-supplied URL fails, try the Perplexity citation list as a fallback.

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -309,8 +310,8 @@ serve(async (req) => {
       });
     }
 
-    const PERPLEXITY_API_KEY = Deno.env.get("PERPLEXITY_API_KEY");
-    if (!PERPLEXITY_API_KEY) throw new Error("PERPLEXITY_API_KEY is not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
     const tf = timeframe || "next 3 months";
     const today = new Date().toISOString().split("T")[0];
@@ -318,91 +319,37 @@ serve(async (req) => {
     const systemPrompt = [
       "You are a networking event researcher for a corporate housing sales team at National Corporate Housing.",
       "Today is " + today + ".",
-      "Find real, verified networking events, conferences, trade shows, and industry meetups for a BDR prospecting in the " + vertical + " vertical that are PHYSICALLY LOCATED IN " + city + " within the " + tf + ".",
+      "Use Google Search to find real, verified networking events, conferences, trade shows, and industry meetups for a BDR prospecting in the " + vertical + " vertical that are PHYSICALLY LOCATED IN " + city + " within the " + tf + ".",
       "CRITICAL RULES:",
       "1) Every event MUST be held IN " + city + ". Do NOT include events in other cities, nearby cities, or virtual-only events.",
-      "2) Only include events that have NOT yet occurred. Every event date must be on or after " + today + ". Do NOT include any past events.",
-      "3) Only include REAL events from REAL organizations with VERIFIABLE online presence. Do NOT invent or fabricate events. If you are not confident an event is real, OMIT it entirely.",
-      "4) URL RULES — THIS IS THE MOST IMPORTANT RULE:",
-      "   - ONLY provide URLs you are CERTAIN are real, active websites.",
-      "   - Use the HOMEPAGE of the hosting organization (e.g. https://www.denver.org, https://www.aia.org, https://www.smps.org).",
-      "   - Do NOT guess or construct event-specific URLs like '/events/2026' or '/conference-2026' — these are almost always wrong.",
-      "   - If you cannot confidently provide a real, working URL, set url to an empty string.",
-      "   - NEVER fabricate a URL. A missing URL is far better than a broken one.",
-      "5) Include the hosting organization name for every event so the result can be cross-checked against a public website.",
-      "6) If you cannot corroborate the event name, city, and organizer from public web evidence, OMIT the event.",
-      "7) Prefer fewer high-confidence events over a longer list of uncertain events.",
-      "5) Focus on well-known recurring events from established organizations: national associations with local chapters, chambers of commerce, convention & visitors bureaus, major industry trade shows.",
-      "For each event return: event name, hosting organization, date or date range, location or venue, why it matters for corporate housing sales, the type of attendees likely present, and a suggested outreach angle.",
-      "Find 8 high-confidence candidate events. Focus on events where decision-makers in " + vertical + " gather.",
-      "ALL events must take place within " + city + " city limits.",
-      "Return ONLY valid JSON, no explanation."
+      "2) Only include events that have NOT yet occurred. Every event date must be on or after " + today + ".",
+      "3) Only include REAL events from REAL organizations with VERIFIABLE online presence — confirm via Google Search.",
+      "4) URL RULES: ONLY provide URLs returned by your Google Search results. Use the homepage of the hosting organization when in doubt. NEVER fabricate a URL — empty string is better than broken.",
+      "5) Include the hosting organization name for every event.",
+      "6) Prefer fewer high-confidence events over a longer list of uncertain events.",
+      "7) Focus on well-known recurring events from established organizations: national associations with local chapters, chambers of commerce, convention & visitors bureaus, major industry trade shows.",
+      "Find up to 8 high-confidence events. Focus on events where decision-makers in " + vertical + " gather.",
+      "",
+      "OUTPUT FORMAT — return ONLY a JSON object inside a ```json code fence, no prose:",
+      '{ "events": [ { "name": "...", "organization": "...", "date": "YYYY-MM-DD or range", "location": "venue, ' + city + '", "why": "...", "attendees": "...", "angle": "...", "priority": "High|Medium|Low", "url": "https://..." } ] }',
     ].join(" ");
 
-    const eventSchema = {
-      type: "object",
-      properties: {
-        events: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-              organization: { type: "string" },
-              date: { type: "string" },
-              location: { type: "string" },
-              why: { type: "string" },
-              attendees: { type: "string" },
-              angle: { type: "string" },
-              priority: { type: "string", enum: ["High", "Medium", "Low"] },
-              url: { type: "string" },
-            },
-            required: ["name", "organization", "date", "location", "why", "attendees", "angle", "priority", "url"],
-          },
-        },
-      },
-      required: ["events"],
-    };
-
-    const response = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + PERPLEXITY_API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "sonar-pro",
-        search_recency_filter: "month",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: "Find networking events for " + vertical + " in " + city + " within the " + tf + ". Return JSON matching the schema." },
-        ],
-        response_format: {
-          type: "json_schema",
-          json_schema: { name: "list_events", schema: eventSchema },
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limited. Please try again in a moment." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    let result: { events?: EventItem[] };
+    try {
+      const text = await callGeminiGrounded({
+        systemPrompt,
+        userPrompt: "Find networking events for " + vertical + " in " + city + " within the " + tf + ". Return JSON matching the schema.",
+        temperature: 0.3,
+      });
+      result = extractJson(text);
+    } catch (e) {
+      if (e instanceof GeminiError) {
+        return new Response(JSON.stringify({ error: e.message }), {
+          status: e.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 401 || response.status === 402) {
-        return new Response(JSON.stringify({ error: "Perplexity API key issue or credits exhausted." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      throw new Error("Perplexity error: " + response.status);
+      throw e;
     }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) throw new Error("No content in response");
-
-    const result = JSON.parse(content);
     const rawEvents: EventItem[] = Array.isArray(result?.events) ? result.events : [];
     const verifiedEvents = (await Promise.all(rawEvents.map((event) => verifyEvent(event, city))))
       .filter((event): event is EventItem => Boolean(event));

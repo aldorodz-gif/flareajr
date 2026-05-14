@@ -1,5 +1,4 @@
-// Centralized feature flags. Flip these to re-enable Perplexity-backed
-// features once the connector is reconnected and credits are added.
-// Read as `boolean` (not narrowed to literal true) so dependent code
-// stays type-checked rather than treated as unreachable.
-export const PERPLEXITY_FEATURES_ENABLED: boolean = false;
+// Centralized feature flags. Search-powered features now run on Gemini with
+// Google Search grounding (GEMINI_API_KEY). Flip this off to disable them again.
+export const PERPLEXITY_FEATURES_ENABLED: boolean = true;
+
