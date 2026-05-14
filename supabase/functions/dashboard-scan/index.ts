@@ -167,7 +167,7 @@ serve(async (req) => {
 
     const rawLeads: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> = result.leads || [];
     const verifiedLeads: typeof rawLeads = [];
-    let dropped = 0;
+    let unverifiedCount = 0;
     for (const lead of rawLeads) {
       const candidates = [lead.source_url, ...citations].filter((u): u is string => !!u);
       let goodUrl: string | null = null;
@@ -177,15 +177,15 @@ serve(async (req) => {
           break;
         }
       }
-      if (goodUrl) {
-        verifiedLeads.push({ ...lead, source_url: goodUrl });
-      } else {
-        dropped++;
-      }
+      // SOFT verification: keep every lead. Only the BDR decides to archive or pipeline it.
+      // If we can't verify, fall back to the model's URL (or first citation) and flag it as unverified.
+      const fallbackUrl = goodUrl ?? lead.source_url ?? candidates[0] ?? null;
+      if (!goodUrl) unverifiedCount++;
+      verifiedLeads.push({ ...lead, source_url: fallbackUrl, url_verified: !!goodUrl });
     }
     result.leads = verifiedLeads;
     result.citations = citations;
-    result.dropped_unverified = dropped;
+    result.unverified_count = unverifiedCount;
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
