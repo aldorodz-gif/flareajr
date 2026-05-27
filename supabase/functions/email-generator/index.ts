@@ -18,8 +18,10 @@ serve(async (req) => {
       });
     }
 
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!GEMINI_API_KEY && !LOVABLE_API_KEY) throw new Error("No AI key configured");
+
 
     const isArticle = signal.startsWith("Article:");
     const varyInstruction = vary ? " Use a different tone and angle than a typical first outreach — vary the approach while keeping the same rules." : "";
