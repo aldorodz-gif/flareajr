@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { extractJson } from "../_shared/gemini.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,6 +9,7 @@ const corsHeaders = {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+
   try {
     const { company, signal, buyer_title, service_line, tone, vary } = await req.json();
     if (!company || !signal || !buyer_title || !service_line) {
@@ -16,8 +18,10 @@ serve(async (req) => {
       });
     }
 
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!GEMINI_API_KEY && !LOVABLE_API_KEY) throw new Error("No AI key configured");
+
 
     const isArticle = signal.startsWith("Article:");
     const varyInstruction = vary ? " Use a different tone and angle than a typical first outreach — vary the approach while keeping the same rules." : "";
@@ -219,55 +223,85 @@ ${referenceEmail}`;
       required.push("suggested_targets", "article_insight");
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        temperature: 0.5,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: `Write the email now for ${company}, anchoring sentence 1 on the specific signal detail: "${signal}".` },
-        ],
-        tools: [{
-          type: "function",
-          function: {
-            name: "write_email",
-            description: "Return the structured email",
-            parameters: { type: "object", properties: emailProperties, required, additionalProperties: false },
-          },
-        }],
-        tool_choice: { type: "function", function: { name: "write_email" } },
-      }),
-    });
+    const schemaHint = JSON.stringify({ type: "object", properties: emailProperties, required }, null, 2);
+    const userPrompt = `Write the email now for ${company}, anchoring sentence 1 on the specific signal detail: "${signal}".
 
-    if (!response.ok) {
-      const txt = await response.text();
-      console.error("Lovable AI error", response.status, txt);
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limited. Please try again in a moment." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+Return ONLY a single JSON object (no prose, no code fences) matching this schema:
+${schemaHint}`;
+
+    async function callDirectGemini(): Promise<Record<string, unknown>> {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      const r = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+          generationConfig: { temperature: 0.5, maxOutputTokens: 4096, responseMimeType: "application/json" },
+        }),
+      });
+      if (!r.ok) {
+        const t = await r.text();
+        console.error("Gemini error", r.status, t.slice(0, 300));
+        throw new Error("gemini_" + r.status);
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Add funds in Settings → Workspace → Usage." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      throw new Error("Lovable AI error " + response.status);
+      const d = await r.json();
+      const text = d?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("") || "";
+      return extractJson(text);
     }
 
-    const data = await response.json();
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
-    const args = toolCall?.function?.arguments;
-    if (!args) throw new Error("No tool call from Lovable AI");
-    const result = JSON.parse(args);
+    async function callGateway(): Promise<Record<string, unknown>> {
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          temperature: 0.5,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: `Write the email now for ${company}, anchoring sentence 1 on the specific signal detail: "${signal}".` },
+          ],
+          tools: [{
+            type: "function",
+            function: { name: "write_email", description: "Return the structured email",
+              parameters: { type: "object", properties: emailProperties, required, additionalProperties: false } },
+          }],
+          tool_choice: { type: "function", function: { name: "write_email" } },
+        }),
+      });
+      if (!response.ok) {
+        const txt = await response.text();
+        console.error("Lovable AI error", response.status, txt);
+        const err = new Error("gateway_" + response.status);
+        (err as Error & { status?: number }).status = response.status;
+        throw err;
+      }
+      const data = await response.json();
+      const args = data.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
+      if (!args) throw new Error("No tool call from gateway");
+      return JSON.parse(args);
+    }
+
+    let result: Record<string, unknown>;
+    try {
+      if (GEMINI_API_KEY) {
+        result = await callDirectGemini();
+      } else {
+        result = await callGateway();
+      }
+    } catch (primaryErr) {
+      console.warn("Primary AI call failed, trying fallback:", (primaryErr as Error).message);
+      if (GEMINI_API_KEY && LOVABLE_API_KEY) {
+        result = await callGateway();
+      } else {
+        throw primaryErr;
+      }
+    }
+
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
+
   } catch (e) {
     console.error("email-generator error:", e);
     return new Response(JSON.stringify({ error: "Something went wrong. Try again." }), {
