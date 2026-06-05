@@ -30,7 +30,8 @@ export async function callGeminiGrounded(opts: {
         error.status === 400 ||
         error.status === 402 ||
         error.status === 429 ||
-        /GEMINI_API_KEY|Gemini API error: 400|Gemini auth\/credit issue|Rate limited by Gemini/i.test(error.message);
+        error.status === 503 ||
+        /GEMINI_API_KEY|Gemini API error: 400|Gemini auth\/credit issue|Rate limited by Gemini|Empty response from Gemini/i.test(error.message);
 
       if (!shouldFallback || !gatewayKey) {
         throw error;
@@ -75,8 +76,13 @@ async function callDirectGemini(
   }
 
   const data = await res.json();
+  const finishReason = data?.candidates?.[0]?.finishReason;
   const text = data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("") || "";
-  if (!text) throw new GeminiError("Empty response from Gemini", 500);
+  if (!text) {
+    console.error("Empty Gemini response. finishReason:", finishReason, "payload head:", JSON.stringify(data).slice(0, 800));
+    // 503 so the outer handler falls back to the Lovable AI gateway
+    throw new GeminiError(`Empty response from Gemini (finishReason: ${finishReason || "unknown"})`, 503);
+  }
   return text;
 }
 
