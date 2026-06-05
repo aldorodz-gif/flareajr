@@ -72,6 +72,7 @@ async function callDirectGemini(
     if (res.status === 429) throw new GeminiError("Rate limited by Gemini. Try again shortly.", 429);
     if (res.status === 401 || res.status === 403) throw new GeminiError("Gemini auth/credit issue. Check GEMINI_API_KEY.", 402);
     if (res.status === 400) throw new GeminiError("Gemini API error: 400", 400);
+    if (res.status >= 500) throw new GeminiError(`Gemini API error: ${res.status}`, 503);
     throw new GeminiError(`Gemini API error: ${res.status}`, 500);
   }
 
