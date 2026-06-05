@@ -30,7 +30,8 @@ export async function callGeminiGrounded(opts: {
         error.status === 400 ||
         error.status === 402 ||
         error.status === 429 ||
-        /GEMINI_API_KEY|Gemini API error: 400|Gemini auth\/credit issue|Rate limited by Gemini/i.test(error.message);
+        error.status === 503 ||
+        /GEMINI_API_KEY|Gemini API error: 400|Gemini auth\/credit issue|Rate limited by Gemini|Empty response from Gemini/i.test(error.message);
 
       if (!shouldFallback || !gatewayKey) {
         throw error;
