@@ -268,7 +268,7 @@ const BdrScoreboard = () => {
   const rollupKey = `${year}-${period}`;
   const teamRow = overrides['__team']?.[rollupKey];
 
-  const FilterTab = ({ id, label, sub, r }: { id: View; label: string; sub: string; r?: CalcRow; dark?: boolean }) => {
+  const FilterTab = ({ id, label, sub, r }: { id: View; label: string; sub: string; r?: CalcRow }) => {
     const active = view === id;
     const pct = r && r.monthlyGoal && r.actual != null ? r.actual / r.monthlyGoal : null;
     const hit = pct != null && pct >= 1;
@@ -489,7 +489,7 @@ const BdrScoreboard = () => {
         </>
       )}
 
-      <div className="mt-8 -mx-5 px-5 pt-6 pb-2 border-t-4" style={{ borderColor: '#0EA5E9', background: '#FFFFFF, transparent)' }}>
+      <div className="mt-8 -mx-5 px-5 pt-6 pb-2 border-t-4" style={{ borderColor: '#0EA5E9', background: '#FFFFFF' }}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] px-2 py-1 rounded" style={{ background: '#0EA5E9', color: '#fff' }}>
             Team Comparison
@@ -500,7 +500,7 @@ const BdrScoreboard = () => {
         </div>
         <Eyebrow gradient="#FFFFFF">View · click to filter</Eyebrow>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1 mb-4">
-          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
+          <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} />
           {regions.map(region => {
             const r = regionRollups[region]?.[rollupKey];
             const memberCount = Object.values(memberMap).filter(m => m.region === region).length;
