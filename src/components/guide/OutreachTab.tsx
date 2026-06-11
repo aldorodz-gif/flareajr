@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
+import { Building2, Zap, User, Briefcase } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import PageHeader from './PageHeader';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface OutreachTabProps {
@@ -193,11 +194,10 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #5BBFA0, #8B8FE8)">Step 07: Make Contact</Eyebrow>
-      <h2 className="text-[26px] font-bold mb-2 leading-tight text-foreground">Write Outreach</h2>
-      <p className="text-[14px] max-w-[720px] mb-6 text-muted-foreground leading-relaxed">
-        Generate a short, personal first email ready to send.
-      </p>
+      <PageHeader
+        title="Write Outreach"
+        subtitle="Four fields. One click. A short, personal first email ready to send."
+      />
 
       {(
         <div className="space-y-8 animate-fade-in">
