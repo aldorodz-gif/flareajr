@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AiToolCard from './AiToolCard';
 import PageHeader from './PageHeader';
