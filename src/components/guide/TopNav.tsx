@@ -6,12 +6,13 @@ import { useDueTaskCount } from '@/hooks/useDueTaskCount';
 interface TopNavProps {
   activeTab: string;
   onTabChange: (tabId: string) => void;
+  onOpenSettings?: () => void;
 }
 
 /**
  * Fixed top navigation — 56px, dark navy bar over the white app.
  */
-const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
+const TopNav = ({ activeTab, onTabChange, onOpenSettings }: TopNavProps) => {
   const { bdrs, selected, setSelectedId, loading } = useBdr();
   const dueCount = useDueTaskCount();
 
@@ -100,6 +101,7 @@ const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
           </select>
         )}
         <button
+          onClick={() => onOpenSettings?.()}
           className="inline-flex items-center justify-center transition-colors"
           style={{
             height: 32,
@@ -107,6 +109,7 @@ const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
             color: '#64748B',
             background: 'transparent',
             border: 'none',
+            cursor: 'pointer',
           }}
           onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
           onMouseLeave={(e) => { e.currentTarget.style.color = '#64748B'; }}

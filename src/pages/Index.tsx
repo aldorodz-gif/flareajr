@@ -11,6 +11,7 @@ import SignalsTab from '../components/guide/SignalsTab';
 import EventsTab from '../components/guide/EventsTab';
 import OpportunitiesTab from '../components/guide/OpportunitiesTab';
 import ProspectsTab from '../components/guide/ProspectsTab';
+import SettingsPage from '../components/guide/SettingsPage';
 
 import { BdrProvider } from '../components/guide/BdrContext';
 import { ThemeProvider } from '../components/guide/ThemeContext';
@@ -21,6 +22,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [animKey, setAnimKey] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleTabChange = useCallback((tabId: string) => {
     setActiveTab(tabId);
@@ -58,13 +60,17 @@ const Index = () => {
         <div className="min-h-screen" style={{ background: '#FFFFFF', color: '#0F172A' }}>
           <DailySummaryToast />
           <WelcomeModal onNavigateToTab={handleTabChange} forceOpen={tourOpen} onClose={() => setTourOpen(false)} />
-          <TopNav activeTab={activeTab} onTabChange={handleTabChange} />
+          <TopNav activeTab={activeTab} onTabChange={handleTabChange} onOpenSettings={() => setSettingsOpen(true)} />
 
           {/* Push content below the fixed 56px nav */}
           <main style={{ paddingTop: 56 }}>
-            <div key={animKey} className="animate-tab-fade">
-              {renderTab()}
-            </div>
+            {settingsOpen ? (
+              <SettingsPage onClose={() => setSettingsOpen(false)} />
+            ) : (
+              <div key={animKey} className="animate-tab-fade">
+                {renderTab()}
+              </div>
+            )}
           </main>
 
           <footer
