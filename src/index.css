@@ -6,63 +6,63 @@
 
 @layer base {
   :root {
-    /* Elite dark design system */
-    --background: 240 6% 6%;         /* #09090B */
-    --foreground: 0 0% 98%;          /* #FAFAFA */
+    /* Elite light design system — Linear / Vercel / Stripe inspired */
+    --background: 0 0% 100%;            /* #FFFFFF */
+    --foreground: 222 47% 11%;          /* #0F172A */
 
-    --card: 240 4% 11%;              /* #18181B */
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;                  /* #FFFFFF */
+    --card-foreground: 222 47% 11%;
 
-    --popover: 240 4% 11%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 239 84% 67%;          /* #6366F1 */
+    --primary: 199 89% 48%;             /* #0EA5E9 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 4% 16%;         /* #27272A */
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 40% 98%;           /* #F8FAFC */
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 46%;  /* #71717A */
+    --muted: 210 40% 98%;
+    --muted-foreground: 215 16% 47%;    /* #64748B */
 
-    --accent: 239 84% 67%;
+    --accent: 199 89% 48%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;        /* #EF4444 */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 73% 51%;           /* #DC2626 */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 4% 16%;            /* #27272A */
-    --input: 240 4% 16%;
-    --ring: 239 84% 67%;
+    --border: 214 32% 91%;              /* #E2E8F0 */
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
 
     --radius: 0.5rem;
 
-    /* Legacy tokens kept for compatibility — point at the new palette */
-    --navy: 240 6% 6%;
-    --navy-hex: #09090B;
-    --gold: 239 84% 67%;
-    --gold-hex: #6366F1;
-    --gold-light: 239 84% 75%;
-    --gold-light-hex: #818CF8;
-    --cream: 240 4% 11%;
-    --cream2: 240 4% 16%;
-    --green: 160 84% 39%;           /* #10B981 */
-    --teal: 160 84% 39%;
-    --rose: 239 84% 67%;
-    --red: 0 84% 60%;
+    /* Legacy tokens kept for compatibility — point at the new light palette */
+    --navy: 222 47% 11%;
+    --navy-hex: #0F172A;
+    --gold: 199 89% 48%;
+    --gold-hex: #0EA5E9;
+    --gold-light: 199 89% 60%;
+    --gold-light-hex: #38BDF8;
+    --cream: 0 0% 100%;
+    --cream2: 210 40% 98%;
+    --green: 142 71% 45%;               /* #16A34A */
+    --teal: 142 71% 45%;
+    --rose: 199 89% 48%;
+    --red: 0 73% 51%;
 
-    --gradient-primary: #6366F1;
-    --gradient-slider: #6366F1;
-    --gradient-header: #09090B;
+    --gradient-primary: #0EA5E9;
+    --gradient-slider: #0EA5E9;
+    --gradient-header: #0F172A;
 
-    --sidebar-background: 240 6% 6%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 239 84% 67%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 199 89% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4% 11%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 4% 16%;
-    --sidebar-ring: 239 84% 67%;
+    --sidebar-accent: 210 40% 98%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 199 89% 48%;
   }
 }
 
@@ -126,4 +126,4 @@
 }
 .flare-confetti { position: absolute; top: 0; pointer-events: none; font-size: 18px; animation: flare-confetti-fall 1500ms cubic-bezier(.2,.6,.4,1) forwards; }
 @keyframes flare-pulse-ring { 0% { transform: scale(.4); opacity: .6; } 100% { transform: scale(1.6); opacity: 0; } }
-.flare-pulse-ring { position: absolute; inset: 0; border-radius: 9999px; border: 2px solid #6366F1; pointer-events: none; animation: flare-pulse-ring 700ms ease-out forwards; }
+.flare-pulse-ring { position: absolute; inset: 0; border-radius: 9999px; border: 2px solid #0EA5E9; pointer-events: none; animation: flare-pulse-ring 700ms ease-out forwards; }

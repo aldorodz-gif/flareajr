@@ -9,8 +9,7 @@ interface TopNavProps {
 }
 
 /**
- * Fixed top navigation: FLARE wordmark + tabs (Lucide icons) + Active BDR + Settings.
- * Height 52px, solid dark surface, single bottom border.
+ * Fixed top navigation — 56px, dark navy bar over the white app.
  */
 const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
   const { bdrs, selected, setSelectedId, loading } = useBdr();
@@ -18,44 +17,54 @@ const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center h-[52px] px-4"
-      style={{ background: '#09090B', borderBottom: '1px solid #27272A' }}
+      className="fixed top-0 left-0 right-0 flex items-center h-[56px]"
+      style={{ background: '#0F172A', zIndex: 100 }}
     >
       {/* Wordmark with accent bar */}
-      <div className="flex items-center gap-2.5 shrink-0">
-        <span className="block h-5 w-[6px] rounded-sm" style={{ background: '#6366F1' }} />
-        <span className="text-[15px] font-bold tracking-tight" style={{ color: '#FAFAFA' }}>
+      <div className="flex items-center shrink-0" style={{ paddingLeft: 28, gap: 10 }}>
+        <span className="block" style={{ width: 2, height: 16, background: '#0EA5E9' }} />
+        <span
+          style={{
+            color: '#FFFFFF',
+            fontWeight: 800,
+            fontSize: 16,
+            letterSpacing: '-0.04em',
+          }}
+        >
           FLARE
         </span>
       </div>
 
       {/* Tabs centered */}
-      <div className="flex-1 flex items-center justify-center gap-0.5 overflow-x-auto hide-scrollbar mx-4">
+      <div className="flex-1 flex items-center justify-center overflow-x-auto hide-scrollbar">
         {TAB_ORDER.map(tab => {
           const Icon = tab.iconNode;
           const isActive = tab.id === activeTab;
+          const color = isActive ? '#FFFFFF' : '#64748B';
           return (
             <button
               key={tab.id}
               data-tab={tab.id}
               data-active={isActive ? 'true' : 'false'}
               onClick={() => onTabChange(tab.id)}
-              className="relative inline-flex items-center gap-1.5 h-[52px] px-3 whitespace-nowrap transition-colors"
+              className="relative inline-flex items-center h-[56px] whitespace-nowrap transition-colors"
               style={{
-                color: isActive ? '#FAFAFA' : '#71717A',
+                color,
                 fontSize: 13,
                 fontWeight: 500,
-                borderBottom: isActive ? '2px solid #6366F1' : '2px solid transparent',
+                padding: '0 16px',
+                gap: 8,
+                borderBottom: isActive ? '2px solid #0EA5E9' : '2px solid transparent',
               }}
-              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = '#FAFAFA'; }}
-              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = '#71717A'; }}
+              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = '#CBD5E1'; }}
+              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = '#64748B'; }}
             >
-              <Icon size={14} />
+              <Icon size={14} color={color} />
               <span>{tab.label}</span>
               {tab.id === 'prospects' && dueCount > 0 && (
                 <span
                   className="ml-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none"
-                  style={{ background: '#6366F1', color: '#fff' }}
+                  style={{ background: '#0EA5E9', color: '#FFFFFF' }}
                 >
                   {dueCount}
                 </span>
@@ -65,35 +74,45 @@ const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
         })}
       </div>
 
-      {/* Active BDR dropdown + settings */}
-      <div className="flex items-center gap-2 shrink-0">
+      {/* Right cluster: BDR + settings */}
+      <div className="flex items-center shrink-0" style={{ paddingRight: 28, gap: 8 }}>
         {!loading && bdrs.length > 0 && (
           <select
             value={selected?.id || ''}
             onChange={(e) => setSelectedId(e.target.value)}
-            className="h-8 px-2.5 rounded-md text-[12px] font-medium outline-none"
+            className="outline-none"
             style={{
-              background: '#18181B',
-              color: '#FAFAFA',
-              border: '1px solid #27272A',
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: '#FFFFFF',
+              borderRadius: 6,
+              height: 32,
+              padding: '0 12px',
+              fontSize: 13,
             }}
             title="Active BDR"
           >
             {bdrs.map(b => (
-              <option key={b.id} value={b.id} style={{ background: '#18181B', color: '#FAFAFA' }}>
+              <option key={b.id} value={b.id} style={{ background: '#0F172A', color: '#FFFFFF' }}>
                 {b.name}
               </option>
             ))}
           </select>
         )}
         <button
-          className="inline-flex items-center justify-center h-8 w-8 rounded-md transition-colors"
-          style={{ background: 'transparent', border: '1px solid #27272A', color: '#71717A' }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = '#FAFAFA'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = '#71717A'; }}
+          className="inline-flex items-center justify-center transition-colors"
+          style={{
+            height: 32,
+            width: 32,
+            color: '#64748B',
+            background: 'transparent',
+            border: 'none',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = '#64748B'; }}
           title="Settings"
         >
-          <Settings size={14} />
+          <Settings size={16} />
         </button>
       </div>
     </nav>

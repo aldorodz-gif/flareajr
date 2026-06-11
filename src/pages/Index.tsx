@@ -55,13 +55,13 @@ const Index = () => {
   return (
     <ThemeProvider>
       <BdrProvider>
-        <div className="min-h-screen" style={{ background: '#09090B', color: '#FAFAFA' }}>
+        <div className="min-h-screen" style={{ background: '#FFFFFF', color: '#0F172A' }}>
           <DailySummaryToast />
           <WelcomeModal onNavigateToTab={handleTabChange} forceOpen={tourOpen} onClose={() => setTourOpen(false)} />
           <TopNav activeTab={activeTab} onTabChange={handleTabChange} />
 
-          {/* Push content below the fixed 52px nav */}
-          <main style={{ paddingTop: 52 }}>
+          {/* Push content below the fixed 56px nav */}
+          <main style={{ paddingTop: 56 }}>
             <div key={animKey} className="animate-tab-fade">
               {renderTab()}
             </div>
@@ -69,10 +69,10 @@ const Index = () => {
 
           <footer
             className="flex flex-col md:flex-row justify-between items-center px-6 md:px-12 py-5 gap-2.5"
-            style={{ background: '#09090B', borderTop: '1px solid #27272A' }}
+            style={{ background: '#FFFFFF', borderTop: '1px solid #E2E8F0' }}
           >
-            <p className="text-[11px]" style={{ color: '#71717A' }}>Flare</p>
-            <span className="text-[11px]" style={{ color: '#71717A' }}>Created by Aldo Rodriguez</span>
+            <p className="text-[11px]" style={{ color: '#94A3B8' }}>Flare</p>
+            <span className="text-[11px]" style={{ color: '#94A3B8' }}>Created by Aldo Rodriguez</span>
           </footer>
         </div>
       </BdrProvider>
