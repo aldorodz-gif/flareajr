@@ -41,6 +41,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [error, setError] = useState('');
+  const [referenceOpen, setReferenceOpen] = useState(false);
 
   const handleScore = useCallback(async () => {
     if (!signalText.trim()) return;
