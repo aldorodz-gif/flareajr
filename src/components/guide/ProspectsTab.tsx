@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import { Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import AiToolCard from './AiToolCard';
 import { SEQUENCE_STEPS, dueDateForDay } from './sequenceConfig';
 import DiscoBallCelebration from './DiscoBallCelebration';
-import ExampleProspectDemo from './ExampleProspectDemo';
+import PageHeader from './PageHeader';
+import SkeletonRows from './SkeletonRows';
 
 interface PipelineItem {
   id: string;
@@ -436,17 +438,10 @@ const ProspectsTab = () => {
         onClose={() => setCelebration(null)}
       />
 
-      <div className="mb-5">
-        <AiToolCard
-          icon="🎯"
-          title="Prospects"
-          subtitle={`${activeItems.length} active · ${archivedItems.length} archived · ${meetingsBooked} meeting${meetingsBooked === 1 ? '' : 's'} booked · ${dueCount} email${dueCount === 1 ? '' : 's'} due`}
-        >
-          <p className="text-[13px] leading-relaxed" style={{ color: '#475569' }}>
-            Each prospect runs a 5-touch sequence over 21 days. Log how you connected, take notes, and book the meeting when they're ready.
-          </p>
-        </AiToolCard>
-      </div>
+      <PageHeader
+        title="Prospects"
+        subtitle="Every active lead runs a 5-touch sequence over 21 days."
+      />
 
       {/* Manual add bar */}
       <div className="mb-5 p-3 rounded-xl flex flex-wrap items-center justify-between gap-3" style={{ background: 'linear-gradient(135deg, rgba(168,85,247,.08), rgba(45,212,191,.06))', border: '1px dashed rgba(168,85,247,.35)' }}>
@@ -594,14 +589,30 @@ const ProspectsTab = () => {
         </div>
       )}
 
-      <ExampleProspectDemo />
-
-      {loading && <div className="py-12 text-center text-[13px] text-muted-foreground">Loading prospects…</div>}
+      {loading && <SkeletonRows count={5} height={64} />}
 
       {!loading && items.length === 0 && (
-        <div className="p-10 text-center rounded-xl" style={{ background: '#FFFFFF', border: '1px dashed rgba(14,30,58,.15)' }}>
-          <p className="text-[14px] font-semibold text-foreground mb-1">No prospects yet</p>
-          <p className="text-[12px] text-muted-foreground">Add leads from <strong>Scan a Market</strong> / <strong>Today's Leads</strong> with the <strong>+ Pipeline</strong> button — or use <strong>+ Add Lead Manually</strong> above for referrals and self-sourced leads.</p>
+        <div className="py-16 px-6 text-center flex flex-col items-center gap-3 rounded-md" style={{ border: '1px solid #E2E8F0', background: '#FFFFFF' }}>
+          <Users size={32} color="#94A3B8" />
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: '#0F172A' }}>No active prospects</h3>
+          <p style={{ fontSize: 12, color: '#64748B', maxWidth: 380 }}>
+            Add a lead from Today's Leads or paste one in manually to start a 5-touch sequence.
+          </p>
+          <button
+            onClick={() => setManualOpen(true)}
+            style={{
+              background: '#0EA5E9',
+              color: '#FFFFFF',
+              fontSize: 13,
+              fontWeight: 600,
+              padding: '8px 16px',
+              borderRadius: 6,
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            + Add Lead Manually
+          </button>
         </div>
       )}
 
