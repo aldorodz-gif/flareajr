@@ -6,12 +6,13 @@ import { useDueTaskCount } from '@/hooks/useDueTaskCount';
 interface TopNavProps {
   activeTab: string;
   onTabChange: (tabId: string) => void;
+  onOpenSettings?: () => void;
 }
 
 /**
  * Fixed top navigation — 56px, dark navy bar over the white app.
  */
-const TopNav = ({ activeTab, onTabChange }: TopNavProps) => {
+const TopNav = ({ activeTab, onTabChange, onOpenSettings }: TopNavProps) => {
   const { bdrs, selected, setSelectedId, loading } = useBdr();
   const dueCount = useDueTaskCount();
 
