@@ -443,7 +443,33 @@ export default function OpportunitiesTab() {
                     </button>
                   )}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                {(() => {
+                  const detail = stripLegacyTags(o.why_it_matters || '').trim();
+                  const type = (o.signal_type || '').trim();
+                  let signalText = '';
+                  if (type && detail) signalText = `${type} — ${detail}`;
+                  else if (type) signalText = type;
+                  else if (detail) signalText = detail;
+                  else signalText = 'Manually added';
+                  return (
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: '#0EA5E9',
+                        fontWeight: 500,
+                        margin: '2px 0 0',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '100%',
+                      }}
+                      title={signalText}
+                    >
+                      ⚡ Signal: {signalText}
+                    </div>
+                  );
+                })()}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
                   <p style={{ fontSize: 12, color: '#64748B', margin: 0, lineHeight: 1.4 }}>{headline}</p>
                   <button
                     onClick={() => setExpandedId(expanded ? null : o.id)}
@@ -453,6 +479,7 @@ export default function OpportunitiesTab() {
                     {expanded ? <ChevronUp size={14} color="#94A3B8" /> : <ChevronDown size={14} color="#94A3B8" />}
                   </button>
                 </div>
+
                 {expanded && (
                   <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #F1F5F9' }}>
                     {o.why_it_matters && <p style={{ fontSize: 13, color: '#0F172A', margin: '0 0 6px', lineHeight: 1.5 }}>{stripLegacyTags(o.why_it_matters)}</p>}
