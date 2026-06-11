@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import AiToolCard from './AiToolCard';
+import PageHeader from './PageHeader';
 import MarketSelector from './MarketSelector';
 import TopVerticals, { VerticalShare } from './TopVerticals';
 import LeadFeed, { ScanLead } from './LeadFeed';
@@ -205,11 +206,16 @@ const MarketHeatTab = () => {
 
   return (
     <section className="px-6 md:px-12 py-8 max-w-[1400px] mx-auto">
+      <PageHeader
+        title="Scan a Market"
+        subtitle="Pull live leads right now — pick a state, city, and vertical and hit Scan. Results load instantly."
+      />
+
       <div className="mb-5">
         <AiToolCard
           icon="🔥"
-          title="Scan a Market · Live territory pull, on demand"
-          subtitle={`${city && state ? `${city}, ${state}` : 'Pick a state + city to begin'} · ${lastScanLabel}`}
+          title={`Scan a Market · ${city && state ? `${city}, ${state}` : 'Pick a state + city to begin'}`}
+          subtitle={lastScanLabel}
         >
           <p className="text-[13px] leading-relaxed" style={{ color: '#475569' }}>
             Different from <strong style={{ color: '#0e1e3a' }}>Today's Leads</strong> (your auto-built daily list) — this is an <strong style={{ color: '#0e1e3a' }}>on-demand radar</strong>. Pick any market and click <strong style={{ color: '#0e1e3a' }}>Scan</strong> to pull fresh leads, top verticals, and inventory right now.
