@@ -580,10 +580,6 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
         </div>
       )}
-
-
-      <div className="mt-8">
-      </div>
     </div>
   );
 };
