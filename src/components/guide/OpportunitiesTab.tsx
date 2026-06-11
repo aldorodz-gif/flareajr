@@ -444,7 +444,7 @@ export default function OpportunitiesTab() {
                   )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <p style={{ fontSize: 13, color: '#64748B', margin: 0, lineHeight: 1.4 }}>{headline}</p>
+                  <p style={{ fontSize: 12, color: '#64748B', margin: 0, lineHeight: 1.4 }}>{headline}</p>
                   <button
                     onClick={() => setExpandedId(expanded ? null : o.id)}
                     style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'inline-flex', alignItems: 'center' }}
@@ -466,32 +466,32 @@ export default function OpportunitiesTab() {
                 )}
               </div>
 
-              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: '#0F172A', lineHeight: 1 }}>{composite}</div>
-                  <div style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '.06em', marginTop: 2 }}>score</div>
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ textAlign: 'center', minWidth: 40 }}>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: '#0F172A', lineHeight: 1 }}>{composite}</div>
+                  <div style={{ fontSize: 9, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '.06em', marginTop: 2 }}>score</div>
                 </div>
                 <button
                   onClick={() => setWriteEmailLead(o)}
-                  style={{ background: '#0F172A', color: '#FFFFFF', border: 'none', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
+                  style={{ background: '#0F172A', color: '#FFFFFF', border: 'none', borderRadius: 6, height: 28, padding: '0 12px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
                 >
                   Write Email
                 </button>
                 {inPipeline ? (
-                  <span style={{ background: '#ECFDF5', color: '#059669', border: '1px solid #A7F3D0', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}>
+                  <span style={{ background: '#ECFDF5', color: '#059669', border: '1px solid #A7F3D0', borderRadius: 6, height: 28, padding: '0 12px', fontSize: 12, fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}>
                     ✓ In pipeline
                   </span>
                 ) : (
                   <button
                     onClick={() => triggerPipeline(o)}
-                    style={{ background: '#FFFFFF', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
+                    style={{ background: '#FFFFFF', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: 6, height: 28, padding: '0 12px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
                   >
                     + Pipeline
                   </button>
                 )}
                 <button
                   onClick={() => archiveOpp(o.id)}
-                  style={{ background: '#FFFFFF', color: '#DC2626', border: '1px solid #FECACA', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
+                  style={{ background: '#FFFFFF', color: '#DC2626', border: '1px solid #FECACA', borderRadius: 6, height: 28, padding: '0 12px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
                 >
                   Archive
                 </button>
