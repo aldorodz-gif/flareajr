@@ -50,7 +50,7 @@ export default function DailySummaryToast() {
           className={`relative w-[420px] max-w-[92vw] rounded-2xl shadow-2xl ring-1 ring-white/20 p-5 ${total > 0 ? 'cursor-pointer hover:scale-[1.01]' : ''} transition-transform animate-scale-in`}
           style={{
             background: total > 0
-              ? 'linear-gradient(135deg, #ec4899 0%, #a855f7 55%, #2dd4bf 110%)'
+              ? 'linear-gradient(135deg, #DC2626 0%, #0EA5E9 55%, #16A34A 110%)'
               : 'linear-gradient(135deg, #0e1e3a, #1e293b)',
             color: '#fff',
             boxShadow: '0 20px 50px -12px rgba(236,72,153,.55)',

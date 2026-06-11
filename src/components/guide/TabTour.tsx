@@ -3,7 +3,7 @@ import { TAB_TOURS, tourStorageKey, exampleStorageKey, TourPreviewKind } from '.
 import { useBdr } from './BdrContext';
 
 const PreviewBlock = ({ kind }: { kind: TourPreviewKind }) => {
-  const wrap: React.CSSProperties = { background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)', borderRadius: 10, padding: 10 };
+  const wrap: React.CSSProperties = { background: '#FFFFFF', border: '1px solid rgba(14,30,58,.08)', borderRadius: 10, padding: 10 };
   switch (kind) {
     case 'pipelineSequence':
       return (
@@ -101,7 +101,7 @@ const PreviewBlock = ({ kind }: { kind: TourPreviewKind }) => {
           <div className="p-2 rounded bg-white" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-extrabold" style={{ color: '#0e1e3a' }}>Acme Corp · Phoenix</span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', color: '#fff' }}>92</span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)', color: '#fff' }}>92</span>
             </div>
             <div className="text-[10px] text-muted-foreground">Expanded HQ · hiring 40 · 3 days ago</div>
           </div>
@@ -113,7 +113,7 @@ const PreviewBlock = ({ kind }: { kind: TourPreviewKind }) => {
           <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#7c3aed' }}>Score chip →</div>
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ background: '#0f766e' }}>92 hot</span>
-            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ background: '#a855f7' }}>74 warm</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded text-white" style={{ background: '#0EA5E9' }}>74 warm</span>
             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: '#F1F5F9', color: '#64748b' }}>48 cool</span>
           </div>
         </div>
@@ -322,7 +322,7 @@ const TabTour = ({ tabId }: Props) => {
               left: rect.left - PADDING,
               width: rect.width + PADDING * 2,
               height: rect.height + PADDING * 2,
-              boxShadow: '0 0 0 2px #ec4899, 0 0 24px rgba(236,72,153,.6)',
+              boxShadow: '0 0 0 2px #DC2626, 0 0 24px rgba(236,72,153,.6)',
             }}
           />
         )}
@@ -380,7 +380,7 @@ const TabTour = ({ tabId }: Props) => {
                 <button
                   onClick={next}
                   className="text-[12px] font-bold px-3.5 py-1.5 rounded text-white"
-                  style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)' }}
+                  style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)' }}
                 >
                   {stepIdx < tour.steps.length - 1 ? 'Next →' : 'Got it ✓'}
                 </button>

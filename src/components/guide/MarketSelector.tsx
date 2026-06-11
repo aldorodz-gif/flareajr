@@ -74,7 +74,7 @@ const MarketSelector = ({ state, city, vertical, loading, onChange, onScan }: Ma
         disabled={loading || !state || !city}
         className="px-5 py-[11px] rounded-lg text-[13px] font-bold uppercase tracking-wider transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
         style={{
-          background: 'linear-gradient(90deg, #ec4899, #f9a8d4)',
+          background: 'linear-gradient(90deg, #DC2626, #f9a8d4)',
           color: '#0a0a14',
           boxShadow: '0 4px 12px rgba(251,146,60,.3)',
         }}

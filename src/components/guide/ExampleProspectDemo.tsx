@@ -120,7 +120,7 @@ const ExampleProspectDemo = () => {
           </div>
 
           {/* Mock card — same layout as a real ProspectCard */}
-          <div className="p-4 rounded-lg" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)' }}>
+          <div className="p-4 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid rgba(14,30,58,.08)' }}>
             <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
               <div>
                 <div className="text-[15px] font-extrabold" style={{ color: '#0e1e3a' }}>Acme Relocation</div>
@@ -198,7 +198,7 @@ const ExampleProspectDemo = () => {
                     <button
                       onClick={() => book('disco')}
                       className="text-[11px] font-bold px-3 py-1.5 rounded-md text-white transition-all hover:-translate-y-0.5"
-                      style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
+                      style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
                     >🪩 Book Disco Call</button>
                     <button
                       onClick={() => book('inperson')}

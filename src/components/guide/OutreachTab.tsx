@@ -224,7 +224,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                           className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
                           style={{
                             borderColor: company ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                            background: company ? '#FFF7ED' : '#FAF7F2',
+                            background: company ? '#FFF7ED' : '#FFFFFF',
                             boxShadow: company ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                           }}
                           disabled={loading}
@@ -242,7 +242,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                           className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
                           style={{
                             borderColor: signal ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                            background: signal ? '#FFF7ED' : '#FAF7F2',
+                            background: signal ? '#FFF7ED' : '#FFFFFF',
                             boxShadow: signal ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                           }}
                           disabled={loading}
@@ -272,7 +272,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                           className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
                           style={{
                             borderColor: buyerTitle ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                            background: buyerTitle ? '#FFF7ED' : '#FAF7F2',
+                            background: buyerTitle ? '#FFF7ED' : '#FFFFFF',
                             boxShadow: buyerTitle ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                           }}
                           disabled={loading}
@@ -286,7 +286,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                           className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200 appearance-none cursor-pointer"
                           style={{
                             borderColor: serviceLine ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                            background: serviceLine ? '#FFF7ED' : '#FAF7F2',
+                            background: serviceLine ? '#FFF7ED' : '#FFFFFF',
                             boxShadow: serviceLine ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                             color: serviceLine ? 'inherit' : '#9CA3AF',
                           }}
@@ -312,7 +312,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                                 title={t.hint}
                                 className="px-3 py-2 text-[12px] font-semibold transition-all rounded-md border"
                                 style={{
-                                  background: active ? 'linear-gradient(135deg, #ec4899, #db2777)' : '#FAF7F2',
+                                  background: active ? 'linear-gradient(135deg, #DC2626, #db2777)' : '#FFFFFF',
                                   color: active ? '#fff' : '#2F4858',
                                   borderColor: active ? 'transparent' : 'rgba(155,120,200,.2)',
                                   boxShadow: active ? '0 2px 8px rgba(251,146,60,.3)' : 'none',
@@ -334,7 +334,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       disabled={!canGenerate || loading}
                       className="w-full py-4 text-[15px] font-bold tracking-wide transition-all"
                       style={{
-                        background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #ec4899, #db2777)',
+                        background: !canGenerate || loading ? '#E2E8F0' : 'linear-gradient(135deg, #DC2626, #db2777)',
                         color: !canGenerate || loading ? '#94A3B8' : '#fff',
                         cursor: !canGenerate || loading ? 'not-allowed' : 'pointer',
                         boxShadow: canGenerate && !loading ? '0 4px 15px rgba(251,146,60,.35)' : 'none',
@@ -351,7 +351,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                   </>
                 ) : (
                   <>
-                    <div className="mb-4 px-5 py-4" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.25)' }}>
+                    <div className="mb-4 px-5 py-4" style={{ background: '#FFFFFF', border: '1px solid rgba(251,146,60,.25)' }}>
                       <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-1 text-muted-foreground">Subject Line</p>
                       <p className="text-[17px] font-bold text-foreground">{result.subject}</p>
                       {result.subject_alternatives && result.subject_alternatives.length > 0 && (
@@ -439,7 +439,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                             </div>
                             <ul className="space-y-1.5">
                               {checks.map(c => (
-                                <li key={c.label} className="flex items-start gap-2 px-3 py-2 rounded-md" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
+                                <li key={c.label} className="flex items-start gap-2 px-3 py-2 rounded-md" style={{ background: '#0F172A', border: '1px solid hsl(var(--border))' }}>
                                   <span className="mt-1 w-2 h-2 rounded-full flex-shrink-0" style={{ background: dot(c.status) }} />
                                   <div className="flex-1 min-w-0">
                                     <p className="text-[12px] font-bold text-foreground">{c.label}</p>
@@ -453,7 +453,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                                 onClick={() => callApi(true)}
                                 disabled={loading}
                                 className="mt-3 w-full text-[12px] font-bold uppercase tracking-wider px-3 py-2 rounded-md hover:opacity-90 disabled:opacity-50"
-                                style={{ background: 'linear-gradient(90deg, #ec4899, #a855f7)', color: '#fff' }}
+                                style={{ background: 'linear-gradient(90deg, #DC2626, #0EA5E9)', color: '#fff' }}
                               >
                                 {loading ? 'Regenerating…' : '↻ Regenerate to fix issues'}
                               </button>
@@ -463,7 +463,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                       );
                     })()}
 
-                    <div className="relative px-5 py-5 mt-4" style={{ background: '#FAFAFA', border: '1px solid hsl(var(--border))' }}>
+                    <div className="relative px-5 py-5 mt-4" style={{ background: '#0F172A', border: '1px solid hsl(var(--border))' }}>
                       <span className="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1" style={{ background: wordCount > 125 ? 'rgba(201,91,106,.1)' : 'rgba(251,146,60,.15)', color: wordCount > 125 ? '#C95B6A' : '#2F4858', border: `1px solid ${wordCount > 125 ? 'rgba(201,91,106,.25)' : 'rgba(251,146,60,.25)'}` }}>
                         {wordCount} words
                       </span>
@@ -483,15 +483,15 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                     {/* Suggested targets */}
                     {result.suggested_targets && result.suggested_targets.length > 0 && (
-                      <div className="mt-4 rounded-lg border overflow-hidden" style={{ borderColor: 'rgba(251,146,60,.25)', background: '#FAF7F2' }}>
+                      <div className="mt-4 rounded-lg border overflow-hidden" style={{ borderColor: 'rgba(251,146,60,.25)', background: '#FFFFFF' }}>
                         <div className="px-4 py-3 flex items-center gap-2" style={{ background: '#2F4858' }}>
                           <span className="text-[14px]">👥</span>
-                          <p className="text-[13px] font-bold" style={{ color: '#ec4899' }}>Suggested Targets at {company}</p>
+                          <p className="text-[13px] font-bold" style={{ color: '#DC2626' }}>Suggested Targets at {company}</p>
                         </div>
                         <div className="divide-y" style={{ borderColor: 'rgba(251,146,60,.12)' }}>
                           {result.suggested_targets.map((t, i) => (
                             <div key={i} className="flex items-start gap-3 px-4 py-3">
-                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style={{ background: '#2F4858', color: '#ec4899' }}>
+                              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 mt-0.5" style={{ background: '#2F4858', color: '#DC2626' }}>
                                 {i + 1}
                               </span>
                               <div>
@@ -512,10 +512,10 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     )}
 
                     <div className="flex gap-3 mt-5">
-                      <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#14b8a6' : 'linear-gradient(135deg, #ec4899, #db2777)', color: '#fff', boxShadow: '0 2px 8px rgba(251,146,60,.3)' }}>
+                      <button onClick={handleCopy} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: copied ? '#14b8a6' : 'linear-gradient(135deg, #DC2626, #db2777)', color: '#fff', boxShadow: '0 2px 8px rgba(251,146,60,.3)' }}>
                         {copied ? '✓ COPIED' : '📋 COPY'}
                       </button>
-                      <button onClick={() => callApi(true)} disabled={loading} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.3)', color: '#2F4858' }}>
+                      <button onClick={() => callApi(true)} disabled={loading} className="px-6 py-3 text-[13px] font-bold transition-all" style={{ background: '#FFFFFF', border: '1px solid rgba(251,146,60,.3)', color: '#2F4858' }}>
                         {loading ? 'Thinking...' : '🔄 Different angle'}
                       </button>
                       <button onClick={() => { setResult(null); setError(''); }} className="px-6 py-3 text-[13px] font-bold transition-all text-muted-foreground">
@@ -548,7 +548,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                 {/* Quick stats */}
                 <div className="flex flex-wrap gap-4 mt-4">
                   {[{ val: '4', label: 'sentences max' }, { val: '<100', label: 'words total' }, { val: '2–4', label: 'word subject' }, { val: '1', label: 'ask only' }].map(s => (
-                    <div key={s.label} className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: '#FAF7F2', border: '1px solid hsl(var(--border))' }}>
+                    <div key={s.label} className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid hsl(var(--border))' }}>
                       <span className="text-[16px] font-bold" style={{ color: '#2F4858' }}>{s.val}</span>
                       <span className="text-[11px] text-muted-foreground">{s.label}</span>
                     </div>
@@ -557,7 +557,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                 {/* Tone rule */}
                 <div className="rounded-lg p-4" style={{ background: '#2F4858' }}>
-                  <p className="text-[12px] font-bold tracking-wide mb-2" style={{ color: '#ec4899' }}>THE PERSONAL TONE RULE</p>
+                  <p className="text-[12px] font-bold tracking-wide mb-2" style={{ color: '#DC2626' }}>THE PERSONAL TONE RULE</p>
                   <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.88)' }}>
                     Write it like you're texting a colleague about someone you both know. No "I wanted to reach out." No "I hope this finds you well." Just one person talking to another.
                   </p>
@@ -586,7 +586,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
             <div className="relative pl-8">
               {/* Timeline line */}
-              <div className="absolute left-[14px] top-3 bottom-3 w-[2px]" style={{ background: 'linear-gradient(to bottom, #ec4899, #2F4858)' }} />
+              <div className="absolute left-[14px] top-3 bottom-3 w-[2px]" style={{ background: 'linear-gradient(to bottom, #DC2626, #2F4858)' }} />
 
               <div className="flex flex-col gap-4">
                 {EMAIL_PARTS.map(s => (
@@ -594,11 +594,11 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     {/* Dot */}
                     <div
                       className="absolute -left-8 top-4 w-[10px] h-[10px] rounded-full border-2"
-                      style={{ borderColor: '#ec4899', background: 'hsl(var(--background))' }}
+                      style={{ borderColor: '#DC2626', background: 'hsl(var(--background))' }}
                     />
                     <div className="rounded-lg border overflow-hidden" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--card))' }}>
                       <div className="px-4 py-3 flex items-center gap-2.5" style={{ borderBottom: '1px solid hsl(var(--border))' }}>
-                        <span className="w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold" style={{ background: '#2F4858', color: '#ec4899' }}>{s.num}</span>
+                        <span className="w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold" style={{ background: '#2F4858', color: '#DC2626' }}>{s.num}</span>
                         <div>
                           <span className="text-[14px] font-semibold text-foreground">{s.title}</span>
                           <span className="text-[12px] text-muted-foreground ml-1.5">— {s.subtitle}</span>
@@ -623,7 +623,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
           {/* Bottom line */}
           <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: '#2F4858' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#ec4899' }}>Bottom line</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#DC2626' }}>Bottom line</span>
             <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.85)' }}>
               Good prospecting emails aren't about you. They're about one signal, one problem, and one small ask. If you nail those three, the reply rate takes care of itself.
             </p>

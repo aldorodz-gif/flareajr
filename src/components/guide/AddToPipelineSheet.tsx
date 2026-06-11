@@ -192,7 +192,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
                 5 touches scheduled over 21 days — Email 1 ready to send today.
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-bold"
-                style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', color: '#fff' }}>
+                style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)', color: '#fff' }}>
                 ⚡ Pipeline +1
               </div>
             </div>
@@ -216,7 +216,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
                     onClick={() => { setChosenTitle(t); setCustomTitle(''); }}
                     className="text-[11px] font-semibold px-2.5 py-1 rounded transition-all"
                     style={{
-                      background: chosenTitle === t && !customTitle ? '#0e1e3a' : '#FAF7F2',
+                      background: chosenTitle === t && !customTitle ? '#0e1e3a' : '#FFFFFF',
                       color: chosenTitle === t && !customTitle ? '#fff' : '#475569',
                       border: '1px solid rgba(14,30,58,.08)',
                     }}
@@ -244,7 +244,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
                     onClick={() => setTone(t)}
                     className="text-[11px] font-semibold px-2.5 py-1 rounded capitalize transition-all"
                     style={{
-                      background: tone === t ? 'linear-gradient(135deg, #ec4899, #db2777)' : '#FAF7F2',
+                      background: tone === t ? 'linear-gradient(135deg, #DC2626, #db2777)' : '#FFFFFF',
                       color: tone === t ? '#fff' : '#475569',
                       border: '1px solid rgba(14,30,58,.08)',
                     }}
@@ -255,7 +255,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
               </div>
             </div>
 
-            <div className="p-3 rounded text-[12px]" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)', color: '#1e293b' }}>
+            <div className="p-3 rounded text-[12px]" style={{ background: '#FFFFFF', border: '1px solid rgba(14,30,58,.08)', color: '#1e293b' }}>
               <span className="font-bold" style={{ color: '#14b8a6' }}>Signal:</span> {lead.signal_detail}
             </div>
 
@@ -264,7 +264,7 @@ const AddToPipelineSheet = ({ lead, onClose, onSaved }: Props) => {
               disabled={!effectiveTitle || generating}
               className="w-full px-4 py-2.5 text-[13px] font-bold tracking-wide rounded transition-all"
               style={{
-                background: !effectiveTitle || generating ? '#94A3B8' : 'linear-gradient(135deg, #ec4899, #db2777)',
+                background: !effectiveTitle || generating ? '#94A3B8' : 'linear-gradient(135deg, #DC2626, #db2777)',
                 color: '#fff',
                 cursor: !effectiveTitle || generating ? 'not-allowed' : 'pointer',
               }}

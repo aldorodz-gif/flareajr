@@ -34,7 +34,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #ec4899, #ea580c)">Level Up</Eyebrow>
+      <Eyebrow gradient="linear-gradient(90deg, #DC2626, #ea580c)">Level Up</Eyebrow>
       <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Prospecting Philosophy</h2>
       <p className="text-[13px] max-w-[760px] mb-5 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(251,146,60,.1)' }}>
         Come back here when your outreach feels generic, when you're stuck, or when you need to refocus on what actually matters.
@@ -59,7 +59,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
                   <span className="text-[20px]">💡</span>
                   <span
                     className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm"
-                    style={{ background: 'linear-gradient(90deg, #ec4899, #f9a8d4)', color: '#0a0a14' }}
+                    style={{ background: 'linear-gradient(90deg, #DC2626, #f9a8d4)', color: '#0a0a14' }}
                   >
                     Core Principle
                   </span>
@@ -80,7 +80,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
                 <div key={step.title} className={`p-5 ${i < 2 ? 'md:border-r' : ''} group/step hover:bg-accent/30 transition-colors`} style={{ borderColor: 'rgba(251,146,60,.08)' }}>
                   <div className="flex items-center gap-2.5 mb-2">
                     <span className="text-[18px]">{step.icon}</span>
-                    <span className="text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center" style={{ background: 'rgba(251,146,60,.1)', color: '#ec4899' }}>{step.num}</span>
+                    <span className="text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center" style={{ background: 'rgba(251,146,60,.1)', color: '#DC2626' }}>{step.num}</span>
                   </div>
                   <p className="text-[13px] font-semibold mb-1 text-foreground">{step.title}</p>
                   <p className="text-[12px] leading-[1.6] text-muted-foreground">{step.desc}</p>
@@ -106,11 +106,11 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
           <p className="text-[13px] text-muted-foreground mb-3 ml-9">See where movement is building. Then focus your prospecting there.</p>
 
           <div className="ml-9 p-4 rounded-xl border" style={{ background: '#fff', borderColor: 'rgba(251,146,60,.12)' }}>
-            <p className="text-[11px] font-bold uppercase tracking-[2px] mb-3" style={{ color: '#ec4899' }}>Ask yourself</p>
+            <p className="text-[11px] font-bold uppercase tracking-[2px] mb-3" style={{ color: '#DC2626' }}>Ask yourself</p>
             <div className="flex flex-col gap-2">
               {['What is changing in my market right now?', 'Does it imply physical people movement?', 'Which companies are tied to it, and who inside owns the problem?'].map((q, i) => (
                 <div key={q} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-accent/30 transition-colors">
-                  <span className="text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: 'rgba(251,146,60,.1)', color: '#ec4899' }}>{i + 1}</span>
+                  <span className="text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: 'rgba(251,146,60,.1)', color: '#DC2626' }}>{i + 1}</span>
                   <p className="text-[13px] text-foreground">{q}</p>
                 </div>
               ))}
@@ -138,7 +138,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
                   onClick={() => setActiveExample(i)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium transition-all duration-200"
                   style={{
-                    background: activeExample === i ? 'linear-gradient(135deg, #ec4899, #ea580c)' : 'rgba(251,146,60,.06)',
+                    background: activeExample === i ? 'linear-gradient(135deg, #DC2626, #ea580c)' : 'rgba(251,146,60,.06)',
                     color: activeExample === i ? '#fff' : undefined,
                     border: `1px solid ${activeExample === i ? 'transparent' : 'rgba(251,146,60,.15)'}`,
                   }}
@@ -150,14 +150,14 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
             </div>
 
             {/* Active card */}
-            <div className="p-5 rounded-xl border transition-all duration-300" style={{ background: '#FAF7F2', borderColor: 'rgba(251,146,60,.15)' }}>
+            <div className="p-5 rounded-xl border transition-all duration-300" style={{ background: '#FFFFFF', borderColor: 'rgba(251,146,60,.15)' }}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[20px]">{EXAMPLES[activeExample].icon}</span>
                 <strong className="text-[15px] text-foreground">{EXAMPLES[activeExample].title}</strong>
               </div>
               <p className="text-[13px] leading-[1.7] mb-3 text-muted-foreground">{EXAMPLES[activeExample].body}</p>
               <div className="flex items-start gap-2 p-3 rounded-lg" style={{ background: 'rgba(251,146,60,.06)', border: '1px solid rgba(251,146,60,.1)' }}>
-                <span className="text-[12px] font-bold flex-shrink-0 mt-0.5" style={{ color: '#ec4899' }}>👀</span>
+                <span className="text-[12px] font-bold flex-shrink-0 mt-0.5" style={{ color: '#DC2626' }}>👀</span>
                 <p className="text-[13px] text-foreground"><strong>What to look for:</strong> {EXAMPLES[activeExample].look}</p>
               </div>
             </div>
@@ -179,7 +179,7 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
                   <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-accent/30 transition-colors">
                     <div className="flex items-center gap-3 text-left">
                       <span className="text-[11px] font-bold rounded-md w-7 h-7 flex items-center justify-center flex-shrink-0"
-                        style={{ background: 'linear-gradient(135deg, #ec4899, #ea580c)', color: '#fff' }}
+                        style={{ background: 'linear-gradient(135deg, #DC2626, #ea580c)', color: '#fff' }}
                       >{m.num}</span>
                       <span className="text-[13px] font-semibold text-foreground">{m.title}</span>
                     </div>

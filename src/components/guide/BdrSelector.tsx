@@ -44,7 +44,7 @@ export default function BdrSelector() {
       data-shell="bdr-bar"
       className="flex items-center gap-3 flex-wrap"
     >
-      <span className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: '#ec4899' }}>
+      <span className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: '#DC2626' }}>
         Active BDR
       </span>
       <select
@@ -65,7 +65,7 @@ export default function BdrSelector() {
           <button
             onClick={() => setEditing(true)}
             className="text-[11px] font-semibold px-2.5 py-1 rounded-md ml-1"
-            style={{ background: 'rgba(251,146,60,.15)', color: '#ec4899', border: '1px solid rgba(251,146,60,.3)' }}
+            style={{ background: 'rgba(251,146,60,.15)', color: '#DC2626', border: '1px solid rgba(251,146,60,.3)' }}
           >
             ✎ Edit coverage
           </button>
@@ -84,7 +84,7 @@ export default function BdrSelector() {
             onClick={save}
             disabled={saving}
             className="text-[11px] font-bold px-3 py-1.5 rounded-md text-white"
-            style={{ background: '#ec4899' }}
+            style={{ background: '#DC2626' }}
           >
             {saving ? 'Saving…' : 'Save'}
           </button>

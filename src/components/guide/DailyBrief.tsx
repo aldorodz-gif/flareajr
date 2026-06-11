@@ -15,31 +15,48 @@ interface BriefData {
 
 const navigate = (tab: string) => window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: tab }));
 
-const StatCard = ({
-  label, value, sub, accent, onClick,
-}: { label: string; value: string | number; sub: string; accent: string; onClick: () => void }) => (
+const MetricCard = ({
+  label, value, sub, topAccent, onClick,
+}: { label: string; value: string | number; sub: string; topAccent: string; onClick: () => void }) => (
   <button
     onClick={onClick}
-    className="text-left rounded-lg transition-colors"
+    className="text-left transition-colors"
     style={{
-      background: '#18181B',
-      border: '1px solid #27272A',
-      borderLeft: `3px solid ${accent}`,
-      padding: '20px 24px',
+      background: '#FFFFFF',
+      border: '1px solid #E2E8F0',
+      borderTop: `2px solid ${topAccent}`,
+      borderRadius: 8,
+      padding: 24,
+      boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
     }}
-    onMouseEnter={(e) => { e.currentTarget.style.background = '#1F1F23'; }}
-    onMouseLeave={(e) => { e.currentTarget.style.background = '#18181B'; }}
+    onMouseEnter={(e) => { e.currentTarget.style.background = '#F8FAFC'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.background = '#FFFFFF'; }}
   >
-    <div className="text-[32px] font-semibold leading-none tabular-nums" style={{ color: '#FAFAFA' }}>
-      {value}
-    </div>
     <div
-      className="mt-2 text-[11px] font-medium uppercase"
-      style={{ color: '#71717A', letterSpacing: '0.08em' }}
+      style={{
+        fontSize: 11,
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.07em',
+        color: '#94A3B8',
+      }}
     >
       {label}
     </div>
-    <div className="mt-1 text-[11px]" style={{ color: '#71717A' }}>{sub}</div>
+    <div
+      className="tabular-nums"
+      style={{
+        fontSize: 40,
+        fontWeight: 700,
+        letterSpacing: '-0.04em',
+        color: '#0F172A',
+        marginTop: 8,
+        lineHeight: 1,
+      }}
+    >
+      {value}
+    </div>
+    <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>{sub}</div>
   </button>
 );
 
@@ -119,61 +136,81 @@ const DailyBrief = () => {
         `${b.dueToday} due today`,
         `${b.overdue} overdue`,
         `${b.meetingsBooked} meeting${b.meetingsBooked === 1 ? '' : 's'} booked`,
-      ].join(' · ');
+      ].join('  ·  ');
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Briefing header card — solid surface, no gradient */}
-      <div
-        className="rounded-lg"
-        style={{ background: '#18181B', border: '1px solid #27272A', padding: '20px 24px' }}
-      >
-        <div className="text-[18px] font-semibold tracking-tight" style={{ color: '#FAFAFA' }}>
+    <div>
+      {/* Greeting — no card, directly on the page */}
+      <div style={{ marginBottom: 32 }}>
+        <div
+          style={{
+            fontSize: 22,
+            fontWeight: 600,
+            letterSpacing: '-0.03em',
+            color: '#0F172A',
+          }}
+        >
           {greeting}{selected ? `, ${selected.name}` : ''} — here's your morning
         </div>
-        <div className="text-[12px] mt-1" style={{ color: '#71717A' }}>{summary}</div>
+        <div style={{ fontSize: 13, color: '#64748B', marginTop: 6 }}>{summary}</div>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard
+      {/* 4 metric cards */}
+      <div
+        className="grid grid-cols-2 md:grid-cols-4"
+        style={{ gap: 16, marginBottom: 32 }}
+      >
+        <MetricCard
           label="Today's Leads"
           value={b.newOppsCount}
           sub={b.highPriorityCount > 0 ? `${b.highPriorityCount} high priority` : 'auto-built overnight'}
-          accent="#6366F1"
+          topAccent="#0EA5E9"
           onClick={() => navigate('opportunities')}
         />
-        <StatCard
+        <MetricCard
           label="Due Today"
           value={b.dueToday}
           sub="sequenced touches"
-          accent="#F59E0B"
+          topAccent="#D97706"
           onClick={() => navigate('prospects')}
         />
-        <StatCard
+        <MetricCard
           label="Overdue"
           value={b.overdue}
           sub={b.nextOverdueCompany ? `Oldest: ${b.nextOverdueCompany}` : 'all caught up'}
-          accent="#EF4444"
+          topAccent="#DC2626"
           onClick={() => navigate('prospects')}
         />
-        <StatCard
+        <MetricCard
           label="Meetings"
           value={b.meetingsBooked}
           sub="booked & open"
-          accent="#10B981"
+          topAccent="#16A34A"
           onClick={() => navigate('prospects')}
         />
       </div>
 
       {b.topCompanies.length > 0 && (
         <div
-          className="rounded-lg flex flex-wrap items-center gap-2"
-          style={{ background: '#18181B', border: '1px solid #27272A', padding: '14px 20px' }}
+          className="flex flex-wrap items-center"
+          style={{
+            background: '#FFFFFF',
+            border: '1px solid #E2E8F0',
+            borderRadius: 8,
+            padding: '14px 20px',
+            gap: 8,
+            marginBottom: 32,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+          }}
         >
           <span
-            className="text-[11px] font-medium uppercase"
-            style={{ color: '#71717A', letterSpacing: '0.08em' }}
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.07em',
+              color: '#94A3B8',
+            }}
           >
             Top picks today
           </span>
@@ -181,10 +218,18 @@ const DailyBrief = () => {
             <button
               key={c}
               onClick={() => navigate('opportunities')}
-              className="text-[12px] font-medium px-3 py-1 rounded-md transition-colors"
-              style={{ background: '#6366F1', color: '#fff' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#4F46E5'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = '#6366F1'; }}
+              className="transition-colors"
+              style={{
+                background: '#0EA5E9',
+                color: '#FFFFFF',
+                borderRadius: 6,
+                height: 28,
+                padding: '0 12px',
+                fontSize: 12,
+                fontWeight: 500,
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#0284C7'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#0EA5E9'; }}
             >
               {c}
             </button>
