@@ -318,19 +318,9 @@ const BdrScoreboard = () => {
         <div>
           <Eyebrow gradient="#FFFFFF">BDR Scoreboard</Eyebrow>
           <h3 className="text-[22px] font-black tracking-tight mt-1" style={{ color: '#0F172A' }}>
-            <span
-              style={{
-                backgroundImage: '#FFFFFF',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-                textShadow: '0 0 18px rgba(236,72,153,.35)',
-                filter: 'drop-shadow(0 1px 0 rgba(168,85,247,.25))',
-              }}
-            >
-              {bdr.name}
-            </span>{' '}
+            <span style={{ color: '#0F172A' }}>{bdr.name}</span>{' '}
             <span className="font-medium text-[16px]" style={{ color: '#64748B' }}>· {bdr.market}</span>
+
           </h3>
           <p className="text-[11px] mt-0.5" style={{ color: '#64748B' }}>{lastRefreshLabel}</p>
         </div>
