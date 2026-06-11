@@ -22,6 +22,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [animKey, setAnimKey] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleTabChange = useCallback((tabId: string) => {
     setActiveTab(tabId);
