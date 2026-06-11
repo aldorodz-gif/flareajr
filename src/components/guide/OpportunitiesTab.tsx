@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { Inbox } from 'lucide-react';
+import { Inbox, ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBdr } from './BdrContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
+import WriteEmailSheet from './WriteEmailSheet';
 import { exportRowsToXlsx } from './exportXlsx';
-import PageHeader from './PageHeader';
 import SkeletonRows from './SkeletonRows';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
