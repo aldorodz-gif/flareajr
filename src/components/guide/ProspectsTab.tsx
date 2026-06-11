@@ -151,7 +151,7 @@ const ProspectCard = ({
             </span>
           )}
           <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(155,120,200,.1)', color: '#9B78C8' }}>
-            {isArchived ? 'archived' : item.stage}
+            {isArchived ? 'archived' : item.stage.replace(/_/g, ' ')}
           </span>
         </div>
       </div>
@@ -459,6 +459,17 @@ const ProspectsTab = () => {
   const activeItems = useMemo(() => items.filter(i => !i.archived_at), [items]);
   const archivedItems = useMemo(() => items.filter(i => !!i.archived_at), [items]);
 
+  // Match tasks to a pipeline item. Prefer exact company+title match; if the
+  // titles drifted (e.g. lead saved with a different contact title than its
+  // tasks), fall back to company-only so sequence stages still render.
+  const tasksForItem = useCallback((item: PipelineItem) => {
+    const exact = tasks.filter(t => t.company_name === item.company_name && (t.contact_title ?? '') === (item.contact_title ?? ''));
+    if (exact.length > 0) return exact;
+    const sameCompanyItems = items.filter(i => i.company_name === item.company_name);
+    if (sameCompanyItems.length > 1) return exact; // ambiguous — don't cross-assign
+    return tasks.filter(t => t.company_name === item.company_name);
+  }, [tasks, items]);
+
   const dueCount = tasks.filter(t => t.status === 'pending' && t.due_date && t.due_date <= todayStr).length;
 
   const stageStats = SEQUENCE_STEPS.map(step => {
@@ -667,7 +678,7 @@ const ProspectsTab = () => {
 
       <div className="grid gap-3">
         {activeItems.map(item => {
-          const itemTasks = tasks.filter(t => t.company_name === item.company_name && (t.contact_title ?? '') === (item.contact_title ?? ''));
+          const itemTasks = tasksForItem(item);
           return (
             <ProspectCard
               key={item.id}
@@ -704,7 +715,7 @@ const ProspectsTab = () => {
           {showArchive && (
             <div className="grid gap-3 mt-3">
               {archivedItems.map(item => {
-                const itemTasks = tasks.filter(t => t.company_name === item.company_name && (t.contact_title ?? '') === (item.contact_title ?? ''));
+                const itemTasks = tasksForItem(item);
                 return (
                   <ProspectCard
                     key={item.id}

@@ -56,12 +56,7 @@ function analyzeEmail(subject: string, body: string): { wordCount: number; check
 }
 
 
-const EMAIL_PARTS = [
-  { num: 1, title: 'One specific observation', subtitle: 'proof you actually looked', good: '"Saw [Company] just [landed the contract / kicked off the expansion], congrats, that\'s a big one."', goodLabel: '✓ PERSONAL', bad: '"I came across your company and was impressed by what you do."', badLabel: '✗ GENERIC' },
-  { num: 2, title: 'One sentence naming their likely problem', subtitle: 'not your solution', good: '"Mobilizations like that move fast, travel, lodging, or temporary housing for incoming crews is usually the thing that gets figured out last."', goodLabel: '✓ THEIR PROBLEM', bad: '"We help teams get placed quickly with the right mix of temporary housing."', badLabel: '✗ YOUR SOLUTION' },
-  { num: 3, title: 'One sentence on what you do', subtitle: 'plain English, outcome-first', good: '"We help get crews placed before they land — temporary housing, hotels, or travel support handled cleanly."', goodLabel: '✓ OUTCOME FIRST', bad: '"We help teams get placed quickly and keep moves, travel, and lodging organized."', badLabel: '✗ COMPANY-FIRST' },
-  { num: 4, title: 'One ask', subtitle: 'the smallest possible yes', good: '"Worth a quick 15-minute call to see if it makes sense for your Q2 timeline?"', goodLabel: '✓ LOW FRICTION', bad: '"I\'d love to schedule a 30-minute demo to walk you through our platform."', badLabel: '✗ HIGH FRICTION' },
-];
+
 
 const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
@@ -195,7 +190,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
       <PageHeader
         title="Write Outreach"
-        subtitle="Four fields. One click. A short, personal first email ready to send."
+        subtitle="Generate a short, personal first email from any signal."
       />
 
       {(
@@ -203,11 +198,9 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
           {/* ── AI Email Generator (Hero) ── */}
           <AiToolCard
             icon="✉️"
-            title="First Email Generator"
-            subtitle="Fill in the details — I'll write your first outreach email"
+            title="Email Generator"
+            subtitle="Company, signal, buyer title, service line — then generate"
           >
-            <p className="text-[14px] font-medium text-foreground mb-1">Four fields. One click. Your outreach email is ready.</p>
-            <p className="text-[13px] text-muted-foreground mb-5">Enter the company, signal, buyer title, and service line. We'll generate a short, personal email ready to send.</p>
 
                 {!result ? (
                   <>
@@ -344,7 +337,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                           <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           Writing your email...
                         </span>
-                      ) : '✉️  Write My Email'}
+                      ) : 'Generate Email'}
                     </button>
                     {error && <p className="mt-3 text-[13px] font-medium" style={{ color: '#EF4444' }}>{error}</p>}
                   </>
