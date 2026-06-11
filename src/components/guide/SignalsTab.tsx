@@ -244,24 +244,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
         </AiToolCard>
       </div>
 
-      {/* ─── Score Legend ─── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10">
-        {[
-          { color: '#14b8a6', bg: 'rgba(16,185,129,.08)', label: 'HIGH', action: 'Call today', desc: 'Real people movement, defined timeline, identifiable buyer.' },
-          { color: '#DC2626', bg: 'rgba(245,158,11,.08)', label: 'MEDIUM', action: 'Track it', desc: 'Real change happening or early-stage signal with future potential.' },
-          { color: '#EF4444', bg: 'rgba(239,68,68,.08)', label: 'LOW', action: 'Move on', desc: 'No plausible path to physical movement. Skip for now.' },
-        ].map((tier) => (
-          <div key={tier.label} className="rounded-xl p-4 relative overflow-hidden" style={{ background: tier.bg, border: `1px solid ${tier.color}22` }}>
-            <div className="absolute top-0 left-0 w-full h-1" style={{ background: tier.color }} />
-            <div className="flex items-center gap-2 mb-2 mt-1">
-              <span className="text-[13px] font-black tracking-wide" style={{ color: tier.color }}>{tier.label}</span>
-              <span className="text-[11px] font-semibold text-muted-foreground">→ {tier.action}</span>
-            </div>
-            <p className="text-[13px] text-foreground leading-[1.55]">{tier.desc}</p>
-          </div>
-        ))}
-      </div>
-
+      {/* ─── Reference (collapsed by default) ─── */}
       <button
         onClick={() => setReferenceOpen(o => !o)}
         style={{
@@ -277,9 +260,28 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
           marginBottom: 12,
         }}
       >
-        <span style={{ fontSize: 13, fontWeight: 600, color: '#0F172A' }}>Show Signal Reference Guide</span>
+        <span style={{ fontSize: 13, fontWeight: 600, color: '#0F172A' }}>{referenceOpen ? 'Hide' : 'Show'} Signal Reference Guide</span>
         {referenceOpen ? <ChevronUp size={16} color="#64748B" /> : <ChevronDown size={16} color="#64748B" />}
       </button>
+
+      {referenceOpen && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          {[
+            { color: '#14b8a6', bg: 'rgba(16,185,129,.08)', label: 'HIGH', action: 'Call today', desc: 'Real people movement, defined timeline, identifiable buyer.' },
+            { color: '#DC2626', bg: 'rgba(245,158,11,.08)', label: 'MEDIUM', action: 'Track it', desc: 'Real change happening or early-stage signal with future potential.' },
+            { color: '#EF4444', bg: 'rgba(239,68,68,.08)', label: 'LOW', action: 'Move on', desc: 'No plausible path to physical movement. Skip for now.' },
+          ].map((tier) => (
+            <div key={tier.label} className="rounded-xl p-4 relative overflow-hidden" style={{ background: tier.bg, border: `1px solid ${tier.color}22` }}>
+              <div className="absolute top-0 left-0 w-full h-1" style={{ background: tier.color }} />
+              <div className="flex items-center gap-2 mb-2 mt-1">
+                <span className="text-[13px] font-black tracking-wide" style={{ color: tier.color }}>{tier.label}</span>
+                <span className="text-[11px] font-semibold text-muted-foreground">→ {tier.action}</span>
+              </div>
+              <p className="text-[13px] text-foreground leading-[1.55]">{tier.desc}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {referenceOpen && (
         <div className="rounded-xl overflow-hidden mb-4 shadow-sm" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
