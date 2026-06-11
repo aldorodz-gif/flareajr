@@ -405,11 +405,11 @@ const BdrScoreboard = () => {
               const annualRevRemaining = revenueForGp(bdr, remaining) ?? 0;
               const annualHit = hit === true;
               return (
-                <div className="p-3 rounded-lg" style={{ background: '#0F172A', border: '1px solid #0F172A' }}>
+                <div className="p-3 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
                   <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: annualHit ? '#10B981' : '#64748B' }}>
                     {annualHit ? `Annual GP Goal Hit · ${year}` : `Top Line Revenue Still Needed · ${year}`}
                   </div>
-                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>
+                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: annualHit ? '#10B981' : '#0F172A' }}>
                     {annualHit ? '$0 needed ✓' : fmt(annualRevRemaining, 'currency')}
                   </div>
                   <div className="text-[10px] mt-0.5" style={{ color: '#64748B' }}>
