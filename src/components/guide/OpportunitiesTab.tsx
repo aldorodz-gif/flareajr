@@ -393,7 +393,7 @@ export default function OpportunitiesTab() {
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {filtered.map(o => {
           const composite = Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2);
           const expanded = expandedId === o.id;
@@ -406,16 +406,16 @@ export default function OpportunitiesTab() {
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
                 borderRadius: 8,
-                padding: '16px 20px',
+                padding: '10px 16px',
                 display: 'flex',
-                gap: 16,
-                alignItems: 'flex-start',
+                gap: 12,
+                alignItems: 'center',
                 flexWrap: 'wrap',
               }}
             >
               <div style={{ flex: 1, minWidth: 280 }}>
-                <div style={{ fontSize: 15, fontWeight: 600, color: '#0F172A', marginBottom: 6 }}>{o.company}</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#0F172A' }}>{o.company}</span>
                   {o.priority && (
                     <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${priorityPill(o.priority)}`}>
                       {o.priority}
