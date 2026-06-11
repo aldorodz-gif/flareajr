@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Eyebrow from './Eyebrow';
 import PromptBox from './PromptBox';
-import SectionNav from './SectionNav';
 
 interface ContactTabProps {
   onNavigate: (tabId: string) => void;
@@ -540,7 +539,6 @@ const ContactTab = ({ onNavigate }: ContactTabProps) => {
         </div>
       </div>
 
-      <SectionNav currentTab="contact" onNavigate={onNavigate} />
     </div>
   );
 };

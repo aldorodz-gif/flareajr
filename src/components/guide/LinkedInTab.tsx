@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
-import SectionNav from './SectionNav';
 
 interface LinkedInTabProps {
   onNavigate: (tabId: string) => void;
@@ -207,7 +206,6 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
         </div>
       )}
 
-      <SectionNav currentTab="linkedin" onNavigate={onNavigate} />
     </main>
   );
 };

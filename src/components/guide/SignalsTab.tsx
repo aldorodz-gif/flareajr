@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AiToolCard from './AiToolCard';
-import SectionNav from './SectionNav';
 import PageHeader from './PageHeader';
 import { useBdr } from './BdrContext';
 
@@ -41,6 +41,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [error, setError] = useState('');
+  const [referenceOpen, setReferenceOpen] = useState(false);
 
   const handleScore = useCallback(async () => {
     if (!signalText.trim()) return;
@@ -261,59 +262,61 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
         ))}
       </div>
 
-      {/* ─── Pursue vs Skip Reference ─── */}
-      <div className="mb-6">
-        <h3 className="text-[16px] font-bold text-foreground mb-1">Quick Reference: Pursue vs. Skip</h3>
-        <p className="text-[12px] text-muted-foreground mb-4">The signals that matter vs. the noise that doesn't.</p>
-      </div>
+      <button
+        onClick={() => setReferenceOpen(o => !o)}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '12px 16px',
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          borderRadius: 8,
+          cursor: 'pointer',
+          marginBottom: 12,
+        }}
+      >
+        <span style={{ fontSize: 13, fontWeight: 600, color: '#0F172A' }}>Show Signal Reference Guide</span>
+        {referenceOpen ? <ChevronUp size={16} color="#64748B" /> : <ChevronDown size={16} color="#64748B" />}
+      </button>
 
-      <div className="rounded-xl overflow-hidden mb-4 shadow-sm" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
-        <div className="grid grid-cols-[30%_22%_1fr] md:grid-cols-[28%_22%_1fr]" style={{ background: 'linear-gradient(135deg, #0E1E3A 0%, #1a1145 40%, #2d1b69 100%)' }}>
-          <div className="px-4 py-3.5 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ background: '#14b8a6' }} />
-            <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: '#14b8a6' }}>Pursue</span>
-          </div>
-          <div className="px-4 py-3.5 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ background: '#EF4444' }} />
-            <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: '#EF4444' }}>Skip</span>
-          </div>
-          <div className="px-4 py-3.5">
-            <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: 'rgba(255,255,255,.8)' }}>Why it matters</span>
-          </div>
-        </div>
-        {signalRows.map((row, i) => (
-          <div
-            key={i}
-            className="grid grid-cols-[30%_22%_1fr] md:grid-cols-[28%_22%_1fr] border-t"
-            style={{ borderColor: 'rgba(14,30,58,.06)', background: i % 2 === 0 ? '#fff' : '#FAFAF8' }}
-          >
-            <div className="px-4 py-3.5 text-[13px] font-semibold text-foreground flex items-start gap-2">
-              <span className="inline-block w-[6px] h-[6px] rounded-full flex-shrink-0 mt-[7px]" style={{ background: '#14b8a6' }} />
-              {row.pursue}
+      {referenceOpen && (
+        <div className="rounded-xl overflow-hidden mb-4 shadow-sm" style={{ border: '1px solid rgba(14,30,58,.08)' }}>
+          <div className="grid grid-cols-[30%_22%_1fr] md:grid-cols-[28%_22%_1fr]" style={{ background: '#0F172A' }}>
+            <div className="px-4 py-3.5 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full" style={{ background: '#10B981' }} />
+              <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: '#10B981' }}>Pursue</span>
             </div>
-            <div className="px-4 py-3.5 text-[13px] font-medium flex items-start gap-2" style={{ color: row.skip === '—' ? '#CBD5E1' : '#EF4444' }}>
-              {row.skip !== '—' && <span className="inline-block w-[6px] h-[6px] rounded-full flex-shrink-0 mt-[7px]" style={{ background: '#EF4444' }} />}
-              {row.skip}
+            <div className="px-4 py-3.5 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full" style={{ background: '#EF4444' }} />
+              <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: '#EF4444' }}>Skip</span>
             </div>
-            <div className="px-4 py-3.5 text-[12.5px] text-muted-foreground leading-[1.55]">{row.why}</div>
+            <div className="px-4 py-3.5">
+              <span className="text-[11px] font-bold uppercase tracking-[.12em]" style={{ color: 'rgba(255,255,255,.8)' }}>Why it matters</span>
+            </div>
           </div>
-        ))}
-      </div>
-
-      {/* Bottom callout */}
-      <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #12082e 40%, #1e1050 100%)', boxShadow: '0 4px 20px rgba(14,30,58,.2)' }}>
-        <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-lg" style={{ background: 'rgba(251,146,60,.15)' }}>
-          🔑
+          {signalRows.map((row, i) => (
+            <div
+              key={i}
+              className="grid grid-cols-[30%_22%_1fr] md:grid-cols-[28%_22%_1fr] border-t"
+              style={{ borderColor: 'rgba(14,30,58,.06)', background: i % 2 === 0 ? '#fff' : '#FAFAF8' }}
+            >
+              <div className="px-4 py-3.5 text-[13px] font-semibold text-foreground flex items-start gap-2">
+                <span className="inline-block w-[6px] h-[6px] rounded-full flex-shrink-0 mt-[7px]" style={{ background: '#10B981' }} />
+                {row.pursue}
+              </div>
+              <div className="px-4 py-3.5 text-[13px] font-medium flex items-start gap-2" style={{ color: row.skip === '—' ? '#CBD5E1' : '#EF4444' }}>
+                {row.skip !== '—' && <span className="inline-block w-[6px] h-[6px] rounded-full flex-shrink-0 mt-[7px]" style={{ background: '#EF4444' }} />}
+                {row.skip}
+              </div>
+              <div className="px-4 py-3.5 text-[12.5px] text-muted-foreground leading-[1.55]">{row.why}</div>
+            </div>
+          ))}
         </div>
-        <div>
-          <p className="text-[12px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: '#DC2626' }}>The one question that matters</p>
-          <p className="text-[14px] leading-[1.65]" style={{ color: 'rgba(255,255,255,.82)' }}>
-            <strong style={{ color: '#fff' }}>Are real people physically going somewhere because of this?</strong> If yes, pursue. If the movement is virtual, speculative, or one day long, move on.
-          </p>
-        </div>
-      </div>
+      )}
 
-      <SectionNav currentTab="signals" onNavigate={onNavigate} />
+
     </div>
   );
 };

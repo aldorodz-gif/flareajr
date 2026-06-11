@@ -4,7 +4,6 @@ import { CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import AiToolCard from './AiToolCard';
-import SectionNav from './SectionNav';
 import PageHeader from './PageHeader';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { US_STATES } from './usStatesData';
@@ -295,7 +294,6 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
         </div>
       )}
 
-      <SectionNav currentTab="events" onNavigate={onNavigate} />
     </main>
   );
 };

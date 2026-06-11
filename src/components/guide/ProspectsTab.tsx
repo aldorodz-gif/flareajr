@@ -74,16 +74,64 @@ const ProspectCard = ({
   const [notesDraft, setNotesDraft] = useState(item.notes ?? '');
   const [editingNotes, setEditingNotes] = useState(false);
 
+  // Compute touch progress and next due task
+  const doneCount = SEQUENCE_STEPS.reduce((acc, step) => {
+    const t = itemTasks.find(tt => tt.task_type === step.task_type);
+    return acc + (t && t.status === 'done' ? 1 : 0);
+  }, 0);
+  const totalSteps = SEQUENCE_STEPS.length;
+  const currentTouch = Math.min(doneCount + 1, totalSteps);
+  const nextPending = itemTasks
+    .filter(t => t.status !== 'done' && t.due_date)
+    .sort((a, b) => (a.due_date || '').localeCompare(b.due_date || ''))[0];
+  const nextActionDate = nextPending?.due_date
+    ? new Date(nextPending.due_date + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+    : null;
+  const advanceNextTouch = (label: string) => {
+    if (!nextPending) return;
+    onTaskToggle(nextPending as TaskRow);
+  };
+
   return (
     <div className="p-4 rounded-lg bg-white border" style={{ borderColor: 'rgba(14,30,58,.08)', opacity: isArchived ? 0.85 : 1 }}>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div>
-          <div className="text-[15px] font-extrabold" style={{ color: '#0e1e3a' }}>{item.company_name}</div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="text-[15px] font-extrabold" style={{ color: '#0e1e3a' }}>{item.company_name}</div>
+            <span style={{ background: '#F1F5F9', color: '#64748B', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 99 }}>
+              Touch {currentTouch} of {totalSteps}
+            </span>
+          </div>
           <div className="text-[12px] text-muted-foreground">
             {item.contact_title ? <>Targeting: <strong style={{ color: '#0e1e3a' }}>{item.contact_title}</strong></> : 'No target title set'}
           </div>
+          {nextActionDate && !isArchived && (
+            <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>Next action: {nextActionDate}</div>
+          )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {!isArchived && nextPending && (
+            <>
+              <button
+                onClick={() => advanceNextTouch('call')}
+                style={{ background: '#FFFFFF', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: 6, height: 28, padding: '0 10px', fontSize: 11, fontWeight: 500, cursor: 'pointer' }}
+              >
+                Logged Call
+              </button>
+              <button
+                onClick={() => advanceNextTouch('email')}
+                style={{ background: '#FFFFFF', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: 6, height: 28, padding: '0 10px', fontSize: 11, fontWeight: 500, cursor: 'pointer' }}
+              >
+                Logged Email
+              </button>
+              <button
+                onClick={() => onBookMeeting(item, 'disco')}
+                style={{ background: '#0F172A', color: '#FFFFFF', border: 'none', borderRadius: 6, height: 28, padding: '0 10px', fontSize: 11, fontWeight: 500, cursor: 'pointer' }}
+              >
+                Book Meeting
+              </button>
+            </>
+          )}
           {item.meeting_booked_at && (
             <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(168,85,247,.15)', color: '#7c3aed' }}>
               {item.meeting_type === 'inperson' ? '🤝 In-person booked' : '🪩 Disco call booked'}
@@ -107,6 +155,7 @@ const ProspectCard = ({
           </span>
         </div>
       </div>
+
 
       <div className="grid grid-cols-5 gap-2">
         {SEQUENCE_STEPS.map(step => {
