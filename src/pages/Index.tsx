@@ -60,13 +60,17 @@ const Index = () => {
         <div className="min-h-screen" style={{ background: '#FFFFFF', color: '#0F172A' }}>
           <DailySummaryToast />
           <WelcomeModal onNavigateToTab={handleTabChange} forceOpen={tourOpen} onClose={() => setTourOpen(false)} />
-          <TopNav activeTab={activeTab} onTabChange={handleTabChange} />
+          <TopNav activeTab={activeTab} onTabChange={handleTabChange} onOpenSettings={() => setSettingsOpen(true)} />
 
           {/* Push content below the fixed 56px nav */}
           <main style={{ paddingTop: 56 }}>
-            <div key={animKey} className="animate-tab-fade">
-              {renderTab()}
-            </div>
+            {settingsOpen ? (
+              <SettingsPage onClose={() => setSettingsOpen(false)} />
+            ) : (
+              <div key={animKey} className="animate-tab-fade">
+                {renderTab()}
+              </div>
+            )}
           </main>
 
           <footer
