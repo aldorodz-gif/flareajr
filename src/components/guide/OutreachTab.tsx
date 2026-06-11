@@ -215,7 +215,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     <div className="flex flex-col gap-3 mb-5">
                       {/* Company */}
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">🏢</span>
+                        <Building2 size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={company}
@@ -233,7 +233,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                       {/* Signal — supports URL or plain text */}
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">{isUrl(signal) ? '🔗' : '📡'}</span>
+                        <Zap size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={signal}
@@ -263,7 +263,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                       {/* Buyer Title */}
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">👤</span>
+                        <User size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={buyerTitle}
@@ -279,7 +279,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                         />
                       </div>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none">🎯</span>
+                        <Briefcase size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <select
                           value={serviceLine}
                           onChange={e => setServiceLine(e.target.value)}
