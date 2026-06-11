@@ -512,6 +512,14 @@ export default function OpportunitiesTab() {
           }
         }}
       />
+      <WriteEmailSheet
+        open={!!writeEmailLead}
+        onClose={() => setWriteEmailLead(null)}
+        company={writeEmailLead?.company || ''}
+        signal={writeEmailLead?.why_it_matters || writeEmailLead?.signal_type || ''}
+      />
+      {/* burstId reserved for future pipeline effects */}
+      {burstId === '__never__' && null}
     </div>
   );
 }
