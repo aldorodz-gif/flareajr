@@ -150,7 +150,7 @@ const DailyBrief = () => {
             color: '#0F172A',
           }}
         >
-          {greeting}{selected ? `, ${selected.name}` : ''} — here's your morning
+          {greeting}{selected ? `, ${selected.name}` : ''} — here's your {greeting.split(' ')[1]}
         </div>
         <div style={{ fontSize: 13, color: '#64748B', marginTop: 6 }}>{summary}</div>
       </div>

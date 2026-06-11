@@ -268,7 +268,7 @@ const BdrScoreboard = () => {
   const rollupKey = `${year}-${period}`;
   const teamRow = overrides['__team']?.[rollupKey];
 
-  const FilterTab = ({ id, label, sub, r, dark }: { id: View; label: string; sub: string; r?: CalcRow; dark?: boolean }) => {
+  const FilterTab = ({ id, label, sub, r }: { id: View; label: string; sub: string; r?: CalcRow; dark?: boolean }) => {
     const active = view === id;
     const pct = r && r.monthlyGoal && r.actual != null ? r.actual / r.monthlyGoal : null;
     const hit = pct != null && pct >= 1;
@@ -279,26 +279,26 @@ const BdrScoreboard = () => {
         type="button"
         className="text-left p-3 rounded-lg transition-all"
         style={{
-          background: dark ? '#0F172A' : '#fff',
-          border: `2px solid ${active ? '#0EA5E9' : (dark ? '#0F172A' : '#E2E8F0')}`,
-          boxShadow: active ? '0 4px 12px rgba(99,102,241,0.25)' : 'none',
+          background: '#FFFFFF',
+          border: `2px solid ${active ? '#0EA5E9' : '#E2E8F0'}`,
+          boxShadow: active ? '0 4px 12px rgba(14,165,233,0.18)' : 'none',
           cursor: 'pointer',
         }}
       >
-        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#64748B' : (active ? '#0EA5E9' : '#64748B') }}>
+        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: active ? '#0EA5E9' : '#64748B' }}>
           {label}
         </div>
         {r ? (
           <>
-            <div className="text-[18px] font-extrabold tabular-nums" style={{ color: dark ? '#fff' : '#0F172A' }}>
+            <div className="text-[18px] font-extrabold tabular-nums" style={{ color: '#0F172A' }}>
               {fmt(r.actual ?? null, 'currency')}
             </div>
-            <div className="text-[10px] mt-0.5 tabular-nums" style={{ color: dark ? '#64748B' : '#64748B' }}>
+            <div className="text-[10px] mt-0.5 tabular-nums" style={{ color: '#64748B' }}>
               goal {fmt(r.monthlyGoal ?? null, 'currency')} · {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
             </div>
           </>
         ) : (
-          <div className="text-[11px]" style={{ color: dark ? '#64748B' : '#64748B' }}>{sub}</div>
+          <div className="text-[11px]" style={{ color: '#64748B' }}>{sub}</div>
         )}
       </button>
     );
@@ -405,11 +405,11 @@ const BdrScoreboard = () => {
               const annualRevRemaining = revenueForGp(bdr, remaining) ?? 0;
               const annualHit = hit === true;
               return (
-                <div className="p-3 rounded-lg" style={{ background: '#0F172A', border: '1px solid #0F172A' }}>
+                <div className="p-3 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
                   <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: annualHit ? '#10B981' : '#64748B' }}>
                     {annualHit ? `Annual GP Goal Hit · ${year}` : `Top Line Revenue Still Needed · ${year}`}
                   </div>
-                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>
+                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: annualHit ? '#10B981' : '#0F172A' }}>
                     {annualHit ? '$0 needed ✓' : fmt(annualRevRemaining, 'currency')}
                   </div>
                   <div className="text-[10px] mt-0.5" style={{ color: '#64748B' }}>
@@ -485,9 +485,9 @@ const BdrScoreboard = () => {
                 const { hit, remaining } = gpStatus(yearTotal?.monthlyGoal, yearTotal?.actual);
                 const yHit = hit === true;
                 return (
-                  <div className="p-2.5 rounded-lg" style={{ background: '#0F172A', border: '1px solid #0F172A' }}>
+                  <div className="p-2.5 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
                     <div className="text-[10px] font-bold" style={{ color: yHit ? '#10B981' : '#64748B' }}>Year {yHit && '✓'}</div>
-                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
+                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: yHit ? '#10B981' : '#0F172A' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
                     <div className="text-[10px] tabular-nums" style={{ color: '#64748B' }}>
                       {yHit ? '$0 GP needed ✓' : remaining != null ? `${fmt(remaining, 'currency')} to goal` : `goal ${fmt(yearTotal?.monthlyGoal ?? null, 'currency')}`}
                     </div>
