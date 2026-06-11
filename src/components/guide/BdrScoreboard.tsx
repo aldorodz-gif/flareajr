@@ -485,9 +485,9 @@ const BdrScoreboard = () => {
                 const { hit, remaining } = gpStatus(yearTotal?.monthlyGoal, yearTotal?.actual);
                 const yHit = hit === true;
                 return (
-                  <div className="p-2.5 rounded-lg" style={{ background: '#0F172A', border: '1px solid #0F172A' }}>
+                  <div className="p-2.5 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
                     <div className="text-[10px] font-bold" style={{ color: yHit ? '#10B981' : '#64748B' }}>Year {yHit && '✓'}</div>
-                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
+                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: yHit ? '#10B981' : '#0F172A' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
                     <div className="text-[10px] tabular-nums" style={{ color: '#64748B' }}>
                       {yHit ? '$0 GP needed ✓' : remaining != null ? `${fmt(remaining, 'currency')} to goal` : `goal ${fmt(yearTotal?.monthlyGoal ?? null, 'currency')}`}
                     </div>
