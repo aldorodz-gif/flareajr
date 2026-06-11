@@ -11,6 +11,7 @@ import SignalsTab from '../components/guide/SignalsTab';
 import EventsTab from '../components/guide/EventsTab';
 import OpportunitiesTab from '../components/guide/OpportunitiesTab';
 import ProspectsTab from '../components/guide/ProspectsTab';
+import SettingsPage from '../components/guide/SettingsPage';
 
 import { BdrProvider } from '../components/guide/BdrContext';
 import { ThemeProvider } from '../components/guide/ThemeContext';
