@@ -14,14 +14,14 @@ const AiToolCard = ({ icon, title, subtitle, children }: AiToolCardProps) => {
   return (
     <div
       className="rounded-lg"
-      style={{ background: '#18181B', border: '1px solid #27272A' }}
+      style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}
     >
-      <div className="px-6 py-5" style={{ borderBottom: '1px solid #27272A' }}>
+      <div className="px-6 py-5" style={{ borderBottom: '1px solid #E2E8F0' }}>
         <div className="flex items-center gap-2.5">
           <span className="text-[18px] leading-none">{icon}</span>
           <div>
-            <p className="text-[16px] font-semibold tracking-tight" style={{ color: '#FAFAFA' }}>{title}</p>
-            <p className="text-[12px] mt-0.5" style={{ color: '#71717A' }}>{subtitle}</p>
+            <p className="text-[16px] font-semibold tracking-tight" style={{ color: '#0F172A' }}>{title}</p>
+            <p className="text-[12px] mt-0.5" style={{ color: '#64748B' }}>{subtitle}</p>
           </div>
         </div>
       </div>

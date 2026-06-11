@@ -94,7 +94,7 @@ export default function MindsetLibrary() {
             <div className="flex items-center gap-2.5 mb-2 flex-wrap">
               <span className="text-[20px]">🧠</span>
               <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm"
-                style={{ background: 'linear-gradient(90deg, #2dd4bf, #ec4899)', color: '#0a0a14' }}>
+                style={{ background: 'linear-gradient(90deg, #16A34A, #DC2626)', color: '#0a0a14' }}>
                 Mindset Library
               </span>
               <span className="text-[10px] font-semibold uppercase tracking-wider text-white/60">
@@ -114,7 +114,7 @@ export default function MindsetLibrary() {
           style={{ borderColor: 'rgba(45,212,191,.18)' }}>
 
           {/* Editor */}
-          <div className="rounded-lg p-4" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)' }}>
+          <div className="rounded-lg p-4" style={{ background: '#FFFFFF', border: '1px solid rgba(14,30,58,.08)' }}>
             <div className="flex items-center gap-2 flex-wrap mb-3">
               <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#0d9488' }}>
                 {editingId ? 'Edit mindset' : 'Add mindset'}
@@ -123,7 +123,7 @@ export default function MindsetLibrary() {
                 <button onClick={() => setScope('global')}
                   className="text-[11px] font-bold px-2.5 py-1 rounded-full transition-all"
                   style={{
-                    background: scope === 'global' ? 'linear-gradient(135deg, #2dd4bf, #0d9488)' : '#fff',
+                    background: scope === 'global' ? 'linear-gradient(135deg, #16A34A, #0d9488)' : '#fff',
                     color: scope === 'global' ? '#fff' : '#0e1e3a',
                     border: '1px solid rgba(45,212,191,.4)',
                   }}>
@@ -132,7 +132,7 @@ export default function MindsetLibrary() {
                 <button onClick={() => setScope('bdr')} disabled={!selected}
                   className="text-[11px] font-bold px-2.5 py-1 rounded-full transition-all disabled:opacity-40"
                   style={{
-                    background: scope === 'bdr' ? 'linear-gradient(135deg, #a855f7, #ec4899)' : '#fff',
+                    background: scope === 'bdr' ? 'linear-gradient(135deg, #0EA5E9, #DC2626)' : '#fff',
                     color: scope === 'bdr' ? '#fff' : '#0e1e3a',
                     border: '1px solid rgba(168,85,247,.4)',
                   }}>
@@ -159,7 +159,7 @@ export default function MindsetLibrary() {
             <div className="flex items-center gap-2 mt-3 flex-wrap">
               <button onClick={save} disabled={saving}
                 className="text-[12px] font-bold px-4 py-2 rounded-md text-white disabled:opacity-50"
-                style={{ background: 'linear-gradient(135deg, #2dd4bf, #ec4899)' }}>
+                style={{ background: 'linear-gradient(135deg, #16A34A, #DC2626)' }}>
                 {saving ? 'Saving…' : editingId ? '💾 Update' : '＋ Add to library'}
               </button>
               {editingId && (
@@ -198,7 +198,7 @@ export default function MindsetLibrary() {
           {!loading && selected && (
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#a855f7' }}>
+                <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#0EA5E9' }}>
                   🎯 Only for {selected.name} ({mine.length})
                 </span>
                 <span className="text-[10px] text-muted-foreground italic">
@@ -212,7 +212,7 @@ export default function MindsetLibrary() {
                   </div>
                 )}
                 {mine.map(m => (
-                  <MindsetRow key={m.id} item={m} accent="#a855f7" onEdit={() => edit(m)} onDelete={() => remove(m.id)} />
+                  <MindsetRow key={m.id} item={m} accent="#0EA5E9" onEdit={() => edit(m)} onDelete={() => remove(m.id)} />
                 ))}
               </div>
             </div>

@@ -24,7 +24,7 @@ interface LeadFeedProps {
 }
 
 const SIGNAL_COLORS: Record<string, string> = {
-  Expansion: '#ec4899',
+  Expansion: '#DC2626',
   'Contract Win': '#14b8a6',
   'Hiring Surge': '#8B8FE8',
   'Project Award': '#f9a8d4',
@@ -54,7 +54,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
           </h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899' }}>
+          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.12)', color: '#DC2626' }}>
             {leads.length} found
           </span>
           <button
@@ -87,7 +87,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
 
       {!loading && leads.length === 0 && (
         <div className="py-12 text-center text-[13px]" style={{ color: '#94a3b8' }}>
-          Pick a state, city, and vertical, then hit <span className="font-bold" style={{ color: '#ec4899' }}>Refresh Scan</span> to surface fresh leads.
+          Pick a state, city, and vertical, then hit <span className="font-bold" style={{ color: '#DC2626' }}>Refresh Scan</span> to surface fresh leads.
         </div>
       )}
 
@@ -119,7 +119,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   </p>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {recommendedTitles.slice(0, 5).map((t) => (
-                      <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ background: '#FAF7F2', color: '#475569', border: '1px solid rgba(14,30,58,.08)' }}>
+                      <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ background: '#FFFFFF', color: '#475569', border: '1px solid rgba(14,30,58,.08)' }}>
                         {t}
                       </span>
                     ))}
@@ -175,7 +175,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   <button
                     onClick={() => setAskLead(lead)}
                     className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
-                    style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899', border: '1px solid rgba(251,146,60,.35)' }}
+                    style={{ background: 'rgba(251,146,60,.12)', color: '#DC2626', border: '1px solid rgba(251,146,60,.35)' }}
                   >
                     💬 What to Ask
                   </button>
@@ -202,12 +202,12 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
               <div className="space-y-5">
                 <SheetHeader className="text-left space-y-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899' }}>{askLead.vertical}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ background: 'rgba(251,146,60,.12)', color: '#DC2626' }}>{askLead.vertical}</span>
                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded" style={{ background: 'rgba(155,120,200,.1)', color: '#9B78C8' }}>{askLead.signal_type}</span>
                   </div>
                   <SheetTitle className="text-lg font-extrabold" style={{ color: '#0e1e3a' }}>{askLead.company_name}</SheetTitle>
                 </SheetHeader>
-                <div className="p-3 rounded-lg text-[13px] leading-relaxed" style={{ background: '#FAF7F2', color: '#0e1e3a', border: '1px solid rgba(14,30,58,.08)' }}>
+                <div className="p-3 rounded-lg text-[13px] leading-relaxed" style={{ background: '#FFFFFF', color: '#0e1e3a', border: '1px solid rgba(14,30,58,.08)' }}>
                   {pb.framing}
                 </div>
                 <div>
@@ -225,7 +225,7 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   <span className="font-bold" style={{ color: '#14b8a6' }}>👂 Listen for:</span> {pb.listenFor}
                 </div>
                 <div className="p-3 rounded-lg text-[12px] leading-relaxed" style={{ background: 'rgba(251,146,60,.08)', border: '1px solid rgba(251,146,60,.25)', color: '#0e1e3a' }}>
-                  <span className="font-bold" style={{ color: '#ec4899' }}>🔥 Cross-sell:</span> {pb.crossSell}
+                  <span className="font-bold" style={{ color: '#DC2626' }}>🔥 Cross-sell:</span> {pb.crossSell}
                 </div>
                 <div className="text-[11px] italic pt-1" style={{ color: '#64748b' }}>
                   Why this lead: {askLead.why_housing}

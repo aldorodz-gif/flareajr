@@ -176,7 +176,7 @@ const ProspectCard = ({
               <button
                 onClick={() => onBookMeeting(item, 'disco')}
                 className="text-[11px] font-bold px-3 py-1.5 rounded-md text-white transition-all hover:-translate-y-0.5"
-                style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
+                style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
               >
                 🪩 Book Disco Call
               </button>
@@ -215,7 +215,7 @@ const ProspectCard = ({
           <button
             onClick={() => { setNotesDraft(item.notes ?? ''); setEditingNotes(true); }}
             className="w-full text-left p-3 rounded text-[12px] hover:bg-slate-50 transition-colors"
-            style={{ background: '#FAF7F2', color: '#1e293b', border: '1px dashed rgba(14,30,58,.12)' }}
+            style={{ background: '#FFFFFF', color: '#1e293b', border: '1px dashed rgba(14,30,58,.12)' }}
           >
             <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">📝 Notes</div>
             {item.notes
@@ -223,7 +223,7 @@ const ProspectCard = ({
               : <span className="text-muted-foreground italic">Click to add notes about this lead — context, what was said, next steps…</span>}
           </button>
         ) : (
-          <div className="rounded p-2" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.12)' }}>
+          <div className="rounded p-2" style={{ background: '#FFFFFF', border: '1px solid rgba(14,30,58,.12)' }}>
             <textarea
               autoFocus
               value={notesDraft}
@@ -456,7 +456,7 @@ const ProspectsTab = () => {
         <button
           onClick={() => setManualOpen(true)}
           className="text-[12px] font-bold px-3.5 py-2 rounded-md text-white transition-all hover:-translate-y-0.5"
-          style={{ background: 'linear-gradient(135deg, #ec4899, #a855f7)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
+          style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
         >
           + Add Lead Manually
         </button>
@@ -507,7 +507,7 @@ const ProspectsTab = () => {
                       onClick={() => setManualForm(f => ({ ...f, source: s.id, connection_type: s.conn }))}
                       className="text-[11px] font-semibold px-2.5 py-1 rounded-full transition-all"
                       style={{
-                        background: manualForm.source === s.id ? '#0e1e3a' : '#FAF7F2',
+                        background: manualForm.source === s.id ? '#0e1e3a' : '#FFFFFF',
                         color: manualForm.source === s.id ? '#fff' : '#475569',
                         border: '1px solid rgba(14,30,58,.08)',
                       }}
@@ -538,7 +538,7 @@ const ProspectsTab = () => {
                   onClick={addManualLead}
                   disabled={manualSaving || !manualForm.company_name.trim()}
                   className="text-[12px] font-bold px-4 py-1.5 rounded text-white"
-                  style={{ background: manualSaving || !manualForm.company_name.trim() ? '#94A3B8' : 'linear-gradient(135deg, #ec4899, #a855f7)' }}
+                  style={{ background: manualSaving || !manualForm.company_name.trim() ? '#94A3B8' : 'linear-gradient(135deg, #DC2626, #0EA5E9)' }}
                 >
                   {manualSaving ? 'Adding…' : '+ Add to pipeline'}
                 </button>
@@ -563,7 +563,7 @@ const ProspectsTab = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
             {stageStats.map(({ step, total, done, dueToday, overdue, scheduled }) => (
-              <div key={step.task_type} className="p-3 rounded-lg" style={{ background: '#FAF7F2', border: '1px solid rgba(14,30,58,.08)' }}>
+              <div key={step.task_type} className="p-3 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid rgba(14,30,58,.08)' }}>
                 <div className="flex items-baseline justify-between mb-1.5">
                   <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#0e1e3a' }}>
                     Day {step.day} · {step.label.split(' · ')[1]}
@@ -599,7 +599,7 @@ const ProspectsTab = () => {
       {loading && <div className="py-12 text-center text-[13px] text-muted-foreground">Loading prospects…</div>}
 
       {!loading && items.length === 0 && (
-        <div className="p-10 text-center rounded-xl" style={{ background: '#FAF7F2', border: '1px dashed rgba(14,30,58,.15)' }}>
+        <div className="p-10 text-center rounded-xl" style={{ background: '#FFFFFF', border: '1px dashed rgba(14,30,58,.15)' }}>
           <p className="text-[14px] font-semibold text-foreground mb-1">No prospects yet</p>
           <p className="text-[12px] text-muted-foreground">Add leads from <strong>Scan a Market</strong> / <strong>Today's Leads</strong> with the <strong>+ Pipeline</strong> button — or use <strong>+ Add Lead Manually</strong> above for referrals and self-sourced leads.</p>
         </div>

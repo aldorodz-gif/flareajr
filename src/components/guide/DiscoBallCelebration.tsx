@@ -39,7 +39,7 @@ const DiscoBallCelebration = ({ open, variant, company, onClose }: Props) => {
         {Array.from({ length: 40 }).map((_, i) => {
           const left = (i * 53) % 100;
           const delay = (i % 10) * 0.08;
-          const colors = ['#ec4899', '#2dd4bf', '#a855f7', '#fde047', '#f97316'];
+          const colors = ['#DC2626', '#16A34A', '#0EA5E9', '#fde047', '#f97316'];
           return (
             <span
               key={i}
@@ -72,7 +72,7 @@ const DiscoBallCelebration = ({ open, variant, company, onClose }: Props) => {
               transition: 'transform 900ms cubic-bezier(.34,1.56,.64,1)',
               animation: phase === 'spin' ? 'discoSpin 2s linear infinite' : undefined,
               backgroundImage:
-                'radial-gradient(circle at 35% 30%, #fff 0%, transparent 25%), conic-gradient(from 0deg, #ec4899, #a855f7, #2dd4bf, #ec4899)',
+                'radial-gradient(circle at 35% 30%, #fff 0%, transparent 25%), conic-gradient(from 0deg, #DC2626, #0EA5E9, #16A34A, #DC2626)',
             }}
           />
         ) : (

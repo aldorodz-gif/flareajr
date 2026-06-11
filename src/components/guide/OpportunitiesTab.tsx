@@ -469,7 +469,7 @@ export default function OpportunitiesTab() {
                     <button
                       onClick={() => archiveOpp(o.id)}
                       className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
-                      style={{ background: 'rgba(251,146,60,.12)', color: '#ec4899', border: '1px solid rgba(251,146,60,.35)' }}
+                      style={{ background: 'rgba(251,146,60,.12)', color: '#DC2626', border: '1px solid rgba(251,146,60,.35)' }}
                     >
                       Archive
                     </button>

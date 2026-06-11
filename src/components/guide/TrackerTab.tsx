@@ -75,7 +75,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
           onClick={() => setTourOpen(true)}
           className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 hover:scale-105"
           style={{
-            background: 'linear-gradient(135deg, #ec4899, #db2777)',
+            background: 'linear-gradient(135deg, #DC2626, #db2777)',
             color: '#fff',
             boxShadow: '0 2px 8px rgba(251,146,60,.35)',
           }}
@@ -103,7 +103,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
           { num: '3', icon: '⏰', title: 'Automate', desc: 'Tell ChatGPT to run it every weekday at 7 AM. Wake up to fresh leads daily.' },
         ].map(step => (
           <div key={step.num} className="p-4 text-center" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-            <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center text-[14px] font-bold" style={{ background: 'linear-gradient(135deg, #ec4899, #db2777)', color: '#fff' }}>
+            <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center text-[14px] font-bold" style={{ background: 'linear-gradient(135deg, #DC2626, #db2777)', color: '#fff' }}>
               {step.num}
             </div>
             <span className="text-[16px]">{step.icon}</span>
@@ -133,9 +133,9 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                     disabled={loading}
                     className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium transition-all duration-200"
                     style={{
-                      background: city === preset.value ? 'linear-gradient(135deg, #ec4899, #db2777)' : '#F1F5F9',
+                      background: city === preset.value ? 'linear-gradient(135deg, #DC2626, #db2777)' : '#F1F5F9',
                       color: city === preset.value ? '#fff' : '#475569',
-                      border: `1px solid ${city === preset.value ? '#ec4899' : '#E2E8F0'}`,
+                      border: `1px solid ${city === preset.value ? '#DC2626' : '#E2E8F0'}`,
                       boxShadow: city === preset.value ? '0 2px 8px rgba(251,146,60,.3)' : 'none',
                     }}
                   >
@@ -157,7 +157,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200"
                   style={{
                     borderColor: city ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                    background: city ? '#FFF7ED' : '#FAF7F2',
+                    background: city ? '#FFF7ED' : '#FFFFFF',
                     boxShadow: city ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                   }}
                   disabled={loading}
@@ -171,7 +171,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200 appearance-none cursor-pointer"
                   style={{
                     borderColor: vertical ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                    background: vertical ? '#FFF7ED' : '#FAF7F2',
+                    background: vertical ? '#FFF7ED' : '#FFFFFF',
                     boxShadow: vertical ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                   }}
                   disabled={loading}
@@ -188,7 +188,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   className="w-full pl-11 pr-4 py-3.5 border text-[14px] focus:outline-none transition-all duration-200 appearance-none cursor-pointer"
                   style={{
                     borderColor: signalType ? 'rgba(251,146,60,.5)' : 'rgba(155,120,200,.2)',
-                    background: signalType ? '#FFF7ED' : '#FAF7F2',
+                    background: signalType ? '#FFF7ED' : '#FFFFFF',
                     boxShadow: signalType ? '0 0 0 3px rgba(251,146,60,.1)' : 'none',
                   }}
                   disabled={loading}
@@ -222,7 +222,7 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
               disabled={!canBuild || loading}
               className="px-7 py-3.5 text-[14px] font-bold tracking-wide transition-all duration-200"
               style={{
-                background: !canBuild || loading ? '#94A3B8' : 'linear-gradient(135deg, #ec4899, #db2777)',
+                background: !canBuild || loading ? '#94A3B8' : 'linear-gradient(135deg, #DC2626, #db2777)',
                 color: '#fff',
                 cursor: !canBuild || loading ? 'not-allowed' : 'pointer',
                 boxShadow: canBuild && !loading ? '0 4px 15px rgba(251,146,60,.35)' : 'none',
@@ -242,12 +242,12 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
                   <li>Review your results, then schedule it (see below)</li>
                 </ol>
                 <div className="relative p-5" style={{ background: 'linear-gradient(135deg, #0E1E3A, #1a1145)' }}>
-                  <div className="absolute top-0 right-0 w-24 h-24 opacity-10" style={{ background: 'radial-gradient(circle, #ec4899, transparent 70%)' }} />
+                  <div className="absolute top-0 right-0 w-24 h-24 opacity-10" style={{ background: 'radial-gradient(circle, #DC2626, transparent 70%)' }} />
                   <button
                     onClick={handleCopyPrompt}
                     className="absolute top-3 right-3 text-[11px] font-bold px-4 py-2 tracking-wider z-10 transition-all duration-200"
                     style={{
-                      background: copied ? 'linear-gradient(135deg, #14b8a6, #0d9488)' : 'linear-gradient(135deg, #ec4899, #db2777)',
+                      background: copied ? 'linear-gradient(135deg, #14b8a6, #0d9488)' : 'linear-gradient(135deg, #DC2626, #db2777)',
                       color: copied ? '#fff' : '#0E1E3A',
                       boxShadow: '0 2px 8px rgba(0,0,0,.2)',
                     }}

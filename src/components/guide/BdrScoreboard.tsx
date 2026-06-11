@@ -181,7 +181,7 @@ const BdrScoreboard = () => {
   const yearTotal = bdr.rows[`${year}-All`];
 
   const onTrack = row && row.monthlyGoal != null && row.actual != null && row.actual >= row.monthlyGoal;
-  const accent = onTrack ? '#10B981' : '#6366F1';
+  const accent = onTrack ? '#10B981' : '#0EA5E9';
 
 
   const handleRefreshClick = () => fileRef.current?.click();
@@ -279,33 +279,33 @@ const BdrScoreboard = () => {
         type="button"
         className="text-left p-3 rounded-lg transition-all"
         style={{
-          background: dark ? '#FAFAFA' : '#fff',
-          border: `2px solid ${active ? '#6366F1' : (dark ? '#FAFAFA' : '#27272A')}`,
+          background: dark ? '#0F172A' : '#fff',
+          border: `2px solid ${active ? '#0EA5E9' : (dark ? '#0F172A' : '#E2E8F0')}`,
           boxShadow: active ? '0 4px 12px rgba(99,102,241,0.25)' : 'none',
           cursor: 'pointer',
         }}
       >
-        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#71717A' : (active ? '#6366F1' : '#71717A') }}>
+        <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: dark ? '#64748B' : (active ? '#0EA5E9' : '#64748B') }}>
           {label}
         </div>
         {r ? (
           <>
-            <div className="text-[18px] font-extrabold tabular-nums" style={{ color: dark ? '#fff' : '#FAFAFA' }}>
+            <div className="text-[18px] font-extrabold tabular-nums" style={{ color: dark ? '#fff' : '#0F172A' }}>
               {fmt(r.actual ?? null, 'currency')}
             </div>
-            <div className="text-[10px] mt-0.5 tabular-nums" style={{ color: dark ? '#71717A' : '#71717A' }}>
+            <div className="text-[10px] mt-0.5 tabular-nums" style={{ color: dark ? '#64748B' : '#64748B' }}>
               goal {fmt(r.monthlyGoal ?? null, 'currency')} · {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
             </div>
           </>
         ) : (
-          <div className="text-[11px]" style={{ color: dark ? '#71717A' : '#71717A' }}>{sub}</div>
+          <div className="text-[11px]" style={{ color: dark ? '#64748B' : '#64748B' }}>{sub}</div>
         )}
       </button>
     );
   };
 
   return (
-    <div className="p-5 rounded-xl mb-5" style={{ background: '#0F0F11', border: '1px solid #27272A' }}>
+    <div className="p-5 rounded-xl mb-5" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
       <input
         ref={fileRef}
         type="file"
@@ -316,11 +316,11 @@ const BdrScoreboard = () => {
 
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
         <div>
-          <Eyebrow gradient="#18181B">BDR Scoreboard</Eyebrow>
-          <h3 className="text-[22px] font-black tracking-tight mt-1" style={{ color: '#FAFAFA' }}>
+          <Eyebrow gradient="#FFFFFF">BDR Scoreboard</Eyebrow>
+          <h3 className="text-[22px] font-black tracking-tight mt-1" style={{ color: '#0F172A' }}>
             <span
               style={{
-                backgroundImage: '#18181B',
+                backgroundImage: '#FFFFFF',
                 WebkitBackgroundClip: 'text',
                 backgroundClip: 'text',
                 color: 'transparent',
@@ -330,16 +330,16 @@ const BdrScoreboard = () => {
             >
               {bdr.name}
             </span>{' '}
-            <span className="font-medium text-[16px]" style={{ color: '#71717A' }}>· {bdr.market}</span>
+            <span className="font-medium text-[16px]" style={{ color: '#64748B' }}>· {bdr.market}</span>
           </h3>
-          <p className="text-[11px] mt-0.5" style={{ color: '#71717A' }}>{lastRefreshLabel}</p>
+          <p className="text-[11px] mt-0.5" style={{ color: '#64748B' }}>{lastRefreshLabel}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={handleRefreshClick}
             disabled={refreshing}
             className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5 transition-opacity disabled:opacity-60"
-            style={{ background: '#6366F1', color: '#fff', border: '1px solid #6366F1' }}
+            style={{ background: '#0EA5E9', color: '#fff', border: '1px solid #0EA5E9' }}
             title="Upload the latest Sales Forecasting .xlsx to refresh the scoreboard"
           >
             <span>{refreshing ? '⏳' : '↻'}</span>
@@ -350,7 +350,7 @@ const BdrScoreboard = () => {
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
             className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
-            style={{ borderColor: '#27272A', background: '#0F0F11', color: '#FAFAFA' }}
+            style={{ borderColor: '#E2E8F0', background: '#FFFFFF', color: '#0F172A' }}
           >
             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
@@ -363,7 +363,7 @@ const BdrScoreboard = () => {
               else setPeriod('All');
             }}
             className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
-            style={{ borderColor: '#27272A', background: '#0F0F11', color: '#FAFAFA' }}
+            style={{ borderColor: '#E2E8F0', background: '#FFFFFF', color: '#0F172A' }}
             title="Switch between monthly, quarterly, or annual goal view"
           >
             <option value="month">Monthly Goal</option>
@@ -375,7 +375,7 @@ const BdrScoreboard = () => {
               value={period}
               onChange={(e) => setPeriod(e.target.value)}
               className="text-[12px] font-semibold rounded-lg px-3 py-2 border outline-none"
-              style={{ borderColor: '#27272A', background: '#0F0F11', color: '#FAFAFA' }}
+              style={{ borderColor: '#E2E8F0', background: '#FFFFFF', color: '#0F172A' }}
             >
               {(goalType === 'month' ? MONTHS : QUARTERS).map(p => (
                 <option key={p} value={p}>{p}</option>
@@ -386,7 +386,7 @@ const BdrScoreboard = () => {
       </div>
 
       {!row && (
-        <div className="p-4 rounded-lg text-[12px]" style={{ background: '#0F0F11', color: '#71717A', border: '1px dashed #27272A' }}>
+        <div className="p-4 rounded-lg text-[12px]" style={{ background: '#FFFFFF', color: '#64748B', border: '1px dashed #E2E8F0' }}>
           No data for {bdr.name} · {key}.
         </div>
       )}
@@ -405,14 +405,14 @@ const BdrScoreboard = () => {
               const annualRevRemaining = revenueForGp(bdr, remaining) ?? 0;
               const annualHit = hit === true;
               return (
-                <div className="p-3 rounded-lg" style={{ background: '#FAFAFA', border: '1px solid #FAFAFA' }}>
-                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: annualHit ? '#10B981' : '#71717A' }}>
+                <div className="p-3 rounded-lg" style={{ background: '#0F172A', border: '1px solid #0F172A' }}>
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: annualHit ? '#10B981' : '#64748B' }}>
                     {annualHit ? `Annual GP Goal Hit · ${year}` : `Top Line Revenue Still Needed · ${year}`}
                   </div>
                   <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#fff' }}>
                     {annualHit ? '$0 needed ✓' : fmt(annualRevRemaining, 'currency')}
                   </div>
-                  <div className="text-[10px] mt-0.5" style={{ color: '#71717A' }}>
+                  <div className="text-[10px] mt-0.5" style={{ color: '#64748B' }}>
                     {annualHit
                       ? `Over by ${fmt(over ?? 0, 'currency')} GP · Goal ${fmt(bdr.annualRevenueGoal, 'currency')}`
                       : `GP remaining ${fmt(remaining, 'currency')} of ${fmt(bdr.annualGpGoal, 'currency')}`}
@@ -425,14 +425,14 @@ const BdrScoreboard = () => {
               const goalHit = hit === true;
               const revNeeded = revenueForGp(bdr, remaining);
               return (
-                <div className="p-3 rounded-lg" style={{ background: goalHit ? 'rgba(16,185,129,0.08)' : '#fff', border: `1px solid ${goalHit ? 'rgba(16,185,129,0.35)' : '#27272A'}` }}>
-                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: goalHit ? '#10B981' : '#71717A' }}>
+                <div className="p-3 rounded-lg" style={{ background: goalHit ? 'rgba(16,185,129,0.08)' : '#fff', border: `1px solid ${goalHit ? 'rgba(16,185,129,0.35)' : '#E2E8F0'}` }}>
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: goalHit ? '#10B981' : '#64748B' }}>
                     {goalHit ? `GP Goal Hit · ${period}` : `Revenue Needed to Hit GP Goal · ${period}`}
                   </div>
-                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: goalHit ? '#10B981' : '#FAFAFA' }}>
+                  <div className="text-[20px] font-extrabold tabular-nums" style={{ color: goalHit ? '#10B981' : '#0F172A' }}>
                     {goalHit ? '$0 needed ✓' : fmt(revNeeded, 'currency')}
                   </div>
-                  <div className="text-[10px] mt-0.5" style={{ color: goalHit ? '#10B981' : '#71717A' }}>
+                  <div className="text-[10px] mt-0.5" style={{ color: goalHit ? '#10B981' : '#64748B' }}>
                     {goalHit
                       ? `Over by ${fmt(over ?? 0, 'currency')} GP`
                       : `GP remaining ${fmt(remaining, 'currency')} of ${fmt(row.monthlyGoal, 'currency')}`}
@@ -440,10 +440,10 @@ const BdrScoreboard = () => {
                 </div>
               );
             })()}
-            <div className="p-3 rounded-lg" style={{ background: '#0F0F11', border: '1px solid #27272A' }}>
-              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#71717A' }}>Revenue Booked (implied) · {period}</div>
-              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#FAFAFA' }}>{fmt(revenueForGp(bdr, row.actual), 'currency')}</div>
-              <div className="text-[10px] mt-0.5" style={{ color: '#71717A' }}>From actual GP {fmt(row.actual, 'currency')}</div>
+            <div className="p-3 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+              <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#64748B' }}>Revenue Booked (implied) · {period}</div>
+              <div className="text-[20px] font-extrabold tabular-nums" style={{ color: '#0F172A' }}>{fmt(revenueForGp(bdr, row.actual), 'currency')}</div>
+              <div className="text-[10px] mt-0.5" style={{ color: '#64748B' }}>From actual GP {fmt(row.actual, 'currency')}</div>
             </div>
           </div>
 
@@ -453,10 +453,10 @@ const BdrScoreboard = () => {
               const isHero = k === 'monthlyGoal' || k === 'actual' || k === 'totalCommPred';
               const negative = format === 'currency' && typeof v === 'number' && v < 0;
               return (
-                <div key={k} className="p-3 rounded-lg" style={{ background: '#0F0F11', border: '1px solid #27272A' }}>
-                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#71717A' }}>{label}</div>
+                <div key={k} className="p-3 rounded-lg" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+                  <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: '#64748B' }}>{label}</div>
                   <div className={`tabular-nums ${isHero ? 'text-[18px] font-extrabold' : 'text-[14px] font-bold'}`}
-                       style={{ color: negative ? '#EF4444' : '#FAFAFA' }}>
+                       style={{ color: negative ? '#EF4444' : '#0F172A' }}>
                     {fmt(v, format)}
                   </div>
                 </div>
@@ -464,18 +464,18 @@ const BdrScoreboard = () => {
             })}
           </div>
 
-          <div className="mt-4 pt-4 border-t" style={{ borderColor: '#27272A' }}>
-            <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#71717A' }}>{year} Quarter Rollup</div>
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: '#E2E8F0' }}>
+            <div className="text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: '#64748B' }}>{year} Quarter Rollup</div>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
               {QUARTERS.map((q, i) => {
                 const qr = quarterTotals[i];
                 const { hit, remaining } = gpStatus(qr?.monthlyGoal, qr?.actual);
                 const qHit = hit === true;
                 return (
-                  <div key={q} className="p-2.5 rounded-lg" style={{ background: qHit ? 'rgba(16,185,129,0.08)' : '#fff', border: `1px solid ${qHit ? 'rgba(16,185,129,0.35)' : '#27272A'}` }}>
-                    <div className="text-[10px] font-bold" style={{ color: qHit ? '#10B981' : '#71717A' }}>{q} {qHit && '✓'}</div>
-                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: qHit ? '#10B981' : '#FAFAFA' }}>{fmt(qr?.actual ?? null, 'currency')}</div>
-                    <div className="text-[10px] tabular-nums" style={{ color: qHit ? '#10B981' : '#71717A' }}>
+                  <div key={q} className="p-2.5 rounded-lg" style={{ background: qHit ? 'rgba(16,185,129,0.08)' : '#fff', border: `1px solid ${qHit ? 'rgba(16,185,129,0.35)' : '#E2E8F0'}` }}>
+                    <div className="text-[10px] font-bold" style={{ color: qHit ? '#10B981' : '#64748B' }}>{q} {qHit && '✓'}</div>
+                    <div className="text-[13px] font-extrabold tabular-nums" style={{ color: qHit ? '#10B981' : '#0F172A' }}>{fmt(qr?.actual ?? null, 'currency')}</div>
+                    <div className="text-[10px] tabular-nums" style={{ color: qHit ? '#10B981' : '#64748B' }}>
                       {qHit ? '$0 GP needed' : remaining != null ? `${fmt(remaining, 'currency')} to goal` : `goal ${fmt(qr?.monthlyGoal ?? null, 'currency')}`}
                     </div>
                   </div>
@@ -485,10 +485,10 @@ const BdrScoreboard = () => {
                 const { hit, remaining } = gpStatus(yearTotal?.monthlyGoal, yearTotal?.actual);
                 const yHit = hit === true;
                 return (
-                  <div className="p-2.5 rounded-lg" style={{ background: '#FAFAFA', border: '1px solid #FAFAFA' }}>
-                    <div className="text-[10px] font-bold" style={{ color: yHit ? '#10B981' : '#71717A' }}>Year {yHit && '✓'}</div>
+                  <div className="p-2.5 rounded-lg" style={{ background: '#0F172A', border: '1px solid #0F172A' }}>
+                    <div className="text-[10px] font-bold" style={{ color: yHit ? '#10B981' : '#64748B' }}>Year {yHit && '✓'}</div>
                     <div className="text-[13px] font-extrabold tabular-nums" style={{ color: '#fff' }}>{fmt(yearTotal?.actual ?? null, 'currency')}</div>
-                    <div className="text-[10px] tabular-nums" style={{ color: '#71717A' }}>
+                    <div className="text-[10px] tabular-nums" style={{ color: '#64748B' }}>
                       {yHit ? '$0 GP needed ✓' : remaining != null ? `${fmt(remaining, 'currency')} to goal` : `goal ${fmt(yearTotal?.monthlyGoal ?? null, 'currency')}`}
                     </div>
                   </div>
@@ -499,16 +499,16 @@ const BdrScoreboard = () => {
         </>
       )}
 
-      <div className="mt-8 -mx-5 px-5 pt-6 pb-2 border-t-4" style={{ borderColor: '#6366F1', background: '#18181B, transparent)' }}>
+      <div className="mt-8 -mx-5 px-5 pt-6 pb-2 border-t-4" style={{ borderColor: '#0EA5E9', background: '#FFFFFF, transparent)' }}>
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] px-2 py-1 rounded" style={{ background: '#6366F1', color: '#fff' }}>
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] px-2 py-1 rounded" style={{ background: '#0EA5E9', color: '#fff' }}>
             Team Comparison
           </span>
-          <span className="text-[11px]" style={{ color: '#71717A' }}>
+          <span className="text-[11px]" style={{ color: '#64748B' }}>
             Separate from your individual numbers above — click a card to see how the team or a region is tracking.
           </span>
         </div>
-        <Eyebrow gradient="#18181B">View · click to filter</Eyebrow>
+        <Eyebrow gradient="#FFFFFF">View · click to filter</Eyebrow>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-1 mb-4">
           <FilterTab id="team" label="Full Team" sub="All BDRs" r={teamRow} dark />
           {regions.map(region => {
@@ -535,15 +535,15 @@ const BdrScoreboard = () => {
         list.sort((a, b) => (b.rows[rollupKey]?.actual ?? 0) - (a.rows[rollupKey]?.actual ?? 0));
         if (list.length === 0) {
           return (
-            <div className="mt-4 pt-4 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-2" style={{ borderColor: '#27272A' }}>
-              <div className="text-[12px]" style={{ color: '#71717A' }}>
+            <div className="mt-4 pt-4 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-2" style={{ borderColor: '#E2E8F0' }}>
+              <div className="text-[12px]" style={{ color: '#64748B' }}>
                 No per-BDR breakdown yet — upload the latest Sales Forecasting workbook to populate this section.
               </div>
               <button
                 onClick={handleRefreshClick}
                 disabled={refreshing}
                 className="text-[12px] font-bold rounded-lg px-3 py-2 inline-flex items-center gap-1.5"
-                style={{ background: '#6366F1', color: '#fff', border: '1px solid #6366F1' }}
+                style={{ background: '#0EA5E9', color: '#fff', border: '1px solid #0EA5E9' }}
               >
                 <span>{refreshing ? '⏳' : '↻'}</span>
                 <span>{refreshing ? 'Loading…' : 'Upload workbook'}</span>
@@ -554,8 +554,8 @@ const BdrScoreboard = () => {
         return (
           <div className="mt-5">
               <table className="w-full overflow-hidden rounded-xl text-[12px]">
-                <thead style={{ background: '#0F0F11' }}>
-                  <tr style={{ color: '#71717A' }}>
+                <thead style={{ background: '#FFFFFF' }}>
+                  <tr style={{ color: '#64748B' }}>
                     <th className="text-left px-3 py-2 font-bold uppercase tracking-wider text-[10px]">BDR</th>
                     <th className="text-left px-3 py-2 font-bold uppercase tracking-wider text-[10px]">Market</th>
                     <th className="text-left px-3 py-2 font-bold uppercase tracking-wider text-[10px]">Region</th>
@@ -572,14 +572,14 @@ const BdrScoreboard = () => {
                     const hit = pct != null && pct >= 1;
                     const varNeg = r?.actVarDollar != null && r.actVarDollar < 0;
                     return (
-                      <tr key={m.name} style={{ background: i % 2 ? '#0F0F11' : '#fff', borderTop: '1px solid #27272A' }}>
-                        <td className="px-3 py-2 font-bold" style={{ color: '#FAFAFA' }}>{m.name}</td>
-                        <td className="px-3 py-2" style={{ color: '#71717A' }}>{m.market}</td>
-                        <td className="px-3 py-2" style={{ color: '#71717A' }}>{m.region}</td>
-                        <td className="px-3 py-2 text-right tabular-nums" style={{ color: '#FAFAFA' }}>{fmt(r?.monthlyGoal ?? null, 'currency')}</td>
-                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: '#FAFAFA' }}>{fmt(r?.actual ?? null, 'currency')}</td>
+                      <tr key={m.name} style={{ background: i % 2 ? '#FFFFFF' : '#fff', borderTop: '1px solid #E2E8F0' }}>
+                        <td className="px-3 py-2 font-bold" style={{ color: '#0F172A' }}>{m.name}</td>
+                        <td className="px-3 py-2" style={{ color: '#64748B' }}>{m.market}</td>
+                        <td className="px-3 py-2" style={{ color: '#64748B' }}>{m.region}</td>
+                        <td className="px-3 py-2 text-right tabular-nums" style={{ color: '#0F172A' }}>{fmt(r?.monthlyGoal ?? null, 'currency')}</td>
+                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: '#0F172A' }}>{fmt(r?.actual ?? null, 'currency')}</td>
                         <td className="px-3 py-2 text-right tabular-nums" style={{ color: varNeg ? '#EF4444' : '#10B981' }}>{fmt(r?.actVarDollar ?? null, 'currency')}</td>
-                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: hit ? '#10B981' : '#6366F1' }}>
+                        <td className="px-3 py-2 text-right tabular-nums font-bold" style={{ color: hit ? '#10B981' : '#0EA5E9' }}>
                           {pct != null ? `${(pct*100).toFixed(0)}%` : '—'} {pct != null && (hit ? '✓' : '⚠')}
                         </td>
                       </tr>

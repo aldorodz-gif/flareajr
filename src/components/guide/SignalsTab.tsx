@@ -101,7 +101,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
   const scoreConfig = (score: string) => {
     if (score === 'HIGH') return { bg: 'linear-gradient(135deg, #14b8a6, #0d9488)', glow: '0 0 40px rgba(16,185,129,.3)', label: 'Call today.', icon: '🎯', action: 'This is a real signal. Pick up the phone.' };
     if (score === 'LOW') return { bg: 'linear-gradient(135deg, #64748B, #475569)', glow: '0 0 40px rgba(100,116,139,.2)', label: 'Move on.', icon: '→', action: 'No physical movement here. Skip it.' };
-    return { bg: 'linear-gradient(135deg, #ec4899, #D97706)', glow: '0 0 40px rgba(245,158,11,.25)', label: 'Track it.', icon: '👁', action: 'Not ready yet, but worth watching.' };
+    return { bg: 'linear-gradient(135deg, #DC2626, #D97706)', glow: '0 0 40px rgba(245,158,11,.25)', label: 'Track it.', icon: '👁', action: 'Not ready yet, but worth watching.' };
   };
 
   return (
@@ -122,11 +122,11 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
             <>
               {/* Demo typing preview */}
               {!hasInteracted && !signalText && (
-                <div className="mb-5 px-5 py-4 rounded-xl" style={{ background: '#FAF7F2', border: '1px solid rgba(251,146,60,.12)' }}>
+                <div className="mb-5 px-5 py-4 rounded-xl" style={{ background: '#FFFFFF', border: '1px solid rgba(251,146,60,.12)' }}>
                   <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: '#db2777' }}>Example input</p>
                   <p className="text-[14px] leading-[1.6]" style={{ color: '#1a1145' }}>
                     {typingDemo}
-                    <span style={{ opacity: showCursor ? 1 : 0, color: '#ec4899', transition: 'opacity 0.1s' }}>|</span>
+                    <span style={{ opacity: showCursor ? 1 : 0, color: '#DC2626', transition: 'opacity 0.1s' }}>|</span>
                   </p>
                 </div>
               )}
@@ -170,9 +170,9 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   placeholder="Paste a headline, LinkedIn post, or article excerpt..."
                   className="w-full min-h-[130px] p-5 rounded-xl text-[14px] leading-[1.7] resize-none focus:outline-none transition-all"
                   style={{
-                    background: '#FAF7F2',
+                    background: '#FFFFFF',
                     border: '2px solid',
-                    borderColor: signalText.trim() ? '#ec4899' : 'rgba(251,146,60,.15)',
+                    borderColor: signalText.trim() ? '#DC2626' : 'rgba(251,146,60,.15)',
                     borderRadius: '12px',
                     color: '#1a1145',
                     boxShadow: signalText.trim()
@@ -183,7 +183,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                 />
                 {signalText.trim() && (
                   <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: 'rgba(251,146,60,.1)' }}>
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#ec4899' }} />
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#DC2626' }} />
                     <span className="text-[11px] font-semibold" style={{ color: '#db2777' }}>Ready</span>
                   </div>
                 )}
@@ -197,7 +197,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                 style={{
                   background: !signalText.trim() || loading
                     ? '#f1f0ee'
-                    : 'linear-gradient(135deg, #ec4899, #db2777)',
+                    : 'linear-gradient(135deg, #DC2626, #db2777)',
                   color: !signalText.trim() || loading ? '#c4c0b8' : '#fff',
                   cursor: !signalText.trim() || loading ? 'not-allowed' : 'pointer',
                   boxShadow: signalText.trim() && !loading
@@ -210,7 +210,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   <span className="flex items-center justify-center gap-3">
                     <span
                       className="w-5 h-5 rounded-full animate-spin"
-                      style={{ border: '2.5px solid rgba(251,146,60,.2)', borderTopColor: '#ec4899' }}
+                      style={{ border: '2.5px solid rgba(251,146,60,.2)', borderTopColor: '#DC2626' }}
                     />
                     Analyzing signal...
                   </span>
@@ -240,7 +240,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                   <div className="text-[36px]">{scoreConfig(result.score).icon}</div>
                 </div>
 
-                <div className="p-6" style={{ background: '#FAF7F2' }}>
+                <div className="p-6" style={{ background: '#FFFFFF' }}>
                   <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: '#94A3B8' }}>Analysis</p>
                   <p className="text-[15px] leading-[1.7] mb-5" style={{ color: '#1a1145' }}>{result.reason}</p>
 
@@ -249,7 +249,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
                       <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#94A3B8' }}>Service</span>
                       <span
                         className="px-3 py-1 rounded-full text-[12px] font-bold"
-                        style={{ background: '#0a0a14', color: '#ec4899' }}
+                        style={{ background: '#0a0a14', color: '#DC2626' }}
                       >
                         {result.service_line}
                       </span>
@@ -291,7 +291,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10">
         {[
           { color: '#14b8a6', bg: 'rgba(16,185,129,.08)', label: 'HIGH', action: 'Call today', desc: 'Real people movement, defined timeline, identifiable buyer.' },
-          { color: '#ec4899', bg: 'rgba(245,158,11,.08)', label: 'MEDIUM', action: 'Track it', desc: 'Real change happening or early-stage signal with future potential.' },
+          { color: '#DC2626', bg: 'rgba(245,158,11,.08)', label: 'MEDIUM', action: 'Track it', desc: 'Real change happening or early-stage signal with future potential.' },
           { color: '#EF4444', bg: 'rgba(239,68,68,.08)', label: 'LOW', action: 'Move on', desc: 'No plausible path to physical movement. Skip for now.' },
         ].map((tier) => (
           <div key={tier.label} className="rounded-xl p-4 relative overflow-hidden" style={{ background: tier.bg, border: `1px solid ${tier.color}22` }}>
@@ -350,7 +350,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
           🔑
         </div>
         <div>
-          <p className="text-[12px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: '#ec4899' }}>The one question that matters</p>
+          <p className="text-[12px] font-bold uppercase tracking-[.12em] mb-1" style={{ color: '#DC2626' }}>The one question that matters</p>
           <p className="text-[14px] leading-[1.65]" style={{ color: 'rgba(255,255,255,.82)' }}>
             <strong style={{ color: '#fff' }}>Are real people physically going somewhere because of this?</strong> If yes, pursue. If the movement is virtual, speculative, or one day long, move on.
           </p>

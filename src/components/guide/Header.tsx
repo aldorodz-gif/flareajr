@@ -72,7 +72,7 @@ const Header = ({ onReplayTour }: HeaderProps) => {
             className="text-[56px] md:text-[72px] font-black tracking-[-0.03em] leading-none"
             style={{
               fontFamily: "'Inter', sans-serif",
-              background: 'linear-gradient(135deg, #ffffff 0%, #2dd4bf 28%, #ec4899 62%, #a855f7 100%)',
+              background: 'linear-gradient(135deg, #ffffff 0%, #16A34A 28%, #DC2626 62%, #0EA5E9 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               filter: 'drop-shadow(0 0 30px rgba(236,72,153,.35))',
@@ -82,7 +82,7 @@ const Header = ({ onReplayTour }: HeaderProps) => {
           </h1>
           <div
             className="h-[3px] w-[80px] mt-2 rounded-full"
-            style={{ background: 'linear-gradient(90deg, #ec4899, #a855f7 60%, rgba(168,85,247,0))' }}
+            style={{ background: 'linear-gradient(90deg, #DC2626, #0EA5E9 60%, rgba(168,85,247,0))' }}
           />
         </div>
 

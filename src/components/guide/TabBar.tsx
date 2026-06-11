@@ -85,7 +85,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
         ref={sliderRef}
         data-shell="tab-slider"
         className="absolute bottom-0 h-[3px] rounded-t-sm pointer-events-none z-10 transition-all duration-300"
-        style={{ background: 'linear-gradient(90deg, #2dd4bf, #ec4899 55%, #a855f7)', boxShadow: '0 0 14px rgba(236,72,153,.55)' }}
+        style={{ background: 'linear-gradient(90deg, #16A34A, #DC2626 55%, #0EA5E9)', boxShadow: '0 0 14px rgba(236,72,153,.55)' }}
       />
       {TAB_ORDER.map((tab) => {
         const isActive = activeTab === tab.id;
@@ -112,7 +112,7 @@ const TabBar = ({ activeTab, visitedTabs, onTabChange }: TabBarProps) => {
               {tab.id === 'prospects' && dueCount > 0 && (
                 <span
                   className="absolute -top-1.5 -right-3 text-[9px] font-extrabold px-1.5 py-0.5 rounded-full leading-none"
-                  style={{ background: '#ec4899', color: '#fff', boxShadow: '0 0 8px rgba(236,72,153,.6)' }}
+                  style={{ background: '#DC2626', color: '#fff', boxShadow: '0 0 8px rgba(236,72,153,.6)' }}
                 >
                   {dueCount}
                 </span>
