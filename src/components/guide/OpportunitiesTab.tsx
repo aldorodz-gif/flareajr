@@ -396,118 +396,108 @@ export default function OpportunitiesTab() {
       <div className="space-y-3">
         {filtered.map(o => {
           const composite = Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2);
+          const expanded = expandedId === o.id;
+          const inPipeline = o.saved_by_bdr === selected.id;
+          const headline = o.signal_type ? `${o.signal_type}${o.market ? ' · ' + o.market : ''}` : (o.market || '');
           return (
-            <div key={o.id} className="border rounded-lg p-4 bg-card hover:border-pink-500/40 transition-colors">
-              <div className="flex items-start justify-between gap-4 flex-wrap">
-                <div className="flex-1 min-w-[300px]">
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="text-lg font-semibold">{o.company}</h3>
-                    {o.priority && (
-                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${priorityPill(o.priority)}`}>
-                        {o.priority}
-                      </span>
-                    )}
-                    {o.confidence_label && (
-                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${confidencePill(o.confidence_label)}`}>
-                        Source: {o.confidence_label}
-                      </span>
-                    )}
-                    {o.near_core_inventory && (
-                      <button
-                        type="button"
-                        onClick={() => openInventoryContext(o)}
-                        className="text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-opacity hover:opacity-85"
-                        style={{ background: '#ccfbf1', color: '#115e59', borderColor: '#99f6e4' }}
-                        title="Open this market in Market Heat"
-                      >
-                        📍 Near {formatNearInventoryLabel(o.nearest_inventory, o.distance_to_inventory)}
-                      </button>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-1">
-                    {o.signal_type} · {o.market} · {o.vertical}
-                  </p>
-                  {o.project && <p className="text-sm font-medium">{o.project}</p>}
-                  {o.why_it_matters && <p className="text-sm mt-2 text-foreground/80">{stripLegacyTags(o.why_it_matters)}</p>}
-                  {o.estimated_stay && (
-                    <p className="text-xs mt-2 text-muted-foreground">Estimated stay: <span className="font-medium text-foreground">{o.estimated_stay}</span></p>
-                  )}
-                  {o.source_url ? (
-                    <a
-                      href={o.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold mt-2 px-2.5 py-1 rounded-full border transition-opacity hover:opacity-80"
-                      style={{ background: 'rgba(45,212,191,.12)', color: '#0d9488', borderColor: 'rgba(45,212,191,.3)' }}
-                    >
-                      🔗 View source
-                    </a>
-                  ) : (
-                    <span className="inline-block text-[11px] font-semibold mt-2 px-2.5 py-1 rounded-full border bg-amber-50 text-amber-700 border-amber-200">
-                      ⚠ No source link — re-scan to refresh
+            <div
+              key={o.id}
+              style={{
+                background: '#FFFFFF',
+                border: '1px solid #E2E8F0',
+                borderRadius: 8,
+                padding: '16px 20px',
+                display: 'flex',
+                gap: 16,
+                alignItems: 'flex-start',
+                flexWrap: 'wrap',
+              }}
+            >
+              <div style={{ flex: 1, minWidth: 280 }}>
+                <div style={{ fontSize: 15, fontWeight: 600, color: '#0F172A', marginBottom: 6 }}>{o.company}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                  {o.priority && (
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${priorityPill(o.priority)}`}>
+                      {o.priority}
                     </span>
                   )}
-                </div>
-
-                <div className="flex flex-col items-end gap-2 min-w-[180px]">
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-pink-400">{composite}</div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Overall Score</div>
-                  </div>
-                  <div className="flex flex-col gap-1.5 mt-2 w-full">
-                    {o.saved_by_bdr === selected.id ? (
-                      <span
-                        className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md text-center"
-                        style={{ background: 'rgba(16,185,129,.15)', color: '#14b8a6' }}
-                      >
-                        ✓ In pipeline
-                      </span>
-                    ) : (
-                      <div className="relative w-full">
-                        <button
-                          onClick={() => triggerPipeline(o)}
-                          className="relative w-full text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5 active:scale-95 overflow-visible"
-                          style={{ background: '#0e1e3a', color: '#fff' }}
-                        >
-                          + Pipeline
-                          {burstId === o.id && <span className="flare-pulse-ring" aria-hidden />}
-                        </button>
-                        {burstId === o.id && (
-                          <div className="absolute inset-0 pointer-events-none" aria-hidden>
-                            {['✨','⚡','🎯','💥','✨','⭐'].map((emoji, i) => {
-                              const angle = (i / 6) * Math.PI * 2;
-                              const dist = 38 + (i % 2) * 14;
-                              return (
-                                <span
-                                  key={i}
-                                  className="flare-sparkle"
-                                  style={{
-                                    left: '50%',
-                                    top: '50%',
-                                    ['--fx' as string]: `${Math.cos(angle) * dist}px`,
-                                    ['--fy' as string]: `${Math.sin(angle) * dist}px`,
-                                    animationDelay: `${i * 25}ms`,
-                                  }}
-                                >
-                                  {emoji}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                  {o.confidence_label && (
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${confidencePill(o.confidence_label)}`}>
+                      {o.confidence_label}
+                    </span>
+                  )}
+                  {o.market && (
+                    <span style={{ fontSize: 11, fontWeight: 500, padding: '2px 8px', borderRadius: 99, background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0' }}>
+                      {o.market}
+                    </span>
+                  )}
+                  {o.near_core_inventory && (
                     <button
-                      onClick={() => archiveOpp(o.id)}
-                      className="text-[11px] font-bold uppercase tracking-wider px-3 py-2 rounded-md transition-all hover:-translate-y-0.5"
-                      style={{ background: 'rgba(251,146,60,.12)', color: '#DC2626', border: '1px solid rgba(251,146,60,.35)' }}
+                      type="button"
+                      onClick={() => openInventoryContext(o)}
+                      className="text-[11px] font-semibold px-2 py-0.5 rounded-full border"
+                      style={{ background: '#ccfbf1', color: '#115e59', borderColor: '#99f6e4' }}
+                      title="Open this market in Market Heat"
                     >
-                      Archive
+                      Near {formatNearInventoryLabel(o.nearest_inventory, o.distance_to_inventory)}
                     </button>
-                  </div>
+                  )}
                 </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <p style={{ fontSize: 13, color: '#64748B', margin: 0, lineHeight: 1.4 }}>{headline}</p>
+                  <button
+                    onClick={() => setExpandedId(expanded ? null : o.id)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'inline-flex', alignItems: 'center' }}
+                    aria-label={expanded ? 'Collapse details' : 'Expand details'}
+                  >
+                    {expanded ? <ChevronUp size={14} color="#94A3B8" /> : <ChevronDown size={14} color="#94A3B8" />}
+                  </button>
+                </div>
+                {expanded && (
+                  <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #F1F5F9' }}>
+                    {o.why_it_matters && <p style={{ fontSize: 13, color: '#0F172A', margin: '0 0 6px', lineHeight: 1.5 }}>{stripLegacyTags(o.why_it_matters)}</p>}
+                    {o.estimated_stay && <p style={{ fontSize: 12, color: '#64748B', margin: '0 0 6px' }}>Estimated stay: <span style={{ color: '#0F172A', fontWeight: 500 }}>{o.estimated_stay}</span></p>}
+                    {o.source_url ? (
+                      <a href={o.source_url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: '#0EA5E9', textDecoration: 'none' }}>View source ↗</a>
+                    ) : (
+                      <span style={{ fontSize: 12, color: '#94A3B8' }}>No source link</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: 24, fontWeight: 700, color: '#0F172A', lineHeight: 1 }}>{composite}</div>
+                  <div style={{ fontSize: 10, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '.06em', marginTop: 2 }}>score</div>
+                </div>
+                <button
+                  onClick={() => setWriteEmailLead(o)}
+                  style={{ background: '#0F172A', color: '#FFFFFF', border: 'none', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
+                >
+                  Write Email
+                </button>
+                {inPipeline ? (
+                  <span style={{ background: '#ECFDF5', color: '#059669', border: '1px solid #A7F3D0', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}>
+                    ✓ In pipeline
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => triggerPipeline(o)}
+                    style={{ background: '#FFFFFF', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
+                  >
+                    + Pipeline
+                  </button>
+                )}
+                <button
+                  onClick={() => archiveOpp(o.id)}
+                  style={{ background: '#FFFFFF', color: '#DC2626', border: '1px solid #FECACA', borderRadius: 6, height: 32, padding: '0 14px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
+                >
+                  Archive
+                </button>
               </div>
             </div>
+
           );
         })}
       </div>
