@@ -103,6 +103,14 @@
 @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 .animate-shimmer { background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
 
+/* Skeleton loader */
+@keyframes flareSkeleton { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.flare-skeleton {
+  background: linear-gradient(90deg, #F1F5F9 0%, #E2E8F0 50%, #F1F5F9 100%);
+  background-size: 200% 100%;
+  animation: flareSkeleton 1.5s linear infinite;
+}
+
 /* No-op classes (kept so existing references don't break) */
 .animate-tool-float,
 .animate-border-glow,

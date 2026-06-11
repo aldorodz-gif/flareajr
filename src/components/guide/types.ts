@@ -18,14 +18,14 @@ export interface TabConfig {
 }
 
 export const TAB_ORDER: TabConfig[] = [
-  { id: 'dashboard',     icon: '🏠', iconNode: LayoutDashboard, label: 'Dashboard' },
   { id: 'opportunities', icon: '⚡', iconNode: Zap,             label: "Today's Leads" },
-  { id: 'market',        icon: '🗺️', iconNode: Map,             label: 'Scan a Market' },
-  { id: 'prospects',     icon: '👥', iconNode: Users,           label: 'Prospects' },
-  { id: 'events',        icon: '📅', iconNode: Calendar,        label: 'Find Events' },
-  { id: 'tracker',       icon: '💬', iconNode: MessageSquare,   label: 'Prompt Builder' },
   { id: 'signals',       icon: '📊', iconNode: BarChart2,       label: 'Score Signals' },
   { id: 'outreach',      icon: '✉️', iconNode: Send,            label: 'Write Outreach' },
+  { id: 'prospects',     icon: '👥', iconNode: Users,           label: 'Prospects' },
+  { id: 'market',        icon: '🗺️', iconNode: Map,             label: 'Scan a Market' },
+  { id: 'events',        icon: '📅', iconNode: Calendar,        label: 'Find Events' },
+  { id: 'tracker',       icon: '💬', iconNode: MessageSquare,   label: 'Prompt Builder' },
+  { id: 'dashboard',     icon: '🏠', iconNode: LayoutDashboard, label: 'Dashboard' },
 ];
 
 export interface VerticalData {

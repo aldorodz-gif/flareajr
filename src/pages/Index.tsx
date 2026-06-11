@@ -18,7 +18,7 @@ import DailySummaryToast from '../components/guide/DailySummaryToast';
 import { TAB_ORDER } from '../components/guide/types';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('opportunities');
   const [animKey, setAnimKey] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
 
