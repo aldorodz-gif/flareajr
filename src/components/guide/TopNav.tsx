@@ -101,6 +101,7 @@ const TopNav = ({ activeTab, onTabChange, onOpenSettings }: TopNavProps) => {
           </select>
         )}
         <button
+          onClick={() => onOpenSettings?.()}
           className="inline-flex items-center justify-center transition-colors"
           style={{
             height: 32,
@@ -108,6 +109,7 @@ const TopNav = ({ activeTab, onTabChange, onOpenSettings }: TopNavProps) => {
             color: '#64748B',
             background: 'transparent',
             border: 'none',
+            cursor: 'pointer',
           }}
           onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; }}
           onMouseLeave={(e) => { e.currentTarget.style.color = '#64748B'; }}
