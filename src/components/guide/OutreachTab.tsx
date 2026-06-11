@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import { Building2, Zap, User, Briefcase } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AiToolCard from './AiToolCard';
-import SectionNav from './SectionNav';
 import PageHeader from './PageHeader';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
@@ -632,7 +631,6 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
       )}
 
       <div className="mt-8">
-        <SectionNav currentTab="outreach" onNavigate={onNavigate} />
       </div>
     </div>
   );

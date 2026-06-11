@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import AiToolCard from './AiToolCard';
-import SectionNav from './SectionNav';
 import PageHeader from './PageHeader';
 import { useBdr } from './BdrContext';
 
@@ -313,7 +312,6 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
         </div>
       </div>
 
-      <SectionNav currentTab="signals" onNavigate={onNavigate} />
     </div>
   );
 };

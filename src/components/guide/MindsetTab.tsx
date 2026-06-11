@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Eyebrow from './Eyebrow';
-import SectionNav from './SectionNav';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useBdr } from './BdrContext';
 import DefenseFrameworkCard from './DefenseFrameworkCard';
@@ -214,7 +213,6 @@ const MindsetTab = ({ onNavigate }: MindsetTabProps) => {
         </section>
       </div>
 
-      <SectionNav currentTab="mindset" onNavigate={onNavigate} />
     </div>
   );
 };

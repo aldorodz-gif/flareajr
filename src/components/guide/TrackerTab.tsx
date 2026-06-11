@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import PromptBox from './PromptBox';
 import AiToolCard from './AiToolCard';
-import SectionNav from './SectionNav';
 import PromptBuilderTour from './PromptBuilderTour';
 import PageHeader from './PageHeader';
 import { useBdr } from './BdrContext';
@@ -251,7 +250,6 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
         <p className="text-[11px] mt-2 text-muted-foreground italic">That's it. One setup, daily results. Move to the next step to learn how to work through your list.</p>
       </div>
 
-      <SectionNav currentTab="tracker" onNavigate={onNavigate} />
     </div>
   );
 };
