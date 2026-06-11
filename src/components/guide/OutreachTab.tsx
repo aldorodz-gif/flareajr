@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
+import { Building2, Zap, User, Briefcase } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import PageHeader from './PageHeader';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface OutreachTabProps {
@@ -193,11 +194,10 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #5BBFA0, #8B8FE8)">Step 07: Make Contact</Eyebrow>
-      <h2 className="text-[26px] font-bold mb-2 leading-tight text-foreground">Write Outreach</h2>
-      <p className="text-[14px] max-w-[720px] mb-6 text-muted-foreground leading-relaxed">
-        Generate a short, personal first email ready to send.
-      </p>
+      <PageHeader
+        title="Write Outreach"
+        subtitle="Four fields. One click. A short, personal first email ready to send."
+      />
 
       {(
         <div className="space-y-8 animate-fade-in">
@@ -215,7 +215,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                     <div className="flex flex-col gap-3 mb-5">
                       {/* Company */}
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">🏢</span>
+                        <Building2 size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={company}
@@ -233,7 +233,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                       {/* Signal — supports URL or plain text */}
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">{isUrl(signal) ? '🔗' : '📡'}</span>
+                        <Zap size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={signal}
@@ -263,7 +263,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
 
                       {/* Buyer Title */}
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px]">👤</span>
+                        <User size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={buyerTitle}
@@ -279,7 +279,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
                         />
                       </div>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none">🎯</span>
+                        <Briefcase size={16} color="#94A3B8" className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <select
                           value={serviceLine}
                           onChange={e => setServiceLine(e.target.value)}

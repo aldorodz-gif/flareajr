@@ -67,7 +67,7 @@ const LinkedInTab = ({ onNavigate }: LinkedInTabProps) => {
 
   return (
     <main className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
-      <Eyebrow gradient="linear-gradient(90deg, #DC2626, #db2777)">Step 09 · LinkedIn Strategy</Eyebrow>
+      
       <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">LinkedIn Post Strategy</h2>
       <p className="text-muted-foreground text-sm max-w-2xl">
         Build a 5-post LinkedIn content arc that positions you as an industry insider — not a cold caller. Each post is designed to warm up your target vertical before you ever pick up the phone.

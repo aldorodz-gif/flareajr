@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import Eyebrow from './Eyebrow';
 import PromptBox from './PromptBox';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
 import PromptBuilderTour from './PromptBuilderTour';
+import PageHeader from './PageHeader';
 import { useBdr } from './BdrContext';
 
 interface TrackerTabProps {
@@ -69,48 +69,24 @@ const TrackerTab = ({ onNavigate }: TrackerTabProps) => {
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
       <PromptBuilderTour open={tourOpen} onClose={() => setTourOpen(false)} />
-      <div className="flex items-start justify-between gap-4 mb-1.5">
-        <Eyebrow gradient="linear-gradient(90deg, #5AB8D4, #8B8FE8)">Step 03: Set Once. Runs Every Morning</Eyebrow>
-        <button
-          onClick={() => setTourOpen(true)}
-          className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 hover:scale-105"
-          style={{
-            background: 'linear-gradient(135deg, #DC2626, #db2777)',
-            color: '#fff',
-            boxShadow: '0 2px 8px rgba(251,146,60,.35)',
-          }}
-        >
-          ▶ Show me how
-        </button>
-      </div>
-      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Find Companies Showing Demand Signals</h2>
-      <p className="text-[13px] max-w-[760px] mb-5 text-muted-foreground">
-        Instead of cold-calling from a list, you're going to let AI scan your market every morning for companies that are <strong className="text-foreground">already moving</strong> — hiring, expanding, relocating, or launching projects that create temporary housing and travel demand.
-      </p>
+      <PageHeader
+        title="Prompt Builder"
+        subtitle="One-time setup — build your ChatGPT Agent Mode search prompt and schedule it to run every morning."
+        right={
+          <button
+            onClick={() => setTourOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold rounded-md transition-colors"
+            style={{ background: '#0EA5E9', color: '#fff' }}
+          >
+            ▶ Show me how
+          </button>
+        }
+      />
 
-      {/* Why this matters — context block */}
-      <div className="mb-6 p-4" style={{ background: 'linear-gradient(135deg, rgba(251,146,60,.06), rgba(155,120,200,.06))', border: '1px solid rgba(251,146,60,.15)' }}>
-        <p className="text-[13px] leading-[1.7] text-muted-foreground">
-          <strong className="text-foreground">Why this works:</strong> Most reps wait for RFPs or referrals. This tool builds you a custom search prompt that finds companies <em>before</em> they start shopping — while they're still planning. You'll know who needs housing before your competitors do.
+      <div className="mb-6 p-3 rounded-md" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
+        <p className="text-[13px]" style={{ color: '#0F172A' }}>
+          <strong>This is a setup tool, not a daily tab.</strong> Configure once, then work from <strong>Today's Leads</strong> every morning.
         </p>
-      </div>
-
-      {/* How it works — 3-step visual */}
-      <div className="grid grid-cols-3 gap-3 mb-8">
-        {[
-          { num: '1', icon: '🔧', title: 'Build', desc: 'Pick your market, vertical, and signal type below. We generate a custom prompt.' },
-          { num: '2', icon: '📋', title: 'Paste', desc: 'Copy the prompt and paste it into ChatGPT Agent Mode. Get your first batch of leads.' },
-          { num: '3', icon: '⏰', title: 'Automate', desc: 'Tell ChatGPT to run it every weekday at 7 AM. Wake up to fresh leads daily.' },
-        ].map(step => (
-          <div key={step.num} className="p-4 text-center" style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-            <div className="w-8 h-8 mx-auto mb-2 flex items-center justify-center text-[14px] font-bold" style={{ background: 'linear-gradient(135deg, #DC2626, #db2777)', color: '#fff' }}>
-              {step.num}
-            </div>
-            <span className="text-[16px]">{step.icon}</span>
-            <p className="text-[13px] font-semibold text-foreground mt-1">{step.title}</p>
-            <p className="text-[11px] leading-[1.5] text-muted-foreground mt-1">{step.desc}</p>
-          </div>
-        ))}
       </div>
 
       {/* Interactive Prompt Builder — Hero */}

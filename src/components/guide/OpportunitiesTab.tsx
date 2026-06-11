@@ -1,10 +1,13 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
+import { Inbox } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useBdr } from './BdrContext';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AddToPipelineSheet, { PipelineLead } from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
+import PageHeader from './PageHeader';
+import SkeletonRows from './SkeletonRows';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 
 interface Opportunity {
@@ -236,51 +239,49 @@ export default function OpportunitiesTab() {
 
   return (
     <div className="px-6 md:px-12 py-8 max-w-[1400px] mx-auto">
-      <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
-        <div>
-          <h2 className="text-2xl font-bold">⚡ Today's Leads <span className="text-sm font-medium text-muted-foreground">· Your auto-built morning list</span></h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Pre-scored opportunities auto-scanned daily for {selected.markets.join(', ')}. Work this list first.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => {
-              if (!filtered.length) { toast.error('Nothing to export'); return; }
-              const rows = filtered.map(o => ({
-                Company: o.company,
-                Market: o.market || '',
-                Vertical: o.vertical || '',
-                Signal: o.signal_type || '',
-                Project: o.project || '',
-                Priority: o.priority || '',
-                Confidence: o.confidence_label || '',
-                'Discovery Score': o.discovery_score,
-                'Housing Fit': o.housing_fit_score,
-                'Confidence Score': o.confidence_score,
-                'Overall Score': Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2),
-                'Why It Matters': o.why_it_matters || '',
-                'Estimated Stay': o.estimated_stay || '',
-                'Nearest Inventory': o.nearest_inventory || '',
-                'Distance (mi)': o.distance_to_inventory ?? '',
-                'Suggested Contacts': (o.suggested_contacts || []).join('; '),
-                Status: o.status,
-                'Last Verified': o.last_verified,
-              }));
-              const stamp = new Date().toISOString().slice(0, 10);
-              exportRowsToXlsx(rows, `flare-todays-leads-${selected.name.replace(/\s+/g, '-')}-${stamp}.xlsx`, "Today's Leads");
-              toast.success(`Exported ${rows.length} leads to Excel`);
-            }}
-            variant="outline"
-            size="lg"
-          >
-            📊 Export Excel
-          </Button>
-          <Button onClick={refresh} disabled={scanning} size="lg" className="bg-pink-500 hover:bg-pink-600">
-            {scanning ? '🔄 Scanning…' : '⚡ Refresh Scan'}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Today's Leads"
+        subtitle="Your auto-built morning list — pre-scored and ready to work."
+        right={
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                if (!filtered.length) { toast.error('Nothing to export'); return; }
+                const rows = filtered.map(o => ({
+                  Company: o.company,
+                  Market: o.market || '',
+                  Vertical: o.vertical || '',
+                  Signal: o.signal_type || '',
+                  Project: o.project || '',
+                  Priority: o.priority || '',
+                  Confidence: o.confidence_label || '',
+                  'Discovery Score': o.discovery_score,
+                  'Housing Fit': o.housing_fit_score,
+                  'Confidence Score': o.confidence_score,
+                  'Overall Score': Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2),
+                  'Why It Matters': o.why_it_matters || '',
+                  'Estimated Stay': o.estimated_stay || '',
+                  'Nearest Inventory': o.nearest_inventory || '',
+                  'Distance (mi)': o.distance_to_inventory ?? '',
+                  'Suggested Contacts': (o.suggested_contacts || []).join('; '),
+                  Status: o.status,
+                  'Last Verified': o.last_verified,
+                }));
+                const stamp = new Date().toISOString().slice(0, 10);
+                exportRowsToXlsx(rows, `flare-todays-leads-${selected.name.replace(/\s+/g, '-')}-${stamp}.xlsx`, "Today's Leads");
+                toast.success(`Exported ${rows.length} leads to Excel`);
+              }}
+              variant="outline"
+              size="sm"
+            >
+              Export Excel
+            </Button>
+            <Button onClick={refresh} disabled={scanning} size="sm">
+              {scanning ? 'Scanning…' : 'Refresh Scan'}
+            </Button>
+          </div>
+        }
+      />
 
       <div className="flex gap-2 mb-4 flex-wrap">
         {([
@@ -340,23 +341,33 @@ export default function OpportunitiesTab() {
         </div>
       )}
 
-      {loading && <div className="py-12 text-center text-muted-foreground">Loading…</div>}
+      {loading && <SkeletonRows count={5} height={72} />}
 
       {!loading && filtered.length === 0 && (
-        <div className="py-16 text-center border border-dashed rounded-lg">
+        <div className="py-16 px-6 text-center flex flex-col items-center gap-3 rounded-md" style={{ border: '1px solid #E2E8F0', background: '#FFFFFF' }}>
           {filter !== 'all' && territoryFiltered.length > 0 ? (
             <>
-              <p className="text-muted-foreground mb-3">
-                No leads match the <span className="font-semibold text-pink-500">
+              <Inbox size={32} color="#94A3B8" />
+              <p className="text-[14px]" style={{ color: '#64748B' }}>
+                No leads match the <span className="font-semibold" style={{ color: '#0F172A' }}>
                   {filter === 'top' ? 'Top Priority' : filter === 'near' ? 'Near Inventory' : 'My Saved'}
                 </span> filter.
               </p>
-              <Button onClick={() => setFilter('all')} variant="outline">Show all leads</Button>
+              <Button onClick={() => setFilter('all')} variant="outline" size="sm">Show all leads</Button>
             </>
           ) : (
             <>
-              <p className="text-muted-foreground mb-3">No opportunities yet for this BDR.</p>
-              <Button onClick={refresh} disabled={scanning}>Run first scan</Button>
+              <Inbox size={32} color="#94A3B8" />
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: '#0F172A' }}>No leads yet for today</h3>
+              <p style={{ fontSize: 12, color: '#64748B', maxWidth: 360 }}>
+                Your list auto-builds overnight. Check back tomorrow morning, or run a manual scan in Scan a Market.
+              </p>
+              <Button
+                size="sm"
+                onClick={() => window.dispatchEvent(new CustomEvent('flare:navigate-tab', { detail: 'market' }))}
+              >
+                Scan a Market Now
+              </Button>
             </>
           )}
         </div>

@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import PageHeader from './PageHeader';
 import { useBdr } from './BdrContext';
 
 interface SignalsTabProps {
@@ -41,28 +41,6 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [error, setError] = useState('');
-  const [typingDemo, setTypingDemo] = useState('');
-  const [showCursor, setShowCursor] = useState(true);
-  const [hasInteracted, setHasInteracted] = useState(false);
-
-  // Typing animation for the demo text
-  useEffect(() => {
-    if (hasInteracted) return;
-    const demoText = 'Boeing opens new 737 MAX assembly line in Everett, WA — 200+ engineers relocating...';
-    let i = 0;
-    const interval = setInterval(() => {
-      setTypingDemo(demoText.slice(0, i + 1));
-      i++;
-      if (i >= demoText.length) clearInterval(interval);
-    }, 35);
-    return () => clearInterval(interval);
-  }, [hasInteracted]);
-
-  // Blinking cursor
-  useEffect(() => {
-    const interval = setInterval(() => setShowCursor(prev => !prev), 530);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleScore = useCallback(async () => {
     if (!signalText.trim()) return;
@@ -90,12 +68,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
   };
 
   const handleExampleClick = (text: string) => {
-    setHasInteracted(true);
     setSignalText(text);
-  };
-
-  const handleTextareaFocus = () => {
-    setHasInteracted(true);
   };
 
   const scoreConfig = (score: string) => {
@@ -106,31 +79,15 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
 
   return (
     <div className="max-w-[900px] mx-auto px-6 py-8 md:px-10">
-      <Eyebrow gradient="linear-gradient(90deg, #E8BE70, #E07878)">Step 05: Quick Reference</Eyebrow>
-      <h2 className="text-[24px] font-semibold mb-1.5 leading-tight text-foreground">Signals Guide: What Counts as a Real Demand Signal</h2>
-      <p className="text-[13px] max-w-[760px] mb-6 pb-3.5 text-muted-foreground" style={{ borderBottom: '1px solid rgba(14,30,58,.08)' }}>
-        Use this as a fast filter. If the signal points to real people movement or clear buying pressure for temporary housing, travel, hotels, or destination services, pursue it. If it does not, move on.
-      </p>
-
-      {/* ═══════════════════════════════════════════════════ */}
-      {/* SIGNAL SCORER — THE INTERACTIVE TOOL               */}
-      {/* ═══════════════════════════════════════════════════ */}
+      <PageHeader
+        title="Score Signals"
+        subtitle="Paste any signal and get an instant read on whether it's worth your time."
+      />
 
       <div className="mb-12">
         <AiToolCard icon="⚡" title="Signal Scorer" subtitle="Paste any signal. I'll tell you if it's worth your time.">
           {!result ? (
             <>
-              {/* Demo typing preview */}
-              {!hasInteracted && !signalText && (
-                <div className="mb-5 px-5 py-4 rounded-xl" style={{ background: '#FFFFFF', border: '1px solid rgba(251,146,60,.12)' }}>
-                  <p className="text-[11px] font-bold uppercase tracking-[.12em] mb-2" style={{ color: '#db2777' }}>Example input</p>
-                  <p className="text-[14px] leading-[1.6]" style={{ color: '#1a1145' }}>
-                    {typingDemo}
-                    <span style={{ opacity: showCursor ? 1 : 0, color: '#DC2626', transition: 'opacity 0.1s' }}>|</span>
-                  </p>
-                </div>
-              )}
-
               {/* Example signal chips */}
               <div className="flex flex-wrap gap-2 mb-4">
                 <span className="text-[11px] font-semibold uppercase tracking-wide self-center mr-1 text-muted-foreground">Try:</span>
@@ -165,8 +122,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
               <div className="relative">
                 <textarea
                   value={signalText}
-                  onChange={e => { setSignalText(e.target.value); setHasInteracted(true); }}
-                  onFocus={handleTextareaFocus}
+                  onChange={e => setSignalText(e.target.value)}
                   placeholder="Paste a headline, LinkedIn post, or article excerpt..."
                   className="w-full min-h-[130px] p-5 rounded-xl text-[14px] leading-[1.7] resize-none focus:outline-none transition-all"
                   style={{
