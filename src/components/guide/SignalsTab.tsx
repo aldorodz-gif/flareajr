@@ -122,8 +122,7 @@ const SignalsTab = ({ onNavigate }: SignalsTabProps) => {
               <div className="relative">
                 <textarea
                   value={signalText}
-                  onChange={e => { setSignalText(e.target.value); setHasInteracted(true); }}
-                  onFocus={handleTextareaFocus}
+                  onChange={e => setSignalText(e.target.value)}
                   placeholder="Paste a headline, LinkedIn post, or article excerpt..."
                   className="w-full min-h-[130px] p-5 rounded-xl text-[14px] leading-[1.7] resize-none focus:outline-none transition-all"
                   style={{
