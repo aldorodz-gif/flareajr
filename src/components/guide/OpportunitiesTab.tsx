@@ -97,6 +97,8 @@ export default function OpportunitiesTab() {
   const [includeOutside, setIncludeOutside] = useState(false);
   const [pipeOpp, setPipeOpp] = useState<Opportunity | null>(null);
   const [burstId, setBurstId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [writeEmailLead, setWriteEmailLead] = useState<Opportunity | null>(null);
 
   const triggerPipeline = (o: Opportunity) => {
     setBurstId(o.id);
@@ -239,49 +241,67 @@ export default function OpportunitiesTab() {
 
   return (
     <div className="px-6 md:px-12 py-8 max-w-[1400px] mx-auto">
-      <PageHeader
-        title="Today's Leads"
-        subtitle="Your auto-built morning list — pre-scored and ready to work."
-        right={
-          <div className="flex gap-2">
-            <Button
-              onClick={() => {
-                if (!filtered.length) { toast.error('Nothing to export'); return; }
-                const rows = filtered.map(o => ({
-                  Company: o.company,
-                  Market: o.market || '',
-                  Vertical: o.vertical || '',
-                  Signal: o.signal_type || '',
-                  Project: o.project || '',
-                  Priority: o.priority || '',
-                  Confidence: o.confidence_label || '',
-                  'Discovery Score': o.discovery_score,
-                  'Housing Fit': o.housing_fit_score,
-                  'Confidence Score': o.confidence_score,
-                  'Overall Score': Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2),
-                  'Why It Matters': o.why_it_matters || '',
-                  'Estimated Stay': o.estimated_stay || '',
-                  'Nearest Inventory': o.nearest_inventory || '',
-                  'Distance (mi)': o.distance_to_inventory ?? '',
-                  'Suggested Contacts': (o.suggested_contacts || []).join('; '),
-                  Status: o.status,
-                  'Last Verified': o.last_verified,
-                }));
-                const stamp = new Date().toISOString().slice(0, 10);
-                exportRowsToXlsx(rows, `flare-todays-leads-${selected.name.replace(/\s+/g, '-')}-${stamp}.xlsx`, "Today's Leads");
-                toast.success(`Exported ${rows.length} leads to Excel`);
-              }}
-              variant="outline"
-              size="sm"
-            >
-              Export Excel
-            </Button>
-            <Button onClick={refresh} disabled={scanning} size="sm">
-              {scanning ? 'Scanning…' : 'Refresh Scan'}
-            </Button>
-          </div>
-        }
-      />
+      <div
+        style={{
+          position: 'sticky',
+          top: 56,
+          zIndex: 20,
+          background: '#FFFFFF',
+          margin: '-32px -48px 16px',
+          padding: '16px 48px',
+          borderBottom: '1px solid #E2E8F0',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
+        <div>
+          <h1 style={{ fontSize: 20, fontWeight: 600, color: '#0F172A', margin: 0 }}>Today's Leads</h1>
+          <p style={{ fontSize: 13, color: '#64748B', margin: '2px 0 0' }}>
+            Pre-scored leads for {selected.name}'s territory — updated overnight.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              if (!filtered.length) { toast.error('Nothing to export'); return; }
+              const rows = filtered.map(o => ({
+                Company: o.company,
+                Market: o.market || '',
+                Vertical: o.vertical || '',
+                Signal: o.signal_type || '',
+                Project: o.project || '',
+                Priority: o.priority || '',
+                Confidence: o.confidence_label || '',
+                'Discovery Score': o.discovery_score,
+                'Housing Fit': o.housing_fit_score,
+                'Confidence Score': o.confidence_score,
+                'Overall Score': Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2),
+                'Why It Matters': o.why_it_matters || '',
+                'Estimated Stay': o.estimated_stay || '',
+                'Nearest Inventory': o.nearest_inventory || '',
+                'Distance (mi)': o.distance_to_inventory ?? '',
+                'Suggested Contacts': (o.suggested_contacts || []).join('; '),
+                Status: o.status,
+                'Last Verified': o.last_verified,
+              }));
+              const stamp = new Date().toISOString().slice(0, 10);
+              exportRowsToXlsx(rows, `flare-todays-leads-${selected.name.replace(/\s+/g, '-')}-${stamp}.xlsx`, "Today's Leads");
+              toast.success(`Exported ${rows.length} leads to Excel`);
+            }}
+            variant="outline"
+            size="sm"
+          >
+            Export Excel
+          </Button>
+          <Button onClick={refresh} disabled={scanning} size="sm" style={{ background: '#0F172A', color: '#FFFFFF' }}>
+            {scanning ? 'Scanning…' : 'Refresh Scan'}
+          </Button>
+        </div>
+      </div>
+
 
       <div className="flex gap-2 mb-4 flex-wrap">
         {([
