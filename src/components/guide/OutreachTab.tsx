@@ -535,7 +535,7 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
               <div className="flex items-center gap-3">
                 <span className="text-[18px]">📐</span>
                 <div>
-                  <p className="text-[14px] font-semibold text-foreground">Email Rules & Guidelines</p>
+                  <p className="text-[14px] font-semibold text-foreground">Email Writing Tips</p>
                   <p className="text-[12px] text-muted-foreground">Stats, tone, mobile tips — everything that makes emails land</p>
                 </div>
               </div>
@@ -578,57 +578,9 @@ const OutreachTab = ({ onNavigate }: OutreachTabProps) => {
             )}
           </div>
 
-          {/* ── 4-Part Email Structure (timeline style) ── */}
-          <section>
-            <h3 className="text-[18px] font-bold mb-1 text-foreground">What the Body Should Contain</h3>
-            <p className="text-[13px] text-muted-foreground mb-5">Nothing else. No company history. No features. Every sentence has one job.</p>
-
-            <div className="relative pl-8">
-              {/* Timeline line */}
-              <div className="absolute left-[14px] top-3 bottom-3 w-[2px]" style={{ background: 'linear-gradient(to bottom, #DC2626, #2F4858)' }} />
-
-              <div className="flex flex-col gap-4">
-                {EMAIL_PARTS.map(s => (
-                  <div key={s.num} className="relative">
-                    {/* Dot */}
-                    <div
-                      className="absolute -left-8 top-4 w-[10px] h-[10px] rounded-full border-2"
-                      style={{ borderColor: '#DC2626', background: 'hsl(var(--background))' }}
-                    />
-                    <div className="rounded-lg border overflow-hidden" style={{ borderColor: 'hsl(var(--border))', background: 'hsl(var(--card))' }}>
-                      <div className="px-4 py-3 flex items-center gap-2.5" style={{ borderBottom: '1px solid hsl(var(--border))' }}>
-                        <span className="w-6 h-6 rounded flex items-center justify-center text-[12px] font-bold" style={{ background: '#2F4858', color: '#DC2626' }}>{s.num}</span>
-                        <div>
-                          <span className="text-[14px] font-semibold text-foreground">{s.title}</span>
-                          <span className="text-[12px] text-muted-foreground ml-1.5">— {s.subtitle}</span>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                        <div className="p-3.5 border-r" style={{ background: 'rgba(91,187,160,.04)', borderColor: 'hsl(var(--border))' }}>
-                          <p className="text-[10px] font-bold mb-1" style={{ color: '#2F4858' }}>{s.goodLabel}</p>
-                          <p className="text-[13px] italic leading-[1.5] text-foreground">{s.good}</p>
-                        </div>
-                        <div className="p-3.5" style={{ background: 'rgba(201,91,106,.04)' }}>
-                          <p className="text-[10px] font-bold mb-1" style={{ color: '#C95B6A' }}>{s.badLabel}</p>
-                          <p className="text-[13px] italic leading-[1.5] text-muted-foreground">{s.bad}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Bottom line */}
-          <div className="rounded-xl p-5 flex gap-4 items-start" style={{ background: '#2F4858' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wider whitespace-nowrap pt-0.5" style={{ color: '#DC2626' }}>Bottom line</span>
-            <p className="text-[13px] leading-[1.7]" style={{ color: 'rgba(250,247,242,.85)' }}>
-              Good prospecting emails aren't about you. They're about one signal, one problem, and one small ask. If you nail those three, the reply rate takes care of itself.
-            </p>
-          </div>
         </div>
       )}
+
 
       <div className="mt-8">
       </div>
