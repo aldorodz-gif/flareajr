@@ -3,9 +3,9 @@ import { useBdr } from './BdrContext';
 import { CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import Eyebrow from './Eyebrow';
 import AiToolCard from './AiToolCard';
 import SectionNav from './SectionNav';
+import PageHeader from './PageHeader';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { US_STATES } from './usStatesData';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
@@ -107,11 +107,10 @@ const EventsTab = ({ onNavigate }: EventsTabProps) => {
 
   return (
     <main className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
-      <Eyebrow gradient="linear-gradient(90deg, #DC2626, #db2777)">Step 08 · Find Events</Eyebrow>
-      <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Networking Event Finder</h2>
-      <p className="text-muted-foreground text-sm max-w-2xl">
-        Discover conferences, trade shows, and networking events where your target buyers gather — so you can show up where decisions are made.
-      </p>
+      <PageHeader
+        title="Find Events"
+        subtitle="Discover conferences and networking events where your buyers gather."
+      />
 
       <AiToolCard
         icon="🎪"
