@@ -579,6 +579,7 @@ export default function OpportunitiesTab() {
                 >
                   Archive
                 </button>
+                <LeadFeedbackButtons bdrId={selected.id} companyName={o.company} opportunityId={o.id} />
               </div>
             </div>
 
