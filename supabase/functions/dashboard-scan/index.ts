@@ -234,7 +234,7 @@ serve(async (req) => {
       leads: verifiedLeads,
       top_verticals: topVerticals,
       tavily_hits: allHits.length,
-      queries_run: queries.length,
+      queries_run: queryPlan.length,
       dropped_fake_url: droppedFakeUrl,
       dropped_unverified: droppedUnverified,
     }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
