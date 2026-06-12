@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Activity, CheckCircle2, XCircle, ExternalLink, RefreshCw } from 'lucide-react';
+import { Activity, CheckCircle2, XCircle, ExternalLink, RefreshCw, Bell, Send } from 'lucide-react';
 
 const ACCENT = '#0EA5E9';
 const TEXT = '#0F172A';
@@ -36,6 +36,13 @@ export default function SystemHealth() {
   const [editingLimit, setEditingLimit] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [savingLimit, setSavingLimit] = useState(false);
+  const [alertRecipient, setAlertRecipient] = useState<string>('aldorodz@gmail.com');
+  const [editingRecipient, setEditingRecipient] = useState<string>('aldorodz@gmail.com');
+  const [alertsEnabled, setAlertsEnabled] = useState<boolean>(true);
+  const [savingAlerts, setSavingAlerts] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState<string>('');
+  const [alerts, setAlerts] = useState<Array<{ id: string; alert_key: string; subject: string | null; recipient: string | null; sent_at: string }>>([]);
 
   const load = async () => {
     setLoading(true);
