@@ -200,6 +200,7 @@ export type Database = {
           status: string
           suggested_contacts: string[] | null
           updated_at: string
+          verified: boolean
           vertical: string | null
           why_it_matters: string | null
         }
@@ -233,6 +234,7 @@ export type Database = {
           status?: string
           suggested_contacts?: string[] | null
           updated_at?: string
+          verified?: boolean
           vertical?: string | null
           why_it_matters?: string | null
         }
@@ -266,6 +268,7 @@ export type Database = {
           status?: string
           suggested_contacts?: string[] | null
           updated_at?: string
+          verified?: boolean
           vertical?: string | null
           why_it_matters?: string | null
         }

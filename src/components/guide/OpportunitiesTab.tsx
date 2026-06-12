@@ -127,6 +127,7 @@ export default function OpportunitiesTab() {
       .from('opportunities')
       .select('*')
       .eq('assigned_bdr', selected.id)
+      .eq('verified', true)
       .neq('status', 'archived')
       .order('discovery_score', { ascending: false })
       .limit(100);
