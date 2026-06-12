@@ -54,20 +54,30 @@ export const HIRING_SIGNAL_TEMPLATES = [
   "new graduate program {market}",
 ];
 
-export async function tavilySearch(apiKey: string, query: string, maxResults = 10, functionName?: string): Promise<TavilyHit[]> {
+export async function tavilySearch(
+  apiKey: string,
+  query: string,
+  maxResults = 10,
+  functionName?: string,
+  includeDomains?: string[],
+): Promise<TavilyHit[]> {
   try {
+    const body: Record<string, unknown> = {
+      api_key: apiKey,
+      query,
+      search_depth: "basic",
+      topic: "news",
+      days: 30,
+      max_results: maxResults,
+      include_answer: false,
+    };
+    if (includeDomains && includeDomains.length > 0) {
+      body.include_domains = includeDomains;
+    }
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        api_key: apiKey,
-        query,
-        search_depth: "basic",
-        topic: "news",
-        days: 30,
-        max_results: maxResults,
-        include_answer: false,
-      }),
+      body: JSON.stringify(body),
     });
     if (!res.ok) {
       const body = await res.text();

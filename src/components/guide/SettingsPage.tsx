@@ -1,10 +1,11 @@
 import { useState, useMemo, useRef } from 'react';
 import {
   Target, Send, BarChart2, Users, Map, Calendar, User, X, Plus, Trash2, Brain,
-  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw, Activity,
+  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw, Activity, Radio as RadioIcon,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import SystemHealth from './SystemHealth';
+import SignalSourcesPanel from './SignalSourcesPanel';
 
 interface SettingsPageProps {
   onClose: () => void;
@@ -22,7 +23,8 @@ const SECTIONS = [
 ];
 
 const ADMIN_SECTIONS = [
-  { id: 'system-health', label: 'System Health',        icon: Activity },
+  { id: 'system-health',   label: 'System Health',   icon: Activity },
+  { id: 'signal-sources',  label: 'Signal Sources',  icon: RadioIcon },
 ];
 
 const ACCENT = '#0EA5E9';
@@ -266,6 +268,7 @@ export default function SettingsPage({ onClose }: SettingsPageProps) {
 
         <main style={{ flex: 1, padding: '32px 40px', maxWidth: 920 }}>
           {activeSection === 'system-health' && isAdmin && <SystemHealth />}
+          {activeSection === 'signal-sources' && isAdmin && <SignalSourcesPanel />}
           {activeSection === 'lead-criteria' && (
             <LeadCriteriaSection
               state={state.leadCriteria} update={(p) => update('leadCriteria', p)}
