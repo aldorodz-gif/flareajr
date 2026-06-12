@@ -393,6 +393,23 @@ export default function OpportunitiesTab() {
         </div>
       )}
 
+      {!loading && filtered.length > 0 && filtered.length < 3 && (
+        <div
+          style={{
+            marginBottom: 12,
+            padding: '10px 14px',
+            borderRadius: 8,
+            background: '#FEF3C7',
+            border: '1px solid #FDE68A',
+            color: '#92400E',
+            fontSize: 13,
+            fontWeight: 500,
+          }}
+        >
+          Fewer verified leads today — quality over quantity.
+        </div>
+      )}
+
       <div className="space-y-2">
         {filtered.map(o => {
           const composite = Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2);
