@@ -310,6 +310,7 @@ const ProspectsTab = () => {
   const [showArchive, setShowArchive] = useState(false);
   const [celebration, setCelebration] = useState<{ company: string; type: 'disco' | 'inperson' } | null>(null);
   const [manualOpen, setManualOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [manualSaving, setManualSaving] = useState(false);
   const [manualForm, setManualForm] = useState({
     company_name: '',
