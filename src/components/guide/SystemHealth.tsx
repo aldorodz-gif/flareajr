@@ -128,10 +128,13 @@ export default function SystemHealth() {
     const recipient = editingRecipient.trim();
     const writes: Promise<unknown>[] = [];
     if (recipient && recipient.includes('@') && recipient !== alertRecipient) {
-      writes.push(supabase.from('system_settings').upsert({ key: 'alerts_recipient', value: recipient as any, updated_at: new Date().toISOString() }));
+      writes.push(Promise.resolve(supabase.from('system_settings').upsert({ key: 'alerts_recipient', value: recipient as any, updated_at: new Date().toISOString() })));
     }
-    writes.push(supabase.from('system_settings').upsert({ key: 'alerts_enabled', value: alertsEnabled as any, updated_at: new Date().toISOString() }));
+    writes.push(Promise.resolve(supabase.from('system_settings').upsert({ key: 'alerts_enabled', value: alertsEnabled as any, updated_at: new Date().toISOString() })));
     await Promise.all(writes);
+    if (recipient && recipient.includes('@')) setAlertRecipient(recipient);
+    setSavingAlerts(false);
+  };
     if (recipient && recipient.includes('@')) setAlertRecipient(recipient);
     setSavingAlerts(false);
   };
