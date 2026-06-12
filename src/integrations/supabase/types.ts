@@ -229,6 +229,51 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_feedback: {
+        Row: {
+          bdr_id: string
+          company_name: string
+          created_at: string
+          id: string
+          opportunity_id: string | null
+          rating: string
+          reason: string | null
+        }
+        Insert: {
+          bdr_id: string
+          company_name: string
+          created_at?: string
+          id?: string
+          opportunity_id?: string | null
+          rating: string
+          reason?: string | null
+        }
+        Update: {
+          bdr_id?: string
+          company_name?: string
+          created_at?: string
+          id?: string
+          opportunity_id?: string | null
+          rating?: string
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_feedback_bdr_id_fkey"
+            columns: ["bdr_id"]
+            isOneToOne: false
+            referencedRelation: "bdr_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_feedback_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       opportunities: {
         Row: {
           assigned_bdr: string | null

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Activity, CheckCircle2, XCircle, ExternalLink, RefreshCw, Bell, Send } from 'lucide-react';
+import { Activity, CheckCircle2, XCircle, ExternalLink, RefreshCw, Bell, Send, ThumbsUp } from 'lucide-react';
 
 const ACCENT = '#0EA5E9';
 const TEXT = '#0F172A';
@@ -43,17 +43,22 @@ export default function SystemHealth() {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<string>('');
   const [alerts, setAlerts] = useState<Array<{ id: string; alert_key: string; subject: string | null; recipient: string | null; sent_at: string }>>([]);
+  const [feedback, setFeedback] = useState<Array<{ bdr_id: string; rating: string; reason: string | null; created_at: string }>>([]);
+  const [bdrNames, setBdrNames] = useState<Record<string, string>>({});
 
   const load = async () => {
     setLoading(true);
     const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-    const [u, r, s, ar, ae, al] = await Promise.all([
+    const fbSince = new Date(Date.now() - 28 * 24 * 3600 * 1000).toISOString();
+    const [u, r, s, ar, ae, al, fb, bp] = await Promise.all([
       supabase.from('api_usage').select('service,function_name,success,error_code,created_at').gte('created_at', since).order('created_at', { ascending: false }).limit(5000),
       supabase.from('scan_runs').select('id,ran_at,bdrs_scanned,leads_inserted,errors').order('ran_at', { ascending: false }).limit(7),
       supabase.from('system_settings').select('value').eq('key', 'tavily_monthly_limit').maybeSingle(),
       supabase.from('system_settings').select('value').eq('key', 'alerts_recipient').maybeSingle(),
       supabase.from('system_settings').select('value').eq('key', 'alerts_enabled').maybeSingle(),
       supabase.from('alert_log').select('id,alert_key,subject,recipient,sent_at').order('sent_at', { ascending: false }).limit(10),
+      supabase.from('lead_feedback').select('bdr_id,rating,reason,created_at').gte('created_at', fbSince).limit(5000),
+      supabase.from('bdr_profiles').select('id,name'),
     ]);
     setRows((u.data as Row[]) || []);
     setRuns((r.data as any[]) || []);
@@ -65,6 +70,10 @@ export default function SystemHealth() {
     const ev = (ae.data as any)?.value;
     if (typeof ev === 'boolean') setAlertsEnabled(ev);
     setAlerts((al.data as any[]) || []);
+    setFeedback((fb.data as any[]) || []);
+    const nameMap: Record<string, string> = {};
+    for (const b of (bp.data as any[]) || []) nameMap[b.id] = b.name;
+    setBdrNames(nameMap);
     setLoading(false);
   };
 
@@ -151,6 +160,50 @@ export default function SystemHealth() {
   };
 
   const maxBar = Math.max(1, ...chartData.flatMap((d) => [d.gemini, d.tavily, d.lovable_gateway]));
+
+  // ---------- Lead Quality aggregates ----------
+  const leadQuality = useMemo(() => {
+    // Per-BDR totals + reason counts
+    const perBdr = new Map<string, { up: number; down: number }>();
+    const reasons = new Map<string, number>();
+    // 4 weekly buckets (oldest -> newest)
+    const weeks: { label: string; up: number; down: number }[] = [];
+    const weekStart = (offset: number) => {
+      const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - 7 * offset);
+      return d.getTime();
+    };
+    for (let i = 3; i >= 0; i--) {
+      const start = weekStart(i + 1);
+      const end = weekStart(i);
+      weeks.push({ label: new Date(end - 1).toISOString().slice(5, 10), up: 0, down: 0 });
+      (weeks as any)._range = (weeks as any)._range || [];
+      (weeks as any)._range.push([start, end]);
+    }
+    const ranges: number[][] = (weeks as any)._range;
+    for (const f of feedback) {
+      const t = new Date(f.created_at).getTime();
+      const b = perBdr.get(f.bdr_id) || { up: 0, down: 0 };
+      if (f.rating === 'up') b.up++; else b.down++;
+      perBdr.set(f.bdr_id, b);
+      if (f.rating === 'down' && f.reason) reasons.set(f.reason, (reasons.get(f.reason) || 0) + 1);
+      for (let i = 0; i < ranges.length; i++) {
+        if (t >= ranges[i][0] && t < ranges[i][1]) {
+          if (f.rating === 'up') weeks[i].up++; else weeks[i].down++;
+          break;
+        }
+      }
+    }
+    const perBdrRows = [...perBdr.entries()].map(([id, v]) => ({
+      id,
+      name: bdrNames[id] || id.slice(0, 8),
+      total: v.up + v.down,
+      acceptance: v.up + v.down > 0 ? Math.round((v.up / (v.up + v.down)) * 100) : 0,
+    })).sort((a, b) => b.total - a.total).slice(0, 12);
+    const topReasons = [...reasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+    return { perBdrRows, topReasons, weeks };
+  }, [feedback, bdrNames]);
+
+
 
   return (
     <div>
@@ -323,6 +376,93 @@ export default function SystemHealth() {
             </tbody>
           </table>
         )}
+      </div>
+
+      {/* Lead Quality */}
+      <div style={card}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: TEXT }}>
+            <ThumbsUp size={14} style={{ verticalAlign: -2, marginRight: 6 }} />Lead Quality (last 28 days)
+          </div>
+          <div style={{ fontSize: 11, color: MUTED }}>
+            {feedback.length.toLocaleString()} ratings · acceptance = 👍 ÷ ({'👍'} + {'👎'})
+          </div>
+        </div>
+
+        {/* 4-week trend */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 16 }}>
+          {leadQuality.weeks.map((w, i) => {
+            const total = w.up + w.down;
+            const pct = total > 0 ? Math.round((w.up / total) * 100) : 0;
+            return (
+              <div key={i} style={{ border: `1px solid ${BORDER}`, borderRadius: 6, padding: 10 }}>
+                <div style={{ fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: 0.5 }}>Week of {w.label}</div>
+                <div style={{ fontSize: 22, fontWeight: 700, color: TEXT, marginTop: 4 }}>{total ? `${pct}%` : '—'}</div>
+                <div style={{ fontSize: 11, color: MUTED }}>{w.up} 👍 · {w.down} 👎</div>
+                <div style={{ marginTop: 6, height: 6, background: '#F1F5F9', borderRadius: 999, overflow: 'hidden' }}>
+                  <div style={{ width: `${pct}%`, height: '100%', background: pct >= 60 ? OK : pct >= 30 ? '#F59E0B' : BAD }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Per-BDR acceptance */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Acceptance rate by BDR</div>
+            {leadQuality.perBdrRows.length === 0 ? (
+              <div style={{ fontSize: 12, color: MUTED }}>No feedback yet.</div>
+            ) : (
+              <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ color: MUTED, textAlign: 'left' }}>
+                    <th style={th}>BDR</th>
+                    <th style={th}>Ratings</th>
+                    <th style={th}>Acceptance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leadQuality.perBdrRows.map((b) => (
+                    <tr key={b.id} style={{ borderTop: `1px solid ${BORDER}` }}>
+                      <td style={td}>{b.name}</td>
+                      <td style={td}>{b.total}</td>
+                      <td style={td}>
+                        <span style={{ color: b.acceptance >= 60 ? OK : b.acceptance >= 30 ? '#92400E' : BAD, fontWeight: 600 }}>
+                          {b.acceptance}%
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Top rejection reasons</div>
+            {leadQuality.topReasons.length === 0 ? (
+              <div style={{ fontSize: 12, color: MUTED }}>No rejection reasons logged.</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {leadQuality.topReasons.map(([reason, count]) => {
+                  const max = leadQuality.topReasons[0][1] || 1;
+                  const w = Math.max(6, Math.round((count / max) * 100));
+                  return (
+                    <div key={reason}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: TEXT }}>
+                        <span>{reason}</span>
+                        <span style={{ color: MUTED }}>{count}</span>
+                      </div>
+                      <div style={{ marginTop: 3, height: 6, background: '#F1F5F9', borderRadius: 999, overflow: 'hidden' }}>
+                        <div style={{ width: `${w}%`, height: '100%', background: BAD }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Quick links */}

@@ -5,6 +5,9 @@ import { getDiscoveryPlaybook } from './discoveryQuestions';
 import AddToPipelineSheet from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
 import { toast } from '@/hooks/use-toast';
+import LeadFeedbackButtons, { logLeadFeedback } from './LeadFeedbackButtons';
+import { useBdr } from './BdrContext';
+
 
 export type GeoScope = 'city' | 'suburb' | 'county' | 'metro' | 'state';
 
@@ -39,6 +42,7 @@ const SIGNAL_COLORS: Record<string, string> = {
 };
 
 const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
+  const { selected } = useBdr();
   const [pipelineIds, setPipelineIds] = useState<Set<string>>(new Set());
   const [askLead, setAskLead] = useState<ScanLead | null>(null);
   const [pipeLead, setPipeLead] = useState<ScanLead | null>(null);
@@ -204,6 +208,9 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   >
                     💬 What to Ask
                   </button>
+                  <div className="flex justify-end pt-0.5">
+                    <LeadFeedbackButtons bdrId={selected?.id ?? null} companyName={lead.company_name} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -215,7 +222,12 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
       <AddToPipelineSheet
         lead={pipeLead ? { ...pipeLead, city: `${city}, ${state}` } : null}
         onClose={() => setPipeLead(null)}
-        onSaved={(l) => setPipelineIds(prev => new Set(prev).add(l.company_name))}
+        onSaved={(l) => {
+          setPipelineIds(prev => new Set(prev).add(l.company_name));
+          if (selected) {
+            logLeadFeedback({ bdrId: selected.id, companyName: l.company_name, rating: 'up', reason: 'pipeline' });
+          }
+        }}
       />
 
       {/* What-to-ask sheet (unchanged) */}
