@@ -209,6 +209,9 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   >
                     💬 What to Ask
                   </button>
+                  <div className="flex justify-center">
+                    <ContactSearchButtons companyName={lead.company_name} />
+                  </div>
                   <div className="flex justify-end pt-0.5">
                     <LeadFeedbackButtons bdrId={selected?.id ?? null} companyName={lead.company_name} />
                   </div>

@@ -556,6 +556,7 @@ export default function OpportunitiesTab() {
                   <div style={{ fontSize: 20, fontWeight: 700, color: '#0F172A', lineHeight: 1 }}>{composite}</div>
                   <div style={{ fontSize: 9, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '.06em', marginTop: 2 }}>score</div>
                 </div>
+                <ContactSearchButtons companyName={o.company} compact />
                 <button
                   onClick={() => setWriteEmailLead(o)}
                   style={{ background: '#0F172A', color: '#FFFFFF', border: 'none', borderRadius: 6, height: 28, padding: '0 12px', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}
