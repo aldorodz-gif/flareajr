@@ -40,6 +40,11 @@ const normalizeLead = (value: unknown) => {
       .filter((t): t is string => typeof t === "string" && t.trim().length > 0)
       .map((t) => t.trim()).slice(0, 5)
     : [];
+  const scopeRaw = asTrimmedString(lead.geo_scope).toLowerCase();
+  const allowedScopes: GeoScope[] = ["city", "suburb", "county", "metro", "state"];
+  const geo_scope = (allowedScopes as string[]).includes(scopeRaw)
+    ? (scopeRaw as GeoScope)
+    : "city";
   return {
     company_name,
     vertical: asTrimmedString(lead.vertical) || "Unknown vertical",
@@ -48,6 +53,8 @@ const normalizeLead = (value: unknown) => {
     why_housing: asTrimmedString(lead.why_housing) || "Potential temporary housing demand needs validation.",
     recommended_titles,
     source_url: asTrimmedString(lead.source_url) || undefined,
+    market: asTrimmedString(lead.market) || undefined,
+    geo_scope,
   };
 };
 
