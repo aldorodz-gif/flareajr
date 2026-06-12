@@ -144,6 +144,7 @@ serve(async (req) => {
 
     let result: { leads?: unknown[]; top_verticals?: unknown[] } = {};
     try {
+      console.log(`dashboard-scan prompt sizes — system: ${systemPrompt.length}, user: ${userPrompt.length}, hits: ${allHits.length}`);
       const text = await callGeminiGrounded({ systemPrompt, userPrompt, temperature: 0.3 });
       result = extractJson(text);
     } catch (e) {
