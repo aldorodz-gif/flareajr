@@ -10,6 +10,7 @@ import {
   type TavilyHit,
 } from "../_shared/tavily.ts";
 import { loadFeedbackContext } from "../_shared/feedback.ts";
+import { loadActiveSignalDomains } from "../_shared/signalSources.ts";
 import { expandGeo, type GeoScope, type GeoEntry } from "../_shared/geoExpand.ts";
 
 type GeoTaggedHit = TavilyHit & { geo: string; geo_scope: GeoScope };
