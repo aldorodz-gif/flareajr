@@ -281,6 +281,7 @@ export type Database = {
           company: string
           confidence_label: string | null
           confidence_score: number
+          contacts: Json
           created_at: string
           date_found: string
           description: string | null
@@ -316,6 +317,7 @@ export type Database = {
           company: string
           confidence_label?: string | null
           confidence_score?: number
+          contacts?: Json
           created_at?: string
           date_found?: string
           description?: string | null
@@ -351,6 +353,7 @@ export type Database = {
           company?: string
           confidence_label?: string | null
           confidence_score?: number
+          contacts?: Json
           created_at?: string
           date_found?: string
           description?: string | null
