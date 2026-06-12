@@ -26,7 +26,6 @@ export async function callGeminiGrounded(opts: {
   if (directKey) {
     let lastError: GeminiError | undefined;
     for (let attempt = 0; attempt < 2; attempt++) {
-      this is a retry loop for 429 rate limits
       try {
         const out = await callDirectGemini({ ...opts, key: directKey });
         logApiUsage({ service: "gemini", function_name: fn, success: true });
