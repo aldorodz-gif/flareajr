@@ -10,6 +10,7 @@ import {
   isBlockedFetchUrl,
   type TavilyHit,
 } from "../_shared/tavily.ts";
+import { loadFeedbackContext } from "../_shared/feedback.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -143,14 +144,19 @@ serve(async (req) => {
       });
     }
 
-    // 3) Get exclusion list (already-surfaced companies for this BDR)
+    // 3) Get exclusion list (already-surfaced companies + permanently downvoted)
     const { data: existingRows } = await supabase
       .from("opportunities")
       .select("company")
       .eq("assigned_bdr", bdr_id)
       .order("created_at", { ascending: false })
       .limit(200);
-    const excludeCompanies = Array.from(new Set((existingRows || []).map(r => r.company))).slice(0, 150);
+    const feedback = await loadFeedbackContext(bdr_id);
+    const excludeCompanies = Array.from(new Set([
+      ...(existingRows || []).map(r => r.company),
+      ...feedback.excludeCompanies,
+    ])).slice(0, 200);
+    const hardExcludeSet = new Set(feedback.excludeCompanies.map((c) => c.toLowerCase()));
 
     // 4) Build the AI prompt — model evaluates ONLY the real Tavily results.
     // Keep prompt SHORT — large prompts cause MAX_TOKENS with empty output.
@@ -167,6 +173,7 @@ serve(async (req) => {
       "- 'company' must be SMB/SME (<~$500M rev). If the article is about an F500 project, name the SMB sub instead; reference the prime only in why_it_matters.",
       "- Skip other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder).",
       excludeCompanies.length > 0 ? `- Skip already-surfaced: ${excludeCompanies.slice(0, 40).join(", ")}.` : "",
+      feedback.promptBlock || "",
       "Vertical must be one of: Relocation, Consult, Govt, Tech, Healthcare, Construction, Interns.",
       "Suggest 3-5 buyer titles (PM, Field Ops, Procurement, HR — avoid C-suite). Score discovery_score, housing_fit_score, confidence_score 0-100.",
       'OUTPUT — ONLY this JSON in a ```json fence: { "leads": [ { "company": "...", "market": "City, ST", "project": "...", "vertical": "...", "signal_type": "...", "description": "...", "why_it_matters": "...", "estimated_stay": "...", "discovery_score": 0, "housing_fit_score": 0, "confidence_score": 0, "suggested_contacts": ["..."], "pitch_angle": "...", "key_talking_points": ["..."], "source_type": "news", "source_url": "https://...", "source_date": "YYYY-MM-DD" } ] }',
@@ -266,6 +273,7 @@ serve(async (req) => {
       if (!o.source_url) { droppedUnverified++; continue; }
       // Must be an EXACT match to a Tavily-returned URL — blocks AI fabrication.
       if (!allowedUrlSet.has(o.source_url)) { droppedFakeUrl++; continue; }
+      if (hardExcludeSet.has((o.company || "").toLowerCase())) { skipped++; continue; }
       if (isCompetitor(blob)) { skipped++; continue; }
       if (!hasHousingNeed(blob)) { skipped++; continue; }
       // Job-board domains block automated fetches — accept without reachability check.
