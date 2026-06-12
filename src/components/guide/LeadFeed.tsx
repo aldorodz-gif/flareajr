@@ -73,8 +73,9 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                 'Signal Detail': l.signal_detail,
                 'Why Housing': l.why_housing,
                 'Recommended Titles': (l.recommended_titles || []).join('; '),
-                City: city,
-                State: state,
+                Location: l.market || `${city}, ${state}`,
+                'Geo Scope': l.geo_scope || 'city',
+                'Scanned From': `${city}, ${state}`,
               }));
               const stamp = new Date().toISOString().slice(0, 10);
               const slug = `${city || 'market'}-${state || ''}`.replace(/\s+/g, '-');
