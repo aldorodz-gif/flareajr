@@ -15,7 +15,8 @@ export interface ImportedContact {
 }
 
 // Logical field keys we want to map to.
-const FIELDS = [
+interface FieldDef { key: FieldKey; label: string; required?: boolean }
+const FIELDS: FieldDef[] = [
   { key: 'company', label: 'Company Name', required: true },
   { key: 'first_name', label: 'First Name' },
   { key: 'last_name', label: 'Last Name' },
@@ -27,8 +28,10 @@ const FIELDS = [
   { key: 'city', label: 'City' },
   { key: 'state', label: 'State' },
   { key: 'employees', label: 'Employees' },
-] as const;
-type FieldKey = typeof FIELDS[number]['key'];
+];
+type FieldKey =
+  | 'company' | 'first_name' | 'last_name' | 'title' | 'email'
+  | 'direct_phone' | 'mobile_phone' | 'website' | 'city' | 'state' | 'employees';
 
 // Common ZoomInfo header aliases → logical key.
 const HEADER_ALIASES: Record<FieldKey, string[]> = {
