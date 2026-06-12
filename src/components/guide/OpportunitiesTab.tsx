@@ -460,6 +460,14 @@ export default function OpportunitiesTab() {
               <div style={{ flex: 1, minWidth: 280 }}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: '#0F172A' }}>{o.company}</span>
+                  {o.active_intent && (
+                    <span
+                      title="Active Intent — +15 score boost"
+                      style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#FFF7ED', color: '#C2410C', border: '1px solid #FED7AA' }}
+                    >
+                      🔥 Active Intent
+                    </span>
+                  )}
                   {o.priority && (
                     <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${priorityPill(o.priority)}`}>
                       {o.priority}
