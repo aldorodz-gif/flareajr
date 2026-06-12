@@ -158,25 +158,27 @@ serve(async (req) => {
       : `Cover any of these 7 verticals: ${VERTICALS.join(", ")}.`;
 
     const allowedUrlSet = new Set(allHits.map(h => h.url));
+    const hitByUrl = new Map(allHits.map(h => [h.url, h] as const));
 
     const systemPrompt = [
       "You evaluate real web search results and extract SMB corporate-housing leads for National Corporate Housing.",
-      `Today: ${today}. Market: ${market}.`,
+      `Today: ${today}. Primary market: ${market}. Scan covers the city, surrounding suburbs, county, metro, and statewide signals.`,
       verticalScope,
       mindsetBlock,
       "RULES:",
       "- Use ONLY the provided Tavily results. Never invent companies, URLs, or dates.",
       "- source_url MUST be copied verbatim from the input list.",
+      "- Each input hit has 'geo' (e.g. 'Marietta, GA') and 'geo_scope' (city|suburb|county|metro|state). Copy them into each lead as 'market' and 'geo_scope' so the BDR sees the TRUE location of the signal, not the primary market.",
       "- 'company_name' must be SMB/SME (<~$500M rev). If the article is about an F500 project, name the SMB sub instead.",
       "- Skip other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder).",
       excludeList.length ? `- Skip already-shown: ${excludeList.join(", ")}.` : "",
       `Use the 7 canonical vertical names exactly: ${VERTICALS.join(", ")}.`,
       "For recommended_titles: 3-5 job titles per lead — never C-suite.",
-      'OUTPUT — ONLY this JSON in a ```json fence: { "leads": [ { "company_name": "...", "vertical": "...", "signal_type": "...", "signal_detail": "...", "why_housing": "...", "recommended_titles": ["..."], "source_url": "https://..." } ], "top_verticals": [ { "vertical": "...", "share_pct": 25, "driver": "..." } ] }',
+      'OUTPUT — ONLY this JSON in a ```json fence: { "leads": [ { "company_name": "...", "vertical": "...", "signal_type": "...", "signal_detail": "...", "why_housing": "...", "recommended_titles": ["..."], "source_url": "https://...", "market": "City, ST", "geo_scope": "city|suburb|county|metro|state" } ], "top_verticals": [ { "vertical": "...", "share_pct": 25, "driver": "..." } ] }',
     ].filter(Boolean).join("\n");
 
     const userPrompt = [
-      `Extract qualified SMB leads from these ${allHits.length} real Tavily results for ${market}. source_url must match one of the urls below exactly.`,
+      `Extract qualified SMB leads from these ${allHits.length} real Tavily results across the ${market} area. source_url must match one of the urls below exactly.`,
       "```json",
       JSON.stringify(allHits),
       "```",
