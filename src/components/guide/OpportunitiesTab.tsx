@@ -439,7 +439,7 @@ export default function OpportunitiesTab() {
 
       <div className="space-y-2">
         {filtered.map(o => {
-          const composite = Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2);
+          const composite = compositeScore(o);
           const expanded = expandedId === o.id;
           const inPipeline = o.saved_by_bdr === selected.id;
           const headline = o.signal_type ? `${o.signal_type}${o.market ? ' · ' + o.market : ''}` : (o.market || '');
