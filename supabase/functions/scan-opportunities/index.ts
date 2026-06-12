@@ -120,8 +120,8 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "BDR has no markets configured" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // 1) Build queries (cap to keep runtime reasonable)
-    const MAX_QUERIES = 10;
+    // 1) Build queries (cap to keep runtime + token budget reasonable)
+    const MAX_QUERIES = 6;
     const shuffled = [...SIGNAL_TEMPLATES].sort(() => Math.random() - 0.5);
     const queries: string[] = [];
     outer: for (const market of markets) {
@@ -139,8 +139,11 @@ serve(async (req) => {
       for (const h of hits) {
         if (seenUrls.has(h.url)) continue;
         seenUrls.add(h.url);
-        allHits.push(h);
+        // Trim content to keep prompt under model token budget
+        allHits.push({ ...h, content: (h.content || "").slice(0, 350) });
+        if (allHits.length >= 30) break;
       }
+      if (allHits.length >= 30) break;
     }
 
     if (allHits.length === 0) {
@@ -159,38 +162,29 @@ serve(async (req) => {
     const excludeCompanies = Array.from(new Set((existingRows || []).map(r => r.company))).slice(0, 150);
 
     // 4) Build the AI prompt — model evaluates ONLY the real Tavily results.
-    const mindsetBlock = await loadMindsetBlocks(bdr_id);
+    // Keep prompt SHORT — large prompts cause MAX_TOKENS with empty output.
     const allowedUrls = allHits.map(h => h.url);
     const allowedUrlSet = new Set(allowedUrls);
 
     const systemPrompt = [
-      "You are a sales intelligence analyst for a corporate housing BDR at National Corporate Housing.",
-      `Today is ${today}.`,
-      mindsetBlock,
-      "OPERATING RULE: The OPERATOR MINDSET block above is load-bearing. Apply every rule, signal type, and target archetype it lists when you select leads.",
-      `BDR markets: ${markets.join(", ")}.`,
-      `BDR target verticals: ${verticals.join(", ") || "all 7 verticals"}.`,
-      `BDR inventory near: ${inv.map(i => `${i.city}, ${i.state}`).join("; ") || "n/a"}.`,
-      "INPUT: You will receive a JSON array of REAL web search results (title, url, content, published_date) returned by Tavily. These are the ONLY source of truth.",
-      "STRICT RULES:",
-      "  • You MUST NOT invent companies, URLs, dates, or details. Every lead must come from one of the provided results.",
-      "  • The 'source_url' you return MUST exactly equal one of the urls in the input. No new URLs, no edited URLs.",
-      "  • If a result does not describe a real, recent, 30+ day corporate housing opportunity, drop it.",
-      "  • The 'company' field must be SMB/SME (≈10–1500 employees, <~$500M revenue) — never Fortune 500/1000. If the article describes a F500 project, identify the SMB subcontractor doing the work and use that as 'company'; reference the prime only in why_it_matters.",
-      "  • Never return other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder, etc.).",
-      excludeCompanies.length > 0 ? `  • Do NOT return any of these already-surfaced companies: ${excludeCompanies.join(", ")}.` : "",
-      "EVALUATE each result: extract company, market (City, ST), the trigger event, the housing angle, vertical (one of: Relocation, Consult, Govt, Tech, Healthcare, Construction, Interns), and 3-5 buyer titles (PM, Field Ops, Project Executive, Procurement, HR/Talent — avoid C-suite).",
-      "Score each 0-100: discovery_score, housing_fit_score, confidence_score.",
-      "OUTPUT FORMAT — return ONLY a JSON object inside a ```json fence, no prose:",
-      '{ "leads": [ { "company": "...", "market": "City, ST", "project": "...", "vertical": "...", "signal_type": "...", "description": "...", "why_it_matters": "...", "estimated_stay": "...", "discovery_score": 0-100, "housing_fit_score": 0-100, "confidence_score": 0-100, "suggested_contacts": ["..."], "pitch_angle": "...", "key_talking_points": ["..."], "source_type": "news|press_release|permit|contract_award|article", "source_url": "https://...", "source_date": "YYYY-MM-DD" } ] }',
-    ].filter(Boolean).join(" ");
+      "You evaluate real web search results and extract SMB corporate-housing leads for National Corporate Housing.",
+      `Today: ${today}. BDR markets: ${markets.join(", ")}. Verticals: ${verticals.join(", ") || "all 7"}.`,
+      "RULES:",
+      "- Use ONLY the provided results. Never invent companies, URLs, or dates.",
+      "- source_url MUST be copied verbatim from the input list.",
+      "- Drop anything that isn't a real 30+ day housing opportunity.",
+      "- 'company' must be SMB/SME (<~$500M rev). If the article is about an F500 project, name the SMB sub instead; reference the prime only in why_it_matters.",
+      "- Skip other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder).",
+      excludeCompanies.length > 0 ? `- Skip already-surfaced: ${excludeCompanies.slice(0, 40).join(", ")}.` : "",
+      "Vertical must be one of: Relocation, Consult, Govt, Tech, Healthcare, Construction, Interns.",
+      "Suggest 3-5 buyer titles (PM, Field Ops, Procurement, HR — avoid C-suite). Score discovery_score, housing_fit_score, confidence_score 0-100.",
+      'OUTPUT — ONLY this JSON in a ```json fence: { "leads": [ { "company": "...", "market": "City, ST", "project": "...", "vertical": "...", "signal_type": "...", "description": "...", "why_it_matters": "...", "estimated_stay": "...", "discovery_score": 0, "housing_fit_score": 0, "confidence_score": 0, "suggested_contacts": ["..."], "pitch_angle": "...", "key_talking_points": ["..."], "source_type": "news", "source_url": "https://...", "source_date": "YYYY-MM-DD" } ] }',
+    ].filter(Boolean).join("\n");
 
     const userPrompt = [
-      `Evaluate these ${allHits.length} real web search results and extract qualified SMB corporate-housing leads.`,
-      `Markets being scanned: ${markets.join(", ")}.`,
-      "Remember: source_url MUST be one of the urls below — copy it verbatim.",
+      `Extract qualified SMB leads from these ${allHits.length} real Tavily results. source_url must match one of the urls below exactly.`,
       "```json",
-      JSON.stringify(allHits, null, 2),
+      JSON.stringify(allHits),
       "```",
     ].join("\n");
 
