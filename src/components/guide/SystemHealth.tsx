@@ -123,6 +123,33 @@ export default function SystemHealth() {
     setSavingLimit(false);
   };
 
+  const saveAlertSettings = async () => {
+    setSavingAlerts(true);
+    const recipient = editingRecipient.trim();
+    const writes: Promise<unknown>[] = [];
+    if (recipient && recipient.includes('@') && recipient !== alertRecipient) {
+      writes.push(supabase.from('system_settings').upsert({ key: 'alerts_recipient', value: recipient as any, updated_at: new Date().toISOString() }));
+    }
+    writes.push(supabase.from('system_settings').upsert({ key: 'alerts_enabled', value: alertsEnabled as any, updated_at: new Date().toISOString() }));
+    await Promise.all(writes);
+    if (recipient && recipient.includes('@')) setAlertRecipient(recipient);
+    setSavingAlerts(false);
+  };
+
+  const sendTestAlert = async () => {
+    setTesting(true); setTestResult('');
+    try {
+      const { data, error } = await supabase.functions.invoke('send-test-alert', { body: {} });
+      if (error) { setTestResult(`Failed: ${error.message}`); }
+      else if ((data as any)?.sent) { setTestResult(`Sent to ${alertRecipient}. Check inbox.`); load(); }
+      else { setTestResult(`Not sent: ${(data as any)?.reason || 'unknown'}`); }
+    } catch (e) {
+      setTestResult(`Error: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setTesting(false);
+    }
+  };
+
   const maxBar = Math.max(1, ...chartData.flatMap((d) => [d.gemini, d.tavily, d.lovable_gateway]));
 
   return (
