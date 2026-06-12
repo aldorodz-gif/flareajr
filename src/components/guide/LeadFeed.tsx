@@ -126,6 +126,12 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                       {lead.vertical}
                     </span>
                   </div>
+                  {(lead.market || lead.geo_scope) && (
+                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#94a3b8' }}>
+                      {(lead.geo_scope || 'city').charAt(0).toUpperCase() + (lead.geo_scope || 'city').slice(1)}
+                      {lead.market ? ` · ${lead.market}` : ''}
+                    </p>
+                  )}
                   <p className="text-[13px] leading-snug mb-1.5" style={{ color: '#1e293b' }}>{lead.signal_detail}</p>
                   <p className="text-[12px] italic mb-2" style={{ color: '#64748b' }}>
                     <span className="font-bold not-italic" style={{ color: '#14b8a6' }}>Why housing:</span> {lead.why_housing}
