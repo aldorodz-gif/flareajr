@@ -161,6 +161,50 @@ export default function SystemHealth() {
 
   const maxBar = Math.max(1, ...chartData.flatMap((d) => [d.gemini, d.tavily, d.lovable_gateway]));
 
+  // ---------- Lead Quality aggregates ----------
+  const leadQuality = useMemo(() => {
+    // Per-BDR totals + reason counts
+    const perBdr = new Map<string, { up: number; down: number }>();
+    const reasons = new Map<string, number>();
+    // 4 weekly buckets (oldest -> newest)
+    const weeks: { label: string; up: number; down: number }[] = [];
+    const weekStart = (offset: number) => {
+      const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - 7 * offset);
+      return d.getTime();
+    };
+    for (let i = 3; i >= 0; i--) {
+      const start = weekStart(i + 1);
+      const end = weekStart(i);
+      weeks.push({ label: new Date(end - 1).toISOString().slice(5, 10), up: 0, down: 0 });
+      (weeks as any)._range = (weeks as any)._range || [];
+      (weeks as any)._range.push([start, end]);
+    }
+    const ranges: number[][] = (weeks as any)._range;
+    for (const f of feedback) {
+      const t = new Date(f.created_at).getTime();
+      const b = perBdr.get(f.bdr_id) || { up: 0, down: 0 };
+      if (f.rating === 'up') b.up++; else b.down++;
+      perBdr.set(f.bdr_id, b);
+      if (f.rating === 'down' && f.reason) reasons.set(f.reason, (reasons.get(f.reason) || 0) + 1);
+      for (let i = 0; i < ranges.length; i++) {
+        if (t >= ranges[i][0] && t < ranges[i][1]) {
+          if (f.rating === 'up') weeks[i].up++; else weeks[i].down++;
+          break;
+        }
+      }
+    }
+    const perBdrRows = [...perBdr.entries()].map(([id, v]) => ({
+      id,
+      name: bdrNames[id] || id.slice(0, 8),
+      total: v.up + v.down,
+      acceptance: v.up + v.down > 0 ? Math.round((v.up / (v.up + v.down)) * 100) : 0,
+    })).sort((a, b) => b.total - a.total).slice(0, 12);
+    const topReasons = [...reasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+    return { perBdrRows, topReasons, weeks };
+  }, [feedback, bdrNames]);
+
+
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
