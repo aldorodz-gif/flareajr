@@ -109,6 +109,14 @@ export default function BdrSelector() {
           </span>
         </div>
       )}
+
+      <button
+        onClick={() => signOut()}
+        className="text-[11px] font-semibold px-2.5 py-1 rounded-md ml-auto text-muted-foreground hover:text-foreground"
+        title="Sign out"
+      >
+        Sign out
+      </button>
     </div>
   );
 }
