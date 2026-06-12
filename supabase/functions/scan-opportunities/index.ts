@@ -108,7 +108,7 @@ serve(async (req) => {
       "2026-2027 CATALYST FOCUS — scan especially for: (a) PUBLIC HOUSING MODERNIZATION — HUD/PHA 'Phased Modernization' or 'Total Building Rehab' bids >$20M; IGNORE pure new construction (no displacement). (b) TECHNICAL WORKFORCE — Data center 'commissioning' or 'equipment onboarding' crews in Northern VA and Texas hubs, 6-9 month rotations of specialized technicians. (c) STRATEGIC M&A — acquisitions where acquirer HQ and target HQ are in different cities, integration teams of 20+ executives relocating 6+ months.",
       "OUTPUT REQUIREMENTS per lead — make sure why_it_matters reads as a one-sentence Catalyst Event AND key_talking_points contains: (1) The Payer (GC or acquiring company holding the budget), (2) Unit Count (specific or estimated, e.g. '~75 units'), (3) Friction Point (why corporate housing vs hotel — kitchens, length of stay, family displacement, crew cohesion), (4) Buyer HQ city/state for RoE check.",
       "JUST FLAG — do not draft outreach copy or email subject lines here; populate the data fields only.",
-      "MANDATORY CITATION: every lead MUST include a real, public source_url (https://...) — news article, RFP/award notice, press release, official notice. NO synthetic URLs. NO placeholders. NO bare domains. If you cannot cite a verifiable source, do NOT return that lead.",
+      "MANDATORY CITATION: every lead MUST include a real, public source_url (https://...) discovered via your Google Search tool — news article, RFP/award notice, press release, official notice. The URL must resolve and the company name MUST appear in the page text. NO synthetic URLs. NO placeholders. NO bare domains. NO homepage links. If you cannot cite a verifiable source from your search results, do NOT return that lead — we will drop unverified leads.",
       "DO NOT prefix why_it_matters with [WHALE], [GLOBAL], [COLLAB], or [TREND:] tags. Plain prose only.",
       variety,
       "OUTPUT FORMAT — return ONLY a JSON object inside a ```json code fence, no prose:",
@@ -283,26 +283,23 @@ serve(async (req) => {
 
     let inserted = 0;
     let skipped = 0;
-    let unverified = 0;
+    let droppedUnverified = 0;
     for (const o of opportunities) {
       const blob = `${o.company} ${o.description} ${o.project}`;
       if (isCompetitor(blob)) { skipped++; continue; }
       if (!hasHousingNeed(blob)) { skipped++; continue; }
 
-      // SOFT verification: try to confirm the source URL actually mentions the company.
-      // We DO NOT drop the lead if verification fails — BDRs decide what to archive or move to pipeline.
-      // Verification only feeds the confidence label so reps see what's been checked.
+      // HARD verification: every lead MUST have a source_url that resolves AND mentions
+      // the company. Unverified leads are dropped — never displayed or stored.
+      if (!o.source_url) { droppedUnverified++; continue; }
       let urlVerified = false;
-      if (o.source_url) {
-        try { urlVerified = await verifyUrlMentionsCompany(o.source_url, o.company); } catch { urlVerified = false; }
-      }
-      if (!urlVerified) unverified++;
+      try { urlVerified = await verifyUrlMentionsCompany(o.source_url, o.company); } catch { urlVerified = false; }
+      if (!urlVerified) { droppedUnverified++; continue; }
 
       const composite = (Number(o.discovery_score) * 0.4) + (Number(o.housing_fit_score) * 0.4) + (Number(o.confidence_score) * 0.2);
       const priority = composite >= 80 ? "Top Priority" : composite >= 65 ? "Strong Opportunity" : composite >= 45 ? "Early Signal" : "Watch List";
       const review_status = composite >= 75 ? "Ready Now" : composite >= 55 ? "Needs Review" : "Watch List";
-      const baseConfidence = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
-      const confidence_label = urlVerified ? baseConfidence : `${baseConfidence} · Unverified URL`;
+      const confidence_label = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
       const nearestResult = await pickNearestInventory(o.market);
       const nearest = nearestResult?.label ?? null;
       const nearestMiles = nearestResult?.miles ?? null;
@@ -338,7 +335,7 @@ serve(async (req) => {
         near_core_inventory: !!nearest,
         distance_to_inventory: nearestMiles,
         source_type: o.source_type,
-        source_url: o.source_url || null,
+        source_url: o.source_url,
         assigned_bdr: bdr_id,
         last_verified: new Date().toISOString(),
       };
@@ -351,7 +348,7 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ inserted, skipped, unverified, total: opportunities.length }), {
+    return new Response(JSON.stringify({ inserted, skipped, dropped_unverified: droppedUnverified, total: opportunities.length }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

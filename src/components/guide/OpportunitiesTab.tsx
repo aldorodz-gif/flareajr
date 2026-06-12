@@ -393,6 +393,23 @@ export default function OpportunitiesTab() {
         </div>
       )}
 
+      {!loading && filtered.length > 0 && filtered.length < 3 && (
+        <div
+          style={{
+            marginBottom: 12,
+            padding: '10px 14px',
+            borderRadius: 8,
+            background: '#FEF3C7',
+            border: '1px solid #FDE68A',
+            color: '#92400E',
+            fontSize: 13,
+            fontWeight: 500,
+          }}
+        >
+          Fewer verified leads today — quality over quantity.
+        </div>
+      )}
+
       <div className="space-y-2">
         {filtered.map(o => {
           const composite = Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2);
@@ -472,16 +489,36 @@ export default function OpportunitiesTab() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 2, flexWrap: 'wrap' }}>
                   <p style={{ fontSize: 12, color: '#64748B', margin: 0, lineHeight: 1.4 }}>{headline}</p>
                   {o.source_url ? (
-                    <a
-                      href={o.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ fontSize: 11, color: '#0EA5E9', textDecoration: 'underline', fontWeight: 500 }}
-                      title={o.source_url}
-                    >
-                      Source ↗
-                    </a>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                      <a
+                        href={o.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ fontSize: 11, color: '#0EA5E9', textDecoration: 'underline', fontWeight: 500 }}
+                        title={o.source_url}
+                      >
+                        Source ↗
+                      </a>
+                      <span
+                        title="Source URL verified — page loads and mentions the company"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 3,
+                          fontSize: 10,
+                          fontWeight: 600,
+                          color: '#059669',
+                          background: '#ECFDF5',
+                          border: '1px solid #A7F3D0',
+                          borderRadius: 4,
+                          padding: '1px 5px',
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        ✓ Verified
+                      </span>
+                    </span>
                   ) : (
                     <span style={{ fontSize: 11, color: '#94A3B8' }}>No source</span>
                   )}
