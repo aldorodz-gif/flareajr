@@ -269,6 +269,62 @@ export default function SystemHealth() {
         )}
       </div>
 
+
+      {/* Alerts */}
+      <div style={card}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: TEXT }}>
+            <Bell size={14} style={{ verticalAlign: -2, marginRight: 6 }} />Alerts
+          </div>
+          <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: MUTED, cursor: 'pointer' }}>
+            <input type="checkbox" checked={alertsEnabled} onChange={(e) => setAlertsEnabled(e.target.checked)} />
+            Email alerts enabled
+          </label>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 10 }}>
+          <span style={{ fontSize: 12, color: MUTED }}>Recipient:</span>
+          <input value={editingRecipient} onChange={(e) => setEditingRecipient(e.target.value)}
+            placeholder="alerts@example.com"
+            style={{ flex: '1 1 220px', minWidth: 220, padding: '6px 10px', border: `1px solid ${BORDER}`, borderRadius: 4, fontSize: 12 }} />
+          <button onClick={saveAlertSettings} disabled={savingAlerts}
+            style={{ background: ACCENT, color: '#FFF', border: 'none', borderRadius: 4, padding: '6px 12px', fontSize: 12, cursor: 'pointer' }}>
+            Save
+          </button>
+          <button onClick={sendTestAlert} disabled={testing}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#FFF', color: TEXT, border: `1px solid ${BORDER}`, borderRadius: 4, padding: '6px 12px', fontSize: 12, cursor: 'pointer' }}>
+            <Send size={12} /> {testing ? 'Sending…' : 'Send test alert'}
+          </button>
+        </div>
+        {testResult && <div style={{ fontSize: 12, color: MUTED, marginBottom: 10 }}>{testResult}</div>}
+        <div style={{ fontSize: 12, color: MUTED, marginBottom: 8 }}>
+          Throttled: each alert key sends at most once every 6 hours. Last 10 alerts:
+        </div>
+        {alerts.length === 0 ? (
+          <div style={{ fontSize: 12, color: MUTED }}>No alerts sent yet.</div>
+        ) : (
+          <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ color: MUTED, textAlign: 'left' }}>
+                <th style={th}>Sent</th>
+                <th style={th}>Alert</th>
+                <th style={th}>Subject</th>
+                <th style={th}>To</th>
+              </tr>
+            </thead>
+            <tbody>
+              {alerts.map((a) => (
+                <tr key={a.id} style={{ borderTop: `1px solid ${BORDER}` }}>
+                  <td style={td}>{timeAgo(a.sent_at)}</td>
+                  <td style={td}><code style={{ fontSize: 11 }}>{a.alert_key}</code></td>
+                  <td style={td}>{a.subject || '—'}</td>
+                  <td style={td}>{a.recipient || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
       {/* Quick links */}
       <div style={card}>
         <div style={{ fontSize: 14, fontWeight: 600, color: TEXT, marginBottom: 10 }}>Quick links</div>
