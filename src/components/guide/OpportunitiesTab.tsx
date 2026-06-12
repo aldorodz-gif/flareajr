@@ -11,6 +11,7 @@ import SkeletonRows from './SkeletonRows';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 import LeadFeedbackButtons, { logLeadFeedback } from './LeadFeedbackButtons';
 import ContactSearchButtons from './ContactSearchButtons';
+import type { ImportedContact } from './ImportContactsSheet';
 
 interface Opportunity {
   id: string;
