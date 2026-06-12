@@ -36,7 +36,13 @@ interface Opportunity {
   last_verified: string;
   status: string;
   saved_by_bdr: string | null;
+  active_intent: boolean;
 }
+
+const INTENT_BONUS = 15;
+const compositeScore = (o: Opportunity) =>
+  Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2) +
+  (o.active_intent ? INTENT_BONUS : 0);
 
 const stripLegacyTags = (s: string | null | undefined): string =>
   (s || '').replace(/\[(WHALE|GLOBAL|COLLAB|TREND:[^\]]*)\]\s*/gi, '').trim();
