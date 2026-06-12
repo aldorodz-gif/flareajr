@@ -540,6 +540,33 @@ export type Database = {
         }
         Relationships: []
       }
+      signal_sources: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          domain: string
+          id: string
+          label: string
+        }
+        Insert: {
+          active?: boolean
+          category: string
+          created_at?: string
+          domain: string
+          id?: string
+          label: string
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          domain?: string
+          id?: string
+          label?: string
+        }
+        Relationships: []
+      }
       system_settings: {
         Row: {
           key: string
