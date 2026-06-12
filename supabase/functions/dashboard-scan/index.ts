@@ -9,6 +9,7 @@ import {
   isBlockedFetchUrl,
   type TavilyHit,
 } from "../_shared/tavily.ts";
+import { loadFeedbackContext } from "../_shared/feedback.ts";
 import { expandGeo, type GeoScope, type GeoEntry } from "../_shared/geoExpand.ts";
 
 type GeoTaggedHit = TavilyHit & { geo: string; geo_scope: GeoScope };
@@ -150,9 +151,14 @@ serve(async (req) => {
       });
     }
 
-    // 3) Mindset block + prompt
+    // 3) Mindset block + feedback context + prompt
     const resolvedBdrId = bdr_id || (await findBdrIdForMarket(city, state));
-    const mindsetBlock = await loadMindsetBlocks(resolvedBdrId, 1500);
+    const [mindsetBlock, feedback] = await Promise.all([
+      loadMindsetBlocks(resolvedBdrId, 1500),
+      loadFeedbackContext(resolvedBdrId),
+    ]);
+    const mergedExclude = Array.from(new Set([...excludeList, ...feedback.excludeCompanies])).slice(0, 80);
+    const hardExcludeSet = new Set(feedback.excludeCompanies.map((c) => c.toLowerCase()));
     const verticalScope = vertical && vertical !== "all"
       ? `Focus exclusively on the "${vertical}" vertical.`
       : `Cover any of these 7 verticals: ${VERTICALS.join(", ")}.`;
@@ -165,13 +171,14 @@ serve(async (req) => {
       `Today: ${today}. Primary market: ${market}. Scan covers the city, surrounding suburbs, county, metro, and statewide signals.`,
       verticalScope,
       mindsetBlock,
+      feedback.promptBlock || "",
       "RULES:",
       "- Use ONLY the provided Tavily results. Never invent companies, URLs, or dates.",
       "- source_url MUST be copied verbatim from the input list.",
       "- Each input hit has 'geo' (e.g. 'Marietta, GA') and 'geo_scope' (city|suburb|county|metro|state). Copy them into each lead as 'market' and 'geo_scope' so the BDR sees the TRUE location of the signal, not the primary market.",
       "- 'company_name' must be SMB/SME (<~$500M rev). If the article is about an F500 project, name the SMB sub instead.",
       "- Skip other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder).",
-      excludeList.length ? `- Skip already-shown: ${excludeList.join(", ")}.` : "",
+      mergedExclude.length ? `- Skip already-shown or downvoted: ${mergedExclude.join(", ")}.` : "",
       `Use the 7 canonical vertical names exactly: ${VERTICALS.join(", ")}.`,
       "For recommended_titles: 3-5 job titles per lead — never C-suite.",
       'OUTPUT — ONLY this JSON in a ```json fence: { "leads": [ { "company_name": "...", "vertical": "...", "signal_type": "...", "signal_detail": "...", "why_housing": "...", "recommended_titles": ["..."], "source_url": "https://...", "market": "City, ST", "geo_scope": "city|suburb|county|metro|state" } ], "top_verticals": [ { "vertical": "...", "share_pct": 25, "driver": "..." } ] }',
@@ -211,6 +218,7 @@ serve(async (req) => {
     for (const lead of rawLeads) {
       if (!lead.source_url) { droppedUnverified++; continue; }
       if (!allowedUrlSet.has(lead.source_url)) { droppedFakeUrl++; continue; }
+      if (hardExcludeSet.has((lead.company_name || "").toLowerCase())) { droppedFakeUrl++; continue; }
       const hit = hitByUrl.get(lead.source_url)!;
       const enriched = { ...lead, market: hit.geo, geo_scope: hit.geo_scope };
       if (isBlockedFetchUrl(lead.source_url)) {
