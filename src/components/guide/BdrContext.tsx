@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '../auth/AuthProvider';
+
 
 export interface BdrProfile {
   id: string;
@@ -23,6 +25,7 @@ const BdrContext = createContext<Ctx | null>(null);
 const STORAGE_KEY = 'flare.selectedBdrId';
 
 export function BdrProvider({ children }: { children: ReactNode }) {
+  const { isAdmin, linkedBdrProfileId } = useAuth();
   const [bdrs, setBdrs] = useState<BdrProfile[]>([]);
   const [selectedId, setSelId] = useState<string | null>(() => localStorage.getItem(STORAGE_KEY));
   const [loading, setLoading] = useState(true);
@@ -49,16 +52,29 @@ export function BdrProvider({ children }: { children: ReactNode }) {
         excluded_markets: [],
       }));
 
-    const list = [...profiles, ...synthetic].sort((a, b) => a.name.localeCompare(b.name));
+    let list = [...profiles, ...synthetic].sort((a, b) => a.name.localeCompare(b.name));
+
+    // Non-admins are scoped to their linked profile only.
+    if (!isAdmin && linkedBdrProfileId) {
+      list = list.filter(b => b.id === linkedBdrProfileId);
+    } else if (!isAdmin && !linkedBdrProfileId) {
+      list = [];
+    }
+
     setBdrs(list);
-    if (!selectedId && list.length > 0) {
+    // Force-select linked profile for non-admins; fall back to first for admins.
+    if (!isAdmin && linkedBdrProfileId) {
+      setSelId(linkedBdrProfileId);
+      localStorage.setItem(STORAGE_KEY, linkedBdrProfileId);
+    } else if (!selectedId && list.length > 0) {
       setSelId(list[0].id);
       localStorage.setItem(STORAGE_KEY, list[0].id);
     }
     setLoading(false);
   };
 
-  useEffect(() => { refresh(); /* eslint-disable-next-line */ }, []);
+
+  useEffect(() => { refresh(); /* eslint-disable-next-line */ }, [isAdmin, linkedBdrProfileId]);
 
   // Auto-promote synthetic snapshot IDs to real bdr_profile rows.
   useEffect(() => {

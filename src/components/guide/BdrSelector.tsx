@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import { useBdr } from './BdrContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from '../auth/AuthProvider';
 
 export default function BdrSelector() {
+  const { isAdmin, signOut } = useAuth();
+
   const { bdrs, selected, setSelectedId, loading, refresh } = useBdr();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
@@ -47,15 +50,22 @@ export default function BdrSelector() {
       <span className="text-[11px] uppercase tracking-widest font-semibold" style={{ color: '#DC2626' }}>
         Active BDR
       </span>
-      <select
-        value={selected?.id || ''}
-        onChange={(e) => setSelectedId(e.target.value)}
-        className="px-3 py-1.5 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
-      >
-        {bdrs.map(b => (
-          <option key={b.id} value={b.id}>{b.name}</option>
-        ))}
-      </select>
+      {isAdmin ? (
+        <select
+          value={selected?.id || ''}
+          onChange={(e) => setSelectedId(e.target.value)}
+          className="px-3 py-1.5 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-pink-500"
+        >
+          {bdrs.map(b => (
+            <option key={b.id} value={b.id}>{b.name}</option>
+          ))}
+        </select>
+      ) : (
+        <span className="px-3 py-1.5 rounded-md text-sm font-medium bg-white border border-slate-200 text-slate-900">
+          {selected?.name ?? '— no profile linked —'}
+        </span>
+      )}
+
 
       {selected && !editing && (
         <>
@@ -99,6 +109,14 @@ export default function BdrSelector() {
           </span>
         </div>
       )}
+
+      <button
+        onClick={() => signOut()}
+        className="text-[11px] font-semibold px-2.5 py-1 rounded-md ml-auto text-muted-foreground hover:text-foreground"
+        title="Sign out"
+      >
+        Sign out
+      </button>
     </div>
   );
 }
