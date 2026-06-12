@@ -112,7 +112,7 @@ serve(async (req) => {
 
     // 3) Mindset block + prompt
     const resolvedBdrId = bdr_id || (await findBdrIdForMarket(city, state));
-    const mindsetBlock = await loadMindsetBlocks(resolvedBdrId);
+    const mindsetBlock = await loadMindsetBlocks(resolvedBdrId, 1500);
     const verticalScope = vertical && vertical !== "all"
       ? `Focus exclusively on the "${vertical}" vertical.`
       : `Cover any of these 7 verticals: ${VERTICALS.join(", ")}.`;
@@ -144,6 +144,7 @@ serve(async (req) => {
 
     let result: { leads?: unknown[]; top_verticals?: unknown[] } = {};
     try {
+      console.log(`dashboard-scan prompt sizes — system: ${systemPrompt.length}, user: ${userPrompt.length}, hits: ${allHits.length}`);
       const text = await callGeminiGrounded({ systemPrompt, userPrompt, temperature: 0.3 });
       result = extractJson(text);
     } catch (e) {

@@ -1,7 +1,7 @@
 // Shared helper: load global + per-BDR mindset blocks for prompt injection.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
-export async function loadMindsetBlocks(bdrId?: string | null): Promise<string> {
+export async function loadMindsetBlocks(bdrId?: string | null, maxChars: number = 1500): Promise<string> {
   try {
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -33,12 +33,19 @@ export async function loadMindsetBlocks(bdrId?: string | null): Promise<string> 
     }
 
     if (!sections.length) return "";
+    let combined = sections.join("\n\n");
+    if (combined.length > maxChars) {
+      const slice = combined.substring(0, maxChars);
+      const breakAt = slice.lastIndexOf("\n\n");
+      const cut = breakAt > 200 ? breakAt : slice.lastIndexOf("\n");
+      combined = (cut > 200 ? slice.substring(0, cut) : slice) + "\n[mindset truncated for length]";
+    }
     return [
       "",
       "============================================================",
       "OPERATOR MINDSET (load-bearing rules — follow these strictly):",
       "============================================================",
-      sections.join("\n\n"),
+      combined,
       "============================================================",
       "",
     ].join("\n");
