@@ -268,6 +268,7 @@ export default function SettingsPage({ onClose }: SettingsPageProps) {
 
         <main style={{ flex: 1, padding: '32px 40px', maxWidth: 920 }}>
           {activeSection === 'system-health' && isAdmin && <SystemHealth />}
+          {activeSection === 'signal-sources' && isAdmin && <SignalSourcesPanel />}
           {activeSection === 'lead-criteria' && (
             <LeadCriteriaSection
               state={state.leadCriteria} update={(p) => update('leadCriteria', p)}
