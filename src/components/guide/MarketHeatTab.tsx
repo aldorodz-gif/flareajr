@@ -193,7 +193,14 @@ const MarketHeatTab = () => {
       setTopVerticals(nextTopVerticals);
       setLastScanAt(new Date());
       await persistMarket();
-      toast({ title: 'Scan complete', description: `${newLeads.length} fresh leads in ${city}, ${state}` });
+      if (newLeads.length === 0) {
+        toast({
+          title: 'No verified signals',
+          description: 'No verified signals found for this scan — try broadening the market or category.',
+        });
+      } else {
+        toast({ title: 'Scan complete', description: `${newLeads.length} fresh leads in ${city}, ${state}` });
+      }
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Scan failed';
       toast({ title: 'Scan failed', description: msg, variant: 'destructive' });
