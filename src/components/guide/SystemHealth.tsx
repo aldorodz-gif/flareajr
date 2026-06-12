@@ -135,9 +135,6 @@ export default function SystemHealth() {
     if (recipient && recipient.includes('@')) setAlertRecipient(recipient);
     setSavingAlerts(false);
   };
-    if (recipient && recipient.includes('@')) setAlertRecipient(recipient);
-    setSavingAlerts(false);
-  };
 
   const sendTestAlert = async () => {
     setTesting(true); setTestResult('');
