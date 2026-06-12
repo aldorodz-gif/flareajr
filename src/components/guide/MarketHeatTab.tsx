@@ -39,6 +39,8 @@ const normalizeLead = (value: unknown): ScanLead | null => {
     why_housing: asTrimmedString(lead.why_housing) || FALLBACK_HOUSING_REASON,
     recommended_titles,
     source_url: asTrimmedString(lead.source_url) || undefined,
+    source_verified: typeof lead.source_verified === 'boolean' ? lead.source_verified : undefined,
+    source_label: asTrimmedString(lead.source_label) || undefined,
   };
 };
 
