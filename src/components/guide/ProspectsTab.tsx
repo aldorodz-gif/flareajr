@@ -7,6 +7,7 @@ import { SEQUENCE_STEPS, dueDateForDay } from './sequenceConfig';
 import DiscoBallCelebration from './DiscoBallCelebration';
 import PageHeader from './PageHeader';
 import SkeletonRows from './SkeletonRows';
+import ImportContactsSheet from './ImportContactsSheet';
 
 interface PipelineItem {
   id: string;
