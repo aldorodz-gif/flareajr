@@ -116,18 +116,39 @@ serve(async (req) => {
     if (geo.county) plan.push({ geo: geo.county, n: 1 });
     plan.push({ geo: geo.state, n: 3 });
 
-    const queryPlan: Array<{ q: string; geo: string; scope: GeoScope }> = [];
+    const queryPlan: Array<{ q: string; geo: string; scope: GeoScope; targeted: boolean }> = [];
     for (const slot of plan) {
       const tpls = shuffleTemplates().slice(0, slot.n);
       for (const t of tpls) {
         if (queryPlan.length >= MAX_QUERIES) break;
-        queryPlan.push({ q: t.replace("{market}", slot.geo.label), geo: slot.geo.label, scope: slot.geo.scope });
+        queryPlan.push({ q: t.replace("{market}", slot.geo.label), geo: slot.geo.label, scope: slot.geo.scope, targeted: false });
       }
       if (queryPlan.length >= MAX_QUERIES) break;
     }
 
+    // Split: ~60% open-web (already in queryPlan), ~40% source-targeted.
+    // For 12 total queries that's ~7 open + ~5 targeted. Trim open-web to make room.
+    const sourceDomains = await loadActiveSignalDomains();
+    const TARGETED_COUNT = sourceDomains.length > 0 ? Math.round(MAX_QUERIES * 0.4) : 0;
+    if (TARGETED_COUNT > 0) {
+      queryPlan.splice(MAX_QUERIES - TARGETED_COUNT);
+      // Re-use shuffled templates against same geo distribution for targeted slice.
+      const targetedPlan: Array<{ geo: GeoEntry }> = [
+        { geo: geo.city }, { geo: geo.city },
+        ...(geo.suburbs[0] ? [{ geo: geo.suburbs[0] }] : []),
+        { geo: geo.state }, { geo: geo.state },
+      ].slice(0, TARGETED_COUNT);
+      for (const slot of targetedPlan) {
+        const tpl = shuffleTemplates()[0];
+        queryPlan.push({ q: tpl.replace("{market}", slot.geo.label), geo: slot.geo.label, scope: slot.geo.scope, targeted: true });
+      }
+    }
+
     // 2) Run Tavily for each query in parallel, tag each hit with its query's geo.
-    const tavilyResults = await Promise.all(queryPlan.map(p => tavilySearch(TAVILY_API_KEY, p.q)));
+    //    Targeted queries pass include_domains so Tavily prioritizes high-value outlets.
+    const tavilyResults = await Promise.all(queryPlan.map(p =>
+      tavilySearch(TAVILY_API_KEY, p.q, 10, "dashboard-scan", p.targeted ? sourceDomains : undefined)
+    ));
     const allHits: GeoTaggedHit[] = [];
     const seenUrls = new Set<string>();
     for (let i = 0; i < tavilyResults.length; i++) {
