@@ -1,5 +1,6 @@
 import BdrScoreboard from './BdrScoreboard';
 import DailyBrief from './DailyBrief';
+import QuotaBanner from './QuotaBanner';
 
 const DashboardTab = () => {
   return (
@@ -10,6 +11,7 @@ const DashboardTab = () => {
         padding: '32px 40px',
       }}
     >
+      <QuotaBanner />
       <DailyBrief />
       <BdrScoreboard />
     </section>
