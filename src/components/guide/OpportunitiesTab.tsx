@@ -36,7 +36,13 @@ interface Opportunity {
   last_verified: string;
   status: string;
   saved_by_bdr: string | null;
+  active_intent: boolean;
 }
+
+const INTENT_BONUS = 15;
+const compositeScore = (o: Opportunity) =>
+  Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2) +
+  (o.active_intent ? INTENT_BONUS : 0);
 
 const stripLegacyTags = (s: string | null | undefined): string =>
   (s || '').replace(/\[(WHALE|GLOBAL|COLLAB|TREND:[^\]]*)\]\s*/gi, '').trim();
@@ -131,6 +137,7 @@ export default function OpportunitiesTab() {
       .eq('assigned_bdr', selected.id)
       .eq('verified', true)
       .neq('status', 'archived')
+      .order('active_intent', { ascending: false })
       .order('discovery_score', { ascending: false })
       .limit(100);
     if (error) toast.error('Failed to load opportunities');
@@ -139,6 +146,18 @@ export default function OpportunitiesTab() {
   }, [selected]);
 
   useEffect(() => { load(); }, [load]);
+
+  const toggleIntent = async (o: Opportunity) => {
+    const next = !o.active_intent;
+    setItems(prev => prev.map(i => i.id === o.id ? { ...i, active_intent: next } : i));
+    const { error } = await supabase.from('opportunities').update({ active_intent: next }).eq('id', o.id);
+    if (error) {
+      toast.error('Failed to update intent');
+      setItems(prev => prev.map(i => i.id === o.id ? { ...i, active_intent: !next } : i));
+      return;
+    }
+    toast.success(next ? '🔥 Marked Active Intent (+15)' : 'Intent cleared');
+  };
 
   const refresh = async () => {
     if (!PERPLEXITY_FEATURES_ENABLED) {
@@ -242,6 +261,9 @@ export default function OpportunitiesTab() {
     if (filter === 'near') return o.near_core_inventory;
     if (filter === 'saved') return o.saved_by_bdr === selected?.id;
     return true;
+  }).slice().sort((a, b) => {
+    if (a.active_intent !== b.active_intent) return a.active_intent ? -1 : 1;
+    return compositeScore(b) - compositeScore(a);
   });
 
   if (!selected) return <div className="p-12 text-center text-muted-foreground">Select a BDR to view opportunities</div>;
@@ -285,7 +307,8 @@ export default function OpportunitiesTab() {
                 'Discovery Score': o.discovery_score,
                 'Housing Fit': o.housing_fit_score,
                 'Confidence Score': o.confidence_score,
-                'Overall Score': Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2),
+                'Overall Score': compositeScore(o),
+                'Active Intent': o.active_intent ? 'Yes' : '',
                 'Why It Matters': o.why_it_matters || '',
                 'Estimated Stay': o.estimated_stay || '',
                 'Nearest Inventory': o.nearest_inventory || '',
@@ -419,7 +442,7 @@ export default function OpportunitiesTab() {
 
       <div className="space-y-2">
         {filtered.map(o => {
-          const composite = Math.round(o.discovery_score * 0.4 + o.housing_fit_score * 0.4 + o.confidence_score * 0.2);
+          const composite = compositeScore(o);
           const expanded = expandedId === o.id;
           const inPipeline = o.saved_by_bdr === selected.id;
           const headline = o.signal_type ? `${o.signal_type}${o.market ? ' · ' + o.market : ''}` : (o.market || '');
@@ -440,6 +463,14 @@ export default function OpportunitiesTab() {
               <div style={{ flex: 1, minWidth: 280 }}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginBottom: 2 }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: '#0F172A' }}>{o.company}</span>
+                  {o.active_intent && (
+                    <span
+                      title="Active Intent — +15 score boost"
+                      style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#FFF7ED', color: '#C2410C', border: '1px solid #FED7AA' }}
+                    >
+                      🔥 Active Intent
+                    </span>
+                  )}
                   {o.priority && (
                     <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${priorityPill(o.priority)}`}>
                       {o.priority}
@@ -556,6 +587,23 @@ export default function OpportunitiesTab() {
                   <div style={{ fontSize: 20, fontWeight: 700, color: '#0F172A', lineHeight: 1 }}>{composite}</div>
                   <div style={{ fontSize: 9, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '.06em', marginTop: 2 }}>score</div>
                 </div>
+                <button
+                  onClick={() => toggleIntent(o)}
+                  title={o.active_intent ? 'Clear Active Intent' : 'Mark Active Intent (+15 score)'}
+                  style={{
+                    background: o.active_intent ? '#FFF7ED' : '#FFFFFF',
+                    color: o.active_intent ? '#C2410C' : '#64748B',
+                    border: `1px solid ${o.active_intent ? '#FED7AA' : '#E2E8F0'}`,
+                    borderRadius: 6,
+                    height: 28,
+                    padding: '0 10px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  🔥 {o.active_intent ? 'Intent' : 'Intent?'}
+                </button>
                 <ContactSearchButtons companyName={o.company} compact />
                 <button
                   onClick={() => setWriteEmailLead(o)}

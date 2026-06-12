@@ -1,0 +1,2 @@
+ALTER TABLE public.opportunities ADD COLUMN IF NOT EXISTS active_intent boolean NOT NULL DEFAULT false;
+CREATE INDEX IF NOT EXISTS idx_opportunities_active_intent ON public.opportunities(active_intent) WHERE active_intent = true;

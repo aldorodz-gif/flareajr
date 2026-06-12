@@ -551,6 +551,7 @@ const ProspectsTab = () => {
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1 block">How did you find them?</label>
                 <div className="flex flex-wrap gap-1.5">
                   {[
+                    { id: 'active_intent_zi', label: '🔥 Active Intent (ZoomInfo)', conn: 'linkedin' },
                     { id: 'referral', label: '🌟 Referral', conn: 'referral' },
                     { id: 'self_sourced', label: '🔎 Self-sourced', conn: 'linkedin' },
                     { id: 'event', label: '🎪 Event', conn: 'inperson' },

@@ -276,6 +276,7 @@ export type Database = {
       }
       opportunities: {
         Row: {
+          active_intent: boolean
           assigned_bdr: string | null
           company: string
           confidence_label: string | null
@@ -310,6 +311,7 @@ export type Database = {
           why_it_matters: string | null
         }
         Insert: {
+          active_intent?: boolean
           assigned_bdr?: string | null
           company: string
           confidence_label?: string | null
@@ -344,6 +346,7 @@ export type Database = {
           why_it_matters?: string | null
         }
         Update: {
+          active_intent?: boolean
           assigned_bdr?: string | null
           company?: string
           confidence_label?: string | null
