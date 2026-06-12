@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import { useBdr } from './BdrContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuth } from '../auth/AuthProvider';
 
 export default function BdrSelector() {
+  const { isAdmin, signOut } = useAuth();
+
   const { bdrs, selected, setSelectedId, loading, refresh } = useBdr();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
