@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Activity, CheckCircle2, XCircle, ExternalLink, RefreshCw, Bell, Send } from 'lucide-react';
+import { Activity, CheckCircle2, XCircle, ExternalLink, RefreshCw, Bell, Send, ThumbsUp } from 'lucide-react';
 
 const ACCENT = '#0EA5E9';
 const TEXT = '#0F172A';
@@ -43,17 +43,22 @@ export default function SystemHealth() {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<string>('');
   const [alerts, setAlerts] = useState<Array<{ id: string; alert_key: string; subject: string | null; recipient: string | null; sent_at: string }>>([]);
+  const [feedback, setFeedback] = useState<Array<{ bdr_id: string; rating: string; reason: string | null; created_at: string }>>([]);
+  const [bdrNames, setBdrNames] = useState<Record<string, string>>({});
 
   const load = async () => {
     setLoading(true);
     const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-    const [u, r, s, ar, ae, al] = await Promise.all([
+    const fbSince = new Date(Date.now() - 28 * 24 * 3600 * 1000).toISOString();
+    const [u, r, s, ar, ae, al, fb, bp] = await Promise.all([
       supabase.from('api_usage').select('service,function_name,success,error_code,created_at').gte('created_at', since).order('created_at', { ascending: false }).limit(5000),
       supabase.from('scan_runs').select('id,ran_at,bdrs_scanned,leads_inserted,errors').order('ran_at', { ascending: false }).limit(7),
       supabase.from('system_settings').select('value').eq('key', 'tavily_monthly_limit').maybeSingle(),
       supabase.from('system_settings').select('value').eq('key', 'alerts_recipient').maybeSingle(),
       supabase.from('system_settings').select('value').eq('key', 'alerts_enabled').maybeSingle(),
       supabase.from('alert_log').select('id,alert_key,subject,recipient,sent_at').order('sent_at', { ascending: false }).limit(10),
+      supabase.from('lead_feedback').select('bdr_id,rating,reason,created_at').gte('created_at', fbSince).limit(5000),
+      supabase.from('bdr_profiles').select('id,name'),
     ]);
     setRows((u.data as Row[]) || []);
     setRuns((r.data as any[]) || []);
@@ -65,6 +70,10 @@ export default function SystemHealth() {
     const ev = (ae.data as any)?.value;
     if (typeof ev === 'boolean') setAlertsEnabled(ev);
     setAlerts((al.data as any[]) || []);
+    setFeedback((fb.data as any[]) || []);
+    const nameMap: Record<string, string> = {};
+    for (const b of (bp.data as any[]) || []) nameMap[b.id] = b.name;
+    setBdrNames(nameMap);
     setLoading(false);
   };
 
