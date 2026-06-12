@@ -584,6 +584,23 @@ export default function OpportunitiesTab() {
                   <div style={{ fontSize: 20, fontWeight: 700, color: '#0F172A', lineHeight: 1 }}>{composite}</div>
                   <div style={{ fontSize: 9, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '.06em', marginTop: 2 }}>score</div>
                 </div>
+                <button
+                  onClick={() => toggleIntent(o)}
+                  title={o.active_intent ? 'Clear Active Intent' : 'Mark Active Intent (+15 score)'}
+                  style={{
+                    background: o.active_intent ? '#FFF7ED' : '#FFFFFF',
+                    color: o.active_intent ? '#C2410C' : '#64748B',
+                    border: `1px solid ${o.active_intent ? '#FED7AA' : '#E2E8F0'}`,
+                    borderRadius: 6,
+                    height: 28,
+                    padding: '0 10px',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  🔥 {o.active_intent ? 'Intent' : 'Intent?'}
+                </button>
                 <ContactSearchButtons companyName={o.company} compact />
                 <button
                   onClick={() => setWriteEmailLead(o)}
