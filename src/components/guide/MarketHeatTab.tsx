@@ -31,6 +31,9 @@ const normalizeLead = (value: unknown): ScanLead | null => {
         .slice(0, 5)
     : [];
 
+  const scopeRaw = asTrimmedString(lead.geo_scope).toLowerCase();
+  const geo_scope = (['city', 'suburb', 'county', 'metro', 'state'] as const).find(s => s === scopeRaw);
+
   return {
     company_name,
     vertical: asTrimmedString(lead.vertical) || 'Unknown vertical',
@@ -41,6 +44,8 @@ const normalizeLead = (value: unknown): ScanLead | null => {
     source_url: asTrimmedString(lead.source_url) || undefined,
     source_verified: typeof lead.source_verified === 'boolean' ? lead.source_verified : undefined,
     source_label: asTrimmedString(lead.source_label) || undefined,
+    market: asTrimmedString(lead.market) || undefined,
+    geo_scope,
   };
 };
 

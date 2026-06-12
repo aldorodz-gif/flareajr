@@ -6,6 +6,8 @@ import AddToPipelineSheet from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
 import { toast } from '@/hooks/use-toast';
 
+export type GeoScope = 'city' | 'suburb' | 'county' | 'metro' | 'state';
+
 export interface ScanLead {
   company_name: string;
   vertical: string;
@@ -16,6 +18,8 @@ export interface ScanLead {
   source_url?: string;
   source_verified?: boolean;
   source_label?: string;
+  market?: string;
+  geo_scope?: GeoScope;
 }
 
 interface LeadFeedProps {
@@ -69,8 +73,9 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                 'Signal Detail': l.signal_detail,
                 'Why Housing': l.why_housing,
                 'Recommended Titles': (l.recommended_titles || []).join('; '),
-                City: city,
-                State: state,
+                Location: l.market || `${city}, ${state}`,
+                'Geo Scope': l.geo_scope || 'city',
+                'Scanned From': `${city}, ${state}`,
               }));
               const stamp = new Date().toISOString().slice(0, 10);
               const slug = `${city || 'market'}-${state || ''}`.replace(/\s+/g, '-');
@@ -91,6 +96,12 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
         <div className="py-12 text-center text-[13px]" style={{ color: '#94a3b8' }}>
           Pick a state, city, and vertical, then hit <span className="font-bold" style={{ color: '#DC2626' }}>Refresh Scan</span> to surface fresh leads.
         </div>
+      )}
+
+      {!loading && leads.length > 0 && city && state && (
+        <p className="text-[11px] mb-3" style={{ color: '#64748b' }}>
+          Scanned: <span className="font-semibold" style={{ color: '#0e1e3a' }}>{city}, {state}</span> + metro, county, and statewide signals.
+        </p>
       )}
 
       <div className="grid gap-3">
@@ -115,6 +126,12 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                       {lead.vertical}
                     </span>
                   </div>
+                  {(lead.market || lead.geo_scope) && (
+                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: '#94a3b8' }}>
+                      {(lead.geo_scope || 'city').charAt(0).toUpperCase() + (lead.geo_scope || 'city').slice(1)}
+                      {lead.market ? ` · ${lead.market}` : ''}
+                    </p>
+                  )}
                   <p className="text-[13px] leading-snug mb-1.5" style={{ color: '#1e293b' }}>{lead.signal_detail}</p>
                   <p className="text-[12px] italic mb-2" style={{ color: '#64748b' }}>
                     <span className="font-bold not-italic" style={{ color: '#14b8a6' }}>Why housing:</span> {lead.why_housing}
