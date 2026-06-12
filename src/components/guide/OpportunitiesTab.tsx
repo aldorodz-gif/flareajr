@@ -469,8 +469,22 @@ export default function OpportunitiesTab() {
                     </div>
                   );
                 })()}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 2, flexWrap: 'wrap' }}>
                   <p style={{ fontSize: 12, color: '#64748B', margin: 0, lineHeight: 1.4 }}>{headline}</p>
+                  {o.source_url ? (
+                    <a
+                      href={o.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ fontSize: 11, color: '#0EA5E9', textDecoration: 'underline', fontWeight: 500 }}
+                      title={o.source_url}
+                    >
+                      Source ↗
+                    </a>
+                  ) : (
+                    <span style={{ fontSize: 11, color: '#94A3B8' }}>No source</span>
+                  )}
                   <button
                     onClick={() => setExpandedId(expanded ? null : o.id)}
                     style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'inline-flex', alignItems: 'center' }}
