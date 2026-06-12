@@ -98,9 +98,12 @@ serve(async (req) => {
 
     // 1) Build queries — round-robin across ALL markets so every market is searched each run.
     const MAX_QUERIES = 9;
+    // Mix in hiring/internship templates when an Interns vertical is in scope.
+    const includeHiring = verticals.length === 0 || verticals.some(v => /intern|hir/i.test(v));
+    const templatePool = includeHiring ? [...SIGNAL_TEMPLATES, ...HIRING_SIGNAL_TEMPLATES] : SIGNAL_TEMPLATES;
     // Per-market shuffled template list so each market gets different templates.
     const perMarketShuffles = new Map<string, string[]>(
-      markets.map(m => [m, [...SIGNAL_TEMPLATES].sort(() => Math.random() - 0.5)])
+      markets.map(m => [m, [...templatePool].sort(() => Math.random() - 0.5)])
     );
     const perMarketIdx = new Map<string, number>(markets.map(m => [m, 0]));
     const queries: string[] = [];
