@@ -297,7 +297,7 @@ export default function OpportunitiesTab() {
             Export Excel
           </Button>
           <Button onClick={refresh} disabled={scanning} size="sm" style={{ background: '#0F172A', color: '#FFFFFF' }}>
-            {scanning ? 'Scanning…' : 'Refresh Scan'}
+            {scanning ? 'Searching the web…' : 'Run Lead Discovery'}
           </Button>
         </div>
       </div>
