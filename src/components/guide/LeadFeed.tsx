@@ -98,6 +98,12 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
         </div>
       )}
 
+      {!loading && leads.length > 0 && city && state && (
+        <p className="text-[11px] mb-3" style={{ color: '#64748b' }}>
+          Scanned: <span className="font-semibold" style={{ color: '#0e1e3a' }}>{city}, {state}</span> + metro, county, and statewide signals.
+        </p>
+      )}
+
       <div className="grid gap-3">
         {leads.map((lead, index) => {
           const color = SIGNAL_COLORS[lead.signal_type] ?? SIGNAL_COLORS.Default;
