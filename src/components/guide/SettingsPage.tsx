@@ -249,7 +249,7 @@ export default function SettingsPage({ onClose }: SettingsPageProps) {
 
       <div style={{ display: 'flex', maxWidth: 1400, margin: '0 auto' }}>
         <aside style={{ width: 240, padding: '24px 0', borderRight: `1px solid ${BORDER}`, background: '#FFF', minHeight: 'calc(100vh - 56px - 81px)' }}>
-          {SECTIONS.map(s => {
+          {visibleSections.map(s => {
             const Icon = s.icon;
             const active = s.id === activeSection;
             return (
@@ -265,6 +265,7 @@ export default function SettingsPage({ onClose }: SettingsPageProps) {
         </aside>
 
         <main style={{ flex: 1, padding: '32px 40px', maxWidth: 920 }}>
+          {activeSection === 'system-health' && isAdmin && <SystemHealth />}
           {activeSection === 'lead-criteria' && (
             <LeadCriteriaSection
               state={state.leadCriteria} update={(p) => update('leadCriteria', p)}
