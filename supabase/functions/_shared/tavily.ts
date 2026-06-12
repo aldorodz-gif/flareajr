@@ -1,5 +1,7 @@
 // Shared Tavily + URL verification helpers.
 // Used by scan-opportunities and dashboard-scan so both pipelines behave identically.
+import { logApiUsage } from "./usageLog.ts";
+
 
 export type TavilyHit = {
   title: string;
@@ -51,7 +53,7 @@ export const HIRING_SIGNAL_TEMPLATES = [
   "new graduate program {market}",
 ];
 
-export async function tavilySearch(apiKey: string, query: string, maxResults = 10): Promise<TavilyHit[]> {
+export async function tavilySearch(apiKey: string, query: string, maxResults = 10, functionName?: string): Promise<TavilyHit[]> {
   try {
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
@@ -69,9 +71,11 @@ export async function tavilySearch(apiKey: string, query: string, maxResults = 1
     if (!res.ok) {
       const body = await res.text();
       console.warn("Tavily error", res.status, body.slice(0, 200));
+      logApiUsage({ service: "tavily", function_name: functionName, success: false, error_code: String(res.status) });
       return [];
     }
     const data = await res.json();
+    logApiUsage({ service: "tavily", function_name: functionName, success: true });
     return (data?.results || []).map((r: any) => ({
       title: r.title || "",
       url: r.url || "",
@@ -80,6 +84,7 @@ export async function tavilySearch(apiKey: string, query: string, maxResults = 1
     })).filter((r: TavilyHit) => r.url && r.title);
   } catch (e) {
     console.warn("Tavily fetch failed", e instanceof Error ? e.message : e);
+    logApiUsage({ service: "tavily", function_name: functionName, success: false, error_code: "exception" });
     return [];
   }
 }
