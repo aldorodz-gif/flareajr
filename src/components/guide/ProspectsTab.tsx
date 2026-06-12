@@ -508,16 +508,34 @@ const ProspectsTab = () => {
       {/* Manual add bar */}
       <div className="mb-5 p-3 rounded-xl flex flex-wrap items-center justify-between gap-3" style={{ background: 'linear-gradient(135deg, rgba(168,85,247,.08), rgba(45,212,191,.06))', border: '1px dashed rgba(168,85,247,.35)' }}>
         <div className="text-[12px]" style={{ color: '#1e293b' }}>
-          <strong style={{ color: '#7c3aed' }}>Got a lead from a referral or your own digging?</strong> Add it manually and a 5-touch sequence schedules instantly.
+          <strong style={{ color: '#7c3aed' }}>Got a lead from a referral or your own digging?</strong> Add it manually or import a ZoomInfo CSV.
         </div>
-        <button
-          onClick={() => setManualOpen(true)}
-          className="text-[12px] font-bold px-3.5 py-2 rounded-md text-white transition-all hover:-translate-y-0.5"
-          style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
-        >
-          + Add Lead Manually
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setImportOpen(true)}
+            className="text-[12px] font-bold px-3.5 py-2 rounded-md transition-all hover:-translate-y-0.5"
+            style={{ background: '#FFFFFF', color: '#0F172A', border: '1px solid #E2E8F0' }}
+          >
+            📥 Import Contacts
+          </button>
+          <button
+            onClick={() => setManualOpen(true)}
+            className="text-[12px] font-bold px-3.5 py-2 rounded-md text-white transition-all hover:-translate-y-0.5"
+            style={{ background: 'linear-gradient(135deg, #DC2626, #0EA5E9)', boxShadow: '0 2px 8px rgba(168,85,247,.3)' }}
+          >
+            + Add Lead Manually
+          </button>
+        </div>
       </div>
+
+      <ImportContactsSheet
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onImported={() => {
+          window.dispatchEvent(new CustomEvent('flare:tasks-updated'));
+          refresh();
+        }}
+      />
 
       {/* Manual add modal */}
       {manualOpen && (
