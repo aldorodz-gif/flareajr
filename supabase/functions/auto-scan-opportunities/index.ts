@@ -39,7 +39,7 @@ serve(async (req) => {
         if (ok) leads_inserted += Number(json.inserted || 0);
         else errors++;
         results.push({ bdr: bdr.name, ok, inserted: json.inserted, error: json.error });
-        await new Promise((r) => setTimeout(r, 1500));
+        await new Promise((r) => setTimeout(r, 20000));
       } catch (e) {
         errors++;
         results.push({ bdr: bdr.name, ok: false, error: e instanceof Error ? e.message : String(e) });

@@ -24,27 +24,39 @@ export async function callGeminiGrounded(opts: {
   const fn = opts.functionName;
 
   if (directKey) {
-    try {
-      const out = await callDirectGemini({ ...opts, key: directKey });
-      logApiUsage({ service: "gemini", function_name: fn, success: true });
-      return out;
-    } catch (error) {
-      const status = error instanceof GeminiError ? error.status : 500;
-      logApiUsage({ service: "gemini", function_name: fn, success: false, error_code: String(status) });
-      if (!(error instanceof GeminiError)) throw error;
+    let lastError: GeminiError | undefined;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const out = await callDirectGemini({ ...opts, key: directKey });
+        logApiUsage({ service: "gemini", function_name: fn, success: true });
+        return out;
+      } catch (error) {
+        const status = error instanceof GeminiError ? error.status : 500;
+        logApiUsage({ service: "gemini", function_name: fn, success: false, error_code: String(status) });
+        if (!(error instanceof GeminiError)) throw error;
+        lastError = error;
 
-      const shouldFallback =
-        error.status === 400 ||
-        error.status === 402 ||
-        error.status === 429 ||
-        error.status === 503 ||
-        /GEMINI_API_KEY|Gemini API error: 400|Gemini auth\/credit issue|Rate limited by Gemini|Empty response from Gemini/i.test(error.message);
+        const is429 = error.status === 429 || /Rate limited by Gemini/i.test(error.message);
+        if (is429 && attempt === 0) {
+          console.warn("Gemini 429 — waiting 8s then retrying...");
+          await new Promise((r) => setTimeout(r, 8000));
+          continue;
+        }
 
-      if (!shouldFallback || !gatewayKey) {
-        throw error;
+        const shouldFallback =
+          error.status === 400 ||
+          error.status === 402 ||
+          error.status === 429 ||
+          error.status === 503 ||
+          /GEMINI_API_KEY|Gemini API error: 400|Gemini auth\/credit issue|Rate limited by Gemini|Empty response from Gemini/i.test(error.message);
+
+        if (!shouldFallback || !gatewayKey) {
+          throw error;
+        }
+
+        console.warn("Direct Gemini call failed, falling back to Lovable AI gateway:", error.message);
+        break;
       }
-
-      console.warn("Direct Gemini call failed, falling back to Lovable AI gateway:", error.message);
     }
   }
 
