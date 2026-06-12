@@ -37,6 +37,7 @@ interface Opportunity {
   status: string;
   saved_by_bdr: string | null;
   active_intent: boolean;
+  contacts: ImportedContact[] | null;
 }
 
 const INTENT_BONUS = 15;
