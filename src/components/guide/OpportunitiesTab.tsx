@@ -143,7 +143,7 @@ export default function OpportunitiesTab() {
       .order('discovery_score', { ascending: false })
       .limit(100);
     if (error) toast.error('Failed to load opportunities');
-    setItems((data || []) as Opportunity[]);
+    setItems((data || []) as unknown as Opportunity[]);
     setLoading(false);
   }, [selected]);
 
