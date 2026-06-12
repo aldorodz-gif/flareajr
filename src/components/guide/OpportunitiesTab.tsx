@@ -575,10 +575,45 @@ export default function OpportunitiesTab() {
                   <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #F1F5F9' }}>
                     {o.why_it_matters && <p style={{ fontSize: 13, color: '#0F172A', margin: '0 0 6px', lineHeight: 1.5 }}>{stripLegacyTags(o.why_it_matters)}</p>}
                     {o.estimated_stay && <p style={{ fontSize: 12, color: '#64748B', margin: '0 0 6px' }}>Estimated stay: <span style={{ color: '#0F172A', fontWeight: 500 }}>{o.estimated_stay}</span></p>}
+                    {Array.isArray(o.contacts) && o.contacts.length > 0 && (
+                      <div style={{ marginTop: 8 }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#64748B', marginBottom: 6 }}>
+                          Contacts ({o.contacts.length})
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          {o.contacts.map((c, idx) => (
+                            <div key={`${c.email || c.name || idx}`} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, padding: '6px 8px', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 6 }}>
+                              <div style={{ minWidth: 140 }}>
+                                <div style={{ fontSize: 12, fontWeight: 600, color: '#0F172A' }}>{c.name || '—'}</div>
+                                {c.title && <div style={{ fontSize: 11, color: '#64748B' }}>{c.title}</div>}
+                              </div>
+                              {c.email && (
+                                <button
+                                  onClick={() => { navigator.clipboard.writeText(c.email); toast.success('Email copied'); }}
+                                  style={{ fontSize: 11, color: '#0EA5E9', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                                  title="Copy email"
+                                >
+                                  ✉ {c.email} 📋
+                                </button>
+                              )}
+                              {c.phone && (
+                                <button
+                                  onClick={() => { navigator.clipboard.writeText(c.phone); toast.success('Phone copied'); }}
+                                  style={{ fontSize: 11, color: '#475569', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                                  title="Copy phone"
+                                >
+                                  📞 {c.phone} 📋
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {o.source_url ? (
-                      <a href={o.source_url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: '#0EA5E9', textDecoration: 'none' }}>View source ↗</a>
+                      <a href={o.source_url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: '#0EA5E9', textDecoration: 'none', display: 'inline-block', marginTop: 8 }}>View source ↗</a>
                     ) : (
-                      <span style={{ fontSize: 12, color: '#94A3B8' }}>No source link</span>
+                      <span style={{ fontSize: 12, color: '#94A3B8', display: 'inline-block', marginTop: 8 }}>No source link</span>
                     )}
                   </div>
                 )}
