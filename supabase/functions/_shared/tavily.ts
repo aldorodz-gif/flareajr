@@ -30,21 +30,98 @@ export function isBlockedFetchUrl(url: string): boolean {
   }
 }
 
-// General opportunity-signal templates. {market} replaced with each market.
-export const SIGNAL_TEMPLATES = [
-  "new construction permits {market}",
-  "data center project announcement {market}",
-  "hospital expansion {market}",
-  "manufacturing plant opening {market}",
-  "company relocation announcement {market}",
-  "office lease expansion {market}",
-  "government contract award {market}",
-  "substation construction {market}",
-  "fiber broadband deployment {market}",
-  "infrastructure groundbreaking {market}",
-  "training cohort program {market}",
-  "subcontractor awarded {market}",
-];
+// Opportunity-signal templates, grouped by category so each scan run
+// can sample across verticals instead of stacking on construction.
+export const SIGNAL_TEMPLATES_BY_CATEGORY: Record<string, string[]> = {
+  construction: [
+    "new construction permits {market}",
+    "data center project announcement {market}",
+    "manufacturing plant opening {market}",
+    "infrastructure groundbreaking {market}",
+    "subcontractor awarded {market}",
+    "substation construction {market}",
+    "fiber broadband deployment {market}",
+  ],
+  corporate_movement: [
+    "company relocation announcement {market}",
+    "office lease expansion {market}",
+    "new headquarters {market}",
+    "company expanding operations {market}",
+  ],
+  govt_defense: [
+    "government contract award {market}",
+    "defense contractor expansion {market}",
+    "military base project {market}",
+  ],
+  healthcare: [
+    "hospital expansion {market}",
+    "new medical facility {market}",
+    "travel nurse demand {market}",
+    "clinical rotation program {market}",
+  ],
+  education_interns: [
+    "internship program {market}",
+    "university expansion {market}",
+    "summer intern cohort {market}",
+    "training program launch {market}",
+  ],
+  sports_entertainment: [
+    "film production filming {market}",
+    "sports team training facility {market}",
+    "major event coming to {market}",
+    "concert residency production {market}",
+  ],
+  disaster_restoration: [
+    "storm damage restoration {market}",
+    "apartment fire displacement {market}",
+    "disaster recovery crews {market}",
+  ],
+  professional_services: [
+    "consulting firm new office {market}",
+    "law firm expansion {market}",
+    "M&A integration project {market}",
+  ],
+  energy_utilities: [
+    "solar project construction {market}",
+    "grid upgrade project {market}",
+    "pipeline project {market}",
+  ],
+};
+
+// Flat list kept for back-compat with existing imports.
+export const SIGNAL_TEMPLATES: string[] = Object.values(SIGNAL_TEMPLATES_BY_CATEGORY).flat();
+
+// Pick templates spread ACROSS categories. Round-robins category buckets
+// (shuffled internally) and caps any one category at `maxPerCategory`.
+export function sampleSignalTemplatesAcrossCategories(
+  count: number,
+  maxPerCategory = 2,
+  extraPool?: string[],
+): string[] {
+  const buckets = Object.entries(SIGNAL_TEMPLATES_BY_CATEGORY).map(([cat, tpls]) => ({
+    cat,
+    pool: [...tpls].sort(() => Math.random() - 0.5),
+    taken: 0,
+  }));
+  if (extraPool && extraPool.length > 0) {
+    buckets.push({ cat: "_extra", pool: [...extraPool].sort(() => Math.random() - 0.5), taken: 0 });
+  }
+  const order = buckets.sort(() => Math.random() - 0.5);
+  const out: string[] = [];
+  let progressed = true;
+  while (out.length < count && progressed) {
+    progressed = false;
+    for (const b of order) {
+      if (out.length >= count) break;
+      if (b.taken >= maxPerCategory) continue;
+      if (b.pool.length === 0) continue;
+      out.push(b.pool.shift()!);
+      b.taken++;
+      progressed = true;
+    }
+  }
+  return out;
+}
 
 // Hiring / internship templates that target press releases & news (not job boards).
 export const HIRING_SIGNAL_TEMPLATES = [

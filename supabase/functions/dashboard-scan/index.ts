@@ -4,6 +4,7 @@ import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.
 import {
   SIGNAL_TEMPLATES,
   HIRING_SIGNAL_TEMPLATES,
+  sampleSignalTemplatesAcrossCategories,
   tavilySearch,
   verifyUrlReachable,
   isBlockedFetchUrl,
@@ -98,8 +99,7 @@ serve(async (req) => {
     // 1) Geo expansion: city + suburbs + county/metro + state-level signals.
     const geo = expandGeo(city, state);
     const wantsHiring = !vertical || vertical === "all" || /intern|hir/i.test(String(vertical));
-    const templatePool = wantsHiring ? [...SIGNAL_TEMPLATES, ...HIRING_SIGNAL_TEMPLATES] : SIGNAL_TEMPLATES;
-    const shuffleTemplates = () => [...templatePool].sort(() => Math.random() - 0.5);
+    const hiringPool = wantsHiring ? HIRING_SIGNAL_TEMPLATES : undefined;
 
     // Distribute MAX_QUERIES=12 across geo levels.
     //   ~4 city, ~3 suburbs, ~2 county/metro, ~3 state.
@@ -108,7 +108,6 @@ serve(async (req) => {
     plan.push({ geo: geo.city, n: 4 });
 
     if (geo.suburbs.length > 0) {
-      // Spread 3 queries across up to 3 distinct suburbs.
       const picks = [...geo.suburbs].sort(() => Math.random() - 0.5).slice(0, 3);
       for (const s of picks) plan.push({ geo: s, n: 1 });
     }
@@ -116,12 +115,17 @@ serve(async (req) => {
     if (geo.county) plan.push({ geo: geo.county, n: 1 });
     plan.push({ geo: geo.state, n: 3 });
 
+    // Pre-sample MAX_QUERIES templates spread ACROSS categories (max 2/category)
+    // so every scan covers verticals like healthcare, sports, disaster, etc.
+    const openTemplates = sampleSignalTemplatesAcrossCategories(MAX_QUERIES, 2, hiringPool);
+
     const queryPlan: Array<{ q: string; geo: string; scope: GeoScope; targeted: boolean }> = [];
+    let tIdx = 0;
     for (const slot of plan) {
-      const tpls = shuffleTemplates().slice(0, slot.n);
-      for (const t of tpls) {
-        if (queryPlan.length >= MAX_QUERIES) break;
-        queryPlan.push({ q: t.replace("{market}", slot.geo.label), geo: slot.geo.label, scope: slot.geo.scope, targeted: false });
+      for (let i = 0; i < slot.n; i++) {
+        if (queryPlan.length >= MAX_QUERIES || tIdx >= openTemplates.length) break;
+        const tpl = openTemplates[tIdx++];
+        queryPlan.push({ q: tpl.replace("{market}", slot.geo.label), geo: slot.geo.label, scope: slot.geo.scope, targeted: false });
       }
       if (queryPlan.length >= MAX_QUERIES) break;
     }
@@ -132,14 +136,15 @@ serve(async (req) => {
     const TARGETED_COUNT = sourceDomains.length > 0 ? Math.round(MAX_QUERIES * 0.4) : 0;
     if (TARGETED_COUNT > 0) {
       queryPlan.splice(MAX_QUERIES - TARGETED_COUNT);
-      // Re-use shuffled templates against same geo distribution for targeted slice.
       const targetedPlan: Array<{ geo: GeoEntry }> = [
         { geo: geo.city }, { geo: geo.city },
         ...(geo.suburbs[0] ? [{ geo: geo.suburbs[0] }] : []),
         { geo: geo.state }, { geo: geo.state },
       ].slice(0, TARGETED_COUNT);
-      for (const slot of targetedPlan) {
-        const tpl = shuffleTemplates()[0];
+      const targetedTemplates = sampleSignalTemplatesAcrossCategories(TARGETED_COUNT, 2, hiringPool);
+      for (let i = 0; i < targetedPlan.length; i++) {
+        const slot = targetedPlan[i];
+        const tpl = targetedTemplates[i] || SIGNAL_TEMPLATES[i % SIGNAL_TEMPLATES.length];
         queryPlan.push({ q: tpl.replace("{market}", slot.geo.label), geo: slot.geo.label, scope: slot.geo.scope, targeted: true });
       }
     }

@@ -5,6 +5,7 @@ import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.
 import {
   SIGNAL_TEMPLATES,
   HIRING_SIGNAL_TEMPLATES,
+  sampleSignalTemplatesAcrossCategories,
   tavilySearch,
   verifyUrlReachable,
   isBlockedFetchUrl,
@@ -102,10 +103,12 @@ serve(async (req) => {
     const MAX_QUERIES = 9;
     // Mix in hiring/internship templates when an Interns vertical is in scope.
     const includeHiring = verticals.length === 0 || verticals.some(v => /intern|hir/i.test(v));
-    const templatePool = includeHiring ? [...SIGNAL_TEMPLATES, ...HIRING_SIGNAL_TEMPLATES] : SIGNAL_TEMPLATES;
-    // Per-market shuffled template list so each market gets different templates.
-    const perMarketShuffles = new Map<string, string[]>(
-      markets.map(m => [m, [...templatePool].sort(() => Math.random() - 0.5)])
+    const hiringPool = includeHiring ? HIRING_SIGNAL_TEMPLATES : undefined;
+
+    // Round-robin across markets; pull a fresh cross-category template sample per market
+    // so each scan covers a spread of verticals (max 2 per category per market).
+    const perMarketTemplates = new Map<string, string[]>(
+      markets.map(m => [m, sampleSignalTemplatesAcrossCategories(MAX_QUERIES, 2, hiringPool)])
     );
     const perMarketIdx = new Map<string, number>(markets.map(m => [m, 0]));
     const queries: string[] = [];
@@ -113,10 +116,10 @@ serve(async (req) => {
       let addedThisCycle = 0;
       for (const market of markets) {
         if (queries.length >= MAX_QUERIES) break;
-        const shuf = perMarketShuffles.get(market)!;
+        const tpls = perMarketTemplates.get(market)!;
         const i = perMarketIdx.get(market)!;
-        if (i >= shuf.length) continue;
-        queries.push(shuf[i].replace("{market}", market));
+        if (i >= tpls.length) continue;
+        queries.push(tpls[i].replace("{market}", market));
         perMarketIdx.set(market, i + 1);
         addedThisCycle++;
       }
