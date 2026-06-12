@@ -1,8 +1,10 @@
 import { useState, useMemo, useRef } from 'react';
 import {
   Target, Send, BarChart2, Users, Map, Calendar, User, X, Plus, Trash2, Brain,
-  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw,
+  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw, Activity,
 } from 'lucide-react';
+import { useAuth } from '@/components/auth/AuthProvider';
+import SystemHealth from './SystemHealth';
 
 interface SettingsPageProps {
   onClose: () => void;
@@ -17,6 +19,10 @@ const SECTIONS = [
   { id: 'events',        label: 'Event Preferences',    icon: Calendar },
   { id: 'account',       label: 'Account',              icon: User },
   { id: 'ai-behavior',   label: 'AI Behavior',          icon: Brain },
+];
+
+const ADMIN_SECTIONS = [
+  { id: 'system-health', label: 'System Health',        icon: Activity },
 ];
 
 const ACCENT = '#0EA5E9';
