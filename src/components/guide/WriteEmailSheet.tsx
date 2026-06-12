@@ -138,6 +138,30 @@ const WriteEmailSheet = ({ open, onClose, company, signal, contacts = [] }: Writ
         </header>
 
         <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {contacts.length > 0 && (
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 500, color: '#64748B', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
+                Recipient ({contacts.length} on file)
+              </p>
+              <select
+                value={recipientEmail}
+                onChange={e => {
+                  const v = e.target.value;
+                  setRecipientEmail(v);
+                  const picked = contacts.find(c => c.email === v);
+                  if (picked?.title) setBuyerTitle(picked.title);
+                }}
+                style={{ ...inputStyle, padding: '10px 12px', appearance: 'none', cursor: 'pointer' }}
+              >
+                <option value="">— Choose a contact —</option>
+                {contacts.map(c => (
+                  <option key={c.email || c.name} value={c.email}>
+                    {c.name || c.email}{c.title ? ` · ${c.title}` : ''}{c.email ? ` · ${c.email}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div style={{ position: 'relative' }}>
             <Building2 size={14} color="#94A3B8" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
             <input value={companyVal} onChange={e => setCompanyVal(e.target.value)} placeholder="Company" style={inputStyle} />
