@@ -11,17 +11,26 @@ const TONES = [
   { id: 'bold', label: 'Bold' },
 ];
 
+interface EmailRecipient {
+  name: string;
+  title: string;
+  email: string;
+  phone?: string;
+}
+
 interface WriteEmailSheetProps {
   open: boolean;
   onClose: () => void;
   company: string;
   signal: string;
+  contacts?: EmailRecipient[];
 }
 
-const WriteEmailSheet = ({ open, onClose, company, signal }: WriteEmailSheetProps) => {
+const WriteEmailSheet = ({ open, onClose, company, signal, contacts = [] }: WriteEmailSheetProps) => {
   const [companyVal, setCompanyVal] = useState(company);
   const [signalVal, setSignalVal] = useState(signal);
   const [buyerTitle, setBuyerTitle] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
   const [serviceLine, setServiceLine] = useState('');
   const [tone, setTone] = useState('direct');
   const [loading, setLoading] = useState(false);
@@ -35,7 +44,11 @@ const WriteEmailSheet = ({ open, onClose, company, signal }: WriteEmailSheetProp
       setSignalVal(signal);
       setResult(null);
       setError('');
+      const first = contacts.find(c => c.email);
+      setRecipientEmail(first?.email ?? '');
+      if (first?.title && !buyerTitle) setBuyerTitle(first.title);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, company, signal]);
 
   const canGenerate = companyVal.trim() && signalVal.trim() && buyerTitle.trim() && serviceLine;
