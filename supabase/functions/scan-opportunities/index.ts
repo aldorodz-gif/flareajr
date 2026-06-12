@@ -265,8 +265,12 @@ serve(async (req) => {
       if (!allowedUrlSet.has(o.source_url)) { droppedFakeUrl++; continue; }
       if (isCompetitor(blob)) { skipped++; continue; }
       if (!hasHousingNeed(blob)) { skipped++; continue; }
-      const reachable = await verifyUrlReachable(o.source_url);
-      if (!reachable) { droppedUnverified++; continue; }
+      // Job-board domains block automated fetches — accept without reachability check.
+      const isJobBoard = isBlockedFetchUrl(o.source_url);
+      if (!isJobBoard) {
+        const reachable = await verifyUrlReachable(o.source_url);
+        if (!reachable) { droppedUnverified++; continue; }
+      }
 
       const composite = (Number(o.discovery_score) * 0.4) + (Number(o.housing_fit_score) * 0.4) + (Number(o.confidence_score) * 0.2);
       const priority = composite >= 80 ? "Top Priority" : composite >= 65 ? "Strong Opportunity" : composite >= 45 ? "Early Signal" : "Watch List";
