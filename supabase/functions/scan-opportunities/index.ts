@@ -120,8 +120,8 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "BDR has no markets configured" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // 1) Build queries (cap to keep runtime reasonable)
-    const MAX_QUERIES = 10;
+    // 1) Build queries (cap to keep runtime + token budget reasonable)
+    const MAX_QUERIES = 6;
     const shuffled = [...SIGNAL_TEMPLATES].sort(() => Math.random() - 0.5);
     const queries: string[] = [];
     outer: for (const market of markets) {
@@ -139,8 +139,11 @@ serve(async (req) => {
       for (const h of hits) {
         if (seenUrls.has(h.url)) continue;
         seenUrls.add(h.url);
-        allHits.push(h);
+        // Trim content to keep prompt under model token budget
+        allHits.push({ ...h, content: (h.content || "").slice(0, 350) });
+        if (allHits.length >= 30) break;
       }
+      if (allHits.length >= 30) break;
     }
 
     if (allHits.length === 0) {
