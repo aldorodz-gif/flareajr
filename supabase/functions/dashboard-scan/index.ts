@@ -1,6 +1,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { loadMindsetBlocks, findBdrIdForMarket } from "../_shared/mindset.ts";
 import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.ts";
+import {
+  SIGNAL_TEMPLATES,
+  HIRING_SIGNAL_TEMPLATES,
+  tavilySearch,
+  verifyUrlReachable,
+  isBlockedFetchUrl,
+  type TavilyHit,
+} from "../_shared/tavily.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,20 +29,15 @@ const asTrimmedString = (value: unknown) => typeof value === "string" ? value.tr
 
 const normalizeLead = (value: unknown) => {
   if (!value || typeof value !== "object") return null;
-
   const lead = value as Record<string, unknown>;
   const company_name = asTrimmedString(lead.company_name);
   if (!company_name) return null;
-
   const recommended_titles = Array.isArray(lead.recommended_titles)
     ? lead.recommended_titles
-      .filter((title): title is string => typeof title === "string" && title.trim().length > 0)
-      .map((title) => title.trim())
-      .slice(0, 5)
+      .filter((t): t is string => typeof t === "string" && t.trim().length > 0)
+      .map((t) => t.trim()).slice(0, 5)
     : [];
-
   return {
-    ...lead,
     company_name,
     vertical: asTrimmedString(lead.vertical) || "Unknown vertical",
     signal_type: asTrimmedString(lead.signal_type) || "Market signal",
@@ -47,13 +50,10 @@ const normalizeLead = (value: unknown) => {
 
 const normalizeTopVertical = (value: unknown) => {
   if (!value || typeof value !== "object") return null;
-
   const row = value as Record<string, unknown>;
   const vertical = asTrimmedString(row.vertical);
   if (!vertical) return null;
-
   const share = typeof row.share_pct === "number" ? row.share_pct : Number(row.share_pct);
-
   return {
     vertical,
     share_pct: Number.isFinite(share) ? Math.max(0, Math.min(100, Math.round(share))) : 0,
@@ -72,51 +72,77 @@ serve(async (req) => {
       });
     }
 
-    const PERPLEXITY_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!PERPLEXITY_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
+    const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
+    if (!TAVILY_API_KEY) {
+      return new Response(JSON.stringify({ error: "TAVILY_API_KEY not configured" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
+    const market = `${city}, ${state}`;
+    const today = new Date().toISOString().split("T")[0];
+    const excludeList: string[] = Array.isArray(exclude) ? exclude.filter(Boolean).slice(0, 40) : [];
+
+    // 1) Build queries from scan input. Include hiring templates when scope is "all" or an intern/hiring vertical.
+    const wantsHiring = !vertical || vertical === "all" || /intern|hir/i.test(String(vertical));
+    const templatePool = wantsHiring ? [...SIGNAL_TEMPLATES, ...HIRING_SIGNAL_TEMPLATES] : SIGNAL_TEMPLATES;
+    const shuffled = [...templatePool].sort(() => Math.random() - 0.5);
+    const MAX_QUERIES = 9;
+    const queries = shuffled.slice(0, MAX_QUERIES).map(t => t.replace("{market}", market));
+
+    // 2) Run Tavily for each query in parallel.
+    const tavilyResults = await Promise.all(queries.map(q => tavilySearch(TAVILY_API_KEY, q)));
+    const allHits: TavilyHit[] = [];
+    const seenUrls = new Set<string>();
+    for (const hits of tavilyResults) {
+      for (const h of hits) {
+        if (seenUrls.has(h.url)) continue;
+        seenUrls.add(h.url);
+        allHits.push({ ...h, content: (h.content || "").slice(0, 350) });
+        if (allHits.length >= 30) break;
+      }
+      if (allHits.length >= 30) break;
+    }
+
+    if (allHits.length === 0) {
+      return new Response(JSON.stringify({ leads: [], top_verticals: [], tavily_hits: 0 }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // 3) Mindset block + prompt
+    const resolvedBdrId = bdr_id || (await findBdrIdForMarket(city, state));
+    const mindsetBlock = await loadMindsetBlocks(resolvedBdrId);
     const verticalScope = vertical && vertical !== "all"
       ? `Focus exclusively on the "${vertical}" vertical.`
       : `Cover any of these 7 verticals: ${VERTICALS.join(", ")}.`;
 
-    const today = new Date().toISOString().split("T")[0];
-    const excludeList: string[] = Array.isArray(exclude) ? exclude.filter(Boolean).slice(0, 60) : [];
-
-    const resolvedBdrId = bdr_id || (await findBdrIdForMarket(city, state));
-    const mindsetBlock = await loadMindsetBlocks(resolvedBdrId);
+    const allowedUrlSet = new Set(allHits.map(h => h.url));
 
     const systemPrompt = [
-      "You are a market intelligence analyst for a corporate housing sales BDR at National Corporate Housing.",
-      `Today is ${today}. The rep covers ${city}, ${state}.`,
+      "You evaluate real web search results and extract SMB corporate-housing leads for National Corporate Housing.",
+      `Today: ${today}. Market: ${market}.`,
       verticalScope,
       mindsetBlock,
-      "OPERATING RULE: The OPERATOR MINDSET block above is load-bearing. Apply every rule, signal type, and target archetype it lists when you select leads — do not just acknowledge it, USE it on every lead.",
-      "MISSION: Use Google Search RIGHT NOW to find SMB/SME companies with active 30+ day corporate housing demand signals in this market.",
-      "Search current news, press releases, contract awards (USASpending, SAM.gov), permits, EDC announcements, regional business journals, hospital/university expansion news, defense/DOE awards, BEAD broadband awards, county capital plans, state procurement portals, construction trade press, LinkedIn job posts.",
-      "The 'company' field MUST be the SMB/SME executing the work — never an F500 / hospital system / utility / agency umbrella. When the umbrella project belongs to an F500, name the SMB sub doing the work.",
-      "Always include a real source_url per lead from your Google Search results. Do NOT fabricate URLs.",
-      excludeList.length
-        ? `Exclude these already-shown companies: ${excludeList.join(", ")}.`
-        : "Surface fresh, less-obvious SMBs — specialty subs, regional staffing firms, niche engineering shops, mid-tier consultancies.",
-      "Return AT LEAST 12 leads (target 12-18).",
-      "Also rank which of the 7 canonical verticals are most active in this market right now (share % summing to 100).",
+      "RULES:",
+      "- Use ONLY the provided Tavily results. Never invent companies, URLs, or dates.",
+      "- source_url MUST be copied verbatim from the input list.",
+      "- 'company_name' must be SMB/SME (<~$500M rev). If the article is about an F500 project, name the SMB sub instead.",
+      "- Skip other corporate housing providers (Synergy, Churchill, Mint House, Oakwood, AKA, Sonder).",
+      excludeList.length ? `- Skip already-shown: ${excludeList.join(", ")}.` : "",
       `Use the 7 canonical vertical names exactly: ${VERTICALS.join(", ")}.`,
       "For recommended_titles: 3-5 job titles per lead — never C-suite.",
-      "",
-      "OUTPUT FORMAT — return ONLY a JSON object inside a ```json code fence, no prose before or after:",
-      "{",
-      '  "leads": [',
-      '    {"company_name": "...", "vertical": "<one of the 7>", "signal_type": "...", "signal_detail": "...", "why_housing": "...", "recommended_titles": ["...", "..."], "source_url": "https://..."}',
-      "  ],",
-      '  "top_verticals": [',
-      '    {"vertical": "<one of the 7>", "share_pct": 25, "driver": "..."}',
-      "  ]",
-      "}",
-    ].join(" ");
+      'OUTPUT — ONLY this JSON in a ```json fence: { "leads": [ { "company_name": "...", "vertical": "...", "signal_type": "...", "signal_detail": "...", "why_housing": "...", "recommended_titles": ["..."], "source_url": "https://..." } ], "top_verticals": [ { "vertical": "...", "share_pct": 25, "driver": "..." } ] }',
+    ].filter(Boolean).join("\n");
 
-    const userPrompt = `Search Google right now for 12-18 SMB/SME companies in ${city}, ${state} with active corporate housing demand signals (expansions, contract wins, hiring surges, project starts, mobilizations, subcontractor mobilizations under larger F500/utility/agency projects) in the last 90 days. Apply the OPERATOR MINDSET rules. Include source_url for each lead from your search results.`;
+    const userPrompt = [
+      `Extract qualified SMB leads from these ${allHits.length} real Tavily results for ${market}. source_url must match one of the urls below exactly.`,
+      "```json",
+      JSON.stringify(allHits),
+      "```",
+    ].join("\n");
 
-    let result: Record<string, unknown> & { leads?: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> };
+    let result: { leads?: unknown[]; top_verticals?: unknown[] } = {};
     try {
       const text = await callGeminiGrounded({ systemPrompt, userPrompt, temperature: 0.3 });
       result = extractJson(text);
@@ -128,63 +154,43 @@ serve(async (req) => {
       }
       throw e;
     }
-    const citations: string[] = [];
 
-    // Verify each lead's source_url actually loads AND mentions the company.
-    // If the model-supplied URL fails, try the Perplexity citation list as a fallback.
-    const verifyUrlMentionsCompany = async (url: string, company: string): Promise<boolean> => {
-      try {
-        const u = new URL(url);
-        if (u.protocol !== "https:" && u.protocol !== "http:") return false;
-        const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 8000);
-        const res = await fetch(url, {
-          method: "GET",
-          redirect: "follow",
-          signal: ctrl.signal,
-          headers: { "User-Agent": "Mozilla/5.0 (compatible; FlareLeadVerifier/1.0)" },
-        });
-        clearTimeout(timer);
-        if (!res.ok) return false;
-        const text = (await res.text()).toLowerCase();
-        const tokens = company.toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length > 3);
-        if (tokens.length === 0) return text.includes(company.toLowerCase());
-        return tokens.some(t => text.includes(t));
-      } catch {
-        return false;
-      }
-    };
-
-    const rawLeads: Array<{ company_name: string; source_url?: string; [k: string]: unknown }> = Array.isArray(result.leads)
-      ? result.leads.map(normalizeLead).filter((lead): lead is { company_name: string; source_url?: string; [k: string]: unknown } => !!lead)
+    const rawLeads = Array.isArray(result.leads)
+      ? result.leads.map(normalizeLead).filter((l): l is NonNullable<ReturnType<typeof normalizeLead>> => !!l)
       : [];
-    const verifiedLeads: typeof rawLeads = [];
-    let unverifiedCount = 0;
+
+    // 4) Validate: source_url must be in Tavily allowed set. Then either verify reachability
+    //    OR mark as job-board (skip the fetch but accept the signal).
+    const verifiedLeads: Array<typeof rawLeads[number] & { source_verified: boolean; source_label?: string }> = [];
+    let droppedFakeUrl = 0, droppedUnverified = 0;
     for (const lead of rawLeads) {
-      const candidates = [lead.source_url, ...citations].filter((u): u is string => !!u);
-      let goodUrl: string | null = null;
-      for (const url of candidates) {
-        if (await verifyUrlMentionsCompany(url, lead.company_name)) {
-          goodUrl = url;
-          break;
-        }
+      if (!lead.source_url) { droppedUnverified++; continue; }
+      if (!allowedUrlSet.has(lead.source_url)) { droppedFakeUrl++; continue; }
+      if (isBlockedFetchUrl(lead.source_url)) {
+        verifiedLeads.push({
+          ...lead,
+          source_verified: false,
+          source_label: "Source: job board (link may require login)",
+        });
+        continue;
       }
-      // SOFT verification: keep every lead. Only the BDR decides to archive or pipeline it.
-      // If we can't verify, fall back to the model's URL (or first citation) and flag it as unverified.
-      const fallbackUrl = goodUrl ?? lead.source_url ?? candidates[0] ?? null;
-      if (!goodUrl) unverifiedCount++;
-      verifiedLeads.push({ ...lead, source_url: fallbackUrl, url_verified: !!goodUrl });
+      const ok = await verifyUrlReachable(lead.source_url);
+      if (!ok) { droppedUnverified++; continue; }
+      verifiedLeads.push({ ...lead, source_verified: true });
     }
-    result.leads = verifiedLeads;
-    result.top_verticals = Array.isArray(result.top_verticals)
-      ? result.top_verticals.map(normalizeTopVertical).filter((row): row is { vertical: string; share_pct: number; driver: string } => !!row)
-      : [];
-    result.citations = citations;
-    result.unverified_count = unverifiedCount;
 
-    return new Response(JSON.stringify(result), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    const topVerticals = Array.isArray(result.top_verticals)
+      ? result.top_verticals.map(normalizeTopVertical).filter((r): r is NonNullable<ReturnType<typeof normalizeTopVertical>> => !!r)
+      : [];
+
+    return new Response(JSON.stringify({
+      leads: verifiedLeads,
+      top_verticals: topVerticals,
+      tavily_hits: allHits.length,
+      queries_run: queries.length,
+      dropped_fake_url: droppedFakeUrl,
+      dropped_unverified: droppedUnverified,
+    }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (e) {
     console.error("dashboard-scan error:", e);
     const msg = e instanceof Error ? e.message : "Something went wrong. Try again.";

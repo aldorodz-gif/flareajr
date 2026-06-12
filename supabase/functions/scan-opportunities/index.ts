@@ -2,6 +2,14 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { loadMindsetBlocks } from "../_shared/mindset.ts";
 import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.ts";
+import {
+  SIGNAL_TEMPLATES,
+  HIRING_SIGNAL_TEMPLATES,
+  tavilySearch,
+  verifyUrlReachable,
+  isBlockedFetchUrl,
+  type TavilyHit,
+} from "../_shared/tavily.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,79 +29,7 @@ const HOUSING_KEYWORDS = [
 function isCompetitor(text: string) { const t = text.toLowerCase(); return COMPETITOR_KEYWORDS.some(k => t.includes(k)); }
 function hasHousingNeed(text: string) { const t = text.toLowerCase(); return HOUSING_KEYWORDS.some(k => t.includes(k)); }
 
-// Signal-query templates. {market} replaced with each BDR market.
-const SIGNAL_TEMPLATES = [
-  "new construction permits {market}",
-  "data center project announcement {market}",
-  "hospital expansion {market}",
-  "manufacturing plant opening {market}",
-  "company relocation announcement {market}",
-  "office lease expansion {market}",
-  "government contract award {market}",
-  "substation construction {market}",
-  "fiber broadband deployment {market}",
-  "infrastructure groundbreaking {market}",
-  "training cohort program {market}",
-  "subcontractor awarded {market}",
-];
-
-type TavilyHit = { title: string; url: string; content: string; published_date?: string };
-
-async function tavilySearch(apiKey: string, query: string): Promise<TavilyHit[]> {
-  try {
-    const res = await fetch("https://api.tavily.com/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        api_key: apiKey,
-        query,
-        search_depth: "basic",
-        topic: "news",
-        days: 30,
-        max_results: 10,
-        include_answer: false,
-      }),
-    });
-    if (!res.ok) {
-      const body = await res.text();
-      console.warn("Tavily error", res.status, body.slice(0, 200));
-      return [];
-    }
-    const data = await res.json();
-    const results: TavilyHit[] = (data?.results || []).map((r: any) => ({
-      title: r.title || "",
-      url: r.url || "",
-      content: r.content || "",
-      published_date: r.published_date || undefined,
-    })).filter((r: TavilyHit) => r.url && r.title);
-    return results;
-  } catch (e) {
-    console.warn("Tavily fetch failed", e instanceof Error ? e.message : e);
-    return [];
-  }
-}
-
-// Verify URL is reachable. Try HEAD first; some hosts reject HEAD → fall back to GET.
-async function verifyUrlReachable(url: string): Promise<boolean> {
-  for (const method of ["HEAD", "GET"] as const) {
-    try {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 7000);
-      const res = await fetch(url, {
-        method,
-        redirect: "follow",
-        signal: ctrl.signal,
-        headers: { "User-Agent": "Mozilla/5.0 (compatible; FlareLeadVerifier/1.0)" },
-      });
-      clearTimeout(timer);
-      if (res.ok) return true;
-      if (method === "HEAD" && (res.status === 405 || res.status === 403 || res.status === 400)) continue;
-    } catch {
-      if (method === "GET") return false;
-    }
-  }
-  return false;
-}
+// SIGNAL_TEMPLATES, tavilySearch, verifyUrlReachable now imported from _shared/tavily.ts
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -162,9 +98,12 @@ serve(async (req) => {
 
     // 1) Build queries — round-robin across ALL markets so every market is searched each run.
     const MAX_QUERIES = 9;
+    // Mix in hiring/internship templates when an Interns vertical is in scope.
+    const includeHiring = verticals.length === 0 || verticals.some(v => /intern|hir/i.test(v));
+    const templatePool = includeHiring ? [...SIGNAL_TEMPLATES, ...HIRING_SIGNAL_TEMPLATES] : SIGNAL_TEMPLATES;
     // Per-market shuffled template list so each market gets different templates.
     const perMarketShuffles = new Map<string, string[]>(
-      markets.map(m => [m, [...SIGNAL_TEMPLATES].sort(() => Math.random() - 0.5)])
+      markets.map(m => [m, [...templatePool].sort(() => Math.random() - 0.5)])
     );
     const perMarketIdx = new Map<string, number>(markets.map(m => [m, 0]));
     const queries: string[] = [];
@@ -329,8 +268,12 @@ serve(async (req) => {
       if (!allowedUrlSet.has(o.source_url)) { droppedFakeUrl++; continue; }
       if (isCompetitor(blob)) { skipped++; continue; }
       if (!hasHousingNeed(blob)) { skipped++; continue; }
-      const reachable = await verifyUrlReachable(o.source_url);
-      if (!reachable) { droppedUnverified++; continue; }
+      // Job-board domains block automated fetches — accept without reachability check.
+      const isJobBoard = isBlockedFetchUrl(o.source_url);
+      if (!isJobBoard) {
+        const reachable = await verifyUrlReachable(o.source_url);
+        if (!reachable) { droppedUnverified++; continue; }
+      }
 
       const composite = (Number(o.discovery_score) * 0.4) + (Number(o.housing_fit_score) * 0.4) + (Number(o.confidence_score) * 0.2);
       const priority = composite >= 80 ? "Top Priority" : composite >= 65 ? "Strong Opportunity" : composite >= 45 ? "Early Signal" : "Watch List";
