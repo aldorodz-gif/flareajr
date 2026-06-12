@@ -186,20 +186,20 @@ const ImportContactsSheet = ({ open, onClose, onImported }: Props) => {
       for (const [k, g] of groups) {
         const match = byCompany.get(k);
         if (match) {
-          const existingContacts = (Array.isArray(match.contacts) ? match.contacts : []) as ImportedContact[];
+          const existingContacts = (Array.isArray(match.contacts) ? match.contacts : []) as unknown as ImportedContact[];
           const combined = [...existingContacts, ...g.contacts];
           const { kept, skipped } = dedupe(combined);
           duped += skipped;
           appended += kept.length - existingContacts.length;
           const { error } = await supabase
             .from('opportunities')
-            .update({ contacts: kept, active_intent: true })
+            .update({ contacts: kept as unknown as never, active_intent: true })
             .eq('id', match.id);
           if (error) throw error;
         } else {
           const { kept, skipped } = dedupe(g.contacts);
           duped += skipped;
-          const { error } = await supabase.from('opportunities').insert({
+          const insertRow = {
             company: g.displayCompany,
             market: g.market,
             vertical: null,
@@ -211,12 +211,13 @@ const ImportContactsSheet = ({ open, onClose, onImported }: Props) => {
             active_intent: true,
             source_type: 'zoominfo_intent',
             assigned_bdr: selected.id,
-            contacts: kept,
+            contacts: kept as unknown as never,
             status: 'new',
             discovery_score: 85,
             housing_fit_score: 80,
             confidence_score: 80,
-          });
+          };
+          const { error } = await supabase.from('opportunities').insert(insertRow);
           if (error) throw error;
           created++;
         }
