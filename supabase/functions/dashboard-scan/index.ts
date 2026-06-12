@@ -204,14 +204,18 @@ serve(async (req) => {
 
     // 4) Validate: source_url must be in Tavily allowed set. Then either verify reachability
     //    OR mark as job-board (skip the fetch but accept the signal).
+    //    Always overwrite market/geo_scope from the cited hit so they reflect the
+    //    true source location, not whatever the model echoed.
     const verifiedLeads: Array<typeof rawLeads[number] & { source_verified: boolean; source_label?: string }> = [];
     let droppedFakeUrl = 0, droppedUnverified = 0;
     for (const lead of rawLeads) {
       if (!lead.source_url) { droppedUnverified++; continue; }
       if (!allowedUrlSet.has(lead.source_url)) { droppedFakeUrl++; continue; }
+      const hit = hitByUrl.get(lead.source_url)!;
+      const enriched = { ...lead, market: hit.geo, geo_scope: hit.geo_scope };
       if (isBlockedFetchUrl(lead.source_url)) {
         verifiedLeads.push({
-          ...lead,
+          ...enriched,
           source_verified: false,
           source_label: "Source: job board (link may require login)",
         });
@@ -219,7 +223,7 @@ serve(async (req) => {
       }
       const ok = await verifyUrlReachable(lead.source_url);
       if (!ok) { droppedUnverified++; continue; }
-      verifiedLeads.push({ ...lead, source_verified: true });
+      verifiedLeads.push({ ...enriched, source_verified: true });
     }
 
     const topVerticals = Array.isArray(result.top_verticals)
