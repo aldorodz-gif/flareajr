@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef } from 'react';
 import {
   Target, Send, BarChart2, Users, Map, Calendar, User, X, Plus, Trash2, Brain,
-  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw, Activity, Radio,
+  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw, Activity, Radio as RadioIcon,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import SystemHealth from './SystemHealth';
