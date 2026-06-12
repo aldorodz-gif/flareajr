@@ -123,9 +123,21 @@ serve(async (req) => {
       if (addedThisCycle === 0) break;
     }
 
+    // Split: ~60% open-web + ~40% source-targeted. For MAX_QUERIES=9 → 5 open + 4 targeted.
+    const sourceDomains = await loadActiveSignalDomains();
+    const TARGETED_COUNT = sourceDomains.length > 0 ? Math.round(MAX_QUERIES * 0.4) : 0;
+    const openQueries = TARGETED_COUNT > 0 ? queries.slice(0, MAX_QUERIES - TARGETED_COUNT) : queries;
+    const targetedQueries = TARGETED_COUNT > 0 ? queries.slice(-TARGETED_COUNT) : [];
+    const queryRuns: Array<{ q: string; targeted: boolean }> = [
+      ...openQueries.map(q => ({ q, targeted: false })),
+      ...targetedQueries.map(q => ({ q, targeted: true })),
+    ];
 
-    // 2) Run Tavily for each query, in parallel
-    const tavilyResults = await Promise.all(queries.map(q => tavilySearch(TAVILY_API_KEY, q).then(hits => ({ q, hits }))));
+    // 2) Run Tavily for each query, in parallel. Targeted queries pass include_domains.
+    const tavilyResults = await Promise.all(queryRuns.map(r =>
+      tavilySearch(TAVILY_API_KEY, r.q, 10, "scan-opportunities", r.targeted ? sourceDomains : undefined)
+        .then(hits => ({ q: r.q, hits }))
+    ));
     const allHits: TavilyHit[] = [];
     const seenUrls = new Set<string>();
     for (const { hits } of tavilyResults) {
