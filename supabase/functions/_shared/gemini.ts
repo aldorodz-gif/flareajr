@@ -81,6 +81,9 @@ async function callDirectGemini(
   const text = data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("") || "";
   if (!text) {
     console.error("Empty Gemini response. finishReason:", finishReason, "payload head:", JSON.stringify(data).slice(0, 800));
+    if (finishReason === "MAX_TOKENS") {
+      throw new GeminiError("Prompt too large for model output budget", 413);
+    }
     // 503 so the outer handler falls back to the Lovable AI gateway
     throw new GeminiError(`Empty response from Gemini (finishReason: ${finishReason || "unknown"})`, 503);
   }
