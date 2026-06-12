@@ -283,26 +283,23 @@ serve(async (req) => {
 
     let inserted = 0;
     let skipped = 0;
-    let unverified = 0;
+    let droppedUnverified = 0;
     for (const o of opportunities) {
       const blob = `${o.company} ${o.description} ${o.project}`;
       if (isCompetitor(blob)) { skipped++; continue; }
       if (!hasHousingNeed(blob)) { skipped++; continue; }
 
-      // SOFT verification: try to confirm the source URL actually mentions the company.
-      // We DO NOT drop the lead if verification fails — BDRs decide what to archive or move to pipeline.
-      // Verification only feeds the confidence label so reps see what's been checked.
+      // HARD verification: every lead MUST have a source_url that resolves AND mentions
+      // the company. Unverified leads are dropped — never displayed or stored.
+      if (!o.source_url) { droppedUnverified++; continue; }
       let urlVerified = false;
-      if (o.source_url) {
-        try { urlVerified = await verifyUrlMentionsCompany(o.source_url, o.company); } catch { urlVerified = false; }
-      }
-      if (!urlVerified) unverified++;
+      try { urlVerified = await verifyUrlMentionsCompany(o.source_url, o.company); } catch { urlVerified = false; }
+      if (!urlVerified) { droppedUnverified++; continue; }
 
       const composite = (Number(o.discovery_score) * 0.4) + (Number(o.housing_fit_score) * 0.4) + (Number(o.confidence_score) * 0.2);
       const priority = composite >= 80 ? "Top Priority" : composite >= 65 ? "Strong Opportunity" : composite >= 45 ? "Early Signal" : "Watch List";
       const review_status = composite >= 75 ? "Ready Now" : composite >= 55 ? "Needs Review" : "Watch List";
-      const baseConfidence = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
-      const confidence_label = urlVerified ? baseConfidence : `${baseConfidence} · Unverified URL`;
+      const confidence_label = o.confidence_score >= 75 ? "High" : o.confidence_score >= 50 ? "Medium" : "Low";
       const nearestResult = await pickNearestInventory(o.market);
       const nearest = nearestResult?.label ?? null;
       const nearestMiles = nearestResult?.miles ?? null;
@@ -338,7 +335,7 @@ serve(async (req) => {
         near_core_inventory: !!nearest,
         distance_to_inventory: nearestMiles,
         source_type: o.source_type,
-        source_url: o.source_url || null,
+        source_url: o.source_url,
         assigned_bdr: bdr_id,
         last_verified: new Date().toISOString(),
       };
@@ -351,7 +348,7 @@ serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ inserted, skipped, unverified, total: opportunities.length }), {
+    return new Response(JSON.stringify({ inserted, skipped, dropped_unverified: droppedUnverified, total: opportunities.length }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
