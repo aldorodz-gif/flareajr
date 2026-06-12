@@ -11,6 +11,7 @@ import {
   type TavilyHit,
 } from "../_shared/tavily.ts";
 import { loadFeedbackContext } from "../_shared/feedback.ts";
+import { loadActiveSignalDomains } from "../_shared/signalSources.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
