@@ -93,22 +93,52 @@ serve(async (req) => {
     const today = new Date().toISOString().split("T")[0];
     const excludeList: string[] = Array.isArray(exclude) ? exclude.filter(Boolean).slice(0, 40) : [];
 
-    // 1) Build queries from scan input. Include hiring templates when scope is "all" or an intern/hiring vertical.
+    // 1) Geo expansion: city + suburbs + county/metro + state-level signals.
+    const geo = expandGeo(city, state);
     const wantsHiring = !vertical || vertical === "all" || /intern|hir/i.test(String(vertical));
     const templatePool = wantsHiring ? [...SIGNAL_TEMPLATES, ...HIRING_SIGNAL_TEMPLATES] : SIGNAL_TEMPLATES;
-    const shuffled = [...templatePool].sort(() => Math.random() - 0.5);
-    const MAX_QUERIES = 9;
-    const queries = shuffled.slice(0, MAX_QUERIES).map(t => t.replace("{market}", market));
+    const shuffleTemplates = () => [...templatePool].sort(() => Math.random() - 0.5);
 
-    // 2) Run Tavily for each query in parallel.
-    const tavilyResults = await Promise.all(queries.map(q => tavilySearch(TAVILY_API_KEY, q)));
-    const allHits: TavilyHit[] = [];
+    // Distribute MAX_QUERIES=12 across geo levels.
+    //   ~4 city, ~3 suburbs, ~2 county/metro, ~3 state.
+    const MAX_QUERIES = 12;
+    const plan: Array<{ geo: GeoEntry; n: number }> = [];
+    plan.push({ geo: geo.city, n: 4 });
+
+    if (geo.suburbs.length > 0) {
+      // Spread 3 queries across up to 3 distinct suburbs.
+      const picks = [...geo.suburbs].sort(() => Math.random() - 0.5).slice(0, 3);
+      for (const s of picks) plan.push({ geo: s, n: 1 });
+    }
+    if (geo.metro) plan.push({ geo: geo.metro, n: 1 });
+    if (geo.county) plan.push({ geo: geo.county, n: 1 });
+    plan.push({ geo: geo.state, n: 3 });
+
+    const queryPlan: Array<{ q: string; geo: string; scope: GeoScope }> = [];
+    for (const slot of plan) {
+      const tpls = shuffleTemplates().slice(0, slot.n);
+      for (const t of tpls) {
+        if (queryPlan.length >= MAX_QUERIES) break;
+        queryPlan.push({ q: t.replace("{market}", slot.geo.label), geo: slot.geo.label, scope: slot.geo.scope });
+      }
+      if (queryPlan.length >= MAX_QUERIES) break;
+    }
+
+    // 2) Run Tavily for each query in parallel, tag each hit with its query's geo.
+    const tavilyResults = await Promise.all(queryPlan.map(p => tavilySearch(TAVILY_API_KEY, p.q)));
+    const allHits: GeoTaggedHit[] = [];
     const seenUrls = new Set<string>();
-    for (const hits of tavilyResults) {
-      for (const h of hits) {
+    for (let i = 0; i < tavilyResults.length; i++) {
+      const meta = queryPlan[i];
+      for (const h of tavilyResults[i]) {
         if (seenUrls.has(h.url)) continue;
         seenUrls.add(h.url);
-        allHits.push({ ...h, content: (h.content || "").slice(0, 350) });
+        allHits.push({
+          ...h,
+          content: (h.content || "").slice(0, 350),
+          geo: meta.geo,
+          geo_scope: meta.scope,
+        });
         if (allHits.length >= 30) break;
       }
       if (allHits.length >= 30) break;
