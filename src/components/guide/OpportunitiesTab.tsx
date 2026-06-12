@@ -137,6 +137,7 @@ export default function OpportunitiesTab() {
       .eq('assigned_bdr', selected.id)
       .eq('verified', true)
       .neq('status', 'archived')
+      .order('active_intent', { ascending: false })
       .order('discovery_score', { ascending: false })
       .limit(100);
     if (error) toast.error('Failed to load opportunities');
@@ -145,6 +146,18 @@ export default function OpportunitiesTab() {
   }, [selected]);
 
   useEffect(() => { load(); }, [load]);
+
+  const toggleIntent = async (o: Opportunity) => {
+    const next = !o.active_intent;
+    setItems(prev => prev.map(i => i.id === o.id ? { ...i, active_intent: next } : i));
+    const { error } = await supabase.from('opportunities').update({ active_intent: next }).eq('id', o.id);
+    if (error) {
+      toast.error('Failed to update intent');
+      setItems(prev => prev.map(i => i.id === o.id ? { ...i, active_intent: !next } : i));
+      return;
+    }
+    toast.success(next ? '🔥 Marked Active Intent (+15)' : 'Intent cleared');
+  };
 
   const refresh = async () => {
     if (!PERPLEXITY_FEATURES_ENABLED) {
