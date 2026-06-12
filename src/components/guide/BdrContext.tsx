@@ -74,7 +74,7 @@ export function BdrProvider({ children }: { children: ReactNode }) {
   };
 
 
-  useEffect(() => { refresh(); /* eslint-disable-next-line */ }, []);
+  useEffect(() => { refresh(); /* eslint-disable-next-line */ }, [isAdmin, linkedBdrProfileId]);
 
   // Auto-promote synthetic snapshot IDs to real bdr_profile rows.
   useEffect(() => {
