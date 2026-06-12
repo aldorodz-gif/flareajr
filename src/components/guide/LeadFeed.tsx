@@ -6,6 +6,7 @@ import AddToPipelineSheet from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
 import { toast } from '@/hooks/use-toast';
 import LeadFeedbackButtons, { logLeadFeedback } from './LeadFeedbackButtons';
+import ContactSearchButtons from './ContactSearchButtons';
 import { useBdr } from './BdrContext';
 
 

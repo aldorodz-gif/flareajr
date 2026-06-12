@@ -10,6 +10,7 @@ import { exportRowsToXlsx } from './exportXlsx';
 import SkeletonRows from './SkeletonRows';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
 import LeadFeedbackButtons, { logLeadFeedback } from './LeadFeedbackButtons';
+import ContactSearchButtons from './ContactSearchButtons';
 
 interface Opportunity {
   id: string;
