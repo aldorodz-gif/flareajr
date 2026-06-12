@@ -65,6 +65,36 @@ export type Database = {
           },
         ]
       }
+      api_usage: {
+        Row: {
+          calls: number
+          created_at: string
+          error_code: string | null
+          function_name: string | null
+          id: string
+          service: string
+          success: boolean
+        }
+        Insert: {
+          calls?: number
+          created_at?: string
+          error_code?: string | null
+          function_name?: string | null
+          id?: string
+          service: string
+          success: boolean
+        }
+        Update: {
+          calls?: number
+          created_at?: string
+          error_code?: string | null
+          function_name?: string | null
+          id?: string
+          service?: string
+          success?: boolean
+        }
+        Relationships: []
+      }
       bdr_mindsets: {
         Row: {
           bdr_id: string | null
@@ -408,6 +438,51 @@ export type Database = {
           status?: string | null
           use_case?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      scan_runs: {
+        Row: {
+          bdrs_scanned: number
+          details: Json | null
+          errors: number
+          id: string
+          leads_inserted: number
+          ran_at: string
+        }
+        Insert: {
+          bdrs_scanned?: number
+          details?: Json | null
+          errors?: number
+          id?: string
+          leads_inserted?: number
+          ran_at?: string
+        }
+        Update: {
+          bdrs_scanned?: number
+          details?: Json | null
+          errors?: number
+          id?: string
+          leads_inserted?: number
+          ran_at?: string
+        }
+        Relationships: []
+      }
+      system_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
         }
         Relationships: []
       }

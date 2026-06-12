@@ -2,6 +2,7 @@
 // Gemini's `google_search` tool gives the model live web search at query time.
 // Note: responseSchema cannot be combined with grounding tools, so we instruct the
 // model to return JSON in the prompt and then extract/parse it defensively.
+import { logApiUsage } from "./usageLog.ts";
 
 const DIRECT_MODEL = "gemini-2.5-flash";
 const FALLBACK_MODEL = "google/gemini-3-flash-preview";
@@ -16,14 +17,20 @@ export async function callGeminiGrounded(opts: {
   systemPrompt: string;
   userPrompt: string;
   temperature?: number;
+  functionName?: string;
 }): Promise<string> {
   const directKey = Deno.env.get("GEMINI_API_KEY");
   const gatewayKey = Deno.env.get("LOVABLE_API_KEY");
+  const fn = opts.functionName;
 
   if (directKey) {
     try {
-      return await callDirectGemini({ ...opts, key: directKey });
+      const out = await callDirectGemini({ ...opts, key: directKey });
+      logApiUsage({ service: "gemini", function_name: fn, success: true });
+      return out;
     } catch (error) {
+      const status = error instanceof GeminiError ? error.status : 500;
+      logApiUsage({ service: "gemini", function_name: fn, success: false, error_code: String(status) });
       if (!(error instanceof GeminiError)) throw error;
 
       const shouldFallback =
@@ -45,7 +52,15 @@ export async function callGeminiGrounded(opts: {
     throw new GeminiError("No AI backend configured for scan requests", 500);
   }
 
-  return await callViaLovableGateway(opts, gatewayKey);
+  try {
+    const out = await callViaLovableGateway(opts, gatewayKey);
+    logApiUsage({ service: "lovable_gateway", function_name: fn, success: true });
+    return out;
+  } catch (err) {
+    const status = err instanceof GeminiError ? err.status : 500;
+    logApiUsage({ service: "lovable_gateway", function_name: fn, success: false, error_code: String(status) });
+    throw err;
+  }
 }
 
 async function callDirectGemini(

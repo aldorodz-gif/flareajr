@@ -1,8 +1,10 @@
 import { useState, useMemo, useRef } from 'react';
 import {
   Target, Send, BarChart2, Users, Map, Calendar, User, X, Plus, Trash2, Brain,
-  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw,
+  ChevronDown, ChevronRight, GripVertical, ArrowUp, ArrowDown, RotateCcw, Activity,
 } from 'lucide-react';
+import { useAuth } from '@/components/auth/AuthProvider';
+import SystemHealth from './SystemHealth';
 
 interface SettingsPageProps {
   onClose: () => void;
@@ -17,6 +19,10 @@ const SECTIONS = [
   { id: 'events',        label: 'Event Preferences',    icon: Calendar },
   { id: 'account',       label: 'Account',              icon: User },
   { id: 'ai-behavior',   label: 'AI Behavior',          icon: Brain },
+];
+
+const ADMIN_SECTIONS = [
+  { id: 'system-health', label: 'System Health',        icon: Activity },
 ];
 
 const ACCENT = '#0EA5E9';
@@ -194,6 +200,8 @@ function AddCustomInput({ placeholder, onAdd }: { placeholder: string; onAdd: (v
 
 // ===== Main =====
 export default function SettingsPage({ onClose }: SettingsPageProps) {
+  const { isAdmin } = useAuth();
+  const visibleSections = isAdmin ? [...SECTIONS, ...ADMIN_SECTIONS] : SECTIONS;
   const [activeSection, setActiveSection] = useState('lead-criteria');
   const [state, setState] = useState<SettingsState>(() => loadSettings());
   const [savedSection, setSavedSection] = useState<string | null>(null);
@@ -241,7 +249,7 @@ export default function SettingsPage({ onClose }: SettingsPageProps) {
 
       <div style={{ display: 'flex', maxWidth: 1400, margin: '0 auto' }}>
         <aside style={{ width: 240, padding: '24px 0', borderRight: `1px solid ${BORDER}`, background: '#FFF', minHeight: 'calc(100vh - 56px - 81px)' }}>
-          {SECTIONS.map(s => {
+          {visibleSections.map(s => {
             const Icon = s.icon;
             const active = s.id === activeSection;
             return (
@@ -257,6 +265,7 @@ export default function SettingsPage({ onClose }: SettingsPageProps) {
         </aside>
 
         <main style={{ flex: 1, padding: '32px 40px', maxWidth: 920 }}>
+          {activeSection === 'system-health' && isAdmin && <SystemHealth />}
           {activeSection === 'lead-criteria' && (
             <LeadCriteriaSection
               state={state.leadCriteria} update={(p) => update('leadCriteria', p)}
