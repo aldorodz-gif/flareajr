@@ -65,6 +65,33 @@ export type Database = {
           },
         ]
       }
+      alert_log: {
+        Row: {
+          alert_key: string
+          body: string | null
+          id: string
+          recipient: string | null
+          sent_at: string
+          subject: string | null
+        }
+        Insert: {
+          alert_key: string
+          body?: string | null
+          id?: string
+          recipient?: string | null
+          sent_at?: string
+          subject?: string | null
+        }
+        Update: {
+          alert_key?: string
+          body?: string | null
+          id?: string
+          recipient?: string | null
+          sent_at?: string
+          subject?: string | null
+        }
+        Relationships: []
+      }
       api_usage: {
         Row: {
           calls: number

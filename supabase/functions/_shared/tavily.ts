@@ -1,6 +1,7 @@
 // Shared Tavily + URL verification helpers.
 // Used by scan-opportunities and dashboard-scan so both pipelines behave identically.
 import { logApiUsage } from "./usageLog.ts";
+import { sendAlert } from "./alerts.ts";
 
 
 export type TavilyHit = {
@@ -72,6 +73,12 @@ export async function tavilySearch(apiKey: string, query: string, maxResults = 1
       const body = await res.text();
       console.warn("Tavily error", res.status, body.slice(0, 200));
       logApiUsage({ service: "tavily", function_name: functionName, success: false, error_code: String(res.status) });
+      sendAlert({
+        alertKey: "tavily_down",
+        subject: "FLARE: Tavily search issue",
+        body: `Tavily returned ${res.status}.\nQuery: ${query}\nBody: ${body.slice(0, 300)}`,
+        functionName,
+      });
       return [];
     }
     const data = await res.json();
@@ -85,6 +92,12 @@ export async function tavilySearch(apiKey: string, query: string, maxResults = 1
   } catch (e) {
     console.warn("Tavily fetch failed", e instanceof Error ? e.message : e);
     logApiUsage({ service: "tavily", function_name: functionName, success: false, error_code: "exception" });
+    sendAlert({
+      alertKey: "tavily_down",
+      subject: "FLARE: Tavily search issue",
+      body: `Tavily fetch threw: ${e instanceof Error ? e.message : String(e)}\nQuery: ${query}`,
+      functionName,
+    });
     return [];
   }
 }

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { sendAlert } from "../_shared/alerts.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -55,6 +56,23 @@ serve(async (req) => {
       details: results,
     });
 
+    // Alert if the overnight run had errors OR produced zero leads across all BDRs.
+    if (errors > 0 || ((bdrs || []).length > 0 && leads_inserted === 0)) {
+      const failed = results.filter((r) => !r.ok).slice(0, 5)
+        .map((r) => `- ${r.bdr}: ${r.error || "unknown"}`).join("\n");
+      await sendAlert({
+        alertKey: "overnight_scan",
+        subject: "FLARE: Overnight lead scan problem",
+        body: [
+          `BDRs scanned: ${(bdrs || []).length}`,
+          `Leads inserted: ${leads_inserted}`,
+          `Errors: ${errors}`,
+          failed ? `\nSample failures:\n${failed}` : "",
+        ].join("\n"),
+        functionName: "auto-scan-opportunities",
+      });
+    }
+
     return new Response(JSON.stringify({ ran_at, results, leads_inserted, errors }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
@@ -67,6 +85,12 @@ serve(async (req) => {
       errors: 1,
       details: { error: e instanceof Error ? e.message : String(e) },
     }).then(() => {}, () => {});
+    await sendAlert({
+      alertKey: "function_error_auto-scan-opportunities",
+      subject: "FLARE: auto-scan-opportunities crashed",
+      body: `Unhandled exception: ${e instanceof Error ? e.message : String(e)}\nStack: ${e instanceof Error ? e.stack?.slice(0, 600) : ""}`,
+      functionName: "auto-scan-opportunities",
+    });
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
