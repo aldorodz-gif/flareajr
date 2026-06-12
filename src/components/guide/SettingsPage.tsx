@@ -200,6 +200,8 @@ function AddCustomInput({ placeholder, onAdd }: { placeholder: string; onAdd: (v
 
 // ===== Main =====
 export default function SettingsPage({ onClose }: SettingsPageProps) {
+  const { isAdmin } = useAuth();
+  const visibleSections = isAdmin ? [...SECTIONS, ...ADMIN_SECTIONS] : SECTIONS;
   const [activeSection, setActiveSection] = useState('lead-criteria');
   const [state, setState] = useState<SettingsState>(() => loadSettings());
   const [savedSection, setSavedSection] = useState<string | null>(null);
