@@ -49,7 +49,7 @@ async function tavilySearch(apiKey: string, query: string): Promise<TavilyHit[]>
         query,
         search_depth: "basic",
         topic: "news",
-        days: 90,
+        days: 30,
         max_results: 10,
         include_answer: false,
       }),
@@ -99,7 +99,48 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { bdr_id } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { bdr_id, action } = body as { bdr_id?: string; action?: string };
+
+    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+    // One-time cleanup: verify a chunk of opportunity rows, delete unreachable/missing URLs,
+    // mark survivors verified=true. Call repeatedly with offset until done=true.
+    if (action === "cleanup") {
+      const chunk = Math.min(Number((body as any).chunk) || 80, 200);
+      const offset = Math.max(Number((body as any).offset) || 0, 0);
+      const { data: rows, error, count } = await supabase
+        .from("opportunities")
+        .select("id, source_url", { count: "exact" })
+        .order("created_at", { ascending: true })
+        .range(offset, offset + chunk - 1);
+      if (error) throw error;
+      let deleted = 0, kept = 0;
+      const BATCH = 20;
+      for (let i = 0; i < (rows || []).length; i += BATCH) {
+        const batch = (rows || []).slice(i, i + BATCH);
+        const results = await Promise.all(batch.map(async (r) => ({
+          r, ok: r.source_url ? await verifyUrlReachable(r.source_url) : false,
+        })));
+        const toDelete = results.filter(x => !x.ok).map(x => x.r.id);
+        const toKeep = results.filter(x => x.ok).map(x => x.r.id);
+        if (toDelete.length) {
+          await supabase.from("opportunities").delete().in("id", toDelete);
+          deleted += toDelete.length;
+        }
+        if (toKeep.length) {
+          await supabase.from("opportunities").update({ verified: true, last_verified: new Date().toISOString() }).in("id", toKeep);
+          kept += toKeep.length;
+        }
+      }
+      const processed = (rows || []).length;
+      const nextOffset = offset + kept; // deletions shift indices; advance by kept only
+      const done = processed < chunk;
+      return new Response(JSON.stringify({ cleanup: true, deleted, kept, processed, total: count, offset, next_offset: nextOffset, done }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     if (!bdr_id) return new Response(JSON.stringify({ error: "bdr_id required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
@@ -107,7 +148,6 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "TAVILY_API_KEY not configured" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const { data: bdr, error: bdrErr } = await supabase.from("bdr_profiles").select("*").eq("id", bdr_id).maybeSingle();
     if (bdrErr || !bdr) throw new Error("BDR profile not found");
 
@@ -120,16 +160,28 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "BDR has no markets configured" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // 1) Build queries (cap to keep runtime + token budget reasonable)
-    const MAX_QUERIES = 6;
-    const shuffled = [...SIGNAL_TEMPLATES].sort(() => Math.random() - 0.5);
+    // 1) Build queries — round-robin across ALL markets so every market is searched each run.
+    const MAX_QUERIES = 9;
+    // Per-market shuffled template list so each market gets different templates.
+    const perMarketShuffles = new Map<string, string[]>(
+      markets.map(m => [m, [...SIGNAL_TEMPLATES].sort(() => Math.random() - 0.5)])
+    );
+    const perMarketIdx = new Map<string, number>(markets.map(m => [m, 0]));
     const queries: string[] = [];
-    outer: for (const market of markets) {
-      for (const tmpl of shuffled) {
-        queries.push(tmpl.replace("{market}", market));
-        if (queries.length >= MAX_QUERIES) break outer;
+    while (queries.length < MAX_QUERIES) {
+      let addedThisCycle = 0;
+      for (const market of markets) {
+        if (queries.length >= MAX_QUERIES) break;
+        const shuf = perMarketShuffles.get(market)!;
+        const i = perMarketIdx.get(market)!;
+        if (i >= shuf.length) continue;
+        queries.push(shuf[i].replace("{market}", market));
+        perMarketIdx.set(market, i + 1);
+        addedThisCycle++;
       }
+      if (addedThisCycle === 0) break;
     }
+
 
     // 2) Run Tavily for each query, in parallel
     const tavilyResults = await Promise.all(queries.map(q => tavilySearch(TAVILY_API_KEY, q).then(hits => ({ q, hits }))));
@@ -320,6 +372,7 @@ serve(async (req) => {
         source_type: o.source_type,
         source_url: o.source_url,
         assigned_bdr: bdr_id,
+        verified: true,
         last_verified: new Date().toISOString(),
       };
 
