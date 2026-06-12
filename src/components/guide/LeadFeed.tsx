@@ -6,6 +6,7 @@ import AddToPipelineSheet from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
 import { toast } from '@/hooks/use-toast';
 import LeadFeedbackButtons, { logLeadFeedback } from './LeadFeedbackButtons';
+import ContactSearchButtons from './ContactSearchButtons';
 import { useBdr } from './BdrContext';
 
 
@@ -208,6 +209,9 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                   >
                     💬 What to Ask
                   </button>
+                  <div className="flex justify-center">
+                    <ContactSearchButtons companyName={lead.company_name} />
+                  </div>
                   <div className="flex justify-end pt-0.5">
                     <LeadFeedbackButtons bdrId={selected?.id ?? null} companyName={lead.company_name} />
                   </div>
