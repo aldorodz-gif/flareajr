@@ -261,6 +261,9 @@ export default function OpportunitiesTab() {
     if (filter === 'near') return o.near_core_inventory;
     if (filter === 'saved') return o.saved_by_bdr === selected?.id;
     return true;
+  }).slice().sort((a, b) => {
+    if (a.active_intent !== b.active_intent) return a.active_intent ? -1 : 1;
+    return compositeScore(b) - compositeScore(a);
   });
 
   if (!selected) return <div className="p-12 text-center text-muted-foreground">Select a BDR to view opportunities</div>;
