@@ -6,6 +6,8 @@ import AddToPipelineSheet from './AddToPipelineSheet';
 import { exportRowsToXlsx } from './exportXlsx';
 import { toast } from '@/hooks/use-toast';
 
+export type GeoScope = 'city' | 'suburb' | 'county' | 'metro' | 'state';
+
 export interface ScanLead {
   company_name: string;
   vertical: string;
@@ -16,6 +18,8 @@ export interface ScanLead {
   source_url?: string;
   source_verified?: boolean;
   source_label?: string;
+  market?: string;
+  geo_scope?: GeoScope;
 }
 
 interface LeadFeedProps {
