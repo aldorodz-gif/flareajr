@@ -11,17 +11,26 @@ const TONES = [
   { id: 'bold', label: 'Bold' },
 ];
 
+interface EmailRecipient {
+  name: string;
+  title: string;
+  email: string;
+  phone?: string;
+}
+
 interface WriteEmailSheetProps {
   open: boolean;
   onClose: () => void;
   company: string;
   signal: string;
+  contacts?: EmailRecipient[];
 }
 
-const WriteEmailSheet = ({ open, onClose, company, signal }: WriteEmailSheetProps) => {
+const WriteEmailSheet = ({ open, onClose, company, signal, contacts = [] }: WriteEmailSheetProps) => {
   const [companyVal, setCompanyVal] = useState(company);
   const [signalVal, setSignalVal] = useState(signal);
   const [buyerTitle, setBuyerTitle] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
   const [serviceLine, setServiceLine] = useState('');
   const [tone, setTone] = useState('direct');
   const [loading, setLoading] = useState(false);
@@ -35,7 +44,11 @@ const WriteEmailSheet = ({ open, onClose, company, signal }: WriteEmailSheetProp
       setSignalVal(signal);
       setResult(null);
       setError('');
+      const first = contacts.find(c => c.email);
+      setRecipientEmail(first?.email ?? '');
+      if (first?.title && !buyerTitle) setBuyerTitle(first.title);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, company, signal]);
 
   const canGenerate = companyVal.trim() && signalVal.trim() && buyerTitle.trim() && serviceLine;
@@ -125,6 +138,30 @@ const WriteEmailSheet = ({ open, onClose, company, signal }: WriteEmailSheetProp
         </header>
 
         <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {contacts.length > 0 && (
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 500, color: '#64748B', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
+                Recipient ({contacts.length} on file)
+              </p>
+              <select
+                value={recipientEmail}
+                onChange={e => {
+                  const v = e.target.value;
+                  setRecipientEmail(v);
+                  const picked = contacts.find(c => c.email === v);
+                  if (picked?.title) setBuyerTitle(picked.title);
+                }}
+                style={{ ...inputStyle, padding: '10px 12px', appearance: 'none', cursor: 'pointer' }}
+              >
+                <option value="">— Choose a contact —</option>
+                {contacts.map(c => (
+                  <option key={c.email || c.name} value={c.email}>
+                    {c.name || c.email}{c.title ? ` · ${c.title}` : ''}{c.email ? ` · ${c.email}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div style={{ position: 'relative' }}>
             <Building2 size={14} color="#94A3B8" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
             <input value={companyVal} onChange={e => setCompanyVal(e.target.value)} placeholder="Company" style={inputStyle} />
