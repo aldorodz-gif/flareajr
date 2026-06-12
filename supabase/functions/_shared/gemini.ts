@@ -3,6 +3,7 @@
 // Note: responseSchema cannot be combined with grounding tools, so we instruct the
 // model to return JSON in the prompt and then extract/parse it defensively.
 import { logApiUsage } from "./usageLog.ts";
+import { sendAlert, geminiRecent429Count } from "./alerts.ts";
 
 const DIRECT_MODEL = "gemini-2.5-flash";
 const FALLBACK_MODEL = "google/gemini-3-flash-preview";
@@ -35,6 +36,27 @@ export async function callGeminiGrounded(opts: {
         logApiUsage({ service: "gemini", function_name: fn, success: false, error_code: String(status) });
         if (!(error instanceof GeminiError)) throw error;
         lastError = error;
+
+        // Alert on auth/credit failures immediately, or after repeated 429s in the last hour.
+        if (status === 402 || status === 401 || status === 403) {
+          sendAlert({
+            alertKey: "gemini_quota",
+            subject: "FLARE: Gemini API issue",
+            body: `Gemini auth/credit failure (${status}): ${error.message}`,
+            functionName: fn,
+          });
+        } else if (error.status === 429) {
+          geminiRecent429Count().then((n) => {
+            if (n > 3) {
+              sendAlert({
+                alertKey: "gemini_quota",
+                subject: "FLARE: Gemini API issue",
+                body: `Gemini returned 429 ${n} times in the last hour. Quota likely exhausted.\nLast error: ${error.message}`,
+                functionName: fn,
+              });
+            }
+          });
+        }
 
         const is429 = error.status === 429 || /Rate limited by Gemini/i.test(error.message);
         if (is429 && attempt === 0) {
@@ -71,6 +93,14 @@ export async function callGeminiGrounded(opts: {
   } catch (err) {
     const status = err instanceof GeminiError ? err.status : 500;
     logApiUsage({ service: "lovable_gateway", function_name: fn, success: false, error_code: String(status) });
+    if (status === 402) {
+      sendAlert({
+        alertKey: "lovable_credits",
+        subject: "FLARE: Lovable AI credits exhausted",
+        body: `Lovable AI gateway returned 402. ${err instanceof Error ? err.message : String(err)}`,
+        functionName: fn,
+      });
+    }
     throw err;
   }
 }
