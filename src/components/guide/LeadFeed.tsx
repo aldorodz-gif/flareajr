@@ -14,6 +14,8 @@ export interface ScanLead {
   why_housing: string;
   recommended_titles: string[];
   source_url?: string;
+  source_verified?: boolean;
+  source_label?: string;
 }
 
 interface LeadFeedProps {
