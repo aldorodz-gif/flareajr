@@ -378,6 +378,93 @@ export default function SystemHealth() {
         )}
       </div>
 
+      {/* Lead Quality */}
+      <div style={card}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: TEXT }}>
+            <ThumbsUp size={14} style={{ verticalAlign: -2, marginRight: 6 }} />Lead Quality (last 28 days)
+          </div>
+          <div style={{ fontSize: 11, color: MUTED }}>
+            {feedback.length.toLocaleString()} ratings · acceptance = 👍 ÷ ({'👍'} + {'👎'})
+          </div>
+        </div>
+
+        {/* 4-week trend */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 16 }}>
+          {leadQuality.weeks.map((w, i) => {
+            const total = w.up + w.down;
+            const pct = total > 0 ? Math.round((w.up / total) * 100) : 0;
+            return (
+              <div key={i} style={{ border: `1px solid ${BORDER}`, borderRadius: 6, padding: 10 }}>
+                <div style={{ fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: 0.5 }}>Week of {w.label}</div>
+                <div style={{ fontSize: 22, fontWeight: 700, color: TEXT, marginTop: 4 }}>{total ? `${pct}%` : '—'}</div>
+                <div style={{ fontSize: 11, color: MUTED }}>{w.up} 👍 · {w.down} 👎</div>
+                <div style={{ marginTop: 6, height: 6, background: '#F1F5F9', borderRadius: 999, overflow: 'hidden' }}>
+                  <div style={{ width: `${pct}%`, height: '100%', background: pct >= 60 ? OK : pct >= 30 ? '#F59E0B' : BAD }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Per-BDR acceptance */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Acceptance rate by BDR</div>
+            {leadQuality.perBdrRows.length === 0 ? (
+              <div style={{ fontSize: 12, color: MUTED }}>No feedback yet.</div>
+            ) : (
+              <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ color: MUTED, textAlign: 'left' }}>
+                    <th style={th}>BDR</th>
+                    <th style={th}>Ratings</th>
+                    <th style={th}>Acceptance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leadQuality.perBdrRows.map((b) => (
+                    <tr key={b.id} style={{ borderTop: `1px solid ${BORDER}` }}>
+                      <td style={td}>{b.name}</td>
+                      <td style={td}>{b.total}</td>
+                      <td style={td}>
+                        <span style={{ color: b.acceptance >= 60 ? OK : b.acceptance >= 30 ? '#92400E' : BAD, fontWeight: 600 }}>
+                          {b.acceptance}%
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: TEXT, marginBottom: 8 }}>Top rejection reasons</div>
+            {leadQuality.topReasons.length === 0 ? (
+              <div style={{ fontSize: 12, color: MUTED }}>No rejection reasons logged.</div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {leadQuality.topReasons.map(([reason, count]) => {
+                  const max = leadQuality.topReasons[0][1] || 1;
+                  const w = Math.max(6, Math.round((count / max) * 100));
+                  return (
+                    <div key={reason}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: TEXT }}>
+                        <span>{reason}</span>
+                        <span style={{ color: MUTED }}>{count}</span>
+                      </div>
+                      <div style={{ marginTop: 3, height: 6, background: '#F1F5F9', borderRadius: 999, overflow: 'hidden' }}>
+                        <div style={{ width: `${w}%`, height: '100%', background: BAD }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Quick links */}
       <div style={card}>
         <div style={{ fontSize: 14, fontWeight: 600, color: TEXT, marginBottom: 10 }}>Quick links</div>
