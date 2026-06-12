@@ -130,14 +130,20 @@ const LeadFeed = ({ leads, city, state, loading }: LeadFeedProps) => {
                         href={lead.source_url}
                         target="_blank"
                         rel="noopener noreferrer"
+                        title={lead.source_label || (lead.source_verified ? 'Verified link' : 'Source link')}
                         className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded inline-flex items-center gap-1 transition-all hover:-translate-y-0.5"
                         style={{ background: 'rgba(20,184,166,.12)', color: '#14b8a6', border: '1px solid rgba(20,184,166,.35)' }}
                       >
-                        🔗 Source
+                        🔗 {lead.source_label ? 'Job Board' : 'Source'}
+                        {lead.source_verified && <span aria-label="verified" title="Verified" style={{ color: '#10b981' }}>✓</span>}
                       </a>
                     )}
                   </div>
+                  {lead.source_label && (
+                    <p className="text-[10px] mt-1.5 italic" style={{ color: '#94a3b8' }}>{lead.source_label}</p>
+                  )}
                 </div>
+
 
                 <div className="flex flex-col gap-1.5">
                   <div className="relative">
