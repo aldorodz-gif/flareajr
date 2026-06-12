@@ -23,7 +23,8 @@ const SECTIONS = [
 ];
 
 const ADMIN_SECTIONS = [
-  { id: 'system-health', label: 'System Health',        icon: Activity },
+  { id: 'system-health',   label: 'System Health',   icon: Activity },
+  { id: 'signal-sources',  label: 'Signal Sources',  icon: RadioIcon },
 ];
 
 const ACCENT = '#0EA5E9';
