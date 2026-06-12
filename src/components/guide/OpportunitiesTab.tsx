@@ -9,6 +9,7 @@ import WriteEmailSheet from './WriteEmailSheet';
 import { exportRowsToXlsx } from './exportXlsx';
 import SkeletonRows from './SkeletonRows';
 import { PERPLEXITY_FEATURES_ENABLED } from '@/lib/featureFlags';
+import LeadFeedbackButtons, { logLeadFeedback } from './LeadFeedbackButtons';
 
 interface Opportunity {
   id: string;
@@ -169,7 +170,11 @@ export default function OpportunitiesTab() {
   };
 
   const archiveOpp = async (id: string) => {
+    const opp = items.find((o) => o.id === id);
     await supabase.from('opportunities').update({ status: 'archived' }).eq('id', id);
+    if (opp && selected) {
+      logLeadFeedback({ bdrId: selected.id, companyName: opp.company, opportunityId: id, rating: 'down', reason: 'archived' });
+    }
     load();
   };
 
@@ -587,6 +592,7 @@ export default function OpportunitiesTab() {
         onSaved={async () => {
           if (pipeOpp && selected) {
             await supabase.from('opportunities').update({ saved_by_bdr: selected.id, status: 'working' }).eq('id', pipeOpp.id);
+            logLeadFeedback({ bdrId: selected.id, companyName: pipeOpp.company, opportunityId: pipeOpp.id, rating: 'up', reason: 'pipeline' });
             load();
           }
         }}
