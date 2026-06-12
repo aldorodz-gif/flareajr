@@ -47,16 +47,24 @@ export default function SystemHealth() {
   const load = async () => {
     setLoading(true);
     const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-    const [u, r, s] = await Promise.all([
+    const [u, r, s, ar, ae, al] = await Promise.all([
       supabase.from('api_usage').select('service,function_name,success,error_code,created_at').gte('created_at', since).order('created_at', { ascending: false }).limit(5000),
       supabase.from('scan_runs').select('id,ran_at,bdrs_scanned,leads_inserted,errors').order('ran_at', { ascending: false }).limit(7),
       supabase.from('system_settings').select('value').eq('key', 'tavily_monthly_limit').maybeSingle(),
+      supabase.from('system_settings').select('value').eq('key', 'alerts_recipient').maybeSingle(),
+      supabase.from('system_settings').select('value').eq('key', 'alerts_enabled').maybeSingle(),
+      supabase.from('alert_log').select('id,alert_key,subject,recipient,sent_at').order('sent_at', { ascending: false }).limit(10),
     ]);
     setRows((u.data as Row[]) || []);
     setRuns((r.data as any[]) || []);
     const v = (s.data as any)?.value;
     const n = typeof v === 'number' ? v : Number(v);
     if (Number.isFinite(n)) { setTavilyLimit(n); setEditingLimit(String(n)); }
+    const rv = (ar.data as any)?.value;
+    if (typeof rv === 'string' && rv) { setAlertRecipient(rv); setEditingRecipient(rv); }
+    const ev = (ae.data as any)?.value;
+    if (typeof ev === 'boolean') setAlertsEnabled(ev);
+    setAlerts((al.data as any[]) || []);
     setLoading(false);
   };
 
