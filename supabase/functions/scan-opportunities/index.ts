@@ -5,6 +5,7 @@ import { callGeminiGrounded, extractJson, GeminiError } from "../_shared/gemini.
 import {
   SIGNAL_TEMPLATES,
   HIRING_SIGNAL_TEMPLATES,
+  sampleSignalTemplatesAcrossCategories,
   tavilySearch,
   verifyUrlReachable,
   isBlockedFetchUrl,
