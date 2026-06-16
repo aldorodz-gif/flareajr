@@ -42,7 +42,7 @@ const Index = () => {
       case 'opportunities': return <OpportunitiesTab />;
       case 'market': return <MarketHeatTab />;
       case 'prospects': return <ProspectsTab />;
-      case 'events': return <EventsTab />;
+      case 'events': return <EventsTab onNavigate={handleTabChange} />;
       default: return null;
     }
   };

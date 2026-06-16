@@ -64,36 +64,6 @@ const TOUR_STEPS: TourStep[] = [
     gradient: 'linear-gradient(135deg, #2d1b3d, #1a1145)',
     simId: 'events',
   },
-  {
-    icon: '📡',
-    title: 'Prompt Builder',
-    subtitle: 'Find companies showing demand signals',
-    description: 'Pick city, vertical, and signal type. Get a ready-to-paste ChatGPT Agent Mode prompt that finds companies with real housing needs.',
-    detail: 'Set it up once, schedule it weekday mornings, and wake up to fresh leads.',
-    tabId: 'tracker',
-    gradient: 'linear-gradient(135deg, #1a3a5c, #1a1145)',
-    simId: 'tracker',
-  },
-  {
-    icon: '📋',
-    title: 'Score Signals',
-    subtitle: 'Is this lead worth chasing?',
-    description: 'Paste any headline or news blurb. Get an instant HIGH / MEDIUM / LOW score plus the likely service line to pitch.',
-    detail: 'Use this anytime you\'re unsure if a lead deserves your time.',
-    tabId: 'signals',
-    gradient: 'linear-gradient(135deg, #2d1b69, #1a1145)',
-    simId: 'bonus',
-  },
-  {
-    icon: '✉️',
-    title: 'Write Outreach',
-    subtitle: 'Signal-specific first emails',
-    description: 'Enter the company, signal, buyer title, service line, and tone. Get a 4-sentence, under-100-word email in NCH\'s voice — ready to send.',
-    detail: 'Pro tip: Send it to yourself first and read on your phone. If it looks like a wall of text, rewrite it.',
-    tabId: 'outreach',
-    gradient: 'linear-gradient(135deg, #1a1145, #0F0F1A)',
-    simId: 'outreach',
-  },
 ];
 
 interface WelcomeModalProps {
