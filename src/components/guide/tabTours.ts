@@ -91,39 +91,6 @@ export const TAB_TOURS: Record<string, TabTour> = {
     ],
   },
 
-  tracker: {
-    tabId: 'tracker',
-    intro: '📡 Prompt Builder — assemble high-quality prompts for any AI tool, with the right context baked in.',
-    example:
-      'Example: You pick "Find expansion signals" + Healthcare + Phoenix. The builder produces a 6-line prompt you can paste into ChatGPT/Claude with vertical, market, ICP, and signal types pre-filled.',
-    steps: [
-      { title: 'Stop guessing prompts', body: 'Pick a goal, a vertical, a market — the builder constructs a prompt that includes the right framing, ICP, and constraints.', why: 'Better prompt in = better lead out.' },
-      { title: 'Copy and paste anywhere', body: 'Use the output in any AI tool. Or come back here when you need a sharper variant.', why: 'Reusable across your stack.' },
-    ],
-  },
-
-  signals: {
-    tabId: 'signals',
-    intro: '📋 Score Signals — paste a news headline or article and find out if it\'s a buying signal worth chasing.',
-    example:
-      'Example: You paste "Acme Corp opens new Phoenix office, hiring 40." Scorer returns 88/100, flags it as a relocation/expansion signal, and suggests targeting HR + Facilities titles.',
-    steps: [
-      { title: 'Triage signals fast', body: 'Drop in any article URL or headline. The scorer rates fit, freshness, and gives a reason in plain English.', why: '5-second go/no-go decision.' },
-      { title: 'Auto-suggested next step', body: 'High-score signals show recommended buyer titles and a one-click path to draft outreach.', why: 'No "what do I do with this?" gap.' },
-    ],
-  },
-
-  outreach: {
-    tabId: 'outreach',
-    intro: '✉️ Write Outreach — generate emails grounded in a real signal, in your tone.',
-    example:
-      'Example: Paste their company URL + the signal. Pick "Director of Operations" and tone "consultative". You get a 90-word email that mentions the signal, why housing matters, and a soft CTA.',
-    steps: [
-      { title: 'Signal-grounded emails', body: 'Tools here scrape the company, extract the signal, and suggest a buyer title before drafting. The email writes itself around real context.', why: 'Generic AI emails get ignored — these don\'t.' },
-      { title: 'Pick a tone', body: 'Direct, warm, analytical, consultative, bold. Match the buyer, not your default.', why: 'Tone fit = reply rate.' },
-      { title: 'One-click to pipeline', body: 'Save the draft and the lead lands in Prospects with a full 5-touch cadence scheduled.', why: 'Outreach → pipeline in one move.' },
-    ],
-  },
 };
 
 export const tourStorageKey = (tabId: string, bdrId?: string | null) =>

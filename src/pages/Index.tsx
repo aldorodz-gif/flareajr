@@ -2,12 +2,9 @@ import { useState, useCallback, useEffect } from 'react';
 import TopNav from '../components/guide/TopNav';
 import WelcomeModal from '../components/guide/WelcomeModal';
 
-import TrackerTab from '../components/guide/TrackerTab';
 import DashboardTab from '../components/guide/DashboardTab';
 import MarketHeatTab from '../components/guide/MarketHeatTab';
 
-import OutreachTab from '../components/guide/OutreachTab';
-import SignalsTab from '../components/guide/SignalsTab';
 import EventsTab from '../components/guide/EventsTab';
 import OpportunitiesTab from '../components/guide/OpportunitiesTab';
 import ProspectsTab from '../components/guide/ProspectsTab';
@@ -40,16 +37,12 @@ const Index = () => {
   }, [handleTabChange]);
 
   const renderTab = () => {
-    const props = { onNavigate: handleTabChange };
     switch (activeTab) {
       case 'dashboard': return <DashboardTab />;
       case 'opportunities': return <OpportunitiesTab />;
       case 'market': return <MarketHeatTab />;
       case 'prospects': return <ProspectsTab />;
-      case 'tracker': return <TrackerTab {...props} />;
-      case 'outreach': return <OutreachTab {...props} />;
-      case 'signals': return <SignalsTab {...props} />;
-      case 'events': return <EventsTab {...props} />;
+      case 'events': return <EventsTab onNavigate={handleTabChange} />;
       default: return null;
     }
   };
